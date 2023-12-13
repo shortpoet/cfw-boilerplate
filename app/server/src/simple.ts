@@ -2,9 +2,9 @@ import http from 'http';
 import dotenv from 'dotenv';
 import { error, json } from 'itty-router';
 import path from 'node:path';
-import { corsify, Api } from '@boilerplate/api/src/router';
+import { corsify, Api } from '@cfw-boilerplate/api/src/router';
 import { mapHttpHeaders, serverLogStart, ctx, serverLogEnd } from './util';
-import { __rootDir, __appDir, __wranglerDir } from '@boilerplate/types/src/root';
+import { __rootDir, __appDir, __wranglerDir } from '@cfw-boilerplate/types/src/root';
 import { unstable_dev } from 'wrangler';
 import type { UnstableDevWorker } from 'wrangler';
 

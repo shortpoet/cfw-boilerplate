@@ -1,5 +1,5 @@
-import { HealthCheck, UserRole } from '@boilerplate/types';
-import { escapeNestedKeys, logLevel, logger, msToTime } from '@boilerplate/utils';
+import { HealthCheck, UserRole } from '@cfw-boilerplate/types';
+import { escapeNestedKeys, logLevel, logger, msToTime } from '@cfw-boilerplate/utils';
 import { ServerResponse } from 'http';
 import { ExecutionContext, KVNamespace } from '@cloudflare/workers-types';
 import { IRequest } from 'itty-router';
@@ -34,7 +34,7 @@ export const healthRes = async (env: Env) => {
     gitInfo =
       isWorker() && hasNamespace
         ? JSON.parse((await (env.CFW_VUE_AI_UI as KVNamespace).get('gitInfo')) || '')
-        : (await import('@boilerplate/db/src/data.json')).default;
+        : (await import('@cfw-boilerplate/db/src/data.json')).default;
   } catch (error) {
     console.error(`[api] [controllers] [health] [healthRes] gitInfo error: ${error}`);
   }

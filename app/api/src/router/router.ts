@@ -19,7 +19,7 @@ import { health_router } from 'api/router';
 const FILE_LOG_LEVEL = 'error';
 
 const { preflight, corsify } = createCors({
-  origins: ['http://localhost:3000', 'https://boilerplate.pages.dev', 'http://localhost:3333'],
+  origins: ['http://localhost:3000', 'https://cfw-boilerplate.pages.dev', 'http://localhost:3333'],
 });
 
 export { corsify };

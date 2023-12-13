@@ -3,7 +3,7 @@ import * as log from '../log';
 import { setVars } from '../cf/vars';
 import { getConfig } from '../config/config';
 import { Options } from '../types';
-import { __appDir, __rootDir, __wranglerDir } from '@boilerplate/types/src/root';
+import { __appDir, __rootDir, __wranglerDir } from '@cfw-boilerplate/types/src/root';
 import { assert } from '../util';
 
 export async function set(opts: Options) {

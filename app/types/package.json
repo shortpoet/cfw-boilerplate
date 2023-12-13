@@ -1,5 +1,5 @@
 {
-  "name": "@boilerplate/types",
+  "name": "@cfw-boilerplate/types",
   "type": "module",
   "version": "0.0.2",
   "description": "",
@@ -10,7 +10,7 @@
   "author": "CarlosSoriano",
   "license": "ISC",
   "devDependencies": {
-    "@boilerplate/types": "workspace:*",
+    "@cfw-boilerplate/types": "workspace:*",
     "@cloudflare/kv-asset-handler": "^0.3.0",
     "@cloudflare/workers-types": "^4.20231025.0",
     "git-last-commit": "^1.0.1",

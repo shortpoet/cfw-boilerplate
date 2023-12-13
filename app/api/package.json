@@ -1,5 +1,5 @@
 {
-  "name": "@boilerplate/api",
+  "name": "@cfw-boilerplate/api",
   "version": "0.0.1",
   "private": true,
   "source": "src/index.ts",
@@ -10,7 +10,7 @@
     "start": "wrangler dev"
   },
   "dependencies": {
-    "@boilerplate/db": "workspace:^",
+    "@cfw-boilerplate/db": "workspace:^",
     "@cloudflare/itty-router-openapi": "^1.0.5",
     "kysely": "^0.26.3",
     "openai": "^4.20.1",
@@ -18,8 +18,8 @@
     "vike": "^0.4.147"
   },
   "devDependencies": {
-    "@boilerplate/types": "workspace:*",
-    "@boilerplate/utils": "workspace:*",
+    "@cfw-boilerplate/types": "workspace:*",
+    "@cfw-boilerplate/utils": "workspace:*",
     "@cloudflare/kv-asset-handler": "^0.3.0",
     "@cloudflare/workers-types": "^4.20231121.0",
     "@types/node": "^20.10.1",

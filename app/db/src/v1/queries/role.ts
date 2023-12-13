@@ -2,7 +2,7 @@
 import { ExpressionBuilder, InsertQueryBuilder, InsertResult, Kysely } from 'kysely';
 import { jsonArrayFrom, jsonObjectFrom } from 'kysely/helpers/sqlite';
 
-import { User, UserRole, UserType, UserUnion } from '@boilerplate/types';
+import { User, UserRole, UserType, UserUnion } from '@cfw-boilerplate/types';
 import { Database, getDatabaseFromEnv } from '..';
 import { format, propertiesToFormat } from '../cast';
 const { to, from } = format;

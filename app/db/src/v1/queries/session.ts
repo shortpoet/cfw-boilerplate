@@ -1,7 +1,7 @@
 import { Kysely } from 'kysely';
 import { Database } from '../db';
 import { format, propertiesToFormat } from '../cast';
-import { User, UserRole, UserType } from '@boilerplate/types';
+import { User, UserRole, UserType } from '@cfw-boilerplate/types';
 const to = format.to;
 const isSqlite = true;
 

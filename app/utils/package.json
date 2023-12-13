@@ -1,5 +1,5 @@
 {
-  "name": "@boilerplate/utils",
+  "name": "@cfw-boilerplate/utils",
   "type": "module",
   "version": "0.0.2",
   "description": "",
@@ -12,7 +12,7 @@
   "dependencies": {},
   "devDependencies": {
     "@cloudflare/kv-asset-handler": "^0.3.0",
-    "@boilerplate/types": "workspace:*",
+    "@cfw-boilerplate/types": "workspace:*",
     "chalk": "^5.3.0"
   }
 }

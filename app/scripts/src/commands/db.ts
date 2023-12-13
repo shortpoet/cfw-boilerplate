@@ -2,7 +2,7 @@ import colors from 'kleur';
 import * as log from '../log';
 import { getConfig } from '../config/config';
 import { Options } from '../types';
-import { __appDir, __rootDir, __wranglerDir } from '@boilerplate/types/src/root';
+import { __appDir, __rootDir, __wranglerDir } from '@cfw-boilerplate/types/src/root';
 import { assert, formatBindingId } from '../util';
 import { applyMigration, createMigration } from '../db/migration';
 import { executeD1Sql } from '../db/sql';

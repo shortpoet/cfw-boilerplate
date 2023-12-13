@@ -1,5 +1,5 @@
 {
-  "name": "@boilerplate/ui",
+  "name": "@cfw-boilerplate/ui",
   "type": "module",
   "version": "0.0.2",
   "description": "",
@@ -38,8 +38,8 @@
     "vite": "^4.4.9"
   },
   "devDependencies": {
-    "@boilerplate/types": "workspace:*",
-    "@boilerplate/utils": "workspace:*",
+    "@cfw-boilerplate/types": "workspace:*",
+    "@cfw-boilerplate/utils": "workspace:*",
     "@types/markdown-it-link-attributes": "^3.0.4",
     "@unhead/vue": "^1.8.8",
     "@unocss/reset": "^0.58.0",

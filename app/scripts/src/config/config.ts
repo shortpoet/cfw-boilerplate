@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv';
 import * as log from '../log';
 
 import { Config, Options, WranglerToml, WrangleConfig } from '../types';
-import { __appDir, __rootDir, __wranglerDir } from '@boilerplate/types/src/root';
+import { __appDir, __rootDir, __wranglerDir } from '@cfw-boilerplate/types/src/root';
 import { assert, formatBindingId, getToml, writeToml } from '../util';
 import { setSecrets } from '../secret/secret';
 import { assertTomlEnv } from './toml';

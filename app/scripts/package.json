@@ -1,5 +1,5 @@
 {
-  "name": "@boilerplate/scripts",
+  "name": "@cfw-boilerplate/scripts",
   "type": "module",
   "version": "0.0.2",
   "description": "",
@@ -18,7 +18,7 @@
     "@types/node": "^20.4.10"
   },
   "devDependencies": {
-    "@boilerplate/types": "workspace:^",
+    "@cfw-boilerplate/types": "workspace:^",
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
     "@vueuse/core": "^10.5.0",
     "chalk": "^5.3.0",

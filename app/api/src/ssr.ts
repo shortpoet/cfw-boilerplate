@@ -1,6 +1,6 @@
 import { renderPage } from 'vike/server';
 import { ExecutionContext } from '@cloudflare/workers-types';
-import { logger, tryLogHeaders, logObjs, getAuthCookies } from '@boilerplate/utils';
+import { logger, tryLogHeaders, logObjs, getAuthCookies } from '@cfw-boilerplate/utils';
 // import { getSessionItty } from './middleware';
 import { UserRole } from '@/types/src';
 

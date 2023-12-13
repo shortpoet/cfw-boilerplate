@@ -1,6 +1,6 @@
 import { Kysely } from 'kysely';
 
-import { UserRole, UserType } from '@boilerplate/types';
+import { UserRole, UserType } from '@cfw-boilerplate/types';
 import { Database, getDatabaseFromEnv } from '..';
 import { format } from '../cast';
 const { to, from } = format;
