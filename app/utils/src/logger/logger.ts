@@ -22,16 +22,20 @@ const loggerConfig: LoggerOptions =
     : { level: config.env.VITE_LOG_LEVEL };
 
 let logger: Logger;
-export const getLogger = () => {
+export const getLogger = (opts: LoggerOptions = {}) => {
   console.log('[logger] init START');
   console.log(loggerConfig);
   console.log(`[logger] NODE_ENV: ${config.env.NODE_ENV}`);
+  const conf = {
+    ...loggerConfig,
+    ...opts,
+  };
   if (!logger) {
     // logger = pinoLogger(loggerConfig);
 
     config.env.NODE_ENV === 'development'
-      ? (logger = pinoLogger(loggerConfig, stream))
-      : (logger = pinoLogger(loggerConfig));
+      ? (logger = pinoLogger(conf, stream))
+      : (logger = pinoLogger(conf));
   }
   logger.info('[logger] init END');
   return logger;

@@ -18,7 +18,7 @@ import { auth_dbv1_router } from 'api/router';
 import { health_router } from 'api/router';
 import { task_router } from 'api/router';
 
-const FILE_LOG_LEVEL = 'error';
+const FILE_LOG_LEVEL = 'debug';
 
 const { preflight, corsify } = createCors({
   origins: ['http://localhost:3000', 'https://cfw-boilerplate.pages.dev', 'http://localhost:3333'],
@@ -46,7 +46,7 @@ const protectedRoutes = {
 
 router
   .options('*', preflight)
-  .all('*', withCfHeaders())
+  .all('*', withCfHeaders(), withPino({ level: FILE_LOG_LEVEL }))
   // .all('/auth/*', authMiddleware)
   // .all('*', withSession())
   .all('/task/*', task_router)
@@ -60,7 +60,6 @@ router
   .get(
     '/hello',
     withCfSummary(),
-    withPino(),
     // withUser(),
     (req: IRequest, res: Response, env: Env, ctx: ExecutionContext) =>
       jsonData(req, res, env, { hello: 'world' })
