@@ -7,6 +7,8 @@ import type {
   KVNamespace,
 } from '@cloudflare/workers-types';
 import { AssetManifestType } from '@cloudflare/kv-asset-handler/dist/types';
+import { Logger as LoggerType } from 'pino';
+
 import type {
   ResponseCfProperties,
   LogLevel,
@@ -106,6 +108,7 @@ declare global {
     readonly headers: Headers;
     params?: Record<string, string>;
     query?: Record<string, string>;
+    logger: LoggerType;
     isAuthenticated?: boolean;
     cf?: CFRequest['cf'];
     cf_summary?: Partial<CFRequest['cf']>;

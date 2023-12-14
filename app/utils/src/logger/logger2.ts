@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import { LogLevel, LOG_LOVELS } from '@cfw-boilerplate/types';
-import { isAssetURL } from '.';
+import { isAssetURL } from '..';
 export {
   logger,
   logLevel,

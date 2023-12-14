@@ -1,4 +1,6 @@
-export { msToTime, uuidv4 };
+import { init } from '@paralleldrive/cuid2';
+
+export { msToTime, uuidv4, createUUId };
 
 function msToTime(duration: number) {
   const milliseconds = Math.floor((duration % 1000) / 100),
@@ -20,3 +22,8 @@ function uuidv4() {
     return (parseInt(c) ^ (randomValue & shiftedValue)).toString(16);
   });
 }
+
+const createUUId = ({ length }: { length?: number } = { length: 7 }) =>
+  init({
+    length,
+  })();

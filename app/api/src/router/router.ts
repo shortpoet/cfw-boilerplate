@@ -10,6 +10,7 @@ import {
   withCfHeaders,
   withCfSummary,
   jsonData,
+  withPino,
   // withUser,
 } from '../middleware';
 
@@ -59,6 +60,7 @@ router
   .get(
     '/hello',
     withCfSummary(),
+    withPino(),
     // withUser(),
     (req: IRequest, res: Response, env: Env, ctx: ExecutionContext) =>
       jsonData(req, res, env, { hello: 'world' })
