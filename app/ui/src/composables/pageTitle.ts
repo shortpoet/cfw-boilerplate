@@ -5,10 +5,11 @@ function usePageTitle(pageContext: {
   documentProps?: { title: string };
 }): { title: string } {
   const title =
-    // For static titles (defined in the `export { documentProps }` of the page's `.page.js`)
-    (pageContext.exports.documentProps || {}).title ||
-    // For dynamic tiles (defined in the `export addContextProps()` of the page's `.page.server.js`)
-    (pageContext.documentProps || {}).title ||
+    // Title defined dynamically by onBeforeRender()
+    pageContext.title ||
+    // Title defined statically by /pages/some-page/+title.js (or by `export default { title }` in /pages/some-page/+config.js)
+    // The config 'pageContext.config.title' is a custom config we defined at ./+config.ts
+    pageContext.config.title ||
     'Demo';
   return { title };
 }
