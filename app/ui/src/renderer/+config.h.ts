@@ -1,11 +1,19 @@
-import type { Config } from 'vike/types'
+import type { Config } from 'vike/types';
+import { onHydrationEnd, onPageTransitionStart, onPageTransitionEnd } from './';
 
 // https://vike.dev/config
 export default {
-  /* To enable Client-side Routing:
+  passToClient: ['pageProps', 'title'],
   clientRouting: true,
-  // !! WARNING !! Before doing so, read https://vike.dev/clientRouting */
-
-  // See https://vike.dev/data-fetching
-  passToClient: ['pageProps', 'urlPathname']
-} satisfies Config
+  prefetchStaticAssets: 'viewport',
+  onHydrationEnd,
+  onPageTransitionStart,
+  onPageTransitionEnd,
+  // https://vike.dev/meta
+  meta: {
+    // Create new config 'title'
+    title: {
+      env: { server: true, client: true },
+    },
+  },
+} satisfies Config;
