@@ -12,7 +12,6 @@
   "scripts": {
     "========= Util": "",
     "wrangle": "pnpm scripts wrangle",
-    "wrangle:kv": "tsx scripts/wrangle.ts --cmds kv",
     "start": "cross-env NODE_ENV=development && concurrently \"pnpm serve\" \"pnpm v:dev\"",
     "dev": "pnpm ui build:w && pnpm w:build && pnpm w:dev",
     "prev": "pnpm run wrangle:kv && pnpm run w:dev",

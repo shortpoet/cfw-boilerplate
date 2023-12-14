@@ -51,9 +51,10 @@ const server = http.createServer(async (req, res) => {
       headers: mappedHeaders,
       // body: req.read(),
     });
+    const data = req.read();
     const response = new Response();
     // const response = new Response("", { cf: req.cf });
-    const resp = await Api.handle(apiReq, response, process.env, ctx)
+    const resp = await Api.handle(apiReq, response, process.env, ctx, data)
       .then(json)
       .catch(error)
       .then(corsify);

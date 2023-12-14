@@ -3,8 +3,19 @@ import { ExecutionContext } from '@cloudflare/workers-types';
 import { setCacheOptions } from '@cfw-boilerplate/utils';
 
 export { handleStaticAssets };
-// @ts-expect-error
-import rawManifest from '__STATIC_CONTENT_MANIFEST';
+function isWorker() {
+  return (
+    // @ts-ignore
+    typeof WebSocketPair !== 'undefined' || typeof caches !== 'undefined'
+  );
+}
+
+async function getManifest(env: Env) {
+  return isWorker()
+    ? // @ts-expect-error
+      (await import('__STATIC_CONTENT_MANIFEST')) || ''
+    : 'local';
+}
 
 async function handleStaticAssets(request: Request, env: Env, ctx: ExecutionContext) {
   // console.log(`[api] [static-assets] handleStaticAssets -> url -> ${request.url}`);
@@ -26,7 +37,7 @@ async function handleStaticAssets(request: Request, env: Env, ctx: ExecutionCont
         ASSET_MANIFEST:
           '__STATIC_CONTENT_MANIFEST' in env
             ? env.__STATIC_CONTENT_MANIFEST
-            : JSON.parse(rawManifest),
+            : JSON.parse(await getManifest(env)),
       };
       const page = await getAssetFromKV(getAssetFromKVArgs, options);
       const response = new Response(page.body, page);

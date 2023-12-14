@@ -3,8 +3,6 @@ import { escapeNestedKeys, logLevel, logger, msToTime } from '@cfw-boilerplate/u
 import { ServerResponse } from 'http';
 import { ExecutionContext, KVNamespace } from '@cloudflare/workers-types';
 import { IRequest } from 'itty-router';
-// @ts-expect-error
-import rawManifest from '__STATIC_CONTENT_MANIFEST';
 
 const FILE_LOG_LEVEL = 'debug';
 
@@ -102,7 +100,7 @@ export const debugRes = async (
   ctx: ExecutionContext,
   parse = false
 ) => {
-  const excludes = ['token', 'ADMIN_USERS', 'secret', 'client_id'];
+  const excludes = ['token', 'ADMIN_USERS', 'secret', 'client_id', 'password'];
   let reqLog = escapeNestedKeys(req, excludes);
   let envLog = escapeNestedKeys(env, excludes);
   const out = {

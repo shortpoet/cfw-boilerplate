@@ -15,6 +15,7 @@ import {
 
 import { auth_dbv1_router } from 'api/router';
 import { health_router } from 'api/router';
+import { task_router } from 'api/router';
 
 const FILE_LOG_LEVEL = 'error';
 
@@ -47,6 +48,7 @@ router
   .all('*', withCfHeaders())
   // .all('/auth/*', authMiddleware)
   // .all('*', withSession())
+  .all('/task/*', task_router)
   .all('/db-v1/*', auth_dbv1_router)
   .all('/health/*', health_router)
   .get('/json-data', (req: IRequest, res: Response, env: Env, ctx: ExecutionContext) => {
@@ -65,8 +67,14 @@ router
   .all('*', () => error(404, 'Oops... Are you sure about that? FAaFO'));
 
 const Api = {
-  handle: (req: Request, resp: Response | ServerResponse, env: Env, ctx: ExecutionContext) => {
-    const out = router.handle(req, resp, env, ctx);
+  handle: (
+    req: Request,
+    resp: Response | ServerResponse,
+    env: Env,
+    ctx: ExecutionContext,
+    data: Record<string, any>
+  ) => {
+    const out = router.handle(req, resp, env, ctx, data);
     return out;
   },
 };
