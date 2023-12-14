@@ -72,9 +72,14 @@ const Api = {
     resp: Response | ServerResponse,
     env: Env,
     ctx: ExecutionContext,
-    data: Record<string, any>
+    data?: Record<string, any>
   ) => {
-    const out = router.handle(req, resp, env, ctx, data);
+    let out;
+    if (data) {
+      out = router.handle(req, resp, env, ctx, data);
+    } else {
+      out = router.handle(req, resp, env, ctx);
+    }
     return out;
   },
 };

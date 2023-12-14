@@ -26,10 +26,15 @@ import { handleSsr } from './ssr';
 const FILE_LOG_LEVEL = 'debug';
 
 export default {
-  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+  async fetch(
+    request: Request,
+    env: Env,
+    ctx: ExecutionContext,
+    data: Record<string, any>
+  ): Promise<Response> {
     try {
       logWorkerStart(request);
-      return await handleFetchEvent(request, env, ctx);
+      return await handleFetchEvent(request, env, ctx, data);
     } catch (e) {
       console.error(e);
       if (e instanceof NotFoundError) {
@@ -46,7 +51,8 @@ export default {
 async function handleFetchEvent(
   request: Request,
   env: Env,
-  ctx: ExecutionContext
+  ctx: ExecutionContext,
+  data: Record<string, any>
 ): Promise<Response> {
   const url = new URL(request.url);
   // const resp = new Response('');
@@ -64,7 +70,7 @@ async function handleFetchEvent(
       // console.log(
       //   `[api] [isAPiURL] index.handleFetchEvent -> ${env.VITE_API_VERSION} -> ${url.pathname}`
       // );
-      res = await Api.handle(request, resp, env, ctx);
+      res = await Api.handle(request, resp, env, ctx, data);
       // console.log(`[api] [isAPiURL] index.handleFetchEvent -> api response`);
       // logObjs([res.headers, res.body]);
       // console.log(await res.clone().json());
