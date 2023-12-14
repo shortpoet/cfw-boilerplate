@@ -12,8 +12,11 @@
   "dependencies": {
     "@cfw-boilerplate/db": "workspace:^",
     "@cloudflare/itty-router-openapi": "^1.0.5",
+    "@lucia-auth/adapter-sqlite": "^2.0.1",
     "kysely": "^0.26.3",
+    "lucia": "^2.7.4",
     "openai": "^4.20.1",
+    "providers": "link:@lucia-auth/oauth/providers",
     "universal-cookie": "^6.1.1",
     "vike": "^0.4.147"
   },
@@ -23,10 +26,10 @@
     "@cloudflare/kv-asset-handler": "^0.3.0",
     "@cloudflare/workers-types": "^4.20231121.0",
     "@types/node": "^20.10.1",
+    "@types/service-worker-mock": "^2.0.1",
     "cf-bindings-proxy": "^0.7.1",
     "itty-router": "^4.0.23",
     "typescript": "^5.3.2",
-    "wrangler": "^3.19.0",
-    "@types/service-worker-mock": "^2.0.1"
+    "wrangler": "^3.19.0"
   }
 }

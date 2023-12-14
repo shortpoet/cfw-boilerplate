@@ -38,6 +38,9 @@ importers:
       lint-staged:
         specifier: ^15.2.0
         version: 15.2.0
+      lucia:
+        specifier: ^2.7.4
+        version: 2.7.4
       prettier:
         specifier: 3.1.0
         version: 3.1.0
@@ -53,12 +56,21 @@ importers:
       '@cloudflare/itty-router-openapi':
         specifier: ^1.0.5
         version: 1.0.6
+      '@lucia-auth/adapter-sqlite':
+        specifier: ^2.0.1
+        version: 2.0.1(lucia@2.7.4)
       kysely:
         specifier: ^0.26.3
         version: 0.26.3
+      lucia:
+        specifier: ^2.7.4
+        version: 2.7.4
       openai:
         specifier: ^4.20.1
         version: 4.21.0
+      providers:
+        specifier: link:@lucia-auth/oauth/providers
+        version: link:@lucia-auth/oauth/providers
       universal-cookie:
         specifier: ^6.1.1
         version: 6.1.1
@@ -1532,6 +1544,21 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.1
       '@jridgewell/sourcemap-codec': 1.4.15
+
+  /@lucia-auth/adapter-sqlite@2.0.1(lucia@2.7.4):
+    resolution: {integrity: sha512-yc7XQ4X3sWG1gyUGHqaXipJIkmvB4MOgJypnSMWy7Vjhn3AOCM2xw51xTs+dGpLOQIn2Laomg9xpmDM2/9tgqQ==}
+    peerDependencies:
+      '@libsql/client': ^0.3.0
+      better-sqlite3: 8.x - 9.x
+      lucia: ^2.0.0
+    peerDependenciesMeta:
+      '@libsql/client':
+        optional: true
+      better-sqlite3:
+        optional: true
+    dependencies:
+      lucia: 2.7.4
+    dev: false
 
   /@mdit-vue/plugin-component@1.0.0:
     resolution: {integrity: sha512-ZXsJwxkG5yyTHARIYbR74cT4AZ0SfMokFFjiHYCbypHIeYWgJhso4+CZ8+3V9EWFG3EHlGoKNGqKp9chHnqntQ==}
@@ -4533,6 +4560,9 @@ packages:
     dependencies:
       yallist: 4.0.0
     dev: true
+
+  /lucia@2.7.4:
+    resolution: {integrity: sha512-do6Aah5kX2DUl7N0CvELWV1/b+qZGF0AUmUrkthYeNfXfgx4RAkWi4BkAlgGDBB/0c1WApb18mUD1pA5qTaWmw==}
 
   /magic-string@0.25.9:
     resolution: {integrity: sha512-RmF0AsMzgt25qzqqLc1+MbHmhdx0ojF2Fvs4XnOqz2ZOBXzzkEwc/dJQZCYHAn7v1jbVOjAZfK8msRn4BxO4VQ==}

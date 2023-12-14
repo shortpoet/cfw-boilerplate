@@ -210,3 +210,12 @@ declare module '__STATIC_CONTENT_MANIFEST' {
   const content: string;
   export default content;
 }
+
+/// <reference types="lucia" />
+declare namespace Lucia {
+  type Auth = import('lucia').Auth;
+  type DatabaseUserAttributes = {
+    username: string;
+  };
+  type DatabaseSessionAttributes = {};
+}
