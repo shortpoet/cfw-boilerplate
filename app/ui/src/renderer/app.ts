@@ -1,8 +1,23 @@
 import { createSSRApp, defineComponent, h } from 'vue';
-import PageShell from './PageShell.vue';
 import { Component, PageContext, PageProps, Page } from '@cfw-boilerplate/types';
+import '@unocss/reset/tailwind.css';
+import 'uno.css';
+import '../styles/main.css';
+import { PageShell } from '../layouts';
+import { install as installPinia } from '../modules/pinia';
+import { StoreState } from 'pinia';
+import { UiState } from '../stores';
 
-export { createApp };
+export { createApp, isClient };
+const isClient = typeof window !== 'undefined';
+const defaultWindow: (Window & typeof globalThis) | undefined = /* #__PURE__ */ isClient
+  ? window
+  : undefined;
+
+// const initialState = defaultWindow?.__INITIAL_STATE__;
+const initialState: StoreState<UiState> = {
+  alaCartePath: '',
+};
 
 function createApp(Page: Page, pageProps: PageProps | undefined, pageContext: PageContext) {
   const { session, csrfToken, callbackUrl, isAdmin, cf } = pageContext;
@@ -30,6 +45,7 @@ function createApp(Page: Page, pageProps: PageProps | undefined, pageContext: Pa
         {},
         {
           default: () => {
+            // @ts-ignore
             return h(this.Page, this.pageProps);
           },
         }
@@ -38,6 +54,7 @@ function createApp(Page: Page, pageProps: PageProps | undefined, pageContext: Pa
   });
 
   const app = createSSRApp(PageWithWrapper);
+  installPinia(app, isClient, initialState);
 
   // We use `app.changePage()` to do Client Routing, see `_default.page.client.js`
   objectAssign(app, {
