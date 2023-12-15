@@ -5,9 +5,24 @@ import {
   onPageTransitionEnd,
 } from './onPageTransitionHooks';
 
+const passToClient = [
+  'pageProps',
+  'title',
+  'documentProps',
+  'routeParams',
+  'session',
+  'csrfToken',
+  'callbackUrl',
+  'redirectTo',
+  'isAdmin',
+  'cf',
+  'sessionToken',
+  'pkceCodeVerifier',
+];
+
 // https://vike.dev/config
 export default {
-  passToClient: ['pageProps', 'title'],
+  passToClient,
   clientRouting: true,
   prefetchStaticAssets: 'viewport',
   onHydrationEnd,
