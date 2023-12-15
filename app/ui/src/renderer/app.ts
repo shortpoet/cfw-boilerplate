@@ -8,16 +8,18 @@ import { install as installPinia } from '../modules/pinia';
 import { StoreState } from 'pinia';
 import { UiState } from '../stores';
 
-export { createApp, isClient, defaultWindow };
+export { createApp, isClient, defaultWindow, getInitialStateUi };
 const isClient = typeof window !== 'undefined';
 const defaultWindow: (Window & typeof globalThis) | undefined = /* #__PURE__ */ isClient
   ? window
   : undefined;
 
 // const initialState = defaultWindow?.__INITIAL_STATE__;
-const initialState: StoreState<UiState> = {
+const initialStateUi: StoreState<UiState> = {
   alaCartePath: '',
 };
+
+const getInitialStateUi = () => initialStateUi;
 
 function createApp(Page: Page, pageProps: PageProps | undefined, pageContext: PageContext) {
   const { session, csrfToken, callbackUrl, isAdmin, cf } = pageContext;
@@ -54,7 +56,7 @@ function createApp(Page: Page, pageProps: PageProps | undefined, pageContext: Pa
   });
 
   const app = createSSRApp(PageWithWrapper);
-  installPinia(app, isClient, initialState);
+  installPinia(app, isClient, getInitialStateUi());
 
   // We use `app.changePage()` to do Client Routing, see `_default.page.client.js`
   objectAssign(app, {

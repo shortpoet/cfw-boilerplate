@@ -8,6 +8,8 @@ import type {
 } from '@cloudflare/workers-types';
 import { AssetManifestType } from '@cloudflare/kv-asset-handler/dist/types';
 import { Logger as LoggerType } from 'pino';
+import { StoreState } from 'pinia';
+
 export { Component };
 export { PageProps };
 
@@ -26,6 +28,7 @@ import type {
   SessionUnion,
 } from './types/src';
 import { Database } from './db/src';
+import { UiState } from '@/ui/src/stores';
 
 type Mutable<T> = {
   -readonly [K in keyof T]-?: T[K];
@@ -197,31 +200,38 @@ declare global {
   namespace Vike {
     interface PageContext {
       Page: Page;
-      pageProps?: PageProps;
-      urlPathname: string;
       Layout: Component;
-      redirectTo?: string;
       config: {
         /** Title defined statically by /pages/some-page/+title.js (or by `export default { title }` in /pages/some-page/+config.js) */
         title?: string;
         description?: string;
       };
+      exports: {
+        documentProps?: {
+          title?: string;
+          description?: string;
+        };
+      };
+      urlPathname: string;
+      isAdmin: boolean;
+      cf: ResponseCfProperties;
+      initalStateUi: StoreState<UiState>;
       /** Title defined dynamically by onBeforeRender() */
       title?: string;
+      pageProps?: PageProps;
+      session?: SessionUnion | null;
+      redirectTo?: string;
       // httpResponse: HttpResponse;
-      _allPageIds: string[];
-      session: SessionUnion | null;
-      isAdmin: boolean;
-      csrfToken: string;
+      csrfToken?: string;
       callbackUrl: string;
-      sessionToken: string;
-      pkceCodeVerifier: string;
-      cf: ResponseCfProperties;
+      sessionToken?: string;
+      pkceCodeVerifier?: string;
       abortReason?: {
         message: string;
         notAdmin?: boolean | undefined;
         noSession?: boolean | undefined;
       };
+      _allPageIds: string[];
     }
   }
 }
