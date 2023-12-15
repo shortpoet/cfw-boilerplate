@@ -13,9 +13,16 @@ import { InlineConfig } from 'vitest';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 
 import dotenv from 'dotenv';
-const envDir = path.resolve(process.cwd(), '..');
+// const __appDir = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+const __appDir = path.resolve('..');
+// const __appDir = path.resolve(process.cwd(), '..');
+const envDir = __appDir;
 const conf = dotenv.config({ path: `${envDir}` });
 const parsed = conf.parsed;
+console.log`\n[vite] [config] loading...`;
+console.log(__appDir);
+console.log(parsed);
+console.log`\n[vite] [config] loading...`;
 const secretConf = dotenv.config({ path: `${envDir}/.env.secret` });
 const parsedSecret = secretConf.parsed;
 console.log(parsedSecret);
