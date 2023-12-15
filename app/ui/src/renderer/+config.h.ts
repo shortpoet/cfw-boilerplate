@@ -1,5 +1,9 @@
 import type { Config } from 'vike/types';
-import { onHydrationEnd, onPageTransitionStart, onPageTransitionEnd } from './';
+import {
+  onHydrationEnd,
+  onPageTransitionStart,
+  onPageTransitionEnd,
+} from './onPageTransitionHooks';
 
 // https://vike.dev/config
 export default {
