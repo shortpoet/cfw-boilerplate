@@ -1,4 +1,4 @@
-import { getCorrelationId, getLogger } from '#/utils';
+import { getCorrelationId, getLogger } from '#/utils/logger/logger';
 const X_CORRELATION_ID = 'x-correlation-id';
 
 export const withPino =
@@ -15,7 +15,7 @@ export const withPino =
     //   msg: 'inbound request',
     // })
 
-    const logger = getLogger({ level }).child({ correlationId });
+    const logger = getLogger({ env, loggerOptions: { level } }).child({ correlationId });
     req.logger = logger;
     // this seems to log at end of request...
     req.logger.info(`[api] middlware.withPino -> ${req.method} -> ${req.url}`);

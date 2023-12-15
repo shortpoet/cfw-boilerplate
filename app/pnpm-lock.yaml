@@ -341,8 +341,6 @@ importers:
         specifier: ^3.3.9
         version: 3.3.11(typescript@5.3.3)
 
-  ui/build/server: {}
-
 packages:
 
   /@aashutoshrathi/word-wrap@1.2.6:
