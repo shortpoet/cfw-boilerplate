@@ -15,6 +15,8 @@ import type { UnstableDevWorker } from 'wrangler';
 // const __wranglerDir = path.resolve(__appDir, 'api');
 
 import { config } from '#/utils/config';
+import { getCorrelationId, getLogger } from '#/utils/logger/logger';
+const logger = getLogger({ env: config.env }).child({ correlationId: getCorrelationId() });
 
 const HOST: string = config.env.HOST || 'localhost';
 const PORT: number = parseInt(config.env.PORT || '3333');
@@ -39,6 +41,7 @@ const server = http.createServer(async (req, res) => {
   });
 
   if (req.url) {
+    logger.info(`[server] req.url: ${req.url}`);
     const { mappedHeaders, contentType } = mapHttpHeaders(req.headers);
     serverLogStart(req, contentType ?? '');
     // console.log(req);
@@ -50,6 +53,7 @@ const server = http.createServer(async (req, res) => {
     const data = req.read();
     const response = new Response();
     // const response = new Response("", { cf: req.cf });
+    // @ts-expect-error
     const resp = await Api.handle(apiReq, response, config.env, ctx, data)
       .then(json)
       .catch(error)
@@ -69,7 +73,7 @@ const server = http.createServer(async (req, res) => {
     }
 
     const incomingHeaders = Array.from(resp.headers.entries()) as any;
-    console.log('[server] incomingHeaders', incomingHeaders);
+    logger.info('[server] incomingHeaders', incomingHeaders);
 
     res.writeHead(resp.status, resp.statusText, incomingHeaders);
 
@@ -83,7 +87,7 @@ const server = http.createServer(async (req, res) => {
 
 server.on('error', (e: NodeJS.ErrnoException) => {
   if (e.code === 'EADDRINUSE') {
-    console.log('Address in use, retrying...');
+    logger.warn('Address in use, retrying...');
     setTimeout(() => {
       server.close();
       server.listen(PORT, HOST);
@@ -93,5 +97,5 @@ server.on('error', (e: NodeJS.ErrnoException) => {
 });
 
 server.listen(PORT, HOST, () => {
-  console.log(`Server running at http://${HOST}:${PORT}/`);
+  logger.info(`Server running at http://${HOST}:${PORT}/`);
 });
