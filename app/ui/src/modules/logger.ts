@@ -1,12 +1,7 @@
 import { LogLevel } from '#/types';
 import { getCorrelationId, getLogger } from '#/utils/logger/logger';
 
-export {
-  provideLogger,
-  useLogger,
-  // getCorrelationId,
-  // getLogger,
-};
+export { provideLogger, useLogger };
 
 const LoggerSymbol: InjectionKey<ReturnType<typeof getLogger>> = Symbol();
 

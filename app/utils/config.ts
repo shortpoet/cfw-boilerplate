@@ -19,7 +19,7 @@ const env: EnvVars = createEnv({
   server: {
     HOST: z.string(),
     VITE_PORT: z.string(),
-    LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']),
+    VITE_LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']),
     NODE_ENV: z.enum(['development', 'production']),
     NEXTAUTH_SECRET: z.string(),
     GITHUB_CLIENT_ID: z.string(),
