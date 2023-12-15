@@ -1,40 +1,43 @@
 import pinoLogger, { Logger, LoggerOptions } from 'pino';
-
 import { createUUId } from '../data';
-import { config } from '../../ui/vite.config';
 
 const stream = (await import('pino-pretty')).default({
   colorize: true,
 });
 
-const loggerConfig: LoggerOptions =
-  config.env.NODE_ENV === 'development'
-    ? {
-        level: config.env.VITE_LOG_LEVEL,
-        // transport: {
-        //   target: 'pino-pretty',
-        //   options: {
-        //     colorize: true,
-        //   },
-        // },
-      }
-    : { level: config.env.VITE_LOG_LEVEL };
-
 let logger: Logger;
-export const getLogger = (opts: LoggerOptions = {}) => {
+type GetLoggerOpts = {
+  env: Env;
+  loggerOptions?: LoggerOptions;
+};
+export const getLogger = (opts: GetLoggerOpts) => {
+  const loggerConfig: LoggerOptions =
+    opts.env.NODE_ENV === 'development'
+      ? {
+          level: opts.env.VITE_LOG_LEVEL,
+          // transport: {
+          //   target: 'pino-pretty',
+          //   options: {
+          //     colorize: true,
+          //   },
+          // },
+        }
+      : { level: opts.env.VITE_LOG_LEVEL };
+
   console.log('[logger] init START');
   console.log(loggerConfig);
-  console.log(`[logger] NODE_ENV: ${config.env.NODE_ENV}`);
+  console.log(`[logger] NODE_ENV: ${opts.env.NODE_ENV}`);
   const conf = {
     ...loggerConfig,
-    ...opts,
+    ...opts.loggerOptions,
   };
   if (!logger) {
     // logger = pinoLogger(loggerConfig);
 
-    config.env.NODE_ENV === 'development'
-      ? (logger = pinoLogger(conf, stream))
-      : (logger = pinoLogger(conf));
+    logger = pinoLogger(conf);
+    // opts.env.NODE_ENV === 'development'
+    //   ? (logger = pinoLogger(conf, stream))
+    //   : (logger = pinoLogger(conf));
   }
   logger.info('[logger] init END');
   return logger;

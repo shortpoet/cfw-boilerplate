@@ -6,64 +6,34 @@ import Shiki from 'markdown-it-shikiji';
 import LinkAttributes from 'markdown-it-link-attributes';
 import Components from 'unplugin-vue-components/vite';
 import AutoImport from 'unplugin-auto-import/vite';
-
 import path from 'node:path';
 import { defineConfig, loadEnv, UserConfig } from 'vite';
 import { InlineConfig } from 'vitest';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
-// import { config } from './config';
 import { createEnv } from '@t3-oss/env-core';
 import { z } from 'zod';
 
 import dotenv from 'dotenv';
-// const __appDir = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
-// const envDir = __appDir;
-// const conf = dotenv.config({ path: `${envDir}/.env` });
-// const parsed = conf.parsed;
-// console.log`\n[vite] [config] loading...`;
-// console.log(__appDir);
 const __appDir = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const envDir = __appDir;
-const conf = dotenv.config({ path: `${envDir}/.env` });
-const parsed = conf.parsed;
-const secretConf = dotenv.config({ path: `${envDir}/.env.secret` });
-console.log(`[config] __appDir: ${__appDir}`);
+const parsed = dotenv.config({ path: `${envDir}/.env` }).parsed;
+const parsedSecret = dotenv.config({ path: `${envDir}/.env.secret` }).parsed;
+const parsedDev = dotenv.config({ path: `${__appDir}/api/.dev.vars` }).parsed;
 console.log(`[config] envDir: ${envDir}`);
-
 // console.log(parsed);
-const vars = dotenv.config({ path: `${__appDir}/api/.dev.vars` });
-const parsedDev = vars.parsed;
 if (!parsed || !parsedDev) {
   const which = [!parsed, !parsedDev];
   throw new Error(`[server] missing env vars -> \n\t\t[.env, .dev.vars] -> ${which}]`);
 }
-
-const env = createEnv({
-  server: {
-    VITE_LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']),
-    NODE_ENV: z.enum(['development', 'production']),
-  },
-  runtimeEnv: process.env,
-  isServer: typeof window === 'undefined',
-});
-// const parsed = config.env;
-// const secretConf = config.secretConf;
-// const envDir = config.envDir;
-console.log`\n[vite] [config] loading...`;
-console.log(envDir);
-console.log(parsed);
-const parsedSecret = secretConf.parsed;
-console.log(parsedSecret);
-
-const args = {
-  // watch: process.argv.includes("--watch"),
-  // liveReload: true,
-};
-export { env };
-export const config = {
-  env,
-  args,
-};
+// const env = createEnv({
+//   server: {
+//     VITE_LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']),
+//     NODE_ENV: z.enum(['development', 'production']),
+//   },
+//   runtimeEnv: process.env,
+//   isServer: typeof window === 'undefined',
+// });
+// console.log(`[config] env: ${JSON.stringify(env)}`);
 
 interface VitestConfigExport extends UserConfig {
   test: InlineConfig;
