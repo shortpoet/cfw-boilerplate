@@ -4,5 +4,9 @@
 
 <script lang="ts" setup>
 import { reactive } from 'vue'
+import { useLogger } from '../../modules/logger';
 const state = reactive({ count: 0 })
+const logger = useLogger();
+logger.info('[counter] START');
+
 </script>

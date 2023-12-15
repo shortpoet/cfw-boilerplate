@@ -15,7 +15,7 @@ if (!parsed || !parsedDev) {
   throw new Error(`[server] missing env vars -> \n\t\t[.env, .dev.vars] -> ${which}]`);
 }
 
-const env = createEnv({
+const env: EnvVars = createEnv({
   server: {
     HOST: z.string(),
     VITE_PORT: z.string(),

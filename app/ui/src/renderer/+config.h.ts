@@ -29,10 +29,13 @@ export default {
   onPageTransitionStart,
   onPageTransitionEnd,
   // https://vike.dev/meta
-  // meta: {
-  //   // Create new config 'title'
-  //   title: {
-  //     env: { server: true, client: true },
-  //   },
-  // },
+  meta: {
+    // Create new config 'title'
+    title: {
+      env: { server: true, client: true },
+    },
+    // logger: {
+    //   env: { server: true, client: true },
+    // },
+  },
 } satisfies Config;
