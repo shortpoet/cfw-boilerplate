@@ -7,26 +7,20 @@ import { mapHttpHeaders, serverLogStart, ctx, serverLogEnd } from './util';
 import { __rootDir, __appDir, __wranglerDir } from '#/utils/root';
 import { unstable_dev } from 'wrangler';
 import type { UnstableDevWorker } from 'wrangler';
-
 // const worker: UnstableDevWorker = await unstable_dev(`${__wranglerDir}/src/index.ts`, {
 //   experimental: { disableExperimentalWarning: true },
 // });
 // const envDir = path.resolve(process.cwd(), '.');
 // const __appDir = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../..');
 // const __wranglerDir = path.resolve(__appDir, 'api');
-const conf = dotenv.config({ path: `${__appDir}/.env` });
-const parsed = conf.parsed;
-const vars = dotenv.config({ path: `${__wranglerDir}/.dev.vars` });
-const parsedDev = vars.parsed;
-if (!parsed || !parsedDev) {
-  const which = [!parsed, !parsedDev];
-  throw new Error(`[server] missing env vars -> \n\t\t[.env, .dev.vars] -> ${which}]`);
-}
-const HOST: string = process.env.HOST || 'localhost';
-const PORT: number = parseInt(process.env.PORT || '3333');
-const SECRET: string = process.env.NEXTAUTH_SECRET || '';
-const GITHUB_CLIENT_ID: string = process.env.GITHUB_CLIENT_ID || '';
-const GITHUB_CLIENT_SECRET: string = process.env.GITHUB_CLIENT_SECRET || '';
+
+import { config } from '#/utils/config';
+
+const HOST: string = config.env.HOST || 'localhost';
+const PORT: number = parseInt(config.env.PORT || '3333');
+const SECRET: string = config.env.NEXTAUTH_SECRET || '';
+const GITHUB_CLIENT_ID: string = config.env.GITHUB_CLIENT_ID || '';
+const GITHUB_CLIENT_SECRET: string = config.env.GITHUB_CLIENT_SECRET || '';
 if (!SECRET || !GITHUB_CLIENT_ID || !GITHUB_CLIENT_SECRET) {
   const which = [!SECRET, !GITHUB_CLIENT_ID, !GITHUB_CLIENT_SECRET]
     .map((b) => b.toString())
@@ -56,7 +50,7 @@ const server = http.createServer(async (req, res) => {
     const data = req.read();
     const response = new Response();
     // const response = new Response("", { cf: req.cf });
-    const resp = await Api.handle(apiReq, response, process.env, ctx, data)
+    const resp = await Api.handle(apiReq, response, config.env, ctx, data)
       .then(json)
       .catch(error)
       .then(corsify);
