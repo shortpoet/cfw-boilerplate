@@ -7,6 +7,7 @@ import { PageShell } from '../layouts';
 import { install as installPinia } from '../modules/pinia';
 import { StoreState } from 'pinia';
 import { UiState } from '../stores';
+import { createHead } from '@vueuse/head';
 
 export { createApp, isClient, defaultWindow, getInitialStateUi };
 const isClient = typeof window !== 'undefined';
@@ -81,6 +82,7 @@ function createApp(Page: Page, pageProps: PageProps | undefined, pageContext: Pa
 
   // Make `pageContext` accessible from any Vue component
   setPageContext(app, pageContextReactive);
+  app.use(createHead());
 
   return app;
 }

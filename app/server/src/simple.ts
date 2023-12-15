@@ -4,7 +4,7 @@ import { error, json } from 'itty-router';
 import path from 'node:path';
 import { corsify, Api } from '@cfw-boilerplate/api/src/router';
 import { mapHttpHeaders, serverLogStart, ctx, serverLogEnd } from './util';
-import { __rootDir, __appDir, __wranglerDir } from '@cfw-boilerplate/types/src/root';
+// import { __rootDir, __appDir, __wranglerDir } from '@cfw-boilerplate/types/src/root';
 import { unstable_dev } from 'wrangler';
 import type { UnstableDevWorker } from 'wrangler';
 
@@ -12,6 +12,8 @@ import type { UnstableDevWorker } from 'wrangler';
 //   experimental: { disableExperimentalWarning: true },
 // });
 // const envDir = path.resolve(process.cwd(), '.');
+const __appDir = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../..');
+const __wranglerDir = path.resolve(__appDir, 'api');
 const conf = dotenv.config({ path: `${__appDir}/.env` });
 const parsed = conf.parsed;
 const vars = dotenv.config({ path: `${__wranglerDir}/.dev.vars` });

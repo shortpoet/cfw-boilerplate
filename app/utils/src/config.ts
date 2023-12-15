@@ -1,10 +1,13 @@
 import dotenv from 'dotenv';
 import { createEnv } from '@t3-oss/env-core';
 import { z } from 'zod';
-import { __rootDir, __appDir, __wranglerDir } from '@cfw-boilerplate/types/src/root';
-
+import path from 'node:path';
+// import { __rootDir, __appDir, __wranglerDir } from '@cfw-boilerplate/types/src/root';
+const __appDir = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../..');
+const __wranglerDir = path.resolve(__appDir, 'api');
 const conf = dotenv.config({ path: `${__appDir}/.env` });
 const parsed = conf.parsed;
+// console.log(parsed);
 const vars = dotenv.config({ path: `${__wranglerDir}/.dev.vars` });
 const parsedDev = vars.parsed;
 if (!parsed || !parsedDev) {

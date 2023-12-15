@@ -1,14 +1,50 @@
 <template>
   <div v-if="is404">
-    <h1>404 Page Not Found</h1>
-    <p>This page could not be found.</p>
+    <h1>{{ title404 }}</h1>
+    <p> {{ msg404 }}</p>
+    <p>{{ errorInfo }}</p>
   </div>
   <div v-else>
-    <h1>500 Internal Error</h1>
-    <p>Something went wrong.</p>
+    <h1>{{ title }}</h1>
+    <p> {{ msg }}</p>
+    <p>{{ errorInfo }}</p>
   </div>
+  <p>
+    This page is hydrated:
+    <Counter />
+  </p>
 </template>
 
 <script lang="ts" setup>
-defineProps(['is404'])
+
+defineProps(['is404', 'errorInfo'])
+const pageContext = usePageContext()
+const { abortReason } = pageContext
+const notAdmin = abortReason?.notAdmin === true
+const noSession = abortReason?.noSession === true
+
+const msg404 = "This page doesn't exist."
+const title404 = 'Page Not Found'
+
+const msg = computed(() => {
+  console.log(`[ui] [error] [msg] notAdmin: ${notAdmin}, noSession: ${noSession}`)
+  if (noSession) {
+    return `You cannot access this page because you aren't signed in.`
+  }
+  if (notAdmin) {
+    return `You cannot access this page because you aren't an administrator.`
+  }
+  return `Something went wrong`
+})
+const title = computed(() => {
+  console.log(`[ui] [error] [title] notAdmin: ${notAdmin}, noSession: ${noSession}`)
+  if (noSession) {
+    return 'Not Signed In'
+  }
+  if (notAdmin) {
+    return 'Unauthorized'
+  }
+  return 'Error'
+})
+
 </script>
