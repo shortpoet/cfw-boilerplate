@@ -3,8 +3,8 @@ packages:
   - 'db/**'
   - 'scripts/**'
   - 'server/**'
-  - 'types/**'
+  # - 'types/**'
   - 'ui/**'
-  - 'utils/**'
+  # - 'utils/**'
   # exclude packages that are inside test directories
   - '!**/app/test/**'

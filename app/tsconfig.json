@@ -17,7 +17,7 @@
     "allowJs": false,
     "forceConsistentCasingInFileNames": true,
     "paths": {
-      "@/*": [
+      "#/*": [
         "./*"
       ],
       "api/*": [
@@ -30,13 +30,13 @@
         "server/*"
       ],
       "types/*": [
-        "types/src/*"
+        "types/*"
       ],
       "ui/*": [
         "ui/src/*"
       ],
       "utils/*": [
-        "utils/src/*"
+        "utils/*"
       ],
     },
   },

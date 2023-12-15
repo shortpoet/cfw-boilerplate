@@ -1,4 +1,4 @@
-import { getCorrelationId, getLogger } from '@/utils/src';
+import { getCorrelationId, getLogger } from '#/utils';
 const X_CORRELATION_ID = 'x-correlation-id';
 
 export const withPino =

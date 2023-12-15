@@ -59,7 +59,7 @@ const link = [
     type: 'image/svg+xml',
     // href: '/favicon.svg?'
     // href: `https://${import.meta.env.VITE_APP_URL}/favicon.svg`
-    // href: (await import('@/public/favicon.svg')).default
+    // href: (await import('#/public/favicon.svg')).default
     href: (await import('../../../public/Old_map_icon.svg')).default,
   },
   {

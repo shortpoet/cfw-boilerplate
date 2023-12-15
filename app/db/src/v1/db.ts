@@ -1,5 +1,5 @@
 import type { GeneratedAlways } from 'kysely';
-import { UserRole, UserType } from '@cfw-boilerplate/types';
+import { UserRole, UserType } from '#/types';
 
 type AccountId = string;
 type UserId = string;

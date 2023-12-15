@@ -11,19 +11,59 @@ import path from 'node:path';
 import { defineConfig, loadEnv, UserConfig } from 'vite';
 import { InlineConfig } from 'vitest';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
+// import { config } from './config';
+import { createEnv } from '@t3-oss/env-core';
+import { z } from 'zod';
 
 import dotenv from 'dotenv';
+// const __appDir = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+// const envDir = __appDir;
+// const conf = dotenv.config({ path: `${envDir}/.env` });
+// const parsed = conf.parsed;
+// console.log`\n[vite] [config] loading...`;
+// console.log(__appDir);
 const __appDir = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const envDir = __appDir;
-const conf = dotenv.config({ path: `${envDir}` });
+const conf = dotenv.config({ path: `${envDir}/.env` });
 const parsed = conf.parsed;
-console.log`\n[vite] [config] loading...`;
-console.log(__appDir);
-console.log(parsed);
-console.log`\n[vite] [config] loading...`;
 const secretConf = dotenv.config({ path: `${envDir}/.env.secret` });
+console.log(`[config] __appDir: ${__appDir}`);
+console.log(`[config] envDir: ${envDir}`);
+
+// console.log(parsed);
+const vars = dotenv.config({ path: `${__appDir}/api/.dev.vars` });
+const parsedDev = vars.parsed;
+if (!parsed || !parsedDev) {
+  const which = [!parsed, !parsedDev];
+  throw new Error(`[server] missing env vars -> \n\t\t[.env, .dev.vars] -> ${which}]`);
+}
+
+const env = createEnv({
+  server: {
+    VITE_LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']),
+    NODE_ENV: z.enum(['development', 'production']),
+  },
+  runtimeEnv: process.env,
+  isServer: typeof window === 'undefined',
+});
+// const parsed = config.env;
+// const secretConf = config.secretConf;
+// const envDir = config.envDir;
+console.log`\n[vite] [config] loading...`;
+console.log(envDir);
+console.log(parsed);
 const parsedSecret = secretConf.parsed;
 console.log(parsedSecret);
+
+const args = {
+  // watch: process.argv.includes("--watch"),
+  // liveReload: true,
+};
+export { env };
+export const config = {
+  env,
+  args,
+};
 
 interface VitestConfigExport extends UserConfig {
   test: InlineConfig;
@@ -162,11 +202,11 @@ export default ({ mode }: { mode: string }) => {
     //   },
     // },
 
-    // resolve: {
-    //   alias: {
-    //     './runtimeConfig': './runtimeConfig.browser',
-    //   },
-    // },
+    resolve: {
+      alias: {
+        '#': path.resolve(__dirname, '..'),
+      },
+    },
 
     build: {
       outDir: 'build',

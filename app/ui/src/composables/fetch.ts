@@ -1,5 +1,5 @@
 import { Ref, UnwrapRef, ref } from 'vue';
-import { escapeNestedKeys } from '@cfw-boilerplate/utils';
+import { escapeNestedKeys } from '#/utils';
 
 export { RequestConfig, FetchError, UseFetchResult, useFetch, USE_FETCH_REQ_INIT };
 

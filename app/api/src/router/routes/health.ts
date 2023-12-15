@@ -1,8 +1,8 @@
 import { IRequest } from 'itty-router';
 import { OpenAPIRouter } from '@cloudflare/itty-router-openapi';
 
-import { UserRole } from '@cfw-boilerplate/types';
-import { logObjs, logger } from '@cfw-boilerplate/utils';
+import { UserRole } from '#/types';
+import { logObjs, logger } from '#/utils';
 import { corsify } from '..';
 import { jsonData, unauthorizedResponse } from '../../middleware';
 import { debugRes, healthCheck, healthCheckJson } from '../../controllers';

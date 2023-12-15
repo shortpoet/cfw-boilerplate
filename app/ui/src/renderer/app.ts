@@ -1,5 +1,5 @@
 import { createSSRApp, defineComponent, h } from 'vue';
-import { Component, PageContext, PageProps, Page } from '@cfw-boilerplate/types';
+import { Component, PageContext, PageProps, Page } from '#/types';
 import '@unocss/reset/tailwind.css';
 import 'uno.css';
 import '../styles/main.css';

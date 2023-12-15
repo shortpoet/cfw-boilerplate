@@ -3,7 +3,7 @@ import { ExecutionContext } from '@cloudflare/workers-types';
 import { ServerResponse } from 'http';
 import { OpenAPIRouter } from '@cloudflare/itty-router-openapi';
 
-import sampleData from '@/db/src/data.json';
+import sampleData from '#/db/src/data.json';
 import {
   // authMiddlewareItty as authMiddleware,
   // withSession,

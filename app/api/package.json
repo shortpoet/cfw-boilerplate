@@ -24,8 +24,6 @@
     "vike": "^0.4.147"
   },
   "devDependencies": {
-    "@cfw-boilerplate/types": "workspace:*",
-    "@cfw-boilerplate/utils": "workspace:*",
     "@cloudflare/kv-asset-handler": "^0.3.0",
     "@cloudflare/workers-types": "^4.20231121.0",
     "@types/node": "^20.10.1",

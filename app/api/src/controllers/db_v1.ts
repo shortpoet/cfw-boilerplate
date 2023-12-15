@@ -1,5 +1,5 @@
 import { q } from '@cfw-boilerplate/db/src';
-import { uuidv4 } from '@cfw-boilerplate/utils';
+import { uuidv4 } from '#/utils';
 
 export const getUsersFind = async (
   req: Request,

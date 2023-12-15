@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { toggleDark, toggleLocales, usePageContext } from '../../composables';
-// import { t } from '@/composables/i18n';
+// import { t } from '#/composables/i18n';
 import Link from './Link.vue';
 
 const pageContext = usePageContext()

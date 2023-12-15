@@ -6,7 +6,7 @@ import { getConfig, secretsFilePath } from '../config/config';
 import { setSecrets } from '../secret/secret';
 import { assert } from '../util';
 import { build } from '../bild/build-worker';
-import { __appDir } from '@/types/src/root';
+import { __appDir } from '#/utils/root';
 
 export default async function (opts: Options) {
   log.info('Retrieving Config');

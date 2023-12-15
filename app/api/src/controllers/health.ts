@@ -1,5 +1,5 @@
-import { HealthCheck, UserRole } from '@cfw-boilerplate/types';
-import { escapeNestedKeys, logLevel, logger, msToTime } from '@cfw-boilerplate/utils';
+import { HealthCheck, UserRole } from '#/types';
+import { escapeNestedKeys, logLevel, logger, msToTime } from '#/utils';
 import { ServerResponse } from 'http';
 import { ExecutionContext, KVNamespace } from '@cloudflare/workers-types';
 import { IRequest } from 'itty-router';

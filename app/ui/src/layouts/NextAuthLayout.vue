@@ -41,7 +41,7 @@ import { AdminLayout } from '../layouts';
 import { useAuthStore } from '../stores';
 import { useHead } from '@vueuse/head';
 import { meta, title, link } from '../renderer';
-import { UserRole } from '@cfw-boilerplate/types';
+import { UserRole } from '#/types';
 
 useHead({
   title,

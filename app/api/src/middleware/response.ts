@@ -1,5 +1,5 @@
 const FILE_LOG_LEVEL = 'debug';
-import { JsonData } from '../../../types/src';
+import { JsonData } from '../../../types';
 
 interface Headers {
   [key: string]: string;
