@@ -8,13 +8,16 @@ import type {
 } from '@cloudflare/workers-types';
 import { AssetManifestType } from '@cloudflare/kv-asset-handler/dist/types';
 import { Logger as LoggerType } from 'pino';
+export { Component };
+export { PageProps };
+
+import type { ComponentPublicInstance } from 'vue';
+type Component = ComponentPublicInstance; // https://stackoverflow.com/questions/63985658/how-to-type-vue-instance-out-of-definecomponent-in-vue-3/63986086#63986086
+type Page = Component;
 
 import type {
   ResponseCfProperties,
   LogLevel,
-  PageProps,
-  Page,
-  Component,
   ListOptions,
   User,
   Session,
@@ -178,6 +181,19 @@ declare global {
       };
     }
   }
+
+  type PageProps = Record<string, unknown> & {
+    isAdmin?: boolean;
+    loading?: boolean;
+    session?: Session | null;
+    csrfToken?: string;
+    callbackUrl?: string;
+    cf?: ResponseCfProperties;
+    apiData?: any;
+    apiDataLoading?: boolean;
+    apiDataError?: any;
+  };
+
   namespace Vike {
     interface PageContext {
       Page: Page;
@@ -185,12 +201,13 @@ declare global {
       urlPathname: string;
       Layout: Component;
       redirectTo?: string;
-      exports: {
-        documentProps?: {
-          title?: string;
-          description?: string;
-        };
+      config: {
+        /** Title defined statically by /pages/some-page/+title.js (or by `export default { title }` in /pages/some-page/+config.js) */
+        title?: string;
+        description?: string;
       };
+      /** Title defined dynamically by onBeforeRender() */
+      title?: string;
       // httpResponse: HttpResponse;
       _allPageIds: string[];
       session: SessionUnion | null;
