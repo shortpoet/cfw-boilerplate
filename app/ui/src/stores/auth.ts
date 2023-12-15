@@ -8,10 +8,10 @@ import {
   UserUnion,
   isGithubUser,
   UserType,
-} from '@cfw-boilerplate/types';
+} from '#/types';
 import { useStorage } from '@vueuse/core';
 import { usePageContext } from '../composables';
-import { uuidv4 } from '@cfw-boilerplate/utils';
+import { uuidv4 } from '#/utils';
 
 const initBaseUser = (user: SessionUnion['user']): BaseUser => {
   const id = uuidv4();

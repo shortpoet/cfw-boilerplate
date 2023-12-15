@@ -1,5 +1,5 @@
 import { render, redirect } from 'vike/abort';
-import { PageContext, UserRole } from '@cfw-boilerplate/types';
+import { PageContext, UserRole } from '#/types';
 import type { GuardAsync } from 'vike/types';
 
 interface GuardProtectedRoutes {

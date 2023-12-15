@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { GithubUser } from '@/types';
+import { GithubUser } from '#/types';
 defineProps<{
   iconClass: string;
   // user: UserUnion;

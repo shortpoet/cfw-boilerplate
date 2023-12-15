@@ -2,7 +2,7 @@ import crypto from 'crypto';
 import colors from 'kleur';
 import { command, writeFile, readFile, assert } from '../util';
 import { Config } from '../types';
-import { __rootDir } from '@/types/src/root';
+import { __rootDir } from '#/utils/root';
 
 export { writeSecretToKv, setSecretFile, setSecrets, assertPassUnlocked };
 

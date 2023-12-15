@@ -1,5 +1,5 @@
 import { badResponse } from './response';
-import { ListOptions } from '@cfw-boilerplate/types';
+import { ListOptions } from '#/types';
 
 const FILE_LOG_LEVEL = 'debug';
 

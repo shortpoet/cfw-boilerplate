@@ -1,10 +1,9 @@
 import pinoLogger, { Logger, LoggerOptions } from 'pino';
-import pretty from 'pino-pretty';
 
 import { createUUId } from '../data';
-import { config } from '../config';
+import { config } from '../../ui/vite.config';
 
-const stream = pretty({
+const stream = (await import('pino-pretty')).default({
   colorize: true,
 });
 

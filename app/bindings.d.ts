@@ -26,9 +26,9 @@ import type {
   UserRole,
   UserType,
   SessionUnion,
-} from './types/src';
+} from './types';
 import { Database } from './db/src';
-import { UiState } from '@/ui/src/stores';
+import { UiState } from '#/ui/src/stores';
 
 type Mutable<T> = {
   -readonly [K in keyof T]-?: T[K];

@@ -38,8 +38,6 @@
     "vite": "^4.4.9"
   },
   "devDependencies": {
-    "@cfw-boilerplate/types": "workspace:*",
-    "@cfw-boilerplate/utils": "workspace:*",
     "@types/markdown-it-link-attributes": "^3.0.4",
     "@unhead/vue": "^1.8.8",
     "@unocss/reset": "^0.58.0",

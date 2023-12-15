@@ -1,6 +1,6 @@
 import { getAssetFromKV } from '@cloudflare/kv-asset-handler';
 import { ExecutionContext } from '@cloudflare/workers-types';
-import { setCacheOptions } from '@cfw-boilerplate/utils';
+import { setCacheOptions } from '#/utils';
 
 export { handleStaticAssets };
 function isWorker() {

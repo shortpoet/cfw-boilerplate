@@ -1,5 +1,5 @@
 import { jsonOkResponse } from './response';
-import { JsonData } from '../../../types/src';
+import { JsonData } from '../../../types';
 import { createCors } from 'itty-router';
 // import { KVPrefix, Prefix } from 'cf-kvprefix'
 // import posts from './post/prefix'

@@ -32,7 +32,7 @@
 
 <script setup lang="ts">
 
-import { UserUnion } from '@/types/src';
+import { UserUnion } from '#/types/src';
 
 defineProps<{
   usePopup?: boolean;
@@ -89,3 +89,4 @@ if (typeof window !== "undefined") {
 }
 
 </script>
+#/types

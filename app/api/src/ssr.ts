@@ -1,8 +1,8 @@
 import { renderPage } from 'vike/server';
 import { ExecutionContext } from '@cloudflare/workers-types';
-import { logger, tryLogHeaders, logObjs, getAuthCookies } from '@cfw-boilerplate/utils';
+import { logger, tryLogHeaders, logObjs, getAuthCookies } from '#/utils';
 // import { getSessionItty } from './middleware';
-import { UserRole } from '@/types/src';
+import { UserRole } from '#/types';
 
 const FILE_LOG_LEVEL = 'debug';
 

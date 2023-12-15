@@ -8,7 +8,7 @@ import {
   logWorkerEnd,
   logWorkerStart,
   logger,
-} from '@cfw-boilerplate/utils';
+} from '#/utils';
 import { Api, corsify } from './router';
 import { handleStaticAssets } from './static-assets';
 import { handleSsr } from './ssr';

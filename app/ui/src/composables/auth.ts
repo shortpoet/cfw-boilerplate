@@ -9,7 +9,7 @@ import {
   isGithubUser,
   UserUnion,
   SessionUnion,
-} from '@cfw-boilerplate/types';
+} from '#/types';
 import { InjectionKey, ref, provide, inject } from 'vue';
 import { useFetch } from './fetch';
 import { useAuthStore } from '../stores';
