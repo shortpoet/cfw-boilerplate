@@ -8,7 +8,7 @@ import { install as installPinia } from '../modules/pinia';
 import { StoreState } from 'pinia';
 import { UiState } from '../stores';
 
-export { createApp, isClient };
+export { createApp, isClient, defaultWindow };
 const isClient = typeof window !== 'undefined';
 const defaultWindow: (Window & typeof globalThis) | undefined = /* #__PURE__ */ isClient
   ? window
