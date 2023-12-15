@@ -96,7 +96,8 @@ declare global {
     };
   }
 
-  type Env = WorkerEnv | NodeEnv | NodeJS.ProcessEnv;
+  type Env = WorkerEnv | NodeEnv | EnvVars;
+  type EnvVars = NodeJS.ProcessEnv | Partial<WorkerEnv>;
   interface CredsAuth {
     sanitizedUser: string;
     user: User;
@@ -159,30 +160,32 @@ declare global {
     }
 
     interface ImportMeta {
-      env: {
-        NODE_ENV: 'development' | 'production';
-        WORKER_ENVIRONMENT: 'dev' | 'qa' | 'uat' | 'prod';
-        VITE_PORT: string;
-        VITE_APP_NAME: string;
-        VITE_API_VERSION: string;
-        VITE_UI_VERSION: string;
-        VITE_LOG_LEVEL: LogLevel;
-        VITE_APP_URL: string;
-        VITE_API_URL: string;
-        SSR_BASE_PATHS: string;
-        __SECRET__: string;
-        NEXTAUTH_URL: string;
-        NEXTAUTH_SECRET: string;
-        GITHUB_CLIENT_ID: string;
-        GITHUB_CLIENT_SECRET: string;
-        JMAP_TOKEN: string;
-        EMAIL_SERVER_HOST: string;
-        EMAIL_SERVER_PORT: string;
-        EMAIL_SERVER_USER: string;
-        EMAIL_SERVER_PASSWORD: string;
-        EMAIL_FROM: string;
-      };
+      env: NodeJS.ProcessEnv;
     }
+
+    // interface ImportMetaEnv {
+    //   NODE_ENV: 'development' | 'production';
+    //   WORKER_ENVIRONMENT: 'dev' | 'qa' | 'uat' | 'prod';
+    //   VITE_PORT: string;
+    //   VITE_APP_NAME: string;
+    //   VITE_API_VERSION: string;
+    //   VITE_UI_VERSION: string;
+    //   VITE_LOG_LEVEL: LogLevel;
+    //   VITE_APP_URL: string;
+    //   VITE_API_URL: string;
+    //   SSR_BASE_PATHS: string;
+    //   __SECRET__: string;
+    //   NEXTAUTH_URL: string;
+    //   NEXTAUTH_SECRET: string;
+    //   GITHUB_CLIENT_ID: string;
+    //   GITHUB_CLIENT_SECRET: string;
+    //   JMAP_TOKEN: string;
+    //   EMAIL_SERVER_HOST: string;
+    //   EMAIL_SERVER_PORT: string;
+    //   EMAIL_SERVER_USER: string;
+    //   EMAIL_SERVER_PASSWORD: string;
+    //   EMAIL_FROM: string;
+    // }
   }
 
   type PageProps = Record<string, unknown> & {

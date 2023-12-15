@@ -8,6 +8,7 @@ import { install as installPinia } from '../modules/pinia';
 import { StoreState } from 'pinia';
 import { UiState } from '../stores';
 import { createHead } from '@vueuse/head';
+import { provideLogger } from '../modules/logger';
 
 export { createApp, isClient, defaultWindow, getInitialStateUi };
 const isClient = typeof window !== 'undefined';
@@ -41,6 +42,7 @@ function createApp(Page: Page, pageProps: PageProps | undefined, pageContext: Pa
     }),
     created() {
       rootComponent = this;
+      provideLogger(import.meta.env as unknown as EnvVars);
     },
     render() {
       return h(

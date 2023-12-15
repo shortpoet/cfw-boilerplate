@@ -1,5 +1,4 @@
 import { getCorrelationId, getLogger } from '#/utils/logger/logger';
-const X_CORRELATION_ID = 'x-correlation-id';
 
 export const withPino =
   ({ level = 'basic' } = {}) =>
