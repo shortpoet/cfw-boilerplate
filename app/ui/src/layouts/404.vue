@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { navigate } from 'vike/client/router'
+// import { navigate } from 'vike/client/router'
 import { useI18n } from '../composables';
 
 const { t } = useI18n()
 
 const nav = () => ({
-  back: () => navigate('/'),
+  // back: () => navigate('/'),
+  back: () => window.history.back(),
 });
 </script>
 
