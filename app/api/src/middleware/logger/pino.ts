@@ -3,11 +3,15 @@ import { getCorrelationId, getLogger } from '#/utils/logger/logger';
 export const withPino =
   ({ level = 'basic' } = {}) =>
   async (req: Request, res: Response, env: Env) => {
-    console.log(`[api] middlware.withPino -> ${req.method} -> ${req.url}`);
+    console.log(`[api] [middlware] [withPino] -> ${req.method} -> ${req.url}`);
+    console.log(env);
     const correlationId = getCorrelationId(req.headers);
     const isSsr = env.SSR;
     const nodeEnv = env.NODE_ENV;
     const envLogLevel = env.VITE_LOG_LEVEL;
+    console.log(
+      `[api] [middlware] [withPino] [params] -> ${correlationId} -> ${isSsr} -> ${nodeEnv} -> ${envLogLevel}`
+    );
 
     // req.headers[X_CORRELATION_ID] = crypto.randomUUID()
     // requestLogger.info({

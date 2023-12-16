@@ -11,7 +11,7 @@ function buildWorker({ entry, out, debug, external } = {}) {
     sourcemap: true,
     outfile: out,
     external,
-    logLevel: 'warning',
+    logLevel: 'error',
     format: 'esm',
     target: 'esnext',
     minify: !debug,

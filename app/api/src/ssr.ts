@@ -38,13 +38,12 @@ async function handleSsr(request: Request, res: Response, env: Env, ctx: Executi
   if (!httpResponse) {
     return null;
   } else {
-    const { statusCode, headers } = httpResponse;
-    const contentType = headers.find((h) => h[0] === 'content-type')?.[1] || '';
+    const { statusCode: status, headers } = httpResponse;
     const { readable, writable } = new TransformStream();
     httpResponse.pipe(writable);
     return new Response(readable, {
-      headers: { 'content-type': contentType },
-      status: statusCode,
+      headers,
+      status,
     });
   }
 }
