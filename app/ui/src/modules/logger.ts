@@ -1,20 +1,14 @@
-import { LogLevel } from '#/types';
-import { getCorrelationId, getLogger } from '#/utils/logger/logger';
+import { getLogger } from '#/utils/logger/logger';
 
-export { provideLogger, useLogger };
+export { provideLogger, LoggerSymbol };
 
 const LoggerSymbol: InjectionKey<ReturnType<typeof getLogger>> = Symbol();
 
 const level = 'debug';
 const provideLogger = (env: EnvVars) => {
-  const logger = getLogger({ env, loggerOptions: { level } });
+  const isSsr = env.SSR;
+  const nodeEnv = env.NODE_ENV;
+  const envLogLevel = env.VITE_LOG_LEVEL;
+  const logger = getLogger({ isSsr, nodeEnv, envLogLevel, loggerOptions: { level } });
   provide(LoggerSymbol, logger);
-};
-
-const useLogger = (req?: Request, level?: LogLevel) => {
-  const logger = inject(LoggerSymbol);
-  if (!logger) throw new Error('provideLogger() not called in parent');
-  const correlationId = getCorrelationId(req?.headers);
-  logger.level = level ?? logger.level;
-  return logger.child({ correlationId });
 };

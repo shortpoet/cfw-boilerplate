@@ -5,6 +5,9 @@ export const withPino =
   async (req: Request, res: Response, env: Env) => {
     console.log(`[api] middlware.withPino -> ${req.method} -> ${req.url}`);
     const correlationId = getCorrelationId(req.headers);
+    const isSsr = env.SSR;
+    const nodeEnv = env.NODE_ENV;
+    const envLogLevel = env.VITE_LOG_LEVEL;
 
     // req.headers[X_CORRELATION_ID] = crypto.randomUUID()
     // requestLogger.info({
@@ -14,7 +17,9 @@ export const withPino =
     //   msg: 'inbound request',
     // })
 
-    const logger = getLogger({ env, loggerOptions: { level } }).child({ correlationId });
+    const logger = getLogger({ isSsr, nodeEnv, envLogLevel, loggerOptions: { level } }).child({
+      correlationId,
+    });
     req.logger = logger;
     // this seems to log at end of request...
     req.logger.info(`[api] middlware.withPino -> ${req.method} -> ${req.url}`);

@@ -63,7 +63,8 @@ const useFetch = async <T = unknown>(
 ): Promise<UseFetchResult<T>> => {
   const urlBase = `${import.meta.env.VITE_API_URL}`;
   const url = path.startsWith('http') ? path : `${urlBase}/${path}`;
-  console.log('[ui] [useFetch] url', url);
+  const logger = useSsrLogger();
+  logger.info('[ui] [useFetch] url', url);
 
   const dataLoading = ref(true);
   const error = ref<FetchError | undefined>();
@@ -154,7 +155,6 @@ const useFetch = async <T = unknown>(
       ct && jsonTypes.includes(ct)
         ? (out = await response.json())
         : (out = { text: await response.text() });
-
       data.value = out;
     } catch (err: any) {
       const message = JSON.parse(err.message);

@@ -84,11 +84,13 @@ declare global {
   const useGuard: typeof import('./composables/guard')['useGuard']
   const useHead: typeof import('@vueuse/head')['useHead']
   const useI18n: typeof import('./composables/i18n')['useI18n']
+  const useLogger: typeof import('./composables/logger')['useLogger']
   const useNextAuth: typeof import('./composables/auth')['useNextAuth']
   const usePageContext: typeof import('./composables/pageContext')['usePageContext']
   const usePageTitle: typeof import('./composables/pageTitle')['usePageTitle']
   const useSeoMeta: typeof import('@vueuse/head')['useSeoMeta']
   const useSlots: typeof import('vue')['useSlots']
+  const useSsrLogger: typeof import('./composables/logger')['useSsrLogger']
   const useUiStore: typeof import('./stores/ui')['useUiStore']
   const watch: typeof import('vue')['watch']
   const watchEffect: typeof import('vue')['watchEffect']
@@ -184,11 +186,13 @@ declare module 'vue' {
     readonly useGuard: UnwrapRef<typeof import('./composables/guard')['useGuard']>
     readonly useHead: UnwrapRef<typeof import('@vueuse/head')['useHead']>
     readonly useI18n: UnwrapRef<typeof import('./composables/i18n')['useI18n']>
+    readonly useLogger: UnwrapRef<typeof import('./composables/logger')['useLogger']>
     readonly useNextAuth: UnwrapRef<typeof import('./composables/auth')['useNextAuth']>
     readonly usePageContext: UnwrapRef<typeof import('./composables/pageContext')['usePageContext']>
     readonly usePageTitle: UnwrapRef<typeof import('./composables/pageTitle')['usePageTitle']>
     readonly useSeoMeta: UnwrapRef<typeof import('@vueuse/head')['useSeoMeta']>
     readonly useSlots: UnwrapRef<typeof import('vue')['useSlots']>
+    readonly useSsrLogger: UnwrapRef<typeof import('./composables/logger')['useSsrLogger']>
     readonly useUiStore: UnwrapRef<typeof import('./stores/ui')['useUiStore']>
     readonly watch: UnwrapRef<typeof import('vue')['watch']>
     readonly watchEffect: UnwrapRef<typeof import('vue')['watchEffect']>
@@ -277,11 +281,13 @@ declare module '@vue/runtime-core' {
     readonly useGuard: UnwrapRef<typeof import('./composables/guard')['useGuard']>
     readonly useHead: UnwrapRef<typeof import('@vueuse/head')['useHead']>
     readonly useI18n: UnwrapRef<typeof import('./composables/i18n')['useI18n']>
+    readonly useLogger: UnwrapRef<typeof import('./composables/logger')['useLogger']>
     readonly useNextAuth: UnwrapRef<typeof import('./composables/auth')['useNextAuth']>
     readonly usePageContext: UnwrapRef<typeof import('./composables/pageContext')['usePageContext']>
     readonly usePageTitle: UnwrapRef<typeof import('./composables/pageTitle')['usePageTitle']>
     readonly useSeoMeta: UnwrapRef<typeof import('@vueuse/head')['useSeoMeta']>
     readonly useSlots: UnwrapRef<typeof import('vue')['useSlots']>
+    readonly useSsrLogger: UnwrapRef<typeof import('./composables/logger')['useSsrLogger']>
     readonly useUiStore: UnwrapRef<typeof import('./stores/ui')['useUiStore']>
     readonly watch: UnwrapRef<typeof import('vue')['watch']>
     readonly watchEffect: UnwrapRef<typeof import('vue')['watchEffect']>

@@ -5,19 +5,23 @@ import { IS_BROWSER } from '../runtime';
 
 let logger: Logger;
 type GetLoggerOpts = {
-  env: EnvVars;
+  isSsr: EnvVars['SSR'];
+  nodeEnv: EnvVars['NODE_ENV'];
+  envLogLevel: EnvVars['VITE_LOG_LEVEL'];
   loggerOptions?: LoggerOptions;
 };
 export const getLogger = (opts: GetLoggerOpts) => {
   console.log('[logger] init START');
+  console.log(opts);
+  const { isSsr, nodeEnv, envLogLevel } = opts;
   const loggerConfig: LoggerOptions =
     // VITE sets this to VITE_USER_NODE_ENV
     // conveniently this allows the strem not to load on browser
     IS_BROWSER
-      ? { level: opts.env.VITE_LOG_LEVEL, browser: { asObject: true } }
-      : opts.env.NODE_ENV === 'development' || opts.env.SSR
+      ? { level: envLogLevel, browser: { asObject: true } }
+      : nodeEnv === 'development' || isSsr
         ? {
-            level: opts.env.VITE_LOG_LEVEL,
+            level: envLogLevel,
             transport: {
               target: 'pino-pretty',
               options: {
@@ -25,7 +29,7 @@ export const getLogger = (opts: GetLoggerOpts) => {
               },
             },
           }
-        : { level: opts.env.VITE_LOG_LEVEL };
+        : { level: envLogLevel };
   const conf = {
     ...loggerConfig,
     ...opts.loggerOptions,

@@ -16,7 +16,12 @@ import type { UnstableDevWorker } from 'wrangler';
 
 import { config } from '#/utils/config';
 import { getCorrelationId, getLogger } from '#/utils/logger/logger';
-const logger = getLogger({ env: config.env }).child({ correlationId: getCorrelationId() });
+const isSsr = config.env.SSR;
+const nodeEnv = config.env.NODE_ENV;
+const envLogLevel = config.env.VITE_LOG_LEVEL;
+const logger = getLogger({ isSsr, nodeEnv, envLogLevel }).child({
+  correlationId: getCorrelationId(),
+});
 
 const HOST: string = config.env.HOST || 'localhost';
 const PORT: number = parseInt(config.env.PORT || '3333');
