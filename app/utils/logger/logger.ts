@@ -11,7 +11,7 @@ type GetLoggerOpts = {
   loggerOptions?: LoggerOptions;
 };
 export const getLogger = (opts: GetLoggerOpts) => {
-  console.log('[logger] init START');
+  // console.log('[logger] init START');
   // console.log(opts);
   const { isSsr, nodeEnv, envLogLevel } = opts;
   const loggerConfig: LoggerOptions =
@@ -37,7 +37,7 @@ export const getLogger = (opts: GetLoggerOpts) => {
   if (!logger) {
     logger = pinoLogger(conf);
   }
-  logger.info('[logger] init END');
+  // logger.info('[logger] init END');
   return logger;
 };
 

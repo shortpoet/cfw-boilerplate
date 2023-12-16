@@ -3,7 +3,7 @@ import { escapeNestedKeys } from '#/utils';
 
 export { RequestConfig, FetchError, UseFetchResult, useFetch, USE_FETCH_REQ_INIT };
 
-const FILE_DEBUG = true;
+const FILE_DEBUG = false;
 const FETCH_DEBUG = import.meta.env.VITE_LOG_LEVEL === 'debug' && FILE_DEBUG;
 const IS_SSR = true;
 // const IS_SSR = import.meta.env.SSR;
@@ -122,7 +122,6 @@ const useFetch = async <T = unknown>(
         );
       }
 
-      logger.debug(`[ui] [useFetch] response:`);
       const response = await fetch(request, { ...init });
 
       if (!response.ok) {
@@ -142,9 +141,13 @@ const useFetch = async <T = unknown>(
 
       if (FETCH_DEBUG) {
         (ct === 'application/json' || ct === 'application/x-www-form-urlencoded') &&
-          console.log('[ui] [useFetch] json clone', await response.clone().json());
+          logger.debug(
+            `[ui] [useFetch] response: ${JSON.stringify(await response.clone().json(), null, 2)}`
+          );
         ct === 'text/plain' &&
-          console.log('[ui] [useFetch] text clone', await response.clone().text());
+          logger.debug(
+            `[ui] [useFetch] response: ${JSON.stringify(await response.clone().text())}`
+          );
       }
 
       const jsonTypes = [
