@@ -42,17 +42,18 @@ async function handleFetchEvent(
   const resp = new Response('', { cf: request.cf });
   const path = url.pathname;
   let res;
-  const logger = getLogger({ env }).child({ correlationId: getCorrelationId() });
-  logger.info(`[api] index.handleFetchEvent -> ${request.method} -> ${path}`);
+  const logger = getLogger({
+    isSsr: env.SSR,
+    nodeEnv: env.NODE_ENV,
+    envLogLevel: env.VITE_LOG_LEVEL,
+  }).child({ correlationId: getCorrelationId(request.headers) });
   switch (true) {
     case isAssetURL(url):
       // must early return or assets missing
       res = await handleStaticAssets(request, env, ctx);
       break;
     case isAPiURL(url):
-      // console.log(
-      //   `[api] [isAPiURL] index.handleFetchEvent -> ${env.VITE_API_VERSION} -> ${url.pathname}`
-      // );
+      logger.info(`[api] [index] [handleApiRequest] -> ${request.method} -> ${path}`);
       res = await Api.handle(request, resp, env, ctx, data);
       logger.info(`[api] [isAPiURL] index.handleFetchEvent -> api response`);
       // logObjs([res.headers, res.body]);
