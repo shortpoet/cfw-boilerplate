@@ -11,7 +11,7 @@ import { defineConfig, loadEnv, UserConfig } from 'vite';
 import { InlineConfig } from 'vitest';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 
-import { envDir, parsedSecret } from './config';
+import { getConfig } from './config';
 
 interface VitestConfigExport extends UserConfig {
   test: InlineConfig;
@@ -25,19 +25,28 @@ const vitestConfig: InlineConfig = {
 };
 
 export default ({ mode }: { mode: string }) => {
+  const { envDir, parsedSecret, parsed } = getConfig(mode);
   console.log(`[ui] [vite] loading... (${mode})`);
   const loaded = loadEnv(mode, envDir, '');
-  const env = { ...process.env, ...loaded, ...parsedSecret };
+  // console.log('[ui] [vite] loaded: ', loaded);
+  // console.log('[ui] [vite] parsedSecret: ', parsedSecret);
+  // console.log('[ui] [vite] process.env: ', parsed);
+  const env = { ...parsed, ...loaded, ...parsedSecret };
   const processEnvValues = {
-    'process.env': Object.entries(env).reduce((prev, [key, val]) => {
-      return {
-        ...prev,
-        [key]: val,
-      };
-    }, {}),
-    __VUE_OPTIONS_API__: JSON.stringify(true),
-    __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
+    'process.env': Object.entries(env).reduce(
+      (prev, [key, val]) => {
+        return {
+          ...prev,
+          [key]: val,
+        };
+      },
+      {
+        __VUE_OPTIONS_API__: JSON.stringify(true),
+        __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
+      }
+    ),
   };
+  // console.log('[ui] [vite] processEnvValues: ', processEnvValues);
   return defineConfig({
     envDir,
     define: processEnvValues,

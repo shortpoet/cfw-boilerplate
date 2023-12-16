@@ -1,0 +1,13 @@
+name = "api"
+# main = "../build/worker.mjs"
+main = "../src/index.ts"
+compatibility_date = "2023-12-06"
+node_compat = true
+workers_dev = true
+[site]
+bucket = "../../ui/build/client"
+[dev]
+port = 3000
+ip = "0.0.0.0"
+[env.dev.vars]
+VITE_API_URL = "http://0.0.0.0:3000"

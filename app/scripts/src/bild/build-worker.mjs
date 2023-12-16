@@ -22,6 +22,8 @@ function buildWorker({ entry, out, debug, external } = {}) {
     // },
     define: {
       IS_CLOUDFLARE_WORKER: 'true',
+      __VUE_OPTIONS_API__: JSON.stringify(true),
+      __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
     },
   };
   console.log('define', define);

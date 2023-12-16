@@ -3,7 +3,7 @@ import { escapeNestedKeys } from '#/utils';
 
 export { RequestConfig, FetchError, UseFetchResult, useFetch, USE_FETCH_REQ_INIT };
 
-const FILE_DEBUG = false;
+const FILE_DEBUG = true;
 const FETCH_DEBUG = import.meta.env.VITE_LOG_LEVEL === 'debug' && FILE_DEBUG;
 const IS_SSR = true;
 // const IS_SSR = import.meta.env.SSR;

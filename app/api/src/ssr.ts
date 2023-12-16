@@ -38,7 +38,8 @@ async function handleSsr(request: Request, res: Response, env: Env, ctx: Executi
   if (!httpResponse) {
     return null;
   } else {
-    const { statusCode, contentType } = httpResponse;
+    const { statusCode, headers } = httpResponse;
+    const contentType = headers.find((h) => h[0] === 'content-type')?.[1] || '';
     const { readable, writable } = new TransformStream();
     httpResponse.pipe(writable);
     return new Response(readable, {
