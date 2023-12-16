@@ -49,8 +49,8 @@ const formatErr = (type: string, code: number, err: Error) => {
   );
 };
 
-export const notFoundResponse = (err?: Error, res?: Response) => {
-  const newErr = err || new Error('Resource not found');
+export const notFoundResponse = (msg?: string, err?: Error, res?: Response) => {
+  const newErr = err || new Error(`${msg}` || 'Resource Not found');
   const init = {
     ...res,
     status: 404,
@@ -68,11 +68,11 @@ export const badResponse = (err: Error, res?: Response) => {
   });
 };
 
-export const jsonOkResponse = (data: JsonData, res?: Response) => {
+export const jsonOkResponse = (data: any, res?: Response) => {
   return okResponse(JSON.stringify(data, null, 2), res);
 };
 
-export const jsonCreatedResponse = (data: JsonData, res?: Response) => {
+export const jsonCreatedResponse = (data: any, res?: Response) => {
   return createdResponse(JSON.stringify(data), res);
 };
 

@@ -54,7 +54,7 @@ export default ({ mode }: { mode: string }) => {
       vue({
         include: [/\.vue$/, /\.md$/],
       }),
-      vike(),
+      vike({ prerender: true }),
       nodePolyfills({
         // To add only specific polyfills, add them here. If no option is passed, adds all polyfills
         include: ['path', 'url'],

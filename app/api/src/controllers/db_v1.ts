@@ -1,5 +1,6 @@
 import { q } from '#/api/db/d1-kysely-authjs';
 import { uuidv4 } from '#/utils';
+import { jsonOkResponse, notFoundResponse } from '../middleware';
 
 export const getUsersFind = async (
   req: Request,
@@ -9,13 +10,7 @@ export const getUsersFind = async (
 ) => {
   const result = await q.getAllUsers(env);
   if (!result) {
-    return new Response('No value found', {
-      status: 404,
-    });
+    return notFoundResponse('User not found');
   }
-  return new Response(JSON.stringify(result), {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  return jsonOkResponse(result, response);
 };

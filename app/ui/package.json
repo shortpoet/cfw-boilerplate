@@ -5,9 +5,10 @@
   "description": "",
   "source": "src/index.ts",
   "scripts": {
-    "dev": "vite",
+    "build": "cross-env NODE_ENV=development vite build --mode development",
+    "dev": "cross-env NODE_ENV=development pnpm build && cross-env NODE_ENV=development vite",
+    "preview": "pnpm build && cross-env NODE_ENV=development vite preview",
     "prod": "npm run build && npm run server:prod",
-    "build": "cross-env NODE_ENV=development vite build",
     "build:w": "cross-env NODE_ENV=development vite build --mode wrangler",
     "server": "cross-env NODE_ENV=development && node --loader ts-node/esm ./server/index.ts",
     "server:dev": "npm run server",

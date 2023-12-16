@@ -5,10 +5,12 @@ import type { OnBeforeRenderAsync, PageContextBuiltInServer } from 'vike/types';
 import { render, redirect } from 'vike/abort';
 import { UserRole } from '#/types';
 import { RequestConfig, useFetch } from '../../../composables';
+import { PATH_MAPPING } from '../index/endpoints';
 
 const onBeforeRender: OnBeforeRenderAsync = async (
   pageContext
 ): ReturnType<OnBeforeRenderAsync> => {
+  const pathMapping = PATH_MAPPING;
   const user = pageContext.session?.user;
   const { urlPathname, csrfToken, sessionToken, callbackUrl } = pageContext;
   console.log(`[ui] [api-data] [onBeforeRender] urlPathname: ${urlPathname}`);
@@ -29,17 +31,10 @@ const onBeforeRender: OnBeforeRenderAsync = async (
   //   `[ui] [api-data] [onBeforeRender] redirectTo ${JSON.stringify({ redirectTo }, null, 2)}`
   // );
 
-  const pathMapping = {
-    '/api-data/hello': { route: 'api/hello', options: {} },
-    '/api-data/debug': { route: 'api/health/debug', options: {} },
-    '/api-data/health': { route: 'api/health/check', options: {} },
-    '/api-data/healthE': { route: 'api/health/check2', options: {} },
-    '/api-data/json-file': { route: 'api/json-data', options: {} },
-  } as Record<string, any>;
   let { dataLoading, error, data } = {
     dataLoading: ref(false),
     error: ref(),
-    data: ref(undefined),
+    data: ref(),
   };
   if (pathMapping[urlPathname]) {
     const opts = {

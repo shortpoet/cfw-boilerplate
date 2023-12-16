@@ -57,7 +57,7 @@ interface UseFetchResult<T> {
   error: Ref<FetchError | undefined>;
 }
 
-const useFetch = async <T = unknown>(
+const useFetch = async <T>(
   path: string,
   options: RequestConfig = {}
 ): Promise<UseFetchResult<T>> => {
@@ -69,7 +69,7 @@ const useFetch = async <T = unknown>(
 
   const dataLoading = ref(true);
   const error = ref<FetchError | undefined>();
-  const data = ref(undefined as unknown as T);
+  const data = ref<T>({} as T);
 
   const token = ref(options.token || options.session?.accessToken);
   const sessionToken = ref(options.sessionToken);
@@ -151,6 +151,18 @@ const useFetch = async <T = unknown>(
           logger.debug(
             `[ui] [useFetch] response: ${JSON.stringify(await response.clone().text())}`
           );
+      }
+
+      if (!!out) {
+        throw new Error(
+          JSON.stringify({
+            name: 'FetchError',
+            message: `Failed to parse data from ${url}.`,
+            status: response.status,
+            statusText: response.statusText,
+            error: JSON.parse(await response.text()),
+          })
+        );
       }
 
       const jsonTypes = [
