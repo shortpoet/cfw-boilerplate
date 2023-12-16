@@ -11,6 +11,7 @@ function isWorker() {
 }
 
 async function getManifest(env: Env) {
+  console.log(`[api] [static-assets] getManifest -> is worker -> ${isWorker()}`);
   return isWorker()
     ? // @ts-expect-error
       (await import('__STATIC_CONTENT_MANIFEST')) || ''

@@ -1,7 +1,6 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "baseUrl": ".",
     "target": "esnext",
     "module": "esnext",
     "allowSyntheticDefaultImports": true,

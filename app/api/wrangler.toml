@@ -1,5 +1,6 @@
 name = "api"
 main = "src/index.ts"
 compatibility_date = "2023-12-06"
+node_compat = true
 [dev]
 port = 3000
