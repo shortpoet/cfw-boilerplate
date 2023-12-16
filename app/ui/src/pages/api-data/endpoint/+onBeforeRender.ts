@@ -21,13 +21,13 @@ const onBeforeRender: OnBeforeRenderAsync = async (
 
   let redirectTo = undefined;
   if (protectedRoutes.includes(urlPathname) && !user) {
-    console.log(`[ui] [api-data] [onBeforeRender] !user && protectedRoutes.includes(urlPathname)`);
+    // console.log(`[ui] [api-data] [onBeforeRender] !user && protectedRoutes.includes(urlPathname)`);
     redirectTo = user ? undefined : '/auth/login';
     throw render('/auth/login');
   }
-  console.log(
-    `[ui] [api-data] [onBeforeRender] redirectTo ${JSON.stringify({ redirectTo }, null, 2)}`
-  );
+  // console.log(
+  //   `[ui] [api-data] [onBeforeRender] redirectTo ${JSON.stringify({ redirectTo }, null, 2)}`
+  // );
 
   const pathMapping = {
     '/api-data/hello': { route: 'api/hello', options: {} },
@@ -54,8 +54,8 @@ const onBeforeRender: OnBeforeRenderAsync = async (
         // 'authjs.session-token': sessionToken,
       },
     } as RequestConfig;
-    console.log(`[ui] [api-data] [onBeforeRender] opts`);
-    console.log(opts);
+    // console.log(`[ui] [api-data] [onBeforeRender] opts`);
+    // console.log(opts);
     ({ dataLoading, error, data } = await useFetch(pathMapping[urlPathname].route, opts));
 
     if (error.value) {

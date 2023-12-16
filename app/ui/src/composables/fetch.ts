@@ -3,7 +3,7 @@ import { escapeNestedKeys } from '#/utils';
 
 export { RequestConfig, FetchError, UseFetchResult, useFetch, USE_FETCH_REQ_INIT };
 
-const FILE_DEBUG = false;
+const FILE_DEBUG = true;
 const FETCH_DEBUG = import.meta.env.VITE_LOG_LEVEL === 'debug' && FILE_DEBUG;
 const IS_SSR = true;
 // const IS_SSR = import.meta.env.SSR;
@@ -64,7 +64,7 @@ const useFetch = async <T = unknown>(
   const urlBase = `${import.meta.env.VITE_API_URL}`;
   const url = path.startsWith('http') ? path : `${urlBase}/${path}`;
   const logger = useSsrLogger();
-  logger.info('[ui] [useFetch] url', url);
+  logger.info(`[ui] [useFetch] url: ${url}`);
 
   const dataLoading = ref(true);
   const error = ref<FetchError | undefined>();
@@ -122,6 +122,7 @@ const useFetch = async <T = unknown>(
         );
       }
 
+      logger.debug(`[ui] [useFetch] response:`);
       const response = await fetch(request, { ...init });
 
       if (!response.ok) {
@@ -157,6 +158,7 @@ const useFetch = async <T = unknown>(
         : (out = { text: await response.text() });
       data.value = out;
     } catch (err: any) {
+      logger.error(`[ui] [useFetch] error: ${err.message}`);
       const message = JSON.parse(err.message);
       error.value = {
         name: err.name,

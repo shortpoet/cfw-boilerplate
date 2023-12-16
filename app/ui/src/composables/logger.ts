@@ -11,7 +11,6 @@ export const useLogger = (req?: Request, level?: LogLevel) => {
 };
 
 export const useSsrLogger = (req?: Request, level?: LogLevel) => {
-  console.log(`[ui] [composables] [logger] [useSsrLogger]`);
   const isSsr = true;
   const nodeEnv = 'development';
   const envLogLevel = 'debug';
