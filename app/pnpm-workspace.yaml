@@ -1,10 +1,7 @@
 packages:
   - 'api/**'
-  - 'db/**'
   - 'scripts/**'
   - 'server/**'
-  # - 'types/**'
   - 'ui/**'
-  # - 'utils/**'
   # exclude packages that are inside test directories
   - '!**/app/test/**'

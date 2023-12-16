@@ -23,8 +23,8 @@
       "api/*": [
         "api/src/*"
       ],
-      "db/*": [
-        "db/src/*"
+      "##/db/*": [
+        "api/db/*"
       ],
       "server/*": [
         "server/*"
