@@ -1,19 +1,12 @@
 import { ExecutionContext } from '@cloudflare/workers-types';
 import { MethodNotAllowedError, NotFoundError } from '@cloudflare/kv-asset-handler/dist/types';
-import {
-  isAPiURL,
-  isAssetURL,
-  isSSR,
-  logObjs,
-  logWorkerEnd,
-  logWorkerStart,
-  logger,
-} from '#/utils';
+import { isAPiURL, isAssetURL, isSSR, logObjs, logWorkerEnd, logWorkerStart } from '#/utils';
 import { Api, corsify } from './router';
 import { handleStaticAssets } from './static-assets';
 import { handleSsr } from './ssr';
 
 const FILE_LOG_LEVEL = 'debug';
+import { getCorrelationId, getLogger } from '#/utils/logger/logger';
 
 export default {
   async fetch(
@@ -47,10 +40,10 @@ async function handleFetchEvent(
   const url = new URL(request.url);
   // const resp = new Response('');
   const resp = new Response('', { cf: request.cf });
-  const log = logger(FILE_LOG_LEVEL, env);
   const path = url.pathname;
   let res;
-  // log(`[api] index.handleFetchEvent -> ${request.method} -> ${path}`);
+  const logger = getLogger({ env }).child({ correlationId: getCorrelationId() });
+  logger.info(`[api] index.handleFetchEvent -> ${request.method} -> ${path}`);
   switch (true) {
     case isAssetURL(url):
       // must early return or assets missing
@@ -61,7 +54,7 @@ async function handleFetchEvent(
       //   `[api] [isAPiURL] index.handleFetchEvent -> ${env.VITE_API_VERSION} -> ${url.pathname}`
       // );
       res = await Api.handle(request, resp, env, ctx, data);
-      // console.log(`[api] [isAPiURL] index.handleFetchEvent -> api response`);
+      logger.info(`[api] [isAPiURL] index.handleFetchEvent -> api response`);
       // logObjs([res.headers, res.body]);
       // console.log(await res.clone().json());
       break;

@@ -38,7 +38,7 @@ async function handleStaticAssets(request: Request, env: Env, ctx: ExecutionCont
         ASSET_MANIFEST:
           '__STATIC_CONTENT_MANIFEST' in env
             ? env.__STATIC_CONTENT_MANIFEST
-            : JSON.parse(await getManifest(env)),
+            : await getManifest(env),
       };
       const page = await getAssetFromKV(getAssetFromKVArgs, options);
       const response = new Response(page.body, page);
