@@ -24,7 +24,7 @@
 }
 </style>
   
-<script setup lang="ts">
+<script async setup lang="ts">
 const props = defineProps({
   title: {
     type: String,

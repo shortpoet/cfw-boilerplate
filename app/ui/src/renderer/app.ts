@@ -32,8 +32,8 @@ function createApp(Page: Page, pageProps: PageProps | undefined, pageContext: Pa
   const PageWithWrapper = defineComponent({
     data: () => ({
       Page: markRaw(Page),
-      pageProps: markRaw(pageProps || {}),
-      Layout: markRaw(pageContext.exports.Layout || PageShell),
+      pageProps: markRaw(pageContext.pageProps || {}),
+      config: markRaw(pageContext.config),
       session,
       csrfToken,
       callbackUrl,
@@ -42,19 +42,22 @@ function createApp(Page: Page, pageProps: PageProps | undefined, pageContext: Pa
     }),
     created() {
       rootComponent = this;
+      provideAuth();
       provideLogger(import.meta.env as unknown as EnvVars);
     },
     render() {
-      return h(
-        PageShell,
-        {},
-        {
-          default: () => {
-            // @ts-ignore
-            return h(this.Page, this.pageProps);
-          },
-        }
-      );
+      if (!!this.config.Layout) {
+        return h(
+          this.config.Layout,
+          {},
+          {
+            default: () => {
+              return h(this.Page, this.pageProps);
+            },
+          }
+        );
+      }
+      return h(this.Page, this.pageProps);
     },
   });
 
@@ -67,9 +70,10 @@ function createApp(Page: Page, pageProps: PageProps | undefined, pageContext: Pa
       Object.assign(pageContextReactive, pageContext);
       rootComponent.Page = markRaw(pageContext.Page);
       rootComponent.pageProps = markRaw(pageContext.pageProps || {});
+      rootComponent.config = markRaw(pageContext.config || PageShell);
       // ... from rootComponent
       // without the below line the layout only changes on reload, and then persists weirdly to other navigated pages
-      rootComponent.Layout = markRaw(pageContext.exports.Layout || PageShell);
+      // rootComponent.Layout = markRaw(pageContext.exports.Layout || PageShell);
       rootComponent.session = pageContext.session;
       rootComponent.csrfToken = pageContext.csrfToken;
       rootComponent.callbackUrl = pageContext.callbackUrl;

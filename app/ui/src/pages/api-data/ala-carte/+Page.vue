@@ -22,24 +22,34 @@
 </style>
   
 <script setup lang="ts">
+import { IS_BROWSER } from '#/utils';
 import { useUiStore } from '../../../stores';
 import { computed, ref, watch } from 'vue';
 
-const ui = useUiStore();
-const urlPath = ref(ui.alaCartePath);
+let urlPath = ref('');
+let go = () => { };
+let onUpdateModel = (value: string) => { };
+if (IS_BROWSER) {
+  const ui = useUiStore();
+  urlPath = ref(ui.alaCartePath);
+  go = () => {
+    if (urlPath.value) {
+      ui.setNewPath(urlPath.value);
+      if (import.meta.env.VITE_LOG_LEVEL === 'debug') {
+        // Your debug logs here
+      }
+      showViewer.value = true;
+      fetchNow.value = true;
+    }
+  };
+  onUpdateModel = (value: string) => {
+    fetchNow.value = false;
+    urlPath.value = value;
+    ui.setNewPath(urlPath.value);
+  };
+}
 const showViewer = ref(false);
 const fetchNow = ref(false);
-
-const go = () => {
-  if (urlPath.value) {
-    ui.setNewPath(urlPath.value);
-    if (import.meta.env.VITE_LOG_LEVEL === 'debug') {
-      // Your debug logs here
-    }
-    showViewer.value = true;
-    fetchNow.value = true;
-  }
-};
 
 const validUrl = computed(() => {
   return (
@@ -51,11 +61,6 @@ const validUrl = computed(() => {
   );
 });
 
-const onUpdateModel = (value: string) => {
-  fetchNow.value = false;
-  urlPath.value = value;
-  ui.setNewPath(urlPath.value);
-};
 
 watch(urlPath, (newVal, oldVal) => {
   // Watch logic here if needed
