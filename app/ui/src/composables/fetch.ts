@@ -159,6 +159,7 @@ const useFetch = async <T = unknown>(
       data.value = out;
     } catch (err: any) {
       logger.error(`[ui] [useFetch] error: ${err.message}`);
+      console.log(err);
       const message = JSON.parse(err.message);
       error.value = {
         name: err.name,
