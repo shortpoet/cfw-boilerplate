@@ -1,2 +1,2 @@
-export * from './v1';
+export * from './d1-kysely-authjs';
 export * from './sampleData';

@@ -1,4 +1,4 @@
-import { q } from '##/db/v1';
+import { q } from '#/api/db/d1-kysely-authjs';
 import { uuidv4 } from '#/utils';
 
 export const getUsersFind = async (
