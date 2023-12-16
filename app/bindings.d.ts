@@ -27,7 +27,7 @@ import type {
   UserType,
   SessionUnion,
 } from './types';
-import { Database } from './db/src';
+import { Database } from './api/db';
 import { UiState } from '#/ui/src/stores';
 
 type Mutable<T> = {
