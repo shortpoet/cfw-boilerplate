@@ -27,7 +27,7 @@ type Endpoint = {
 
 const formatPath = (path: string) => {
   // return path.replace(/\{([^\}]+)\}/g, ':$1');
-  console.log(`[ui] [api-data] [formatPath] path: ${path}`);
+  // console.log(`[ui] [api-data] [formatPath] path: ${path}`);
   return path
     .replace(/\//g, ' ')
     .replace(/api/g, '')
@@ -60,7 +60,9 @@ const getEndpoints = async () => {
   const { text } = data.value || { text: '{}' };
   // console.log(`[ui] [api-data] [onBeforePrerenderStart] endpoints`);
   const openApi = JSON.parse(text) as OpenApi;
-  const e = Object.keys(openApi.paths).filter((path) => !path.match(/[\*\{]/));
+  const e = Object.keys(openApi.paths)
+    .filter((path) => !path.match(/[\*\{]/))
+    .reverse();
   const endpoints = e.map((path) => {
     return {
       path,
