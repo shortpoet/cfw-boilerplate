@@ -1,12 +1,11 @@
 <template>
-  <h1>Welcome</h1>
-  This page is:
-  <ul>
-    <li>Rendered to HTML.</li>
-    <li>Interactive. <Counter /></li>
-  </ul>
+  <div>
+    <h1>Welcome to AI-Maps</h1>
+    <ul>
+      <TheCounter :initial="8" />
+    </ul>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import Counter from './Counter.vue'
 </script>
