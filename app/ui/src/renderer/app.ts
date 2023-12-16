@@ -46,18 +46,30 @@ function createApp(Page: Page, pageProps: PageProps | undefined, pageContext: Pa
       provideLogger(import.meta.env as unknown as EnvVars);
     },
     render() {
+      // @ts-expect-error
       if (!!this.config.Layout) {
         return h(
+          // @ts-expect-error
           this.config.Layout,
           {},
           {
             default: () => {
+              // @ts-expect-error
               return h(this.Page, this.pageProps);
             },
           }
         );
       }
-      return h(this.Page, this.pageProps);
+      return h(
+        PageShell,
+        {},
+        {
+          default: () => {
+            // @ts-expect-error
+            return h(this.Page, this.pageProps);
+          },
+        }
+      );
     },
   });
 
