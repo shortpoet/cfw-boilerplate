@@ -39,6 +39,7 @@ export const withCfSummary =
   ({ level = 'basic' } = {}) =>
   async (request: Request, env: Env) => {
     console.log(`[api] middlware.withCfSummary -> ${request.method} -> ${request.url}`);
+    request.logger.info(`[api] middlware.withCfSummary -> ${request.method} -> ${request.url}`);
     request.cf_summary = request.cf
       ? {
           longitude: request.cf.longitude,
@@ -61,6 +62,7 @@ export const withCfHeaders =
   ({ level = 'basic' } = {}) =>
   async (request: Request, res: Response, env: Env) => {
     console.log(`[api] middlware.withCfHeaders -> ${request.method} -> ${request.url}`);
+    request.logger.info(`[api] middlware.withCfHeaders -> ${request.method} -> ${request.url}`);
     const { cf } = request;
     if (cf) {
       const { colo, clientTcpRtt } = cf;
@@ -73,4 +75,5 @@ export const withCfHeaders =
     }
     res.headers.set('x-api-env', env.NODE_ENV);
     console.log(`[api] middlware.withCfHeaders ->  END`);
+    request.logger.info(`[api] middlware.withCfHeaders ->  END`);
   };

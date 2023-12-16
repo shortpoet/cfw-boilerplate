@@ -4,6 +4,9 @@ import { ServerResponse } from 'http';
 import { OpenAPIRouter } from '@cloudflare/itty-router-openapi';
 
 import sampleData from '##/db/data.json';
+// const sampleData = {
+//   hello: 'world',
+// };
 import {
   // authMiddlewareItty as authMiddleware,
   // withSession,
@@ -46,7 +49,7 @@ const protectedRoutes = {
 
 router
   .options('*', preflight)
-  .all('*', withCfHeaders(), withPino({ level: FILE_LOG_LEVEL }))
+  .all('*', withPino({ level: FILE_LOG_LEVEL }), withCfHeaders())
   // .all('/auth/*', authMiddleware)
   // .all('*', withSession())
   .all('/task/*', task_router)

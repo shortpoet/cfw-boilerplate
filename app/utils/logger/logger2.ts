@@ -16,8 +16,8 @@ const logLevel = (level: LogLevel, env?: Env): boolean => {
   const envLevel = env?.VITE_LOG_LEVEL || 'debug';
   const currentIndex = LOG_LOVELS.indexOf(env?.VITE_LOG_LEVEL) || 0;
   const targetIndex = LOG_LOVELS.indexOf(level);
-  const out = currentIndex >= targetIndex;
-  // console.log("logLevel", { level, envLevel, currentIndex, targetIndex, out });
+  const out = currentIndex <= targetIndex;
+  // console.log('logLevel', { level, envLevel, currentIndex, targetIndex, out });
   return out;
 };
 
@@ -39,7 +39,7 @@ const logObjs = (objs: any[]) => {
   }
 };
 
-const logWorkerStart = (request: Request) => {
+const logWorkerStart = (request: Request, env: Env) => {
   const url = new URL(request.url);
   const { cf, headers } = request;
   let ct;
@@ -62,7 +62,7 @@ const logWorkerStart = (request: Request) => {
       const { city, region, country, colo, clientTcpRtt } = cf;
       const location = [city, region, country].filter(Boolean).join(', ');
       console.log(`[api] main.fetch -> detected location: ${location}`);
-      if (clientTcpRtt) {
+      if (clientTcpRtt && logLevel('debug', env)) {
         console.log(
           `[api] main.fetch -> round trip time from client to edge colo ${colo} is ${clientTcpRtt} ms
            [api] main.fetch -> headers:

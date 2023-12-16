@@ -21,6 +21,7 @@ declare global {
   const SESSION_TOKEN_EXPIRY: typeof import('./composables/auth')['SESSION_TOKEN_EXPIRY']
   const USE_FETCH_REQ_INIT: typeof import('./composables/fetch')['USE_FETCH_REQ_INIT']
   const UseFetchResult: typeof import('./composables/fetch')['UseFetchResult']
+  const X_CORRELATION_ID: typeof import('./composables/logger')['X_CORRELATION_ID']
   const computed: typeof import('vue')['computed']
   const cookieOptions: typeof import('./composables/auth')['cookieOptions']
   const createApp: typeof import('vue')['createApp']
@@ -123,6 +124,7 @@ declare module 'vue' {
     readonly SESSION_TOKEN_EXPIRY: UnwrapRef<typeof import('./composables/auth')['SESSION_TOKEN_EXPIRY']>
     readonly USE_FETCH_REQ_INIT: UnwrapRef<typeof import('./composables/fetch')['USE_FETCH_REQ_INIT']>
     readonly UseFetchResult: UnwrapRef<typeof import('./composables/fetch')['UseFetchResult']>
+    readonly X_CORRELATION_ID: UnwrapRef<typeof import('./composables/logger')['X_CORRELATION_ID']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
     readonly cookieOptions: UnwrapRef<typeof import('./composables/auth')['cookieOptions']>
     readonly createApp: UnwrapRef<typeof import('vue')['createApp']>
@@ -218,6 +220,7 @@ declare module '@vue/runtime-core' {
     readonly SESSION_TOKEN_EXPIRY: UnwrapRef<typeof import('./composables/auth')['SESSION_TOKEN_EXPIRY']>
     readonly USE_FETCH_REQ_INIT: UnwrapRef<typeof import('./composables/fetch')['USE_FETCH_REQ_INIT']>
     readonly UseFetchResult: UnwrapRef<typeof import('./composables/fetch')['UseFetchResult']>
+    readonly X_CORRELATION_ID: UnwrapRef<typeof import('./composables/logger')['X_CORRELATION_ID']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
     readonly cookieOptions: UnwrapRef<typeof import('./composables/auth')['cookieOptions']>
     readonly createApp: UnwrapRef<typeof import('vue')['createApp']>

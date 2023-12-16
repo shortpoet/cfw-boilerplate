@@ -2,16 +2,18 @@ import { createEnv } from '@t3-oss/env-core';
 import { z } from 'zod';
 import path from 'node:path';
 import dotenv from 'dotenv';
+import colors from 'kleur';
 
 export const getConfig = (mode: string) => {
+  console.log(colors.green(`[ui] [config] mode: `), colors.magenta(`${mode}`));
   const __appDir = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
   const envDir = __appDir;
-  const envPath = mode === 'dev' ? `${envDir}/.env` : `${envDir}/.env.${mode}`;
+  // console.log(colors.green(`[ui] [config] envDir: `), colors.magenta(`${envDir}`));
+  const envPath = mode === 'development' ? `${envDir}/.env` : `${envDir}/.env.${mode}`;
   const parsed = dotenv.config({ path: envPath }).parsed;
 
   const parsedSecret = dotenv.config({ path: `${envDir}/.env.secret` }).parsed;
   const parsedDev = dotenv.config({ path: `${__appDir}/api/.dev.vars` }).parsed;
-  console.log(`[config] envDir: ${envDir}`);
   // console.log(parsed);
   if (!parsed || !parsedDev) {
     const which = [!parsed, !parsedDev];
@@ -26,7 +28,7 @@ export const getConfig = (mode: string) => {
     runtimeEnv: process.env,
     isServer: typeof window === 'undefined',
   });
-  console.log(`[config] env: ${JSON.stringify(env)}`);
+  // console.log(colors.green(`[ui] [config] env: `), colors.magenta(`${JSON.stringify(env)}`));
 
   return { envDir, parsed, parsedDev, parsedSecret, env };
 };

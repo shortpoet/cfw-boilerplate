@@ -19,9 +19,8 @@ import { getCorrelationId, getLogger } from '#/utils/logger/logger';
 const isSsr = config.env.SSR;
 const nodeEnv = config.env.NODE_ENV;
 const envLogLevel = config.env.VITE_LOG_LEVEL;
-const logger = getLogger({ isSsr, nodeEnv, envLogLevel }).child({
-  correlationId: getCorrelationId(),
-});
+
+const logger = getLogger({ isSsr, nodeEnv, envLogLevel });
 
 const HOST: string = config.env.HOST || 'localhost';
 const PORT: number = parseInt(config.env.PORT || '3333');
@@ -45,9 +44,12 @@ const server = http.createServer(async (req, res) => {
     res.end(err);
   });
 
+  const { mappedHeaders, contentType } = mapHttpHeaders(req.headers);
   if (req.url) {
+    logger.child({
+      correlationId: getCorrelationId(new Headers(mappedHeaders)),
+    });
     logger.info(`[server] req.url: ${req.url}`);
-    const { mappedHeaders, contentType } = mapHttpHeaders(req.headers);
     serverLogStart(req, contentType ?? '');
     // console.log(req);
     const apiReq = new Request(new URL(req.url, 'http://' + req.headers.host), {
@@ -78,7 +80,7 @@ const server = http.createServer(async (req, res) => {
     }
 
     const incomingHeaders = Array.from(resp.headers.entries()) as any;
-    logger.info('[server] incomingHeaders', incomingHeaders);
+    logger.debug(`server] incomingHeaders -> ${JSON.stringify(incomingHeaders, null, 2)}`);
 
     res.writeHead(resp.status, resp.statusText, incomingHeaders);
 

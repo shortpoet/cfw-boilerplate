@@ -2,6 +2,8 @@ import pinoLogger, { Logger, LoggerOptions } from 'pino';
 import { createUUId } from '../data';
 export const X_CORRELATION_ID = 'x-correlation-id';
 import { IS_BROWSER } from '../runtime';
+import colors from 'kleur';
+
 // import * as _stream from 'pino-pretty';
 
 // const stream = (await import('pino-pretty')).default({
@@ -20,8 +22,8 @@ type GetLoggerOpts = {
   loggerOptions?: LoggerOptions;
 };
 export const getLogger = (opts: GetLoggerOpts) => {
-  console.log('[logger] init START');
-  console.log(opts);
+  // console.log('[logger] init START');
+  // console.log(opts);
   const { isSsr, nodeEnv, envLogLevel } = opts;
   const loggerConfig: LoggerOptions =
     // VITE sets this to VITE_USER_NODE_ENV
@@ -43,7 +45,7 @@ export const getLogger = (opts: GetLoggerOpts) => {
     ...loggerConfig,
     ...opts.loggerOptions,
   };
-  console.log(conf);
+  // console.log(conf);
   if (!logger) {
     logger = pinoLogger(conf);
     // logger = pinoLogger(conf, stream);
@@ -53,10 +55,14 @@ export const getLogger = (opts: GetLoggerOpts) => {
 };
 
 export const getCorrelationId = (headers?: Headers) => {
+  // console.log(colors.yellow('[logger] getCorrelationId'));
+  // console.log(headers);
   let correlationId = headers?.get(X_CORRELATION_ID);
+  // console.log(colors.magenta(`[logger] getCorrelationId PRE -> ${correlationId}`));
   if (!correlationId) {
     correlationId = createUUId();
     // correlationId = crypto.randomUUID();
   }
+  // console.log(colors.green(`[logger] getCorrelationId RET -> ${correlationId}`));
   return correlationId;
 };

@@ -4,7 +4,7 @@ import { logger, tryLogHeaders, logObjs, getAuthCookies } from '#/utils';
 // import { getSessionItty } from './middleware';
 import { UserRole } from '#/types';
 
-const FILE_LOG_LEVEL = 'debug';
+const FILE_LOG_LEVEL = 'info';
 
 export { handleSsr };
 
@@ -13,8 +13,7 @@ async function handleSsr(request: Request, res: Response, env: Env, ctx: Executi
   log(`[api] [ssr] handleSsr -> url -> ${request.url}`);
   // const session = await getSessionItty(request, res, env);
   const cookieHeader = request.headers.get('cookie') || '';
-  log(`[api] [ssr] handleSsr -> cookieHeader ->`);
-  console.log(cookieHeader);
+  log(`[api] [ssr] handleSsr -> cookieHeader -> ${cookieHeader}`);
   const { sessionToken, csrfToken, callbackUrl, pkceCodeVerifier } = getAuthCookies(cookieHeader);
 
   const userAgent = request.headers.get('User-Agent') || '';

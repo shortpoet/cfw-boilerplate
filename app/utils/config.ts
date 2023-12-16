@@ -2,13 +2,14 @@ import dotenv from 'dotenv';
 import { createEnv } from '@t3-oss/env-core';
 import { z } from 'zod';
 import path from 'node:path';
+import colors from 'kleur';
 
 const __appDir = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const envDir = __appDir;
 const parsed = dotenv.config({ path: `${envDir}/.env` }).parsed;
 const parsedSecret = dotenv.config({ path: `${envDir}/.env.secret` }).parsed;
 const parsedDev = dotenv.config({ path: `${__appDir}/api/.dev.vars` }).parsed;
-console.log(`[config] envDir: ${envDir}`);
+console.log(colors.green(`[utils] `), colors.magenta(`[config] envDir: ${envDir}`));
 // console.log(parsed);
 if (!parsed || !parsedDev) {
   const which = [!parsed, !parsedDev];

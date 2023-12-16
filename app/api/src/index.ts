@@ -16,7 +16,7 @@ export default {
     data: Record<string, any>
   ): Promise<Response> {
     try {
-      logWorkerStart(request);
+      logWorkerStart(request, env);
       return await handleFetchEvent(request, env, ctx, data);
     } catch (e) {
       console.error(e);
@@ -42,17 +42,18 @@ async function handleFetchEvent(
   const resp = new Response('', { cf: request.cf });
   const path = url.pathname;
   let res;
-  const logger = getLogger({
-    isSsr: env.SSR,
-    nodeEnv: env.NODE_ENV,
-    envLogLevel: env.VITE_LOG_LEVEL,
-  }).child({ correlationId: getCorrelationId(request.headers) });
   switch (true) {
     case isAssetURL(url):
       // must early return or assets missing
       res = await handleStaticAssets(request, env, ctx);
       break;
     case isAPiURL(url):
+      const logger = getLogger({
+        isSsr: env.SSR,
+        nodeEnv: env.NODE_ENV,
+        envLogLevel: env.VITE_LOG_LEVEL,
+      }).child({ correlationId: getCorrelationId(request.headers) });
+      request.logger = logger;
       logger.info(`[api] [index] [handleApiRequest] -> ${request.method} -> ${path}`);
       res = await Api.handle(request, resp, env, ctx, data);
       logger.info(`[api] [isAPiURL] index.handleFetchEvent -> api response`);

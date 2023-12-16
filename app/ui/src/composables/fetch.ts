@@ -3,7 +3,7 @@ import { escapeNestedKeys } from '#/utils';
 
 export { RequestConfig, FetchError, UseFetchResult, useFetch, USE_FETCH_REQ_INIT };
 
-const FILE_DEBUG = true;
+const FILE_DEBUG = false;
 const FETCH_DEBUG = import.meta.env.VITE_LOG_LEVEL === 'debug' && FILE_DEBUG;
 const IS_SSR = true;
 // const IS_SSR = import.meta.env.SSR;
@@ -63,8 +63,9 @@ const useFetch = async <T = unknown>(
 ): Promise<UseFetchResult<T>> => {
   const urlBase = `${import.meta.env.VITE_API_URL}`;
   const url = path.startsWith('http') ? path : `${urlBase}/${path}`;
-  const logger = useSsrLogger();
+  const { logger, correlationId } = useSsrLogger();
   logger.info(`[ui] [useFetch] url: ${url}`);
+  logger.info(`[ui] [useFetch] correlationId: ${correlationId}`);
 
   const dataLoading = ref(true);
   const error = ref<FetchError | undefined>();
@@ -94,12 +95,14 @@ const useFetch = async <T = unknown>(
         ...options.headers,
         ...serverHeaders,
         Authorization: `Bearer ${token.value}`,
+        [X_CORRELATION_ID]: correlationId,
         // "X-Ping": "pong",
       }
     : {
         ...USE_FETCH_REQ_INIT.headers,
         ...options.headers,
         Authorization: `Bearer ${token.value}`,
+        [X_CORRELATION_ID]: correlationId,
         // "X-Ping": "pong",
       };
   const init = {

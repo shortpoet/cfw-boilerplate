@@ -1,21 +1,23 @@
 import { LogLevel } from '#/types';
-import { getCorrelationId, getLogger } from '#/utils/logger/logger';
+import { getCorrelationId, getLogger, X_CORRELATION_ID } from '#/utils/logger/logger';
 import { LoggerSymbol } from '../modules/logger';
 
-export const useLogger = (req?: Request, level?: LogLevel) => {
+export { X_CORRELATION_ID, useLogger, useSsrLogger };
+
+const useLogger = (level?: LogLevel) => {
   const logger = inject(LoggerSymbol);
   if (!logger) throw new Error('provideLogger() not called in parent');
-  const correlationId = getCorrelationId(req?.headers);
+  const correlationId = getCorrelationId();
   logger.level = level ?? logger.level;
-  return logger.child({ correlationId });
+  return { logger: logger.child({ correlationId }), correlationId };
 };
 
-export const useSsrLogger = (req?: Request, level?: LogLevel) => {
+const useSsrLogger = (level?: LogLevel) => {
   const isSsr = true;
   const nodeEnv = 'development';
   const envLogLevel = 'debug';
   level = level ?? envLogLevel;
   const logger = getLogger({ isSsr, nodeEnv, envLogLevel, loggerOptions: { level } });
-  const correlationId = getCorrelationId(req?.headers);
-  return logger.child({ correlationId });
+  const correlationId = getCorrelationId();
+  return { logger: logger.child({ correlationId }), correlationId };
 };
