@@ -59,5 +59,5 @@ export async function writeDatabaseToToml(
   console.log(colors.magenta(`[wrangle] [db] config after:`));
   console.log(config);
   // console.log(config["env"][`${env_name}`]);
-  writeToml(config, { wranglerFile, debug, appName, env });
+  writeToml(config, { wranglerFile, debug, env });
 }

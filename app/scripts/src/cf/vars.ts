@@ -18,10 +18,17 @@ export async function setVars(
 
   const config = await getToml(wranglerFile);
   if (!config && !config['env'] && !config['env'][`${conf.env}`]) {
-    throw new Error(`no config found at ${wranglerFile}`);
+    throw new Error(`[wrangle] [setVars] no config found at ${wranglerFile}`);
   }
-  console.log(config);
-  log.print('green', `[setVars] Setting vars for ${conf.env} -> ${wranglerFile}`);
+
+  log.print('green', `[wrangle] [setVars] Setting vars for ${conf.env} -> ${wranglerFile}`);
+
+  if (conf.debug) {
+    log.print('blue', '[wrangle] [setVars] config');
+    console.log(config['env'][`${conf.env}`]['vars']);
+    log.print('blue', '[wrangle] [setVars] envVars');
+    console.log(envVars);
+  }
 
   const env = conf.env;
   Object.keys(secrets).forEach((key) => {
@@ -35,17 +42,19 @@ export async function setVars(
   Object.keys(secrets).forEach((key) => {
     delete newVars[key];
   });
-  log.print('blue', '[wrangle] newVars');
+  if (conf.debug) {
+    log.print('blue', '[wrangle] [setVars] newVars');
+    console.log(newVars);
+  }
   const newConf = {
     ...config,
     env: {
       ...config['env'],
       [`${env}`]: {
-        ...config['env'][`${env}`],
         vars: newVars,
+        ...config['env'][`${env}`],
       },
     },
   };
-  console.log(newConf);
-  writeToml(newConf, { wranglerFile, debug });
+  writeToml(newConf, { wranglerFile, debug, env });
 }

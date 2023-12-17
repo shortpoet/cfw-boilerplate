@@ -20,9 +20,8 @@ const env: EnvVars = createEnv({
   server: {
     HOST: z.string(),
     VITE_PORT: z.string(),
+    VITE_PORT_API: z.string(),
     VITE_LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']),
-    VITE_API_URL: z.string(),
-    VITE_APP_URL: z.string(),
     NODE_ENV: z.enum(['development', 'production']),
     WORKER_ENVIRONMENT: z.enum(['dev', 'qa', 'uat', 'prod']),
     VITE_APP_NAME: z.string(),

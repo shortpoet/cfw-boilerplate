@@ -38,5 +38,5 @@
 </template>
 
 <script setup lang="ts">
-const urlBase = `${import.meta.env.VITE_API_URL}`
+const { urlBase } = useBaseUrlApi();
 </script>

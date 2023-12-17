@@ -98,27 +98,25 @@ async function getToml(tomlPath: string): Promise<WranglerToml> {
   return toml.parse(await read(tomlPath, 'utf8'));
 }
 
-const writeToml = async (
-  data: any,
-  conf: Pick<Config, 'wranglerFile' | 'debug' | 'env' | 'appName'>
-) => {
-  const { wranglerFile, debug, env, appName } = conf;
+const writeToml = async (data: any, conf: Pick<Config, 'wranglerFile' | 'debug' | 'env'>) => {
+  const { wranglerFile, debug, env } = conf;
   if (debug) log.print('blue', `[util] writing toml file: "${wranglerFile}"`);
   if (debug) console.log(data);
-  const backupPath = wranglerFile.replace(`${env}.toml`, `${env}.bak.toml`);
-  if (debug) log.print('blue', `[util] backing up toml file: "${backupPath}"`);
+  const backupPath = wranglerFile.replace(`${env}.toml.json`, `${env}.bak.toml.json`);
+  // if (debug) log.print('blue', `[util] backing up toml file: "${backupPath}"`);
   // await writeFile(backupPath, await readFile(wranglerFile));
   await writeFile(`${wranglerFile}`, JSON.stringify(data, null, 2));
-  const toml = json2toml(data);
-  if (debug) console.log(toml);
-  let lines = toml.split('\n');
+  // const backupPath = wranglerFile.replace(`${env}.toml`, `${env}.bak.toml`);
+  // const toml = json2toml(data);
+  // if (debug) console.log(toml);
+  // let lines = toml.split('\n');
   // console.log(lines);
   // const ENV_LINE = `[env.${env}]`;
   // const NAME_LINE = `name = "${appName}"`;
   // if (lines.indexOf(ENV_LINE) === -1) lines.push(ENV_LINE);
   // const nextLine = lines.indexOf(ENV_LINE) + 1;
   // if (nextLine && nextLine !== NAME_LINE) lines.splice(nextLine, 0, NAME_LINE);
-  const tomlString = lines.join('\n');
+  // const tomlString = lines.join('\n');
   // await writeFile(wranglerFile, tomlString);
 };
 

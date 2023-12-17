@@ -52,6 +52,9 @@ export const createGithubAuth = (auth: Auth, env: Env) => {
   return github(auth, {
     clientId: env.GITHUB_CLIENT_ID,
     clientSecret: env.GITHUB_CLIENT_SECRET,
-    redirectUri: `${env.VITE_API_URL}/api/auth/login/github/callback`,
+    redirectUri:
+      env.NODE_ENV === 'development'
+        ? `http://${env.HOST}:${env.VITE_PORT_API}/api/auth/login/github/callback`
+        : `https://${env.HOST}/api/auth/login/github/callback`,
   });
 };

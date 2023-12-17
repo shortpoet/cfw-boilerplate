@@ -61,7 +61,7 @@ const useFetch = async <T>(
   path: string,
   options: RequestConfig = {}
 ): Promise<UseFetchResult<T>> => {
-  const urlBase = `${import.meta.env.VITE_API_URL}`;
+  const { urlBase } = useBaseUrlApi();
   const url = path.startsWith('http') ? path : `${urlBase}/${path}`;
   const { logger, correlationId } = useSsrLogger();
   logger.info(`[ui] [useFetch] url: ${url}`);

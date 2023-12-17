@@ -51,5 +51,5 @@ export async function assertTomlEnv(
   //   env != 'dev' ? { ...defaultEnvConfig, ...config['env'][`${env}`] } : config['env'][`${env}`];
   if (config['vars']) config['env'][`${env}`]['vars'] = config['vars'];
   // console.log(config);
-  await writeToml(config, { wranglerFile, debug, appName, env });
+  await writeToml(config, { wranglerFile, debug, env });
 }

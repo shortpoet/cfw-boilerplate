@@ -8,7 +8,11 @@ const cookieOptions: (mode: 'set' | 'remove', env: Env) => CookieSetOptions = (m
   if (env.VITE_LOG_LEVEL === 'debug') {
     console.log('cookieOptions');
   }
-  const hostname = new URL(env.VITE_APP_URL).hostname;
+  const baseUrl =
+    process.env.NODE_ENV === 'development'
+      ? `http://${env.HOST}:${env.VITE_PORT}`
+      : `https://${env.HOST}`;
+  const hostname = new URL(`${baseUrl}`).hostname;
   const isLocalhost =
     hostname === 'localhost' || hostname.startsWith('127.0.0.') || hostname.startsWith('192.168.');
   const out = {
@@ -17,7 +21,7 @@ const cookieOptions: (mode: 'set' | 'remove', env: Env) => CookieSetOptions = (m
     maxAge: 60 * 60 * 24,
     domain: hostname,
     sameSite: 'none' as const,
-    secure: env.VITE_APP_URL.startsWith('https') && !isLocalhost,
+    secure: baseUrl.startsWith('https') && !isLocalhost,
     httpOnly: false,
   };
   if (env.VITE_LOG_LEVEL === 'debug') {

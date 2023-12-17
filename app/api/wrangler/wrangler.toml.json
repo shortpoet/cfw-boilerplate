@@ -15,6 +15,23 @@
   },
   "env": {
     "dev": {
+      "vars": {
+        "HOST": "0.0.0.0",
+        "VITE_PORT": "3000",
+        "VITE_PORT_API": "3000",
+        "VITE_LOG_LEVEL": "debug",
+        "NODE_ENV": "development",
+        "WORKER_ENVIRONMENT": "dev",
+        "VITE_APP_NAME": "cfw-boilerplate",
+        "VITE_API_VERSION": "0.0.1",
+        "VITE_UI_VERSION": "0.0.1",
+        "AUTH_PATH": "api/auth",
+        "EMAIL_SERVER_HOST": "smtp.fastmail.com",
+        "EMAIL_SERVER_PORT": "465",
+        "EMAIL_SERVER_USER": "cfw-boilerplate-signups@shortpoet.com",
+        "EMAIL_FROM": "cfw-boilerplate-signups@shortpoet.com",
+        "SSR_BASE_PATHS": "_error,about,api-data,auth,index"
+      },
       "name": "cfw-boilerplate",
       "d1_databases": [
         {
@@ -23,25 +40,6 @@
           "database_id": "54354d55-a9fa-41de-8727-6df90ba3e32f"
         }
       ],
-      "vars": {
-        "HOST": "localhost",
-        "VITE_PORT": "3000",
-        "VITE_LOG_LEVEL": "debug",
-        "NODE_ENV": "development",
-        "WORKER_ENVIRONMENT": "dev",
-        "VITE_APP_NAME": "cfw-boilerplate",
-        "VITE_API_VERSION": "0.0.1",
-        "VITE_UI_VERSION": "0.0.1",
-        "VITE_APP_URL": "http://localhost:3000",
-        "VITE_API_URL": "http://localhost:3000",
-        "NEXTAUTH_URL": "http://localhost:3000/api/auth",
-        "EMAIL_SERVER_HOST": "smtp.fastmail.com",
-        "EMAIL_SERVER_PORT": "465",
-        "EMAIL_SERVER_USER": "cfw-boilerplate-signups@shortpoet.com",
-        "EMAIL_FROM": "cfw-boilerplate-signups@shortpoet.com",
-        "SSR_BASE_PATHS": "_error,about,api-data,auth,index",
-        "LUCIAAUTH_URL": "http://localhost:3000/api/auth"
-      },
       "kv_namespaces": [
         {
           "binding": "CFW_BOILERPLATE_UI",

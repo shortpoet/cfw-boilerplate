@@ -65,12 +65,11 @@ declare global {
     WORKER_ENVIRONMENT: 'dev' | 'qa' | 'uat' | 'prod';
     SSR?: boolean;
     VITE_PORT: string;
+    VITE_PORT_API: string;
     VITE_LOG_LEVEL: LogLevel;
     VITE_APP_NAME: string;
     VITE_API_VERSION: string;
     VITE_UI_VERSION: string;
-    VITE_APP_URL: string;
-    VITE_API_URL: string;
     SSR_BASE_PATHS: string;
 
     // CLOUDFLARE
@@ -85,7 +84,7 @@ declare global {
 
     // AUTH
     __SECRET__: string;
-    NEXTAUTH_URL: string;
+    AUTH_PATH: string;
     NEXTAUTH_SECRET: string;
     GITHUB_CLIENT_ID: string;
     GITHUB_CLIENT_SECRET: string;
@@ -161,15 +160,14 @@ declare global {
       WORKER_ENVIRONMENT: 'dev' | 'qa' | 'uat' | 'prod';
       SSR?: boolean;
       VITE_PORT: string;
+      VITE_PORT_API: string;
       VITE_LOG_LEVEL: LogLevel;
       VITE_APP_NAME: string;
       VITE_API_VERSION: string;
       VITE_UI_VERSION: string;
-      VITE_APP_URL: string;
-      VITE_API_URL: string;
       SSR_BASE_PATHS: string;
       __SECRET__: string;
-      NEXTAUTH_URL: string;
+      AUTH_PATH: string;
       NEXTAUTH_SECRET: string;
       GITHUB_CLIENT_ID: string;
       GITHUB_CLIENT_SECRET: string;
@@ -197,7 +195,7 @@ declare global {
     //   VITE_API_URL: string;
     //   SSR_BASE_PATHS: string;
     //   __SECRET__: string;
-    //   NEXTAUTH_URL: string;
+    //   AUTH_PATH: string;
     //   NEXTAUTH_SECRET: string;
     //   GITHUB_CLIENT_ID: string;
     //   GITHUB_CLIENT_SECRET: string;
