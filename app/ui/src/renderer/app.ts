@@ -42,7 +42,8 @@ function createApp(Page: Page, pageProps: PageProps | undefined, pageContext: Pa
     }),
     created() {
       rootComponent = this;
-      provideAuth();
+      // provideNextAuth();
+      provideLuciaAuth();
       provideLogger(import.meta.env as unknown as EnvVars);
     },
     render() {

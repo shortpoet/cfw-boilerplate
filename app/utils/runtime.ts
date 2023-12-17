@@ -18,3 +18,8 @@ function isBrowser() {
 const IS_WORKER = isWorker();
 const IS_NODE = isNode();
 const IS_BROWSER = isBrowser();
+
+export const isClient = typeof window !== 'undefined';
+const defaultWindow: (Window & typeof globalThis) | undefined = /* #__PURE__ */ isClient
+  ? window
+  : undefined;

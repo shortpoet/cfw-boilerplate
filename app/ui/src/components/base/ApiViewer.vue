@@ -60,7 +60,7 @@ const props = defineProps({
 const urlPath = ref(props.urlPath);
 const fetchNow = ref(props.fetchNow);
 
-const auth = useNextAuth();
+const auth = useLuciaAuth();
 const { user, authLoading, onLoad } = auth;
 console.log('[ui] [Api Viewer] [auth] user');
 console.log(user);

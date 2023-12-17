@@ -1,21 +1,19 @@
-import { Ref } from 'vue';
-// import type { AuthAction, Session as OAuthSession } from '@auth/core/types';
-
 export {
   Session,
   EmailUser,
   GithubUser,
+  CredentialsUser,
   User,
   BaseUser,
-  NextAuthInstance,
   SetSessionResult,
   SessionUnion,
   UserUnion,
+  AuthInstance,
+  LoginOptions,
 };
 
 type ISODateString = string;
 
-// interface Session extends OAuthSession {
 interface Session {
   id: string;
   userId: string;
@@ -151,26 +149,8 @@ type GithubUser = {
   picture?: string;
 };
 
-// type GithubUser = {
-//   id: string;
-//   userType: UserType.GitHub;
-//   username: string;
-//   created_at: number;
-//   image?: string;
-//   name?: string;
-//   nickname?: string;
-//   picture?: string;
-//   updated_at?: string;
-//   sub?: string;
-//   email?: string;
-// };
-
 type SessionUnion = GithubSession | EmailSession | CredentialsSession;
-// type SessionUnion = GithubSession | Session;
-
 type UserUnion = EmailUser | GithubUser | CredentialsUser | BaseUser;
-// export type UserUnion = (EmailUser | GithubUser | CredentialsUser) & BaseUser;
-// type User<T> = T & BaseUser;
 type User = UserUnion;
 
 interface SetSessionResult {
@@ -204,7 +184,7 @@ export function isCredentialsUser(user: SessionUnion['user']): user is Credentia
   // return user.userType === UserType.Credentials;
 }
 
-interface NextAuthInstance {
+interface AuthInstance {
   authLoading: Ref<boolean>;
   authError: Ref<any>;
   isLoggedIn: Ref<boolean>;
@@ -219,7 +199,7 @@ interface NextAuthInstance {
   // popupOpen: Ref<boolean>;
 
   onLoad: () => Promise<UserUnion | null | undefined>;
-  login(options?: any): Promise<void>;
+  login(options: LoginOptions): Promise<void>;
   logout(options?: any): Promise<void>;
   setSession?: (user: UserUnion) => Promise<SetSessionResult>;
   setSessionStore?: (session: SessionUnion) => void;
@@ -233,24 +213,8 @@ interface NextAuthInstance {
   isGithubUser?: (user: UserUnion) => user is GithubUser;
   isEmailUser?: (user: UserUnion) => user is EmailUser;
   isCredentialsUser?: (user: UserUnion) => user is CredentialsUser;
-
-  // createAuthClient: (
-  //   onRedirectCallback: (appState: any) => void,
-  //   redirect_uri?: string,
-  //   options?: ClientOptions,
-  // ) => Promise<void>;
-  // isAuthenticated: () => Promise<boolean>;
-  // loginWithPopup(o?: PopupLoginOptions): Promise<void>;
-  // handleRedirectCallback(url?: string): Promise<RedirectLoginResult>;
-  // loginWithRedirect(o?: RedirectLoginOptions): Promise<void>;
-  // getTokenSilently(options?: GetTokenSilentlyOptions): Promise<string>;
-  // getTokenSilently(
-  //   options: GetTokenSilentlyOptions & { detailedResponse: true },
-  // ): Promise<GetTokenSilentlyVerboseResponse>;
-  // getIdTokenClaims(): Promise<IdToken | undefined>;
-  // getTokenWithPopup(o?: GetTokenWithPopupOptions): Promise<string | undefined>;
 }
 
-// interface Auth0Instance {
-//   $auth: this;
-// }
+type LoginOptions = {
+  provider: string;
+};

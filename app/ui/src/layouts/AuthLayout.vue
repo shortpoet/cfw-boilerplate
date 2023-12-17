@@ -53,11 +53,11 @@ let authLoading = ref(true);
 const pageContext = usePageContext();
 const isAdmin = computed(() => pageContext.session?.user.roles?.includes(UserRole.Admin));
 
-console.log('[ui] [NextAuthLayout] [pageContext] isAdmin -> ', isAdmin.value);
+console.log('[ui] [AuthLayout] [pageContext] isAdmin -> ', isAdmin.value);
 
 let Layout = isAdmin.value ? AdminLayout : UserLayout;
 const pageComponent = computed(() => {
-  console.log('[ui] [NextAuthLayout] [computed.pageComponent] -> isAdmin ', isAdmin.value);
+  console.log('[ui] [AuthLayout] [computed.pageComponent] -> isAdmin ', isAdmin.value);
   return Layout;
 });
 
@@ -66,12 +66,12 @@ onMounted(async () => {
   const authStore = useAuthStore();
   const session = ref(pageContext.session);
   if (session.value) {
-    console.log('[ui] [NextAuthLayout] [onMounted] session -> ', session.value);
-    console.log('[ui] [NextAuthLayout] [onMounted] authStore.session -> ', authStore.session);
+    console.log('[ui] [AuthLayout] [onMounted] session -> ', session.value);
+    console.log('[ui] [AuthLayout] [onMounted] authStore.session -> ', authStore.session);
     authStore.setSession(session.value);
   }
 
-  const auth = useNextAuth();
+  const auth = useLuciaAuth();
   const { onLoad } = auth;
   await onLoad();
   authLoading.value = auth.authLoading.value;

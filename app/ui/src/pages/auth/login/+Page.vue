@@ -12,12 +12,21 @@
     <Login>
       <template #login="loginProps">
         <button class="btn m-3 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-          id="login-button" :disabled="loginProps.isLoggedIn" @click="loginProps.onLogin">Log in</button>
+          id="login-button" :disabled="loginProps.isLoggedIn" @click="loginProps.onLogin">
+          Log in
+        </button>
+      </template>
+      <template #login-github="loginProps">
+        <button class="btn m-3 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+          id="login-button-github" :disabled="loginProps.isLoggedIn" @click="loginProps.onLogin">
+          <i class="i-carbon-logo-github" inline-block /> Log in Github
+        </button>
       </template>
       <template #login-popup="loginPopupProps">
         <button class="btn m-3 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-          id="login-button" :disabled="loginPopupProps.isLoggedIn" @click="loginPopupProps.onLoginPopup">Log in
-          Popup</button>
+          id="login-button" :disabled="loginPopupProps.isLoggedIn" @click="loginPopupProps.onLoginPopup">
+          Log in Popup
+        </button>
       </template>
       <template #logout="logoutProps">
         <button class="btn m-3 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"

@@ -1,1 +1,1 @@
-export { NextAuthLayout as Layout } from '../../layouts';
+export { AuthLayout as Layout } from '../../layouts';

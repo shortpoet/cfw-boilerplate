@@ -1,4 +1,4 @@
-import { createCors, RequestLike, IRequest, error } from 'itty-router';
+import { RequestLike, IRequest, error } from 'itty-router';
 import { ExecutionContext } from '@cloudflare/workers-types';
 import { ServerResponse } from 'http';
 import { OpenAPIRouter } from '@cloudflare/itty-router-openapi';
@@ -23,6 +23,7 @@ import { health_router } from 'api/router';
 import { task_router } from 'api/router';
 import { auth_router } from 'api/router';
 import withCookies from '../middleware/cookie';
+import { createCors } from '../middleware/createCors';
 
 const FILE_LOG_LEVEL = 'debug';
 
@@ -51,7 +52,7 @@ const protectedRoutes = {
 };
 
 router
-  .options('*', preflight)
+  .all('*', preflight)
   .all('*', withPino({ level: FILE_LOG_LEVEL }), withCfHeaders())
   .all('*', withQueryParams(), withCookies(), withSession())
   .all('/auth/*', auth_router)
@@ -87,7 +88,7 @@ const Api = {
     if (data) {
       out = router.handle(req, resp, env, ctx, data);
     } else {
-      out = router.handle(req, resp, env, ctx);
+      out = router.handle(req, resp, env, ctx).catch(error).then(corsify);
     }
     return out;
   },

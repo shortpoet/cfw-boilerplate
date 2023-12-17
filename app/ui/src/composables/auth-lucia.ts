@@ -1,6 +1,6 @@
 import {
   BaseUser,
-  NextAuthInstance,
+  LuciaAuthInstance,
   Session,
   SetSessionResult,
   User,
@@ -9,6 +9,7 @@ import {
   isGithubUser,
   UserUnion,
   SessionUnion,
+  LoginOptions,
 } from '#/types';
 import { InjectionKey, ref, provide, inject } from 'vue';
 import { useFetch } from './fetch';
@@ -16,14 +17,13 @@ import { useAuthStore } from '../stores';
 import { storeToRefs } from 'pinia';
 
 export {
-  COOKIES_SESSION_TOKEN,
-  COOKIES_USER_TOKEN,
-  SESSION_TOKEN_EXPIRY,
-  cookieOptions,
-  useNextAuth,
+  LUCIAAUTH_COOKIES_LUCIAAUTH_SESSION_TOKEN,
+  LUCIAAUTH_COOKIES_USER_TOKEN,
+  LUCIAAUTH_SESSION_TOKEN_EXPIRY,
+  useLuciaAuth,
 };
 
-const AuthSymbol: InjectionKey<NextAuthInstance> = Symbol();
+const AuthSymbol: InjectionKey<LuciaAuthInstance> = Symbol();
 
 const user = ref<UserUnion>();
 const session = ref<SessionUnion | undefined>();
@@ -35,23 +35,11 @@ const audience = `https://ssr.shortpoet.com`;
 const scope = 'openid profile email offline_access';
 const response_type = 'code';
 
-const COOKIES_USER_TOKEN = `${process.env.VITE_APP_NAME}-next-user-token`;
-const COOKIES_SESSION_TOKEN = `${process.env.VITE_APP_NAME}-next-session-token`;
-const SESSION_TOKEN_EXPIRY = 60 * 60; // 1 hour
+const LUCIAAUTH_COOKIES_USER_TOKEN = `${process.env.VITE_APP_NAME}-next-user-token`;
+const LUCIAAUTH_COOKIES_LUCIAAUTH_SESSION_TOKEN = `${process.env.VITE_APP_NAME}-next-session-token`;
+const LUCIAAUTH_SESSION_TOKEN_EXPIRY = 60 * 60; // 1 hour
 
-const cookieOptions: any = {
-  // const cookieOptions: CookieSetOptions = {
-  path: '/',
-  expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
-  maxAge: 60 * 60 * 24,
-  domain: 'localhost',
-  sameSite: 'strict',
-  // below only works in https
-  // secure: true,
-  // httpOnly: true,
-};
-
-export const provideAuth = () => {
+export const provideLuciaAuth = () => {
   const auth = {
     user,
     authLoading,
@@ -71,12 +59,7 @@ export const provideAuth = () => {
   provide(AuthSymbol, auth);
 };
 
-export const isClient = typeof window !== 'undefined';
-const defaultWindow: (Window & typeof globalThis) | undefined = /* #__PURE__ */ isClient
-  ? window
-  : undefined;
-
-const useNextAuth = () => {
+const useLuciaAuth = () => {
   const auth = inject(AuthSymbol);
   if (!auth) throw new Error('provideAuth() not called in parent');
 
@@ -113,12 +96,12 @@ const useNextAuth = () => {
   auth.setLoginRedirectPath = setLoginRedirectPath;
   auth.setSessionStore = setSessionStore;
   // console.log(`authStore: ${JSON.stringify(authStore, null, 2)}`);
-  return auth as NextAuthInstance;
+  return auth as LuciaAuthInstance;
 };
 
 const setSession = async (): Promise<SetSessionResult> => {
   // TODO set session type
-  const url = new URL(`${process.env.NEXTAUTH_URL}/session`);
+  const url = new URL(`${process.env.LUCIAAUTH_URL}/session`);
   const { data, error, dataLoading } = await useFetch<any>(url.href);
   let res: SetSessionResult = { session: undefined, status: 'Loading' };
   if (error.value) {
@@ -148,40 +131,32 @@ const onLoad = async () => {
   return null;
 };
 
-const login = async (options?: any) => {
+const login = async (opts: LoginOptions) => {
   let res;
-  const url = new URL(`${process.env.NEXTAUTH_URL}/signin`);
+  const url = new URL(`${process.env.LUCIAAUTH_URL}/login/${opts.provider}`);
+
   const { data, error, dataLoading } = await useFetch(url.href);
-  window.location.replace(url.href);
+  const { logger, correlationId } = useSsrLogger();
+
   if (error.value) {
-    console.error(`error: ${error.value}`);
+    logger.error(`[ui] [useAuth] error:`);
+    logger.error(error.value);
   }
 
   if (dataLoading.value) {
-    console.log(`[ui] [useAuth] dataLoading: ${dataLoading.value}`);
+    logger.info(`[ui] [useAuth] dataLoading: ${dataLoading.value}`);
     res = { result: 'Loading', status: 'Loading' };
   }
   if (data.value) {
-    console.log(`data: ${JSON.stringify(data.value, null, 2)}`);
+    logger.debug(`[ui] [useAuth] data: ${JSON.stringify(data.value, null, 2)}`);
     res = { result: 'Success', status: 'Success' };
-    // const { session, user } = data.value;
-
-    // if (process.env.VITE_LOG_LEVEL === 'debug') {
-    //   let logObj = escapeNestedKeys({ ...data.value }, [
-    //     'token',
-    //     'body',
-    //     'Authorization',
-    //     'accessToken',
-    //     'sessionToken',
-    //   ]);
-    //   console.log(`data: ${JSON.stringify(logObj, null, 2)}`);
-    // }
   }
+  // window.location.replace(url.href);
 };
 
 const logout = async () => {
   let res;
-  const url = new URL(`${process.env.NEXTAUTH_URL}/signout`);
+  const url = new URL(`${process.env.LUCIAAUTH_URL}/signout`);
   const { data, error, dataLoading } = await useFetch(url.href);
   window.location.replace(url.href);
   // navigate(url.pathname);

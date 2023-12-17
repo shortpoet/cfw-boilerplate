@@ -11,7 +11,7 @@
     <li>{{ githubUser?.nickname }}</li>
     <li>Other info</li>
     <Login>
-      <template #login="loginProps">
+      <template #login-github="loginProps">
         <li>
           <button class="c-yellow btn m-3 text-sm py-2 px-4 rounded-full" id="login-button" :disabled="loggedIn"
             @click="loginProps.onLogin">Log in</button>

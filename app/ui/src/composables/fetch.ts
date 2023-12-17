@@ -128,13 +128,17 @@ const useFetch = async <T>(
       const response = await fetch(request, { ...init });
 
       if (!response.ok) {
+        let error = await response.text();
+        try {
+          error = JSON.parse(error);
+        } catch (error) {}
         throw new Error(
           JSON.stringify({
             name: 'FetchError',
             message: `Failed to fetch data from ${url}.`,
             status: response.status,
             statusText: response.statusText,
-            error: JSON.parse(await response.text()),
+            error,
           })
         );
       }
@@ -159,13 +163,17 @@ const useFetch = async <T>(
       }
 
       if (!!out) {
+        let error = await response.text();
+        try {
+          error = JSON.parse(error);
+        } catch (error) {}
         throw new Error(
           JSON.stringify({
             name: 'FetchError',
             message: `Failed to parse data from ${url}.`,
             status: response.status,
             statusText: response.statusText,
-            error: JSON.parse(await response.text()),
+            error,
           })
         );
       }
@@ -183,7 +191,10 @@ const useFetch = async <T>(
     } catch (err: any) {
       logger.error(`[ui] [useFetch] error: ${err.message}`);
       console.log(err);
-      const message = JSON.parse(err.message);
+      let message = err.message;
+      try {
+        message = JSON.parse(err.message);
+      } catch (error) {}
       error.value = {
         name: err.name,
         message,

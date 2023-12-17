@@ -11,8 +11,8 @@
     </div>
   </div>
   <div v-else>
-    <div>
-      <slot name="login" :onLogin="onLogin" :isLoggedIn="isLoggedIn" />
+    <div v-for="prov in providers" :key="prov">
+      <slot :name="`login-${prov}`" :onLogin="onLogin" :isLoggedIn="isLoggedIn" />
     </div>
     <div>
       <slot name="login-popup" :onLoginPopup="onLoginPopup" :isLoggedIn="isLoggedIn" />
@@ -47,6 +47,13 @@ let authLoading = ref(false);
 let authError = ref(null);
 let isLoggedIn = ref(false);
 
+const providers = ref([
+  'github'
+])
+
+console.log("[ui] [login.component] setup");
+console.log(`[ui] [login.component] providers`);
+console.log(providers.value);
 
 const pageContext = usePageContext();
 const session = pageContext.session;
@@ -62,7 +69,7 @@ if (import.meta.env.VITE_LOG_LEVEL === 'debug') {
 
 if (typeof window !== "undefined") {
   console.log("[ui] [login.component] typeof window !== 'undefined' -> can now load things that would break SSR");
-  const auth = useNextAuth();
+  const auth = useLuciaAuth();
   const { login, logout, authLoading } = auth;
   ({ authError, isLoggedIn } = auth);
   user = auth.user || user;
@@ -70,9 +77,14 @@ if (typeof window !== "undefined") {
   console.log(`[ui] [login.component] authLoading.value ${authLoading.value}`);
   onLogin.value = async (event: any) => {
     console.log("[ui] [login.component] onLogin");
+    console.log(`[ui] [login.component] event ${event}`);
+    console.log(event)
+    console.log(event.target)
+    console.log(event.target.id)
     // cookie options must be in both set and remove
     // cookies.set(COOKIES_USER_TOKEN, true, cookieOptions)
-    await login();
+    const provider = event.target.id.split('-')[2];
+    await login({ provider });
   };
   onLoginPopup.value = async (event: any) => {
     console.log("[ui] [login.component] onLoginPopup");
@@ -89,4 +101,3 @@ if (typeof window !== "undefined") {
 }
 
 </script>
-#/types
