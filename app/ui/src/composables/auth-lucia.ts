@@ -153,7 +153,8 @@ const login = async (opts: LoginOptions) => {
     logger.debug(`[ui] [useAuth] data: ${JSON.stringify(data.value, null, 2)}`);
     res = { result: 'Success', status: 'Success' };
   }
-  // window.location.replace(url.href);
+  console.log(data.value);
+  window.location.replace(data.value.url);
 };
 
 const logout = async () => {

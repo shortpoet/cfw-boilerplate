@@ -3,7 +3,7 @@ import { escapeNestedKeys } from '#/utils';
 
 export { RequestConfig, FetchError, UseFetchResult, useFetch, USE_FETCH_REQ_INIT };
 
-const FILE_DEBUG = false;
+const FILE_DEBUG = true;
 const FETCH_DEBUG = import.meta.env.VITE_LOG_LEVEL === 'debug' && FILE_DEBUG;
 const IS_SSR = true;
 // const IS_SSR = import.meta.env.SSR;
@@ -87,6 +87,7 @@ const useFetch = async <T>(
     host: 'localhost:3000',
     'sec-fetch-dest': 'empty',
     'sec-fetch-mode': 'cors',
+    origin: `${urlBase}`,
   };
 
   const headers = IS_SSR
@@ -148,8 +149,9 @@ const useFetch = async <T>(
 
       const headers = response.headers;
 
-      console.log('headers -> ');
+      console.log('[ui] [useFetch] response headers -> ');
       console.log(headers);
+      console.log(headers.get('set-cookie'));
 
       if (FETCH_DEBUG) {
         (ct === 'application/json' || ct === 'application/x-www-form-urlencoded') &&

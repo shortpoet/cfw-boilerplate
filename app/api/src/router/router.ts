@@ -28,12 +28,13 @@ import { createCors } from '../middleware/createCors';
 const FILE_LOG_LEVEL = 'debug';
 
 const { preflight, corsify } = createCors({
-  origins: [
-    'http://localhost:3000',
-    'https://cfw-boilerplate.pages.dev',
-    'http://localhost:3333',
-    'https://github.com',
-  ],
+  // origins: [
+  //   'http://127.0.0.1',
+  //   'http://localhost:3000',
+  //   'https://cfw-boilerplate.pages.dev',
+  //   'http://localhost:3333',
+  //   'https://github.com',
+  // ],
 });
 
 export { corsify };

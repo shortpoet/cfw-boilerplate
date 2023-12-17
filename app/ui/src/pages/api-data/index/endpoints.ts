@@ -48,6 +48,7 @@ const PATH_MAPPING = {
   '/api-data/find': { route: 'api/db-v1/find', options: {} },
 } as Record<string, any>;
 
+let endpoints: Endpoint[] = [];
 const getEndpoints = async () => {
   let { dataLoading, error, data } = {
     dataLoading: ref(false),
@@ -56,20 +57,29 @@ const getEndpoints = async () => {
   };
   const opts = {} as RequestConfig;
 
-  ({ dataLoading, error, data } = await useFetch<DiscoveryEndpoint>('api/openapi.json', opts));
-  const { text } = data.value || { text: '{}' };
-  // console.log(`[ui] [api-data] [onBeforePrerenderStart] endpoints`);
-  const openApi = JSON.parse(text) as OpenApi;
-  const e = Object.keys(openApi.paths)
-    .filter((path) => !path.match(/[\*\{]/))
-    .reverse();
-  const endpoints = e.map((path) => {
-    return {
-      path,
-      title:
-        openApi.paths[path].get?.summary || openApi.paths[path].post?.summary || formatPath(path),
-    };
-  });
-  // console.log(endpoints);
+  try {
+    ({ dataLoading, error, data } = await useFetch<DiscoveryEndpoint>('api/openapi.json', opts));
+    const { text } = data.value || { text: '{}' };
+    // console.log(`[ui] [api-data] [onBeforePrerenderStart] endpoints`);
+    const openApi = JSON.parse(text) as OpenApi;
+    const e = Object.keys(openApi.paths)
+      .filter((path) => !path.match(/[\*\{]/))
+      .reverse();
+    endpoints = e.map((path) => {
+      return {
+        path,
+        title:
+          openApi.paths[path].get?.summary || openApi.paths[path].post?.summary || formatPath(path),
+      };
+    });
+    // console.log(endpoints);
+  } catch (error) {
+    endpoints = Object.keys(PATH_MAPPING).map((path) => {
+      return {
+        path,
+        title: formatPath(path),
+      };
+    });
+  }
   return endpoints;
 };

@@ -5,6 +5,7 @@ import { createAuth, jsonOkResponse, badResponse, serverErrorResponse } from '..
 import { redirectResponse } from '#/api/src/middleware/redirect';
 import { OAuthRequestError } from '@lucia-auth/oauth';
 import { parseCookie } from 'lucia/utils';
+import { json } from 'stream/consumers';
 
 type CF = [env: Env, ctx: ExecutionContext];
 const router = OpenAPIRouter<IRequest, CF>({ base: '/api/auth/login' });
@@ -27,8 +28,46 @@ router.get('/github', async (req: Request, res: Response, env: Env, ctx: Executi
     secure: process.env.NODE_ENV === 'production',
     path: '/',
     maxAge: 60 * 60,
+    sameSite: 'lax',
   });
-  return redirectResponse(url.href, res, 302);
+  res.headers.set('Access-Control-Expose-Headers', 'Set-Cookie');
+  res.headers.set('Access-Control-Allow-Credentials', 'true');
+  res.headers.set('Access-Control-Allow-Origin', '*');
+  res.headers.set(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept, authorization'
+  );
+  return jsonOkResponse({ url }, res);
+  return redirectResponse(
+    // `http://${env.HOST}:${env.VITE_PORT_API}/api/auth/login/github/callback`,
+    url.toString(),
+    res,
+    302
+  );
+  // console.log(`[api] [auth] [login] [github] -> headers`);
+  // console.log(res.headers);
+  // res.headers.set('Location', '/');
+  // res.headers.set('Cache-Control', 'no-cache');
+  // res.headers.set('Pragma', 'no-cache');
+  // res.headers.set('Expires', '0');
+  // res.headers.set('Content-Type', 'text/plain');
+  // res.headers.set('Content-Length', '0');
+  // res.headers.set('Connection', 'close');
+  // res.headers.set('Access-Control-Allow-Origin', '*');
+  // console.log(res.headers);
+  // const resp = await fetch(url.href, {
+  //   method: 'GET',
+  //   headers: {
+  //     'Content-Type': 'text/plain',
+  //     'Content-Length': '0',
+  //     Connection: 'close',
+  //     'Access-Control-Allow-Origin': '*',
+  //   },
+  // });
+  // console.log(`[api] [auth] [login] [github] -> cookie`);
+  // console.log(resp.headers.getSetCookie());
+  // console.log(`[api] [auth] [login] [github] -> res`);
+  // console.log(await resp.text());
 });
 
 router.get(
@@ -42,9 +81,13 @@ router.get(
       return redirectResponse('/', res, 302);
     }
     const cookies = parseCookie(req.headers.get('cookie') ?? '');
+    console.log(`[api] [auth] [login] [github] -> cookies: ${cookies}`);
     const storedState = cookies.github_oauth_state;
     const state = req.query?.state;
     const code = req.query?.code;
+    console.log(`[api] [auth] [login] [github] -> storedState: ${storedState}`);
+    console.log(`[api] [auth] [login] [github] -> state: ${state}`);
+    console.log(`[api] [auth] [login] [github] -> code: ${code}`);
     // validate state
     if (!storedState || !state || storedState !== state || typeof code !== 'string') {
       return badResponse('Invalid state', undefined, res);

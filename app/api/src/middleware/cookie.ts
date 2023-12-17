@@ -73,6 +73,7 @@ export default function withCookies() {
     const cookieHeader = req.headers.get('cookie') || '';
     req.universalCookies = new Cookies(cookieHeader || '');
     res.cookie = withCookie;
+    res.clearCookie = clearCookie;
 
     req.universalCookies.addChangeListener((change: CookieChangeOptions) => {
       if (res.headersSent) {
@@ -80,7 +81,7 @@ export default function withCookies() {
       }
 
       if (change.value === undefined) {
-        clearCookie(req, res, env, change.name, { name: change.name, ...change.options });
+        res.clearCookie(req, res, env, change.name, { name: change.name, ...change.options });
       } else {
         const expressOpt = (<any>Object).assign({}, change.options);
         if (expressOpt.maxAge && change.options && change.options.maxAge) {

@@ -144,7 +144,13 @@ declare global {
       options?: CookieSetOptions
     ) => void;
     headersSent?: boolean;
-    clearCookie?: (name: string, options?: CookieChangeOptions) => void;
+    clearCookie: (
+      req: Request,
+      res: Response,
+      env: Env,
+      name: string,
+      options?: CookieChangeOptions
+    ) => void;
     cf?: ResponseCfProperties;
     webSocket?: WebSocket;
     encodeBody?: 'automatic' | 'manual' | undefined;

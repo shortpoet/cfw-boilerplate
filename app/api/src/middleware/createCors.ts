@@ -13,6 +13,8 @@ export const createCors = (options: CorsOptions = {}) => {
   // console.log(options);
   // Destructure and set defaults for options.
   const { origins = ['*'], maxAge, methods = ['GET'], headers = {} } = options;
+  console.log(`[api] [middleware] [createCors] -> origins: `);
+  console.log(origins);
 
   let allowOrigin: any;
   const isAllowOrigin =
@@ -42,7 +44,7 @@ export const createCors = (options: CorsOptions = {}) => {
     const origin = r.headers.get('origin') || '';
     console.log(`[api] [middleware] [createCors] [preflight] -> origin: ${origin}`);
     // set allowOrigin globally
-    allowOrigin = isAllowOrigin(origin) && { 'Access-Control-Allow-Origin': origin };
+    allowOrigin = isAllowOrigin(origin) && { 'Access-Control-Allow-Origin': '*' };
 
     console.log(`[api] [middleware] [createCors] [preflight] -> allowOrigin: `);
     console.log(allowOrigin);

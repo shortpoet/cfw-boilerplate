@@ -16,7 +16,7 @@ export default {
 
 export const redirectResponse = (redirectUrl: string, res?: Response, status = 301) => {
   const init = initResponse(res);
-  return new Response(undefined, {
+  return new Response(null, {
     ...init,
     status,
     headers: {
