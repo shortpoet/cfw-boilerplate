@@ -14,12 +14,14 @@ import {
   withCfSummary,
   jsonData,
   withPino,
+  withQueryParams,
   // withUser,
 } from '../middleware';
 
 import { auth_dbv1_router } from 'api/router';
 import { health_router } from 'api/router';
 import { task_router } from 'api/router';
+import { auth_router } from 'api/router';
 import withCookies from '../middleware/cookie';
 
 const FILE_LOG_LEVEL = 'debug';
@@ -51,9 +53,8 @@ const protectedRoutes = {
 router
   .options('*', preflight)
   .all('*', withPino({ level: FILE_LOG_LEVEL }), withCfHeaders())
-  .all('*', withCookies())
-  .all('*', withSession())
-  // .all('*', withSession())
+  .all('*', withQueryParams(), withCookies(), withSession())
+  .all('/auth/*', auth_router)
   .all('/task/*', task_router)
   .all('/db-v1/*', auth_dbv1_router)
   .all('/health/*', health_router)

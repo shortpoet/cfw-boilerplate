@@ -60,12 +60,26 @@ export const notFoundResponse = (msg?: string, err?: Error, res?: Response) => {
   return new Response(body, init);
 };
 
-export const badResponse = (err: Error, res?: Response) => {
-  return new Response(formatErr('BadRequest', 400, err), {
+export const badResponse = (msg?: string, err?: Error, res?: Response) => {
+  const newErr = err || new Error(`${msg}` || 'Bad Request');
+  const init = {
     ...res,
     status: 400,
-    statusText: err.message,
-  });
+    statusText: newErr.message,
+  } as ResponseInit;
+  const body = formatErr('BadRequest', 400, newErr);
+  return new Response(body, init);
+};
+
+export const serverErrorResponse = (msg?: string, err?: Error, res?: Response) => {
+  const newErr = err || new Error(`${msg}` || 'Server Error');
+  const init = {
+    ...res,
+    status: 500,
+    statusText: newErr.message,
+  } as ResponseInit;
+  const body = formatErr('ServerError', 500, newErr);
+  return new Response(body, init);
 };
 
 export const jsonOkResponse = (data: any, res?: Response) => {

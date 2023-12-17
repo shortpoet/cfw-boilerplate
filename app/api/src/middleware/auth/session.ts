@@ -20,13 +20,15 @@ export const withSession =
       const auth = createAuth(env);
       const authRequest = auth.handleRequest(req);
       const session = await authRequest.validate();
-      // if (!session) {
-      //   return null;
-      // }
+      if (!session) {
+        return;
+      }
       const result = userSchema.safeParse(session.user);
       if (!result.success) {
         throw new Error(result.error.toString());
       }
+      console.log(`[api] [middleware] [auth] [withSession] -> result ->`);
+      console.log(result);
       const user = result.data;
       console.log(`[api] [middleware] [auth] [withSession] -> user ->`);
       console.log(user);

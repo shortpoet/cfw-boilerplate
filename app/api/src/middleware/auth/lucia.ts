@@ -13,7 +13,7 @@ const envAliasMap = {
 
 // const envAlias = envAliasMap[config.env.NODE_ENV];
 export const createAuth = (env: Env) => {
-  console.log(`[api] [middleware] [auth] [lucia] -> env: ${env.NODE_ENV}`);
+  console.log(`[api] [middleware] [auth] [lucia] [createAuth] -> env: ${env.NODE_ENV}`);
   const adapter = deriveDatabaseAdapter(env);
   if (!adapter) {
     throw new Error('could not derive database adapter');
@@ -34,7 +34,7 @@ export const createAuth = (env: Env) => {
       };
     },
   });
-  console.log(`[api] [middleware] [auth] [lucia] -> auth: ${auth}`);
+  console.log(`[api] [middleware] [auth] [lucia] [createAuth] -> auth: ${auth}`);
   return auth;
 };
 
@@ -51,5 +51,6 @@ export const createGithubAuth = (auth: Auth, env: Env) => {
   return github(auth, {
     clientId: env.GITHUB_CLIENT_ID,
     clientSecret: env.GITHUB_CLIENT_SECRET,
+    redirectUri: `${env.VITE_API_URL}/api/auth/login/github/callback`,
   });
 };

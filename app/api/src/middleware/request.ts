@@ -3,6 +3,18 @@ import { ListOptions } from '#/types';
 
 const FILE_LOG_LEVEL = 'debug';
 
+const fromEntries = (ent: [string, string][]) =>
+  ent.reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {});
+
+export const withQueryParams = () => async (request: Request, env: Env) => {
+  console.log(`[api] middlware.withQueryParams -> ${request.method} -> ${request.url}`);
+  const url = new URL(request.url);
+  request.query = Object.fromEntries(url.searchParams);
+  // request.query = fromEntries([...url.searchParams.entries()]);
+  console.log(`[api] middlware.withQueryParams ->  END`);
+  console.log(request.query);
+};
+
 export const withListOptions = (request: Request) => {
   const { query } = request;
   if (!query) {
@@ -15,11 +27,11 @@ export const withListOptions = (request: Request) => {
     const limitAsNumber = Number(limit);
 
     if (limitAsNumber !== limitAsNumber) {
-      return badResponse(new Error('[limit] query must be a number.'));
+      return badResponse('', new Error('[limit] query must be a number.'));
     }
 
     if (limitAsNumber > 1000 || limitAsNumber < 1) {
-      return badResponse(new Error('[limit] query must be between 1 and 1000.'));
+      return badResponse('', new Error('[limit] query must be between 1 and 1000.'));
     }
 
     listOptions.limit = limitAsNumber;
