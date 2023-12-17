@@ -9,7 +9,7 @@ const cookieOptions: (mode: 'set' | 'remove', env: Env) => CookieSetOptions = (m
     console.log('cookieOptions');
   }
   const baseUrl =
-    process.env.NODE_ENV === 'development'
+    process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'staging'
       ? `http://${env.HOST}:${env.VITE_PORT}`
       : `https://${env.HOST}`;
   const hostname = new URL(`${baseUrl}`).hostname;

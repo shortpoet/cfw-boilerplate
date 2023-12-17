@@ -21,6 +21,6 @@ function shouldTrustHost() {
   return !!(
     process.env.AUTH_TRUST_HOST ??
     process.env.VERCEL ??
-    process.env.NODE_ENV === 'development'
+    (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'staging')
   );
 }

@@ -51,8 +51,8 @@ export async function setVars(
     env: {
       ...config['env'],
       [`${env}`]: {
-        vars: newVars,
         ...config['env'][`${env}`],
+        vars: newVars,
       },
     },
   };

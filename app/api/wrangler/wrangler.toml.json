@@ -1,8 +1,8 @@
 {
   "name": "cfw-boilerplate",
   "compatibility_date": "2023-11-21",
-  "node_compat": false,
-  "workers_dev": false,
+  "node_compat": true,
+  "workers_dev": true,
   "main": "../build/worker.mjs",
   "site": {
     "bucket": "../../ui/build/client"
@@ -20,7 +20,7 @@
         "VITE_PORT": "3000",
         "VITE_PORT_API": "3000",
         "VITE_LOG_LEVEL": "debug",
-        "NODE_ENV": "development",
+        "NODE_ENV": "staging",
         "WORKER_ENVIRONMENT": "dev",
         "VITE_APP_NAME": "cfw-boilerplate",
         "VITE_API_VERSION": "0.0.1",

@@ -1,8 +1,18 @@
 import esbuild from 'esbuild';
 import { NodeModulesPolyfillPlugin } from '@esbuild-plugins/node-modules-polyfill';
+import { polyfillNode } from 'esbuild-plugin-polyfill-node';
+import brode from '@geut/esbuild-plugin-brode';
 
 function buildWorker({ entry, out, debug, external } = {}) {
-  const plugins = [NodeModulesPolyfillPlugin()];
+  const plugins = [
+    // brode(),
+    // polyfillNode({
+    //   polyfills: {
+    //     crypto: true,
+    //   },
+    // }),
+    NodeModulesPolyfillPlugin(),
+  ];
   const define = {
     plugins,
     platform: 'browser',
@@ -42,6 +52,7 @@ export async function build({ entry, out, debug }) {
     // "node:buffer",
     // "node:http",
     // 'node:url',
+    'node:crypto',
     '__STATIC_CONTENT_MANIFEST',
   ];
 

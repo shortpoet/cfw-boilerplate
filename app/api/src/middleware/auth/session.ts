@@ -17,7 +17,7 @@ export const withSession =
       userId: z.string(),
     });
     try {
-      const auth = createAuth(env);
+      const auth = await createAuth(env);
       console.log(`[api] [middleware] [auth] [withSession] -> auth ->`);
       const authRequest = auth.handleRequest(req);
       console.log(`[api] [middleware] [auth] [withSession] -> authRequest ->`);

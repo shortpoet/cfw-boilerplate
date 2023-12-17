@@ -61,7 +61,7 @@ declare global {
     __appDir: string;
     HOST: string;
     PORT: string;
-    NODE_ENV: 'development' | 'production';
+    NODE_ENV: 'development' | 'staging' | 'production';
     WORKER_ENVIRONMENT: 'dev' | 'qa' | 'uat' | 'prod';
     SSR?: boolean;
     VITE_PORT: string;
@@ -156,7 +156,7 @@ declare global {
       __appDir: string;
       HOST: string;
       PORT: string;
-      NODE_ENV: 'development' | 'production';
+      NODE_ENV: 'development' | 'staging' | 'production';
       WORKER_ENVIRONMENT: 'dev' | 'qa' | 'uat' | 'prod';
       SSR?: boolean;
       VITE_PORT: string;

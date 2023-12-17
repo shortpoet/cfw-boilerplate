@@ -24,7 +24,7 @@ export const getConfig = (mode: string) => {
   const env = createEnv({
     server: {
       VITE_LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']),
-      NODE_ENV: z.enum(['development', 'production']),
+      NODE_ENV: z.enum(['development', 'staging', 'production']),
     },
     runtimeEnv: process.env,
     isServer: typeof window === 'undefined',
