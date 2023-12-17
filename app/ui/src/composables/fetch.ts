@@ -20,10 +20,10 @@ interface RequestConfig {
   callbackUrl?: string;
   user?: any;
   session?: any;
+  credentials?: RequestCredentials; // include, *same-origin, omit
   // Cloudflare Error: The 'mode, credentials' field on 'RequestInitializerDict' is not implemented.
   // referrerPolicy?: ReferrerPolicy; // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
   // cache?: RequestCache; // *default, no-cache, reload, force-cache, only-if-cached
-  // credentials?: RequestCredentials; // include, *same-origin, omit
   // mode?: RequestMode; // no-cors, *cors, same-origin
 }
 
@@ -31,9 +31,11 @@ const USE_FETCH_REQ_INIT: RequestConfig = {
   method: 'GET',
   headers: {
     'Content-Type': 'application/json',
+    'Access-Control-Allow-Credentials': 'true',
     Accept: 'application/json',
   },
   redirect: 'follow',
+  credentials: 'include',
   // referrerPolicy: 'no-referrer',
   // cache: 'no-cache',
   // credentials: 'same-origin',
