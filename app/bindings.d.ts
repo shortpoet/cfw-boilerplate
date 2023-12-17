@@ -9,6 +9,7 @@ import type {
 import { AssetManifestType } from '@cloudflare/kv-asset-handler/dist/types';
 import { Logger as LoggerType } from 'pino';
 import { StoreState } from 'pinia';
+import Cookies, { CookieChangeOptions, CookieSetOptions } from 'universal-cookie';
 
 export { Component };
 export { PageProps };
@@ -39,8 +40,8 @@ declare module 'json2toml';
 declare global {
   // const __STATIC_CONTENT: KVNamespace;
   // const __STATIC_CONTENT_MANIFEST: AssetManifestType;
-  const CFW_VUE_AI_KV_UI: KVNamespace;
-  const CFW_VUE_AI_DB: D1Database;
+  const CFW_BOILERPLATE_KV_UI: KVNamespace;
+  const CFW_BOILERPLATE_DB: D1Database;
   const isWorkerEnv: () => void;
 
   interface Window {
@@ -71,14 +72,14 @@ declare global {
     SSR_BASE_PATHS: string;
 
     // CLOUDFLARE
-    CFW_VUE_AI_UI: KVNamespace;
+    CFW_BOILERPLATE_UI: KVNamespace;
 
     __STATIC_CONTENT: KVNamespace;
     __STATIC_CONTENT_MANIFEST: AssetManifestType | string;
 
     // DB
-    CFW_VUE_AI_DB: D1Database;
-    CFW_VUE_AI_DB_BINDING_NAME: string;
+    CFW_BOILERPLATE_DB: D1Database;
+    CFW_BOILERPLATE_DB_BINDING_NAME: string;
 
     // AUTH
     __SECRET__: string;
@@ -119,6 +120,7 @@ declare global {
     params?: Record<string, string>;
     query?: Record<string, string>;
     logger: LoggerType;
+    universalCookies: Cookies;
     isAuthenticated?: boolean;
     cf?: CFRequest['cf'];
     cf_summary?: Partial<CFRequest['cf']>;
@@ -132,6 +134,16 @@ declare global {
   // interface Response extends Response {}
 
   interface Response extends CFResponse {
+    cookie: (
+      req: Request,
+      res: Response,
+      env: Env,
+      name?: string,
+      value?: string,
+      options?: CookieSetOptions
+    ) => void;
+    headersSent?: boolean;
+    clearCookie?: (name: string, options?: CookieChangeOptions) => void;
     cf?: ResponseCfProperties;
     webSocket?: WebSocket;
     encodeBody?: 'automatic' | 'manual' | undefined;
@@ -249,8 +261,8 @@ declare module '__STATIC_CONTENT_MANIFEST' {
 }
 
 /// <reference types="lucia" />
-declare namespace Lucia {
-  type Auth = import('lucia').Auth;
+export declare namespace Lucia {
+  type Auth = import('./api/src/middleware/auth/lucia').Auth;
   type DatabaseUserAttributes = {
     username: string;
   };

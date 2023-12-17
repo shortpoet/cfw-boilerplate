@@ -3,9 +3,9 @@ import { OpenAPIRouter } from '@cloudflare/itty-router-openapi';
 
 import { UserRole } from '#/types';
 import { logObjs, logger } from '#/utils';
-import { corsify } from '..';
-import { jsonData, unauthorizedResponse } from '../../middleware';
-import { debugRes, healthCheck, healthCheckJson } from '../../controllers';
+import { corsify } from '../..';
+import { jsonData, unauthorizedResponse } from '../../../middleware';
+import { debugRes, healthCheck, healthCheckJson } from '../../../controllers';
 
 const FILE_LOG_LEVEL = 'debug';
 

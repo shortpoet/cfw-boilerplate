@@ -8,8 +8,8 @@ import sampleData from '##/db/data.json';
 //   hello: 'world',
 // };
 import {
-  // authMiddlewareItty as authMiddleware,
-  // withSession,
+  // auth as authMiddleware,
+  withSession,
   withCfHeaders,
   withCfSummary,
   jsonData,
@@ -20,6 +20,7 @@ import {
 import { auth_dbv1_router } from 'api/router';
 import { health_router } from 'api/router';
 import { task_router } from 'api/router';
+import withCookies from '../middleware/cookie';
 
 const FILE_LOG_LEVEL = 'debug';
 
@@ -50,7 +51,8 @@ const protectedRoutes = {
 router
   .options('*', preflight)
   .all('*', withPino({ level: FILE_LOG_LEVEL }), withCfHeaders())
-  // .all('/auth/*', authMiddleware)
+  .all('*', withCookies())
+  .all('*', withSession())
   // .all('*', withSession())
   .all('/task/*', task_router)
   .all('/db-v1/*', auth_dbv1_router)
@@ -64,8 +66,10 @@ router
     '/hello',
     withCfSummary(),
     // withUser(),
-    (req: IRequest, res: Response, env: Env, ctx: ExecutionContext) =>
-      jsonData(req, res, env, { hello: 'world' })
+    (req: IRequest, res: Response, env: Env, ctx: ExecutionContext) => {
+      res.cookie(req, res, env, 'hello', 'world', { httpOnly: true, secure: false });
+      return jsonData(req, res, env, { hello: 'world' });
+    }
   )
   // .all("*", error_handler)
   .all('*', () => error(404, 'Oops... Are you sure about that? FAaFO'));

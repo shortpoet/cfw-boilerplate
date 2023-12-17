@@ -12,10 +12,10 @@ export * from './adapter';
 export { q };
 
 const getDatabaseFromEnv = async (env: Env) => {
-  const localBinding = env.CFW_VUE_AI_DB_BINDING_NAME || 'local-CFW_VUE_AI_DB_LOCAL';
+  const localBinding = env.CFW_BOILERPLATE_DB_BINDING_NAME || 'local-CFW_BOILERPLATE_DB_LOCAL';
   console.log(`[db] getDatabaseFromEnv -> localBinding: ${localBinding}`);
   const d1 =
-    env.WORKER_ENVIRONMENT === 'dev' ? binding<D1Database>(localBinding) : env.CFW_VUE_AI_DB;
+    env.WORKER_ENVIRONMENT === 'dev' ? binding<D1Database>(localBinding) : env.CFW_BOILERPLATE_DB;
   if (d1) {
     console.log(`[db] getDatabaseFromEnv -> env: ${env.WORKER_ENVIRONMENT}`);
     console.log(`[db] getDatabaseFromEnv -> d1:`);

@@ -1,0 +1,46 @@
+{
+  "name": "cfw-boilerplate",
+  "compatibility_date": "2023-11-21",
+  "node_compat": false,
+  "workers_dev": false,
+  "main": "../build/worker.mjs",
+  "site": {
+    "bucket": "../../ui/build/client"
+  },
+  "build": {
+    "command": "npm run build"
+  },
+  "dev": {
+    "port": 3000
+  },
+  "env": {
+    "dev": {
+      "name": "cfw-boilerplate",
+      "d1_databases": [
+        {
+          "binding": "CFW_BOILERPLATE_DB",
+          "database_name": "cfw-boilerplate-dev-CFW_BOILERPLATE_DB",
+          "database_id": "54354d55-a9fa-41de-8727-6df90ba3e32f"
+        }
+      ],
+      "vars": {
+        "HOST": "0.0.0.0",
+        "VITE_PORT": "3000",
+        "VITE_LOG_LEVEL": "info",
+        "NODE_ENV": "development",
+        "WORKER_ENVIRONMENT": "qa",
+        "VITE_APP_NAME": "cfw-boilerplate",
+        "VITE_API_VERSION": "0.0.1",
+        "VITE_UI_VERSION": "0.0.1",
+        "VITE_APP_URL": "http://localhost:3000",
+        "VITE_API_URL": "http://0.0.0.0:3333",
+        "NEXTAUTH_URL": "http://localhost:3333/api/auth",
+        "EMAIL_SERVER_HOST": "smtp.fastmail.com",
+        "EMAIL_SERVER_PORT": "465",
+        "EMAIL_SERVER_USER": "cfw-boilerplate-signups@shortpoet.com",
+        "EMAIL_FROM": "cfw-boilerplate-signups@shortpoet.com",
+        "SSR_BASE_PATHS": "_error,about,api-data,auth,index"
+      }
+    }
+  }
+}

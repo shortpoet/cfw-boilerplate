@@ -1,4 +1,16 @@
 export { getCookieAuthToken, getAuthCookies };
+import { CookieSetOptions } from 'universal-cookie';
+
+const cookieOptions: CookieSetOptions = {
+  path: '/',
+  expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
+  maxAge: 60 * 60 * 24,
+  domain: 'localhost',
+  sameSite: 'strict',
+  // below only works in https
+  // secure: true,
+  // httpOnly: true,
+};
 
 function parseCookie(cookie: string): { [key: string]: string } {
   return cookie

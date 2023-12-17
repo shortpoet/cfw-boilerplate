@@ -1,42 +1,55 @@
 // lucia.ts
-import { lucia, Middleware } from "lucia";
+import { deriveDatabaseAdapter } from '#/api/db/d1-kysely-lucia';
+import { lucia, Middleware } from 'lucia';
 import { web } from 'lucia/middleware';
 
-import { libsql } from "@lucia-auth/adapter-sqlite";
-import { google } from "@lucia-auth/oauth/providers";
-// import { config } from "../config";
-import { client } from "../db/primary";
+// import { google } from '@lucia-auth/oauth/providers';
+import { github } from '@lucia-auth/oauth/providers';
 
 const envAliasMap = {
-  production: "PROD",
-  development: "DEV",
+  production: 'PROD',
+  development: 'DEV',
 } as const;
 
 // const envAlias = envAliasMap[config.env.NODE_ENV];
+export const createAuth = (env: Env) => {
+  console.log(`[api] [middleware] [auth] [lucia] -> env: ${env.NODE_ENV}`);
+  const adapter = deriveDatabaseAdapter(env);
+  if (!adapter) {
+    throw new Error('could not derive database adapter');
+  }
+  // console.log(`[api] [middleware] [auth] [lucia] -> adapter: ${adapter}`);
+  const auth = lucia({
+    env: env.NODE_ENV === 'development' ? 'DEV' : 'PROD',
+    middleware: web(),
+    adapter,
+    getUserAttributes: (data) => {
+      return {
+        githubUsername: data.username,
+        name: data.name,
+        picture: data.picture,
+        email: data.email,
+        id: data.id,
+        organization_id: data.organization_id,
+      };
+    },
+  });
+  console.log(`[api] [middleware] [auth] [lucia] -> auth: ${auth}`);
+  return auth;
+};
 
-export const auth = lucia({
-  env: envAlias,
-  middleware: web(),
-  adapter: libsql(client, {
-    user: "user",
-    key: "user_key",
-    session: "user_session",
-  }),
-  getUserAttributes: (data) => {
-    return {
-      name: data.name,
-      picture: data.picture,
-      email: data.email,
-      id: data.id,
-      organization_id: data.organization_id,
-    };
-  },
-});
+export type Auth = ReturnType<typeof createAuth>;
 
-export type Auth = typeof auth;
-
-export const googleAuth = google(auth, {
-  clientId: config.env.GOOGLE_CLIENT_ID,
-  clientSecret: config.env.GOOGLE_CLIENT_SECRET,
-  redirectUri: `${config.env.HOST_URL}api/auth/google/callback`,
-});
+// export const createGoogleAuth = (auth: Auth, env: Env) => {
+//   return google(auth, {
+//     redirectUri: `${env.HOST_URL}api/auth/google/callback`,
+//     clientId: env.GOOGLE_CLIENT_ID,
+//     clientSecret: env.GOOGLE_CLIENT_SECRET,
+//   });
+// }
+export const createGithubAuth = (auth: Auth, env: Env) => {
+  return github(auth, {
+    clientId: env.GITHUB_CLIENT_ID,
+    clientSecret: env.GITHUB_CLIENT_SECRET,
+  });
+};

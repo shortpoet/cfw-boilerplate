@@ -8,7 +8,7 @@ const __appDir = path.resolve(path.dirname(new URL(import.meta.url).pathname), '
 const envDir = __appDir;
 const parsed = dotenv.config({ path: `${envDir}/.env` }).parsed;
 const parsedSecret = dotenv.config({ path: `${envDir}/.env.secret` }).parsed;
-const parsedDev = dotenv.config({ path: `${__appDir}/api/.dev.vars` }).parsed;
+const parsedDev = dotenv.config({ path: `${__appDir}/api/wrangler/.dev.vars` }).parsed;
 console.log(colors.green(`[utils] `), colors.magenta(`[config] envDir: ${envDir}`));
 // console.log(parsed);
 if (!parsed || !parsedDev) {

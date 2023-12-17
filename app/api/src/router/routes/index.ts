@@ -1,3 +1,3 @@
-export { default as auth_dbv1_router } from './db_v1';
-export { default as health_router } from './health';
-export { default as task_router } from './task';
+export * from './db_v1';
+export * from './health';
+export * from './task';

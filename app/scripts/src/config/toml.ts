@@ -20,11 +20,14 @@ export async function assertTomlEnv(
     compatibility_date: '2023-11-21',
     node_compat: false,
     workers_dev: false,
-    main: './build/worker.mjs',
+    main: '../build/worker.mjs',
     site: {
-      bucket: '../ui/build/client',
+      bucket: '../../ui/build/client',
       // entry_point: 'index.html',
       // include: ['dist/*'],
+    },
+    build: {
+      command: 'npm run build',
     },
     dev: {
       port: 3000,

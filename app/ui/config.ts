@@ -13,7 +13,8 @@ export const getConfig = (mode: string) => {
   const parsed = dotenv.config({ path: envPath }).parsed;
 
   const parsedSecret = dotenv.config({ path: `${envDir}/.env.secret` }).parsed;
-  const parsedDev = dotenv.config({ path: `${__appDir}/api/.dev.vars` }).parsed;
+  const parsedDev = dotenv.config({ path: `${__appDir}/api/wrangler/.dev.vars` }).parsed;
+  console.log(`${__appDir}/api/wrangler/.dev.vars`);
   // console.log(parsed);
   if (!parsed || !parsedDev) {
     const which = [!parsed, !parsedDev];

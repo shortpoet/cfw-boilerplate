@@ -142,6 +142,11 @@ const useFetch = async <T>(
       let out;
       const ct = response.headers.get('Content-Type');
 
+      const headers = response.headers;
+
+      console.log('headers -> ');
+      console.log(headers);
+
       if (FETCH_DEBUG) {
         (ct === 'application/json' || ct === 'application/x-www-form-urlencoded') &&
           logger.debug(

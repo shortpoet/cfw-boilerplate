@@ -26,12 +26,12 @@ export const healthRes = async (env: Env) => {
   if (!env) {
     throw new Error('env is undefined');
   }
-  const hasNamespace = env.CFW_VUE_AI_UI !== undefined;
+  const hasNamespace = env.CFW_BOILERPLATE_UI !== undefined;
   let gitInfo;
   try {
     gitInfo =
       isWorker() && hasNamespace
-        ? JSON.parse((await (env.CFW_VUE_AI_UI as KVNamespace).get('gitInfo')) || '')
+        ? JSON.parse((await (env.CFW_BOILERPLATE_UI as KVNamespace).get('gitInfo')) || '')
         : (await import('@cfw-boilerplate/db/src/data.json')).default;
   } catch (error) {
     console.error(`[api] [controllers] [health] [healthRes] gitInfo error: ${error}`);
@@ -110,9 +110,9 @@ export const debugRes = async (
     env: parse
       ? {
           ...envLog,
-          CFW_VUE_AI_UI: await parseEnv(env.CFW_VUE_AI_UI as KVNamespace),
-          // CFW_VUE_AI_KV_USERS: await parseEnv(env.CFW_VUE_AI_KV_USERS as KVNamespace),
-          // CFW_VUE_AI_KV_SESSIONS: await parseEnv(env.CFW_VUE_AI_KV_SESSIONS as KVNamespace),
+          CFW_BOILERPLATE_UI: await parseEnv(env.CFW_BOILERPLATE_UI as KVNamespace),
+          // CFW_BOILERPLATE_KV_USERS: await parseEnv(env.CFW_BOILERPLATE_KV_USERS as KVNamespace),
+          // CFW_BOILERPLATE_KV_SESSIONS: await parseEnv(env.CFW_BOILERPLATE_KV_SESSIONS as KVNamespace),
         }
       : envLog,
     ctx,
