@@ -7,6 +7,7 @@ import sqlite from 'better-sqlite3';
 import { betterSqlite3 } from '@lucia-auth/adapter-sqlite';
 import type { Database } from 'better-sqlite3';
 import type { Client } from '@libsql/client';
+import path from 'node:path';
 
 import fs from 'fs';
 import { D1Database } from '@cloudflare/workers-types';
@@ -15,7 +16,12 @@ export { getDatabaseFromEnv, deriveDatabaseAdapter };
 
 const getDatabaseFromEnv = (env: Env) => {
   if (env.WORKER_ENVIRONMENT === 'dev') {
-    return sqlite('local.sqlite').exec(fs.readFileSync('./sql/schema.sql', 'utf8'));
+    // unreliable i think. it is server when running `dev`
+    // const thisDirectory = path.resolve('.');
+    // console.log(`[db] getDatabaseFromEnv -> thisDirectory: ${thisDirectory}`);
+    return sqlite('local.sqlite').exec(
+      fs.readFileSync(`${env.__wranglerDir}/migrations/0000_init-db.sql`, 'utf8')
+    );
   } else {
     return env.CFW_BOILERPLATE_DB;
   }

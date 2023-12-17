@@ -9,8 +9,8 @@ export type CorsOptions = {
 
 // Create CORS function with default options.
 export const createCors = (options: CorsOptions = {}) => {
-  console.log(`[api] [middleware] [createCors] -> `);
-  console.log(options);
+  // console.log(`[api] [middleware] [createCors] -> `);
+  // console.log(options);
   // Destructure and set defaults for options.
   const { origins = ['*'], maxAge, methods = ['GET'], headers = {} } = options;
 
@@ -34,13 +34,18 @@ export const createCors = (options: CorsOptions = {}) => {
   // Pre-flight function.
   const preflight = (r: IRequest) => {
     console.log(`[api] [middleware] [createCors] [preflight] -> `);
-    console.log(r);
+    // console.log(r);
     // Use methods set.
     const useMethods = [...new Set(['OPTIONS', ...methods])];
+    console.log(`[api] [middleware] [createCors] [preflight] -> headers: `);
+    console.log(r.headers);
     const origin = r.headers.get('origin') || '';
-
+    console.log(`[api] [middleware] [createCors] [preflight] -> origin: ${origin}`);
     // set allowOrigin globally
     allowOrigin = isAllowOrigin(origin) && { 'Access-Control-Allow-Origin': origin };
+
+    console.log(`[api] [middleware] [createCors] [preflight] -> allowOrigin: `);
+    console.log(allowOrigin);
 
     // Check if method is OPTIONS.
     if (r.method === 'OPTIONS') {
@@ -50,6 +55,13 @@ export const createCors = (options: CorsOptions = {}) => {
         'Access-Control-Allow-Headers': r.headers.get('Access-Control-Request-Headers'),
         ...allowOrigin,
       };
+
+      console.log(`[api] [middleware] [createCors] [preflight] -> reqHeaders: `);
+      console.log(reqHeaders);
+      console.log(`[api] [middleware] [createCors] [preflight] -> r.headers: `);
+      console.log(r.headers.get('Origin'));
+      console.log(r.headers.get('Access-Control-Request-Headers'));
+      console.log(r.headers.get('Access-Control-Request-Method'));
 
       // Handle CORS pre-flight request.
       return new Response(null, {
@@ -66,7 +78,7 @@ export const createCors = (options: CorsOptions = {}) => {
   // Corsify function.
   const corsify = (response: Response): Response => {
     console.log(`[api] [middleware] [createCors] [corsify] -> `);
-    console.log(response);
+    // console.log(response);
     if (!response)
       throw new Error('No fetch handler responded and no upstream to proxy to specified.');
 

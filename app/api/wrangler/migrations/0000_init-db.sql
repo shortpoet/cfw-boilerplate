@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS [user] 
 (
-  [id] VARCHAR(15) NOT NULL PRIMARY KEY
+  [id] VARCHAR(15) NOT NULL PRIMARY KEY,
+  [username] VARCHAR(31) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS [user_key] 
@@ -32,6 +33,9 @@ CREATE TABLE IF NOT EXISTS [d1_migrations]
 
 CREATE UNIQUE INDEX IF NOT EXISTS user_id
   ON user(id);
+
+CREATE UNIQUE INDEX IF NOT EXISTS user_name
+  ON user(username);
 
 CREATE UNIQUE INDEX IF NOT EXISTS user_key_id
   ON user_key(id);

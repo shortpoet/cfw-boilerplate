@@ -60,6 +60,8 @@ const server = http.createServer(async (req, res) => {
     const data = req.read();
     const response = new Response();
     // const response = new Response("", { cf: req.cf });
+    console.log(`[server] [simple] -> apiReq -> ${config.env.__appDir}`);
+    console.log(`[server] [simple] -> apiReq -> ${config.env.__wranglerDir}`);
     // @ts-expect-error
     const resp = await Api.handle(apiReq, response, config.env, ctx, data)
       .then(json)
@@ -78,6 +80,8 @@ const server = http.createServer(async (req, res) => {
       res.end('Not Found');
       return;
     }
+
+    console.log(await resp.clone().text());
 
     const incomingHeaders = Array.from(resp.headers.entries()) as any;
     logger.debug(`server] incomingHeaders -> ${JSON.stringify(incomingHeaders, null, 2)}`);

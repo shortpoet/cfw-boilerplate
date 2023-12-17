@@ -21,7 +21,11 @@ const env: EnvVars = createEnv({
     HOST: z.string(),
     VITE_PORT: z.string(),
     VITE_LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']),
+    VITE_API_URL: z.string(),
+    VITE_APP_URL: z.string(),
     NODE_ENV: z.enum(['development', 'production']),
+    WORKER_ENVIRONMENT: z.enum(['dev', 'qa', 'uat', 'prod']),
+    VITE_APP_NAME: z.string(),
     NEXTAUTH_SECRET: z.string(),
     GITHUB_CLIENT_ID: z.string(),
     GITHUB_CLIENT_SECRET: z.string(),
@@ -36,6 +40,6 @@ const args = {
 };
 
 export const config = {
-  env,
+  env: { ...env, __appDir, __wranglerDir: `${__appDir}/api/wrangler` },
   args,
 };

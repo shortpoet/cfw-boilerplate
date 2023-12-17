@@ -18,7 +18,9 @@ export const withSession =
     });
     try {
       const auth = createAuth(env);
+      console.log(`[api] [middleware] [auth] [withSession] -> auth ->`);
       const authRequest = auth.handleRequest(req);
+      console.log(`[api] [middleware] [auth] [withSession] -> authRequest ->`);
       const session = await authRequest.validate();
       if (!session) {
         return;
@@ -57,7 +59,7 @@ export const withSession =
     }
   };
 
-export const withAuth =
+export const withGuard =
   ({ roles = [UserRole.Admin] }: { roles?: UserRole[] } = {}) =>
   async (req: Request, res: Response, env: Env, ctx: ExecutionContext) => {
     roles = [...roles, UserRole.Admin];

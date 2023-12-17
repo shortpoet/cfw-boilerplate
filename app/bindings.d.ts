@@ -57,16 +57,18 @@ declare global {
   export type Bindings = Record<string, unknown>;
   interface WorkerEnv {
     // APP
+    __wranglerDir: string;
+    __appDir: string;
     HOST: string;
     PORT: string;
     NODE_ENV: 'development' | 'production';
     WORKER_ENVIRONMENT: 'dev' | 'qa' | 'uat' | 'prod';
     SSR?: boolean;
     VITE_PORT: string;
+    VITE_LOG_LEVEL: LogLevel;
     VITE_APP_NAME: string;
     VITE_API_VERSION: string;
     VITE_UI_VERSION: string;
-    VITE_LOG_LEVEL: LogLevel;
     VITE_APP_URL: string;
     VITE_API_URL: string;
     SSR_BASE_PATHS: string;
@@ -151,6 +153,10 @@ declare global {
   }
   namespace NodeJS {
     interface ProcessEnv {
+      __wranglerDir: string;
+      __appDir: string;
+      HOST: string;
+      PORT: string;
       NODE_ENV: 'development' | 'production';
       WORKER_ENVIRONMENT: 'dev' | 'qa' | 'uat' | 'prod';
       SSR?: boolean;

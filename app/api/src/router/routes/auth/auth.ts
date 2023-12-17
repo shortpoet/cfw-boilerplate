@@ -83,6 +83,8 @@ router.get(
         // invalid code
         return badResponse('Invalid code', undefined, res);
       }
+      req.logger.error(`[api] [auth] [login] [github] -> error: ${e}`);
+      console.error(`[api] [auth] [login] [github] -> error: ${e}`);
       return serverErrorResponse('Server error', new Error(JSON.stringify(e)), res);
     }
   }

@@ -1,6 +1,7 @@
 // lucia.ts
 import { deriveDatabaseAdapter } from '#/api/db/d1-kysely-lucia';
 import { lucia, Middleware } from 'lucia';
+import 'lucia/polyfill/node';
 import { web } from 'lucia/middleware';
 
 // import { google } from '@lucia-auth/oauth/providers';
