@@ -31,5 +31,8 @@
     "sade": "^1.8.1",
     "terser": "^5.26.0",
     "toml": "^3.0.0"
+  },
+  "browser": {
+    "crypto": false
   }
 }

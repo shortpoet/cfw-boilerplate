@@ -24,7 +24,7 @@
         }
       ],
       "vars": {
-        "HOST": "0.0.0.0",
+        "HOST": "localhost",
         "VITE_PORT": "3000",
         "VITE_LOG_LEVEL": "debug",
         "NODE_ENV": "development",
@@ -33,15 +33,22 @@
         "VITE_API_VERSION": "0.0.1",
         "VITE_UI_VERSION": "0.0.1",
         "VITE_APP_URL": "http://localhost:3000",
-        "VITE_API_URL": "http://0.0.0.0:3333",
-        "NEXTAUTH_URL": "http://localhost:3333/api/auth",
+        "VITE_API_URL": "http://localhost:3000",
+        "NEXTAUTH_URL": "http://localhost:3000/api/auth",
         "EMAIL_SERVER_HOST": "smtp.fastmail.com",
         "EMAIL_SERVER_PORT": "465",
         "EMAIL_SERVER_USER": "cfw-boilerplate-signups@shortpoet.com",
         "EMAIL_FROM": "cfw-boilerplate-signups@shortpoet.com",
         "SSR_BASE_PATHS": "_error,about,api-data,auth,index",
-        "LUCIAAUTH_URL": "http://localhost:3333/api/auth"
-      }
+        "LUCIAAUTH_URL": "http://localhost:3000/api/auth"
+      },
+      "kv_namespaces": [
+        {
+          "binding": "CFW_BOILERPLATE_UI",
+          "id": "8628edc554ab472eb869826418e8f18f",
+          "preview_id": "81d71e89fbd34b8fb982066af9407578"
+        }
+      ]
     }
   }
 }
