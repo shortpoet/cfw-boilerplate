@@ -3,6 +3,7 @@ import colors from 'kleur';
 import { command, writeFile, readFile, assert } from '../util';
 import { Config } from '../types';
 import { __rootDir } from '#/utils/root';
+import { createInterface } from 'readline';
 
 export { writeSecretToKv, setSecretFile, setSecrets, assertPassUnlocked };
 
@@ -49,13 +50,33 @@ async function setSecrets(
   return secrets;
 }
 
+async function promptForInput(prompt: string) {
+  const readline = createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+  return new Promise((resolve) => {
+    readline.question(prompt, (answer: string) => {
+      readline.close();
+      resolve(answer);
+    });
+  });
+}
+
 async function getOrCreateSecret(secretName: string, passKey: string, generateLength = 32) {
   let secret;
   console.log(colors.cyan(`[wrangle] [secret] getOrCreateSecret ${secretName} ${passKey}`));
   secret = await passGet(passKey);
   if (!secret) {
     colors.yellow(`[wrangle] [secret] secret ${secretName} not found. Generating new secret`);
-    secret = generateSecret(generateLength);
+    const answer = await promptForInput(
+      `Enter secret for ${secretName} (or press enter to generate a new secret): `
+    );
+    if (answer && typeof answer === 'string') {
+      secret = answer;
+    } else {
+      secret = generateSecret(generateLength);
+    }
     await passWrite(passKey, secret);
   }
   return secret;

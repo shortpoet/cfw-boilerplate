@@ -7,13 +7,13 @@ import * as secret from './commands/secret';
 import build from './commands/build';
 import go from './commands/go';
 
-const cli = sade('cfw')
+const cli = sade('wrangle')
   .version('0.0.1')
   // .version('$$VERSION$$') // Note: Inject via build step
   .option('-C, --cwd', 'The relative working directory', '.')
   .option('-g, --goLive', 'Go live', false)
   .option('-e, --env', 'The environment to list', 'dev')
-  // .option('-d, --debug', 'Debug mode', false)
+  .option('-d, --debug', 'Debug mode', false)
 
   .command('kv list')
   .alias('kv ls')
