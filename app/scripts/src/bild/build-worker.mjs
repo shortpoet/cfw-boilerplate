@@ -6,12 +6,12 @@ import brode from '@geut/esbuild-plugin-brode';
 function buildWorker({ entry, out, debug, external } = {}) {
   const plugins = [
     // brode(),
-    // polyfillNode({
-    //   polyfills: {
-    //     crypto: true,
-    //   },
-    // }),
-    NodeModulesPolyfillPlugin(),
+    polyfillNode({
+      polyfills: {
+        crypto: true,
+      },
+    }),
+    // NodeModulesPolyfillPlugin(),
   ];
   const define = {
     plugins,

@@ -84,7 +84,13 @@ if (typeof window !== "undefined") {
     // cookie options must be in both set and remove
     // cookies.set(COOKIES_USER_TOKEN, true, cookieOptions)
     const provider = event.target.id.split('-')[2];
-    await login({ provider });
+    console.log(`[ui] [login.component] provider ${provider}`);
+    try {
+      await login({ provider });
+    } catch (error) {
+      console.log(`[ui] [login.component] error`);
+      console.log(error);
+    }
   };
   onLoginPopup.value = async (event: any) => {
     console.log("[ui] [login.component] onLoginPopup");

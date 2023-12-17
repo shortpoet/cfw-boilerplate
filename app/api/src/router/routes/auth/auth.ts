@@ -1,13 +1,7 @@
 import { IRequest } from 'itty-router';
 import { OpenAPIRouter } from '@cloudflare/itty-router-openapi';
 import { getUsersFind } from '../../../controllers';
-import {
-  createAuth,
-  jsonOkResponse,
-  createGithubAuth,
-  badResponse,
-  serverErrorResponse,
-} from '../../../middleware';
+import { createAuth, jsonOkResponse, badResponse, serverErrorResponse } from '../../../middleware';
 import { redirectResponse } from '#/api/src/middleware/redirect';
 import { OAuthRequestError } from '@lucia-auth/oauth';
 import { parseCookie } from 'lucia/utils';
@@ -18,14 +12,13 @@ const router = OpenAPIRouter<IRequest, CF>({ base: '/api/auth/login' });
 router.get('/github', async (req: Request, res: Response, env: Env, ctx: ExecutionContext) => {
   console.log(`[api] [auth] [login] [github]`);
 
-  const auth = createAuth(env);
+  const { auth, githubAuth } = await createAuth(env);
   const authRequest = auth.handleRequest(req);
   const session = await authRequest.validate();
   const reqUrl = new URL(req.url).href;
   if (session) {
     return redirectResponse(reqUrl, res, 302);
   }
-  const githubAuth = createGithubAuth(auth, env);
   const [url, state] = await githubAuth.getAuthorizationUrl();
   console.log(`[api] [auth] [login] [github] -> url: ${url}`);
 
@@ -42,7 +35,7 @@ router.get(
   '/github/callback',
   async (req: Request, res: Response, env: Env, ctx: ExecutionContext) => {
     console.log(`[api] [auth] [login] [github]`);
-    const auth = createAuth(env);
+    const { auth, githubAuth } = await createAuth(env);
     const authRequest = auth.handleRequest(req);
     const session = await authRequest.validate();
     if (session) {
@@ -57,7 +50,6 @@ router.get(
       return badResponse('Invalid state', undefined, res);
     }
     try {
-      const githubAuth = createGithubAuth(auth, env);
       const { getExistingUser, githubUser, createUser } = await githubAuth.validateCallback(code);
 
       const getUser = async () => {

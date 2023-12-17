@@ -1,7 +1,7 @@
 // lucia.ts
 import { deriveDatabaseAdapter } from '#/api/db/d1-kysely-lucia';
 import { lucia, Middleware } from 'lucia';
-// import 'lucia/polyfill/node';
+import 'lucia/polyfill/node';
 import { web } from 'lucia/middleware';
 
 // import { google } from '@lucia-auth/oauth/providers';
@@ -36,7 +36,17 @@ export const createAuth = async (env: Env) => {
     },
   });
   console.log(`[api] [middleware] [auth] [lucia] [createAuth] -> auth: ${auth}`);
-  return auth;
+
+  const githubAuth = github(auth, {
+    clientId: env.GITHUB_CLIENT_ID,
+    clientSecret: env.GITHUB_CLIENT_SECRET,
+    redirectUri:
+      env.NODE_ENV === 'development' || env.NODE_ENV === 'staging'
+        ? `http://${env.HOST}:${env.VITE_PORT_API}/api/auth/login/github/callback`
+        : `https://${env.HOST}/api/auth/login/github/callback`,
+  });
+
+  return { auth, githubAuth };
 };
 
 export type Auth = ReturnType<typeof createAuth>;
@@ -48,13 +58,14 @@ export type Auth = ReturnType<typeof createAuth>;
 //     clientSecret: env.GOOGLE_CLIENT_SECRET,
 //   });
 // }
-export const createGithubAuth = async (auth: Auth, env: Env) => {
-  return github(await auth, {
-    clientId: env.GITHUB_CLIENT_ID,
-    clientSecret: env.GITHUB_CLIENT_SECRET,
-    redirectUri:
-      env.NODE_ENV === 'development' || env.NODE_ENV === 'staging'
-        ? `http://${env.HOST}:${env.VITE_PORT_API}/api/auth/login/github/callback`
-        : `https://${env.HOST}/api/auth/login/github/callback`,
-  });
-};
+
+// export const createGithubAuth = async (auth: Auth, env: Env) => {
+//   return github(auth, {
+//     clientId: env.GITHUB_CLIENT_ID,
+//     clientSecret: env.GITHUB_CLIENT_SECRET,
+//     redirectUri:
+//       env.NODE_ENV === 'development' || env.NODE_ENV === 'staging'
+//         ? `http://${env.HOST}:${env.VITE_PORT_API}/api/auth/login/github/callback`
+//         : `https://${env.HOST}/api/auth/login/github/callback`,
+//   });
+// };

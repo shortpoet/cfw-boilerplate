@@ -16,7 +16,7 @@
   "env": {
     "dev": {
       "vars": {
-        "HOST": "0.0.0.0",
+        "HOST": "localhost",
         "VITE_PORT": "3000",
         "VITE_PORT_API": "3000",
         "VITE_LOG_LEVEL": "debug",

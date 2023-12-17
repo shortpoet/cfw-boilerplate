@@ -15,7 +15,7 @@ import { D1Database } from '@cloudflare/workers-types';
 export { getDatabaseFromEnv, deriveDatabaseAdapter };
 
 const getDatabaseFromEnv = async (env: Env) => {
-  if (env.WORKER_ENVIRONMENT === 'dev') {
+  if (env.NODE_ENV === 'development') {
     // unreliable i think. it is server when running `dev`
     // const thisDirectory = path.resolve('.');
     // console.log(`[db] getDatabaseFromEnv -> thisDirectory: ${thisDirectory}`);

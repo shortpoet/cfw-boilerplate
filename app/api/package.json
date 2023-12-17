@@ -8,7 +8,7 @@
     "========= Run": "",
     "deploy": "wrangler deploy",
     "dev": "wrangler dev --live-reload --config ./wrangler/wrangler.toml",
-    "dev:dev": "wrangler dev --live-reload --config ./wrangler/wrangler.toml.json --env dev",
+    "dev:dev": "wrangler dev --live-reload --local --config ./wrangler/wrangler.toml.json --env dev",
     "dev:qa": "wrangler dev --live-reload --env qa --config ./wrangler/wrangler.qa.toml.json",
     "dev:uat": "wrangler dev --live-reload --env uat --config ./wrangler/wrangler.uat.toml.json",
     "dev:prod": "wrangler dev --live-reload --env prod --config ./wrangler/wrangler.prod.toml.json",
