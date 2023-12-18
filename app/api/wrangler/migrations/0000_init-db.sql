@@ -24,14 +24,6 @@ CREATE TABLE IF NOT EXISTS [user_session]
   FOREIGN KEY (user_id) REFERENCES user(id)
 );
 
-CREATE TABLE IF NOT EXISTS [d1_migrations]
-(
-  [id]         VARCHAR(255) NOT NULL PRIMARY KEY,
-  [applied_at] TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  [name]       VARCHAR(255)
-);
-
-
 CREATE UNIQUE INDEX IF NOT EXISTS user_id
   ON user(id);
 

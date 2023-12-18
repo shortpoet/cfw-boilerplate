@@ -26,7 +26,7 @@ export async function deleteKV(opts: Options) {
     // throw new Error('no binding name');
     opts.bindingName = utils.formatBindingId(conf, { isUi: true }.isUi);
   }
-  const res = await deleteNamespace(opts.bindingName, conf);
+  await deleteNamespace(opts.bindingName, conf);
 }
 
 export async function create(opts: Options) {

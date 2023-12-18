@@ -18,10 +18,10 @@ import {
   // withUser,
 } from '../middleware';
 
-import { auth_dbv1_router } from 'api/router';
-import { health_router } from 'api/router';
-import { task_router } from 'api/router';
-import { auth_router } from 'api/router';
+import { auth_dbv1_router } from '#/api/src/router';
+import { health_router } from '#/api/src/router';
+import { task_router } from '#/api/src/router';
+import { auth_router } from '#/api/src/router';
 import withCookies from '../middleware/cookie';
 // import { createCors } from '../middleware/createCors';
 

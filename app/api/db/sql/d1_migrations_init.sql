@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS [d1_migrations]
+(
+  [id]         VARCHAR(255) NOT NULL PRIMARY KEY,
+  [applied_at] TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  [name]       VARCHAR(255)
+);

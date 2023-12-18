@@ -1,0 +1,53 @@
+{
+  "name": "cfw-boilerplate",
+  "compatibility_date": "2023-11-21",
+  "node_compat": true,
+  "workers_dev": true,
+  "main": "../build/worker.mjs",
+  "site": {
+    "bucket": "../../ui/build/client"
+  },
+  "build": {
+    "command": "npm run build"
+  },
+  "dev": {
+    "port": 3000,
+    "ip": "127.0.0.1"
+  },
+  "env": {
+    "wrng": {
+      "name": "cfw-boilerplate",
+      "vars": {
+        "HOST": "127.0.0.1",
+        "VITE_PORT": "3000",
+        "VITE_PORT_API": "3000",
+        "VITE_LOG_LEVEL": "info",
+        "NODE_ENV": "staging",
+        "WORKER_ENVIRONMENT": "wrng",
+        "VITE_APP_NAME": "cfw-boilerplate",
+        "VITE_API_VERSION": "0.0.1",
+        "VITE_UI_VERSION": "0.0.1",
+        "AUTH_PATH": "api/auth",
+        "EMAIL_SERVER_HOST": "smtp.fastmail.com",
+        "EMAIL_SERVER_PORT": "465",
+        "EMAIL_SERVER_USER": "cfw-boilerplate-signups@shortpoet.com",
+        "EMAIL_FROM": "cfw-boilerplate-signups@shortpoet.com",
+        "SSR_BASE_PATHS": "_error,about,api-data,auth,index"
+      },
+      "kv_namespaces": [
+        {
+          "binding": "CFW_BOILERPLATE_UI",
+          "id": "bc833facb940416288c56cfb24f93008",
+          "preview_id": "9aed60705bc6412a99095b235c4625d1"
+        }
+      ],
+      "d1_databases": [
+        {
+          "binding": "CFW_BOILERPLATE_DB",
+          "database_name": "cfw-boilerplate-wrng-CFW_BOILERPLATE_DB",
+          "database_id": "a876f83c-d674-4fdb-9ab4-d000490cc43a"
+        }
+      ]
+    }
+  }
+}

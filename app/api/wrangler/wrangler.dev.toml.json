@@ -12,7 +12,7 @@
   },
   "dev": {
     "port": 3000,
-    "ip": "0.0.0.0"
+    "ip": "localhost"
   },
   "env": {
     "dev": {
@@ -39,13 +39,6 @@
           "binding": "CFW_BOILERPLATE_UI",
           "id": "8628edc554ab472eb869826418e8f18f",
           "preview_id": "81d71e89fbd34b8fb982066af9407578"
-        }
-      ],
-      "d1_databases": [
-        {
-          "binding": "CFW_BOILERPLATE_DB",
-          "database_name": "cfw-boilerplate-dev-CFW_BOILERPLATE_DB",
-          "database_id": "ac7170ed-7d0a-48d4-a89f-663c1dee488e"
         }
       ]
     }
