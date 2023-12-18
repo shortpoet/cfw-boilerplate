@@ -32,7 +32,7 @@ async function handleSsr(request: Request, res: Response, env: Env, ctx: Executi
   };
   console.log(`[api] [ssr] handleSsr -> pageContextInit ->`);
   // logObjs([pageContextInit]);
-  console.log(pageContextInit);
+  // console.log(pageContextInit);
   const pageContext = await renderPage(pageContextInit);
   const { httpResponse } = pageContext;
   if (!httpResponse) {

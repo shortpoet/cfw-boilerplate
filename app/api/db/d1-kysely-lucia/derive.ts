@@ -51,7 +51,7 @@ const getSql3Adapter = (db: Database) =>
 const deriveDatabaseAdapter = async (env: Env) => {
   console.log(`[db] deriveDatabaseAdapter -> env: ${env.NODE_ENV}`);
   const db = await getDatabaseFromEnv(env);
-  if (env.WORKER_ENVIRONMENT === 'dev') {
+  if (env.NODE_ENV === 'development') {
     return getSql3Adapter(db);
   } else {
     return getAdapter(db);

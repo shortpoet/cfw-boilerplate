@@ -1,6 +1,6 @@
 import { merge } from '#/utils';
 import Cookies, { CookieChangeOptions, CookieSetOptions } from 'universal-cookie';
-import { sign } from 'cookie-signature';
+import sig from 'cookie-signature-subtle';
 import cookie from 'cookie';
 
 const append = (res: Response, field: string, val: string | string[]) => {
@@ -13,7 +13,7 @@ const append = (res: Response, field: string, val: string | string[]) => {
   res.headers.set(field, valArray.join(', '));
 };
 
-const withCookie = (
+const withCookie = async (
   req: Request,
   res: Response,
   env: Env,
@@ -37,7 +37,7 @@ const withCookie = (
   let val = typeof value === 'object' ? 'j:' + JSON.stringify(value) : String(value);
 
   if (signed) {
-    val = 's:' + sign(val, secret);
+    val = 's:' + (await sig.sign(val, secret));
   }
 
   if (opts.maxAge != null) {
@@ -56,7 +56,7 @@ const withCookie = (
   append(res, 'Set-Cookie', cookie.serialize(name, String(val), opts));
 };
 
-const clearCookie = (
+const clearCookie = async (
   req: Request,
   res: Response,
   env: Env,
@@ -75,20 +75,20 @@ export default function withCookies() {
     res.cookie = withCookie;
     res.clearCookie = clearCookie;
 
-    req.universalCookies.addChangeListener((change: CookieChangeOptions) => {
+    req.universalCookies.addChangeListener(async (change: CookieChangeOptions) => {
       if (res.headersSent) {
         return;
       }
 
       if (change.value === undefined) {
-        res.clearCookie(req, res, env, change.name, { name: change.name, ...change.options });
+        await res.clearCookie(req, res, env, change.name, { name: change.name, ...change.options });
       } else {
         const expressOpt = (<any>Object).assign({}, change.options);
         if (expressOpt.maxAge && change.options && change.options.maxAge) {
           // the standard for maxAge is seconds but express uses milliseconds
           expressOpt.maxAge = change.options.maxAge * 1000;
         }
-        res.cookie(req, res, env, change.name, change.value, expressOpt);
+        await res.cookie(req, res, env, change.name, change.value, expressOpt);
       }
     });
   };

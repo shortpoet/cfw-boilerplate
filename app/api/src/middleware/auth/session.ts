@@ -19,6 +19,8 @@ export const withSession =
     try {
       const { auth } = await createAuth(env);
       console.log(`[api] [middleware] [auth] [withSession] -> auth ->`);
+      console.log(`[api] [middleware] [auth] [withSession] -> headers ->`);
+      console.log(req.headers);
       const authRequest = auth.handleRequest(req);
       console.log(`[api] [middleware] [auth] [withSession] -> authRequest ->`);
       const session = await authRequest.validate();

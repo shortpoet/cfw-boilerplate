@@ -104,9 +104,9 @@ importers:
       cookie:
         specifier: ^0.6.0
         version: 0.6.0
-      cookie-signature:
-        specifier: ^1.2.1
-        version: 1.2.1
+      cookie-signature-subtle:
+        specifier: ^1.0.0
+        version: 1.0.0
       kysely:
         specifier: ^0.26.3
         version: 0.26.3
@@ -3169,13 +3169,13 @@ packages:
   /convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
 
-  /cookie-signature@1.0.6:
-    resolution: {integrity: sha512-QADzlaHc8icV8I7vbaJXJwod9HWYp8uCqf1xa4OfNu1T7JVxQIrUgOWtHdNDtPiywmFbiS12VjotIXLrKM3orQ==}
+  /cookie-signature-subtle@1.0.0:
+    resolution: {integrity: sha512-zBWVJJLtic4zfDSCcV77XFre7/y1GPE4bnlSarsrLiAVu+/hfMXlavXWODqdfUlnXetH7W1Kc7+1eTs8Qakj7g==}
+    engines: {node: '>=15.13.0'}
     dev: false
 
-  /cookie-signature@1.2.1:
-    resolution: {integrity: sha512-78KWk9T26NhzXtuL26cIJ8/qNHANyJ/ZYrmEXFzUmhZdjpBv+DlWlOANRTGBt48YcyslsLrj0bMLFTmXvLRCOw==}
-    engines: {node: '>=6.6.0'}
+  /cookie-signature@1.0.6:
+    resolution: {integrity: sha512-QADzlaHc8icV8I7vbaJXJwod9HWYp8uCqf1xa4OfNu1T7JVxQIrUgOWtHdNDtPiywmFbiS12VjotIXLrKM3orQ==}
     dev: false
 
   /cookie@0.4.2:

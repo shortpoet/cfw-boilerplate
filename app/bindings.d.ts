@@ -36,6 +36,7 @@ type Mutable<T> = {
 };
 
 declare module 'json2toml';
+declare module 'cookie-signature-subtle';
 
 declare global {
   // const __STATIC_CONTENT: KVNamespace;

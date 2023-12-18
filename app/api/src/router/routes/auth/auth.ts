@@ -6,7 +6,7 @@ import { redirectResponse } from '#/api/src/middleware/redirect';
 import { OAuthRequestError } from '@lucia-auth/oauth';
 import { parseCookie } from 'lucia/utils';
 import { json } from 'stream/consumers';
-import { unsign } from 'cookie-signature';
+import sig from 'cookie-signature-subtle';
 
 type CF = [env: Env, ctx: ExecutionContext];
 const router = OpenAPIRouter<IRequest, CF>({ base: '/api/auth/login' });
@@ -24,7 +24,7 @@ router.get('/github', async (req: Request, res: Response, env: Env, ctx: Executi
   const [url, state] = await githubAuth.getAuthorizationUrl();
   console.log(`[api] [auth] [login] [github] -> url: ${url}`);
 
-  res.cookie(req, res, env, 'github_oauth_state', state, {
+  await res.cookie(req, res, env, 'github_oauth_state', state, {
     httpOnly: false,
     secure: process.env.NODE_ENV === 'production',
     path: '/',
@@ -86,9 +86,10 @@ router.get(
     }
     const cookies = parseCookie(req.headers.get('cookie') ?? '');
     console.log(`[api] [auth] [login] [github] -> cookies: ${cookies}`);
+    console.log(cookies);
     const secret = env.NEXTAUTH_SECRET;
     const storedState = cookies.github_oauth_state
-      ? unsign(cookies.github_oauth_state.replace('s:', ''), secret)
+      ? await sig.unsign(cookies.github_oauth_state.replace('s:', ''), secret)
       : '';
     const state = req.query?.state;
     const code = req.query?.code;
