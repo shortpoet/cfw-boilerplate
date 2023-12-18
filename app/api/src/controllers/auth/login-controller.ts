@@ -19,13 +19,13 @@ export const loginGithub = async (req: Request, res: Response, env: Env, ctx: Ex
     return redirectResponse(reqUrl, 302, res.headers);
   }
   const [url, state] = await githubAuth.getAuthorizationUrl();
-  // console.log(`[api] [auth] [login] [github] -> url: ${url}`);
+  console.log(`[api] [auth] [login] [github] -> url: ${url}`);
   await res.cookie(req, res, env, 'github_oauth_state', state, {
     httpOnly: false,
     secure: process.env.NODE_ENV === 'production',
     path: '/',
     maxAge: 60 * 60,
-    sameSite: 'lax',
+    sameSite: 'none',
   });
   // res.headers.set('Access-Control-Expose-Headers', 'Set-Cookie');
   // res.headers.set(

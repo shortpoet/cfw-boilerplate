@@ -12,12 +12,12 @@
   },
   "dev": {
     "port": 3000,
-    "ip": "localhost"
+    "ip": "0.0.0.0"
   },
   "env": {
     "dev": {
       "vars": {
-        "HOST": "localhost",
+        "HOST": "127.0.0.1",
         "VITE_PORT": "3000",
         "VITE_PORT_API": "3000",
         "VITE_LOG_LEVEL": "info",
