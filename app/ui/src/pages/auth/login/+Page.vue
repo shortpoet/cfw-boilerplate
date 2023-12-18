@@ -5,7 +5,7 @@
     <i class="i-carbon-page-first" inline-block /><span>back</span>
     </Link>
 
-    <Link :href="`${urlBase}/api/auth/session`" :title="'back'">
+    <Link :href="`${urlBaseApi}/api/auth/session`" :title="'back'">
     <i class="i-carbon-user-activity" inline-block /><span>Session</span>
     </Link>
 
@@ -38,5 +38,5 @@
 </template>
 
 <script setup lang="ts">
-const { urlBase } = useBaseUrlApi();
+const { urlBaseApi } = useBaseUrl();
 </script>

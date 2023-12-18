@@ -100,8 +100,8 @@ const useNextAuth = () => {
 
 const setSession = async (): Promise<SetSessionResult> => {
   // TODO set session type
-  const { urlBase } = useBaseUrlApi();
-  const url = new URL(`${urlBase}/${process.env.AUTH_PATH}/session`);
+  const { urlBaseApi } = useBaseUrl();
+  const url = new URL(`${urlBaseApi}/${process.env.AUTH_PATH}/session`);
   const { data, error, dataLoading } = await useFetch<any>(url.href);
   let res: SetSessionResult = { session: undefined, status: 'Loading' };
   if (error.value) {
@@ -133,8 +133,8 @@ const onLoad = async () => {
 
 const login = async (options?: any) => {
   let res;
-  const { urlBase } = useBaseUrlApi();
-  const url = new URL(`${urlBase}/${process.env.AUTH_PATH}/signin`);
+  const { urlBaseApi } = useBaseUrl();
+  const url = new URL(`${urlBaseApi}/${process.env.AUTH_PATH}/signin`);
   const { data, error, dataLoading } = await useFetch(url.href);
   window.location.replace(url.href);
   if (error.value) {
@@ -165,8 +165,8 @@ const login = async (options?: any) => {
 
 const logout = async () => {
   let res;
-  const { urlBase } = useBaseUrlApi();
-  const url = new URL(`${urlBase}/${process.env.AUTH_PATH}/signout`);
+  const { urlBaseApi } = useBaseUrl();
+  const url = new URL(`${urlBaseApi}/${process.env.AUTH_PATH}/signout`);
   const { data, error, dataLoading } = await useFetch(url.href);
   window.location.replace(url.href);
   // navigate(url.pathname);

@@ -20,7 +20,7 @@ declare global {
   const EffectScope: typeof import('vue')['EffectScope']
   const FetchError: typeof import('./composables/fetch')['FetchError']
   const LUCIAAUTH_COOKIES_SESSION_TOKEN: typeof import('./composables/auth-lucia')['LUCIAAUTH_COOKIES_SESSION_TOKEN']
-  const LUCIAAUTH_COOKIES_USER_TOKEN: typeof import('./composables/auth-lucia')['LUCIAAUTH_COOKIES_USER_TOKEN']
+  const LUCIAAUTH_COOKIES_USER_TOKEN: (typeof import('./composables/auth-lucia'))['LUCIAAUTH_COOKIES_USER_TOKEN']
   const LUCIAAUTH_SESSION_TOKEN_EXPIRY: typeof import('./composables/auth-lucia')['LUCIAAUTH_SESSION_TOKEN_EXPIRY']
   const Locale: typeof import('./composables/locales')['Locale']
   const RequestConfig: typeof import('./composables/fetch')['RequestConfig']
@@ -88,7 +88,7 @@ declare global {
   const unref: typeof import('vue')['unref']
   const useAttrs: typeof import('vue')['useAttrs']
   const useAuthStore: typeof import('./stores/auth')['useAuthStore']
-  const useBaseUrlApi: typeof import('./composables/baseUrl')['useBaseUrlApi']
+  const useBaseUrl: typeof import('./composables/baseUrl')['useBaseUrl']
   const useCssModule: typeof import('vue')['useCssModule']
   const useCssVars: typeof import('vue')['useCssVars']
   const useFetch: typeof import('./composables/fetch')['useFetch']
@@ -196,7 +196,7 @@ declare module 'vue' {
     readonly unref: UnwrapRef<typeof import('vue')['unref']>
     readonly useAttrs: UnwrapRef<typeof import('vue')['useAttrs']>
     readonly useAuthStore: UnwrapRef<typeof import('./stores/auth')['useAuthStore']>
-    readonly useBaseUrlApi: UnwrapRef<typeof import('./composables/baseUrl')['useBaseUrlApi']>
+    readonly useBaseUrl: UnwrapRef<typeof import('./composables/baseUrl')['useBaseUrl']>
     readonly useCssModule: UnwrapRef<typeof import('vue')['useCssModule']>
     readonly useCssVars: UnwrapRef<typeof import('vue')['useCssVars']>
     readonly useFetch: UnwrapRef<typeof import('./composables/fetch')['useFetch']>
@@ -297,7 +297,7 @@ declare module '@vue/runtime-core' {
     readonly unref: UnwrapRef<typeof import('vue')['unref']>
     readonly useAttrs: UnwrapRef<typeof import('vue')['useAttrs']>
     readonly useAuthStore: UnwrapRef<typeof import('./stores/auth')['useAuthStore']>
-    readonly useBaseUrlApi: UnwrapRef<typeof import('./composables/baseUrl')['useBaseUrlApi']>
+    readonly useBaseUrl: UnwrapRef<typeof import('./composables/baseUrl')['useBaseUrl']>
     readonly useCssModule: UnwrapRef<typeof import('vue')['useCssModule']>
     readonly useCssVars: UnwrapRef<typeof import('vue')['useCssVars']>
     readonly useFetch: UnwrapRef<typeof import('./composables/fetch')['useFetch']>

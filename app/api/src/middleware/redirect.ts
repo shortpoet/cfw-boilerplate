@@ -1,4 +1,4 @@
-import { initResponse } from './response';
+import { setHeaders } from './response';
 
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
@@ -14,14 +14,13 @@ export default {
   },
 };
 
-export const redirectResponse = (redirectUrl: string, res?: Response, status = 301) => {
-  const init = initResponse(res);
-  return new Response(null, {
-    ...init,
-    status,
-    headers: {
-      ...init.headers,
-      Location: redirectUrl,
-    },
-  });
+export const redirectResponse = (
+  redirectUrl: string,
+  status = 301,
+  headers: Response['headers'] | Record<string, string>
+) => {
+  const res = setHeaders(Response.redirect(redirectUrl, status), headers);
+  console.log(`[api] [redirectResponse] -> res`);
+  console.log(res);
+  return res;
 };

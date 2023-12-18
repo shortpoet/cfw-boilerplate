@@ -55,7 +55,7 @@ export async function getConfig(opts: Options): Promise<Config> {
     JMAP_TOKEN: `Mail/fastmail/ai-maps-email-send-token`,
   };
 
-  await assertTomlEnv({ env, wranglerFile, appName, debug });
+  await assertTomlEnv({ env, wranglerFile, appName, debug, envVars });
 
   const bindingNameBase = `${appName.toUpperCase().replace(/-/g, '_')}`;
   const bindingNameSuffixes = [

@@ -101,8 +101,8 @@ const useLuciaAuth = () => {
 
 const setSession = async (): Promise<SetSessionResult> => {
   // TODO set session type
-  const { urlBase } = useBaseUrlApi();
-  const url = new URL(`${urlBase}/${process.env.AUTH_PATH}/session`);
+  const { urlBaseApi } = useBaseUrl();
+  const url = new URL(`${urlBaseApi}/${process.env.AUTH_PATH}/session`);
   const { data, error, dataLoading } = await useFetch<any>(url.href);
   let res: SetSessionResult = { session: undefined, status: 'Loading' };
   if (error.value) {
@@ -134,8 +134,8 @@ const onLoad = async () => {
 
 const login = async (opts: LoginOptions) => {
   let res;
-  const { urlBase } = useBaseUrlApi();
-  const url = new URL(`${urlBase}/${process.env.AUTH_PATH}/login/${opts.provider}`);
+  const { urlBaseApi } = useBaseUrl();
+  const url = new URL(`${urlBaseApi}/${process.env.AUTH_PATH}/login/${opts.provider}`);
   console.log(`[ui] [useAuth] login url: ${url.href}`);
   const { data, error, dataLoading } = await useFetch(url.href, {
     headers: {
@@ -164,8 +164,8 @@ const login = async (opts: LoginOptions) => {
 
 const logout = async () => {
   let res;
-  const { urlBase } = useBaseUrlApi();
-  const url = new URL(`${urlBase}/${process.env.AUTH_PATH}/logout`);
+  const { urlBaseApi } = useBaseUrl();
+  const url = new URL(`${urlBaseApi}/${process.env.AUTH_PATH}/logout`);
   const { data, error, dataLoading } = await useFetch(url.href);
   window.location.replace(url.href);
   // navigate(url.pathname);

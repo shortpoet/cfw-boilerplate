@@ -15,6 +15,8 @@ const envAliasMap = {
 // const envAlias = envAliasMap[config.env.NODE_ENV];
 export const createAuth = async (env: Env) => {
   console.log(`[api] [middleware] [auth] [lucia] [createAuth] -> env: ${env.NODE_ENV}`);
+  console.log(`[api] [middleware] [auth] [lucia] [createAuth] -> host: ${env.HOST}`);
+  console.log(`[api] [middleware] [auth] [lucia] [createAuth] -> port: ${env.VITE_PORT_API}`);
   const adapter = await deriveDatabaseAdapter(env);
   if (!adapter) {
     throw new Error('could not derive database adapter');
@@ -32,6 +34,7 @@ export const createAuth = async (env: Env) => {
         email: data.email,
         id: data.id,
         organization_id: data.organization_id,
+        roles: [],
       };
     },
   });

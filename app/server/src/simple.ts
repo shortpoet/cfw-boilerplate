@@ -22,7 +22,7 @@ const envLogLevel = config.env.VITE_LOG_LEVEL;
 
 const logger = getLogger({ isSsr, nodeEnv, envLogLevel });
 
-const HOST: string = config.env.HOST || 'localhost';
+const HOST: string = config.env.HOST || '127.0.0.1';
 const PORT: number = parseInt(config.env.PORT || '3333');
 const SECRET: string = config.env.NEXTAUTH_SECRET || '';
 const GITHUB_CLIENT_ID: string = config.env.GITHUB_CLIENT_ID || '';

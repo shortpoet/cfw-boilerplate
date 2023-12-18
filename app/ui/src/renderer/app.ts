@@ -30,6 +30,8 @@ function createApp(Page: Page, pageProps: PageProps | undefined, pageContext: Pa
   logger.info(`[ui] [app] [createApp] correlationId: ${correlationId}`);
   logger.info(`[ui] [app] [createApp] session:`);
   logger.info(session);
+  console.log(`[ui] [app] [createApp] session:`);
+  console.log(session);
   let rootComponent: any;
   // sxee comments below
   // let rootComponent: Component & { Page: Component; pageProps: PageProps };

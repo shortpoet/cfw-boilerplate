@@ -4,6 +4,7 @@ import { createAuth } from './lucia';
 import { unauthorizedResponse } from '../response';
 import { getCookieAuthToken, logger, logObjs } from '#/utils';
 import { UserRole } from '#/types';
+import { getSession } from '../../controllers';
 const FILE_LOG_LEVEL = 'debug';
 
 export const withSession =
@@ -17,9 +18,7 @@ export const withSession =
       userId: z.string(),
     });
     try {
-      const { auth } = await createAuth(env);
-      const authRequest = auth.handleRequest(req);
-      const session = await authRequest.validate();
+      const session = await getSession(req, env);
       if (!session) {
         return;
       }
@@ -29,6 +28,10 @@ export const withSession =
       }
       const user = result.data;
       res.session = session;
+      req.logger.info(`[api] [middleware] [auth] [withSession] -> user ->`);
+      req.logger.info(user);
+      req.logger.info(`[api] [middleware] [auth] [withSession] -> session ->`);
+      req.logger.info(res.session);
       // const db = await getDatabaseFromEnv(env);
       // if (!db || !session?.sessionToken) return;
       // const dbSession = await q.getSession(session.sessionToken, db);

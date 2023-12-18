@@ -2,34 +2,13 @@ import { redirectResponse } from '#/api/src/middleware/redirect';
 import { OAuthRequestError } from '@lucia-auth/oauth';
 import { parseCookie } from 'lucia/utils';
 import sig from 'cookie-signature-subtle';
-import { createAuth, jsonOkResponse, badResponse, serverErrorResponse } from '../../middleware';
-
-export const logout = async (req: Request, res: Response, env: Env, ctx: ExecutionContext) => {
-  const { auth } = await createAuth(env);
-  const authRequest = auth.handleRequest(req);
-  // check if user is authenticated
-  const session = await authRequest.validate(); // or `authRequest.validateBearerToken()`
-  req.logger.info(`[api] [auth] [logout] -> session:`);
-  console.log(session);
-  if (!session) {
-    return new Response('Unauthorized', {
-      status: 401,
-    });
-  }
-  // make sure to invalidate the current session!
-  await auth.invalidateSession(session.sessionId);
-
-  // for session cookies
-  // create blank session cookie
-  const sessionCookie = auth.createSessionCookie(null);
-  return new Response(null, {
-    headers: {
-      Location: '/login', // redirect to login page
-      'Set-Cookie': sessionCookie.serialize(), // delete session cookie
-    },
-    status: 302,
-  });
-};
+import {
+  createAuth,
+  jsonOkResponse,
+  badResponse,
+  serverErrorResponse,
+  getBaseUrl,
+} from '../../middleware';
 
 export const loginGithub = async (req: Request, res: Response, env: Env, ctx: ExecutionContext) => {
   const { auth, githubAuth } = await createAuth(env);
@@ -37,7 +16,7 @@ export const loginGithub = async (req: Request, res: Response, env: Env, ctx: Ex
   const session = await authRequest.validate();
   const reqUrl = new URL(req.url).href;
   if (session) {
-    return redirectResponse(reqUrl, res, 302);
+    return redirectResponse(reqUrl, 302, res.headers);
   }
   const [url, state] = await githubAuth.getAuthorizationUrl();
   // console.log(`[api] [auth] [login] [github] -> url: ${url}`);
@@ -65,8 +44,10 @@ export const loginGithubCallback = async (
   const { auth, githubAuth } = await createAuth(env);
   const authRequest = auth.handleRequest(req);
   const session = await authRequest.validate();
+  const { baseUrlApp } = getBaseUrl(env);
+  const dataPage = `${baseUrlApp}/api-data`;
   if (session) {
-    return redirectResponse('/', res, 302);
+    return redirectResponse(dataPage, 302, res.headers);
   }
   const cookies = parseCookie(req.headers.get('cookie') ?? '');
   // console.log(`[api] [auth] [login] [github] -> cookies: ${cookies}`);
@@ -121,6 +102,7 @@ export const loginGithubCallback = async (
     //   'Access-Control-Allow-Headers',
     //   'Origin, X-Requested-With, Content-Type, Accept, authorization'
     // );
+    // return Response.redirect(dataPage, 302).headers.set('Set-Cookie', sessionCookie.serialize());
     return jsonOkResponse({ session }, res);
   } catch (e) {
     if (e instanceof OAuthRequestError) {

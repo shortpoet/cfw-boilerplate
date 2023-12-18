@@ -3,11 +3,15 @@ import { ExecutionContext } from '@cloudflare/workers-types';
 import { logger, tryLogHeaders, logObjs, getAuthCookies } from '#/utils';
 // import { getSessionItty } from './middleware';
 import { UserRole } from '#/types';
+import { getSession } from './controllers';
 
 export { handleSsr };
 
 async function handleSsr(req: Request, res: Response, env: Env, ctx: ExecutionContext) {
+  const session = await getSession(req, env);
   req.logger.info(`[api] [ssr] handleSsr -> url -> ${req.url}`);
+  req.logger.info(`[api] [ssr] handleSsr -> session ->`);
+  req.logger.info(session);
   const cookieHeader = req.headers.get('cookie') || '';
   req.logger.debug(`[api] [ssr] handleSsr -> cookieHeader -> ${cookieHeader}`);
   const { sessionToken, csrfToken, callbackUrl, pkceCodeVerifier } = getAuthCookies(cookieHeader);
@@ -18,7 +22,7 @@ async function handleSsr(req: Request, res: Response, env: Env, ctx: ExecutionCo
     fetch: (...args: Parameters<typeof fetch>) => fetch(...args),
     // isAdmin: session?.user?.roles?.includes(UserRole.Admin) || false,
     userAgent,
-    session: res.session,
+    session,
     cf: req.cf,
     csrfToken,
     callbackUrl,

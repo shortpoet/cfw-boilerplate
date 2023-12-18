@@ -5,13 +5,29 @@ interface Headers {
   [key: string]: string;
 }
 
+export const getBaseUrl = (env: Env) => {
+  return {
+    baseUrlApi:
+      env.NODE_ENV === 'development' || env.NODE_ENV === 'staging'
+        ? `http://${env.HOST}:${env.VITE_PORT_API}`
+        : `https://${env.HOST}`,
+    baseUrlApp:
+      env.NODE_ENV === 'development' || env.NODE_ENV === 'staging'
+        ? `http://${env.HOST}:${env.VITE_PORT}`
+        : `https://${env.HOST}`,
+  };
+};
+
 export const remapHeaders = (res: Response) => {
   const headers = new Headers(res.headers);
   Object.entries(headers).map(([key, val]) => res.headers.set(key, val));
   return res;
 };
 
-export const setHeaders = (res: Response, headers: Headers) => {
+export const setHeaders = (
+  res: Response,
+  headers: Response['headers'] | Record<string, string>
+) => {
   Object.entries(headers).map(([key, val]) => res.headers.set(key, val));
   return res;
 };

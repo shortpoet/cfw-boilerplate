@@ -51,7 +51,11 @@ useHead({
 
 let authLoading = ref(true);
 const pageContext = usePageContext();
-const isAdmin = computed(() => pageContext.session?.user.roles?.includes(UserRole.Admin));
+const isAdmin = computed(() => (
+  pageContext.session?.user.roles ?
+    pageContext.session?.user.roles?.includes(UserRole.Admin)
+    : false
+));
 
 console.log('[ui] [AuthLayout] [pageContext] isAdmin -> ', isAdmin.value);
 

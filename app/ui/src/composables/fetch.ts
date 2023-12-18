@@ -71,8 +71,8 @@ const useFetch = async <T>(
   path: string,
   options: RequestConfig = {}
 ): Promise<UseFetchResult<T>> => {
-  const { urlBase } = useBaseUrlApi();
-  const url = path.startsWith('http') ? path : `${urlBase}/${path}`;
+  const { urlBaseApi, urlBaseApp } = useBaseUrl();
+  const url = path.startsWith('http') ? path : `${urlBaseApi}/${path}`;
   const { logger, correlationId } = useSsrLogger();
   logger.info(`[ui] [useFetch] url: ${url}`);
   logger.info(`[ui] [useFetch] correlationId: ${correlationId}`);
@@ -95,10 +95,10 @@ const useFetch = async <T>(
     'content-type': 'application/json',
     // cookie: `next-auth.session-token=${sessionToken.value}; next-auth.csrf-token=${csrfToken.value}; next-auth.callback-url=${callbackUrl.value};`,
     cookie: `${[LUCIAAUTH_COOKIES_SESSION_TOKEN]}=${sessionToken.value};`,
-    host: 'localhost:3000',
+    host: `${urlBaseApp}`,
     'sec-fetch-dest': 'empty',
     'sec-fetch-mode': 'cors',
-    origin: `${urlBase}`,
+    origin: `${urlBaseApi}`,
   };
 
   const headers = IS_SSR

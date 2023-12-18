@@ -29,10 +29,11 @@ const FILE_LOG_LEVEL = 'debug';
 
 const { preflight, corsify } = createCors({
   origins: [
-    'http://127.0.0.1',
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:3333',
     'http://localhost:3000',
-    'https://cfw-boilerplate.pages.dev',
     'http://localhost:3333',
+    'https://cfw-boilerplate.pages.dev',
     'https://github.com',
   ],
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
