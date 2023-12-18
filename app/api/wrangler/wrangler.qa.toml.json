@@ -11,19 +11,17 @@
     "command": "npm run build"
   },
   "dev": {
-    "port": 3000,
-    "ip": "127.0.0.1"
+    "port": 3000
   },
   "env": {
-    "wrng": {
+    "qa": {
       "name": "cfw-boilerplate",
       "vars": {
-        "HOST": "127.0.0.1",
+        "NODE_ENV": "staging",
+        "WORKER_ENVIRONMENT": "qa",
         "VITE_PORT": "3000",
         "VITE_PORT_API": "3000",
-        "VITE_LOG_LEVEL": "info",
-        "NODE_ENV": "staging",
-        "WORKER_ENVIRONMENT": "wrng",
+        "VITE_LOG_LEVEL": "debug",
         "VITE_APP_NAME": "cfw-boilerplate",
         "VITE_API_VERSION": "0.0.1",
         "VITE_UI_VERSION": "0.0.1",
@@ -33,21 +31,7 @@
         "EMAIL_SERVER_USER": "cfw-boilerplate-signups@shortpoet.com",
         "EMAIL_FROM": "cfw-boilerplate-signups@shortpoet.com",
         "SSR_BASE_PATHS": "_error,about,api-data,auth,index"
-      },
-      "kv_namespaces": [
-        {
-          "binding": "CFW_BOILERPLATE_UI",
-          "id": "bc833facb940416288c56cfb24f93008",
-          "preview_id": "9aed60705bc6412a99095b235c4625d1"
-        }
-      ],
-      "d1_databases": [
-        {
-          "binding": "CFW_BOILERPLATE_DB",
-          "database_name": "cfw-boilerplate-wrng-CFW_BOILERPLATE_DB",
-          "database_id": "a876f83c-d674-4fdb-9ab4-d000490cc43a"
-        }
-      ]
+      }
     }
   }
 }

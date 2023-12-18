@@ -15,14 +15,15 @@
     "ip": "localhost"
   },
   "env": {
-    "dev": {
+    "rng": {
+      "name": "cfw-boilerplate",
       "vars": {
-        "HOST": "127.0.0.1",
+        "HOST": "localhost",
         "VITE_PORT": "3000",
         "VITE_PORT_API": "3000",
         "VITE_LOG_LEVEL": "info",
         "NODE_ENV": "staging",
-        "WORKER_ENVIRONMENT": "dev",
+        "WORKER_ENVIRONMENT": "rng",
         "VITE_APP_NAME": "cfw-boilerplate",
         "VITE_API_VERSION": "0.0.1",
         "VITE_UI_VERSION": "0.0.1",
@@ -33,19 +34,18 @@
         "EMAIL_FROM": "cfw-boilerplate-signups@shortpoet.com",
         "SSR_BASE_PATHS": "_error,about,api-data,auth,index"
       },
-      "name": "cfw-boilerplate",
-      "kv_namespaces": [
-        {
-          "binding": "CFW_BOILERPLATE_UI",
-          "id": "7b7fe7525dba47b1a3b063f7c71a6373",
-          "preview_id": "81d71e89fbd34b8fb982066af9407578"
-        }
-      ],
       "d1_databases": [
         {
           "binding": "CFW_BOILERPLATE_DB",
-          "database_name": "cfw-boilerplate-dev-CFW_BOILERPLATE_DB",
-          "database_id": "f923a251-1409-45e2-bdf9-9631fe42f033"
+          "database_name": "cfw-boilerplate-rng-CFW_BOILERPLATE_DB",
+          "database_id": "82fba1af-a784-40cd-a9d3-b564da779e80"
+        }
+      ],
+      "kv_namespaces": [
+        {
+          "binding": "CFW_BOILERPLATE_UI",
+          "id": "cd48c1596e884b8293fc5b8004150679",
+          "preview_id": "9e268d3abf994568a16cb5032a1c0982"
         }
       ]
     }

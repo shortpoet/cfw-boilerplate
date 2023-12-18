@@ -1,6 +1,6 @@
 export { WrangleConfig, Options, Config, Arrayable, Nullable, Argv, WranglerToml };
 type WrangleConfig = {
-  env: 'dev' | 'wrng' | 'qa' | 'prod';
+  env: 'dev' | 'rng' | 'qa' | 'prod';
   wranglerFile: string;
   envFile: string;
   debug: boolean;
@@ -12,7 +12,7 @@ type Nullable<T> = T | null;
 interface Argv {
   cwd: string;
   dir: string;
-  env?: 'dev' | 'wrng' | 'qa' | 'prod';
+  env?: 'dev' | 'rng' | 'qa' | 'prod';
   debug?: boolean;
 }
 
@@ -21,7 +21,7 @@ interface Options {
   goLive?: boolean;
   /** Name of source directory */
   dir?: string;
-  env?: 'dev' | 'wrng' | 'qa' | 'prod';
+  env?: 'dev' | 'rng' | 'qa' | 'prod';
   debug?: boolean;
   only?: Arrayable<string>;
   ignore?: Arrayable<string>;
@@ -33,7 +33,7 @@ type Config = {
   cwd: string;
   goLive: boolean;
   dir: string;
-  env: 'dev' | 'wrng' | 'qa' | 'prod';
+  env: 'dev' | 'rng' | 'qa' | 'prod';
   envVars: Record<string, string>;
   debug: boolean;
   envFile: string;

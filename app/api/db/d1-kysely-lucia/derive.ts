@@ -23,7 +23,16 @@ const getDatabaseFromEnv = async (env: Env) => {
       .default('local.sqlite')
       .exec(fs.readFileSync(`${env.__wranglerDir}/migrations/0000_init-db.sql`, 'utf8'));
   } else {
-    return env.CFW_BOILERPLATE_DB;
+    const db = env.CFW_BOILERPLATE_DB;
+    console.log(`[db] getDatabaseFromEnv -> db: ${db}`);
+    const r = await db.batch([
+      db.prepare('PRAGMA table_list'),
+      db.prepare('PRAGMA table_info(user_session)'),
+    ]);
+    console.log(`[db] getDatabaseFromEnv -> res:`);
+    console.log(r[0].results);
+    console.log(r.result);
+    return db;
   }
 };
 

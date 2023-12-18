@@ -23,7 +23,7 @@ const env: EnvVars = createEnv({
     VITE_PORT_API: z.string(),
     VITE_LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']),
     NODE_ENV: z.enum(['development', 'staging', 'production']),
-    WORKER_ENVIRONMENT: z.enum(['dev', 'wrng', 'qa', 'prod']),
+    WORKER_ENVIRONMENT: z.enum(['dev', 'rng', 'qa', 'prod']),
     VITE_APP_NAME: z.string(),
     NEXTAUTH_SECRET: z.string(),
     GITHUB_CLIENT_ID: z.string(),

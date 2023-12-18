@@ -63,7 +63,7 @@ declare global {
     HOST: string;
     PORT: string;
     NODE_ENV: 'development' | 'staging' | 'production';
-    WORKER_ENVIRONMENT: 'dev' | 'wrng' | 'qa' | 'prod';
+    WORKER_ENVIRONMENT: 'dev' | 'rng' | 'qa' | 'prod';
     SSR?: boolean;
     VITE_PORT: string;
     VITE_PORT_API: string;
@@ -164,7 +164,7 @@ declare global {
       HOST: string;
       PORT: string;
       NODE_ENV: 'development' | 'staging' | 'production';
-      WORKER_ENVIRONMENT: 'dev' | 'wrng' | 'qa' | 'prod';
+      WORKER_ENVIRONMENT: 'dev' | 'rng' | 'qa' | 'prod';
       SSR?: boolean;
       VITE_PORT: string;
       VITE_PORT_API: string;
@@ -192,7 +192,7 @@ declare global {
 
     // interface ImportMetaEnv {
     //   NODE_ENV: 'development' | 'production';
-    //   WORKER_ENVIRONMENT: 'dev' | 'wrng' | 'qa' | 'prod';
+    //   WORKER_ENVIRONMENT: 'dev' | 'rng' | 'qa' | 'prod';
     //   VITE_PORT: string;
     //   VITE_APP_NAME: string;
     //   VITE_API_VERSION: string;

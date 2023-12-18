@@ -29,7 +29,7 @@ export async function assertTomlEnv(
       // include: ['dist/*'],
     },
     build: {
-      command: 'npm run build',
+      command: 'npm run build:d',
     },
     dev: {
       port: 3000,

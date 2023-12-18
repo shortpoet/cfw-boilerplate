@@ -9,7 +9,7 @@
     "dev": "cross-env NODE_ENV=development pnpm build && cross-env NODE_ENV=development vite",
     "preview": "pnpm build && cross-env NODE_ENV=development vite preview",
     "prod": "npm run build && npm run server:prod",
-    "build:w": "cross-env NODE_ENV=staging vite build --mode wrng",
+    "build:w": "cross-env NODE_ENV=staging vite build --mode rng",
     "server": "cross-env NODE_ENV=development && node --loader ts-node/esm ./server/index.ts",
     "server:dev": "npm run server",
     "server:prod": "cross-env NODE_ENV=production npm run server"

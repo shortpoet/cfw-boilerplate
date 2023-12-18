@@ -59,14 +59,23 @@ export async function create(opts: Options) {
   log.info('[command] [db] Creating - Asserting Database:');
   assertDatabase(conf);
 }
+export async function exec(opts: Options) {
+  log.print('green', `${colors.cyan(log.ARROW)} opts`);
+  console.info(JSON.stringify(opts));
+  // console.log(opts);
+  const { env, debug, envFile, wranglerFile } = await getConfig(opts);
+  const conf = { env, envFile, debug, wranglerFile };
+  log.info('[command] [db] Executing Command:');
+}
 export async function _db(opts: Options) {
   log.print('green', `${colors.cyan(log.ARROW)} opts`);
   console.info(JSON.stringify(opts));
   // console.log(opts);
   const { env, debug, envFile, wranglerFile } = await getConfig(opts);
   const conf = { env, envFile, debug, wranglerFile };
-  log.info('[command] [vars] Setting Vars:');
+  log.info('[command] [db] :');
 }
+
 // const dbCommand = opts.dbCommand;
 // const subCommand = opts.subCommand;
 // const bindingIdDb = formatBindingId(opts, { isUi: false }.isUi);
