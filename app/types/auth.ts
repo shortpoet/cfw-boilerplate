@@ -217,4 +217,5 @@ interface AuthInstance {
 
 type LoginOptions = {
   provider: string;
+  sessionToken?: string;
 };

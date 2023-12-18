@@ -41,6 +41,7 @@ let onLogin = ref((event: any) => { console.log(`[ui] [login.component] womp log
 let onLogout = ref((event: any) => { console.log(`[ui] [login.component] logout ${event}`); });
 let onLoginPopup = ref((event: any) => { console.log(`[ui] [login.component] login popup ${event}`); });
 const slots = useSlots()
+// @ts-ignore
 const loginSlot = slots.login;
 let user = ref<UserUnion>();
 let authLoading = ref(false);
@@ -64,7 +65,7 @@ const session = pageContext.session;
 if (import.meta.env.VITE_LOG_LEVEL === 'debug') {
   console.log("[ui] [login.component] setup done");
   console.log(`[ui] [login.component] login slot`);
-  console.log(loginSlot);
+  // console.log(loginSlot);
 }
 
 if (typeof window !== "undefined") {
@@ -84,9 +85,14 @@ if (typeof window !== "undefined") {
     // cookie options must be in both set and remove
     // cookies.set(COOKIES_USER_TOKEN, true, cookieOptions)
     const provider = event.target.id.split('-')[2];
-    console.log(`[ui] [login.component] provider ${provider}`);
+    const sessionToken = getCookie(LUCIAAUTH_COOKIES_SESSION_TOKEN);
+    // const all = Cookies.get()
+    // console.log(`[ui] [login.component] all cookies`);
+    // console.log(all);
+    // console.log(`[ui] [login.component] cookie ${cookie}`);
+    // console.log(`[ui] [login.component] provider ${provider}`);
     try {
-      await login({ provider });
+      await login({ provider, sessionToken });
     } catch (error) {
       console.log(`[ui] [login.component] error`);
       console.log(error);

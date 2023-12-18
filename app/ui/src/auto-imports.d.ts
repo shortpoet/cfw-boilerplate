@@ -15,33 +15,34 @@ declare global {
   const AUTHJS_COOKIES_AUTHJS_SESSION_TOKEN: typeof import('./composables/auth-authjs')['AUTHJS_COOKIES_AUTHJS_SESSION_TOKEN']
   const AUTHJS_COOKIES_USER_TOKEN: typeof import('./composables/auth-authjs')['AUTHJS_COOKIES_USER_TOKEN']
   const AUTHJS_SESSION_TOKEN_EXPIRY: typeof import('./composables/auth-authjs')['AUTHJS_SESSION_TOKEN_EXPIRY']
-  const COOKIES_SESSION_TOKEN: typeof import('./composables/auth-authjs')['COOKIES_SESSION_TOKEN']
-  const COOKIES_USER_TOKEN: typeof import('./composables/auth-authjs')['COOKIES_USER_TOKEN']
+  const COOKIES_SESSION_TOKEN: (typeof import('./composables/auth-authjs'))['COOKIES_SESSION_TOKEN']
+  const COOKIES_USER_TOKEN: (typeof import('./composables/auth-authjs'))['COOKIES_USER_TOKEN']
   const EffectScope: typeof import('vue')['EffectScope']
   const FetchError: typeof import('./composables/fetch')['FetchError']
-  const LUCIAAUTH_COOKIES_LUCIAAUTH_SESSION_TOKEN: typeof import('./composables/auth-lucia')['LUCIAAUTH_COOKIES_LUCIAAUTH_SESSION_TOKEN']
+  const LUCIAAUTH_COOKIES_SESSION_TOKEN: typeof import('./composables/auth-lucia')['LUCIAAUTH_COOKIES_SESSION_TOKEN']
   const LUCIAAUTH_COOKIES_USER_TOKEN: typeof import('./composables/auth-lucia')['LUCIAAUTH_COOKIES_USER_TOKEN']
   const LUCIAAUTH_SESSION_TOKEN_EXPIRY: typeof import('./composables/auth-lucia')['LUCIAAUTH_SESSION_TOKEN_EXPIRY']
   const Locale: typeof import('./composables/locales')['Locale']
   const RequestConfig: typeof import('./composables/fetch')['RequestConfig']
-  const SESSION_TOKEN_EXPIRY: typeof import('./composables/auth-authjs')['SESSION_TOKEN_EXPIRY']
+  const SESSION_TOKEN_EXPIRY: (typeof import('./composables/auth-authjs'))['SESSION_TOKEN_EXPIRY']
   const USE_FETCH_REQ_INIT: typeof import('./composables/fetch')['USE_FETCH_REQ_INIT']
   const UseFetchResult: typeof import('./composables/fetch')['UseFetchResult']
   const X_CORRELATION_ID: typeof import('./composables/logger')['X_CORRELATION_ID']
   const computed: typeof import('vue')['computed']
-  const cookieOptions: typeof import('./composables/auth-lucia')['cookieOptions']
+  const cookieOptions: (typeof import('./composables/auth-lucia'))['cookieOptions']
   const createApp: typeof import('vue')['createApp']
   const customRef: typeof import('vue')['customRef']
   const defineAsyncComponent: typeof import('vue')['defineAsyncComponent']
   const defineComponent: typeof import('vue')['defineComponent']
   const effectScope: typeof import('vue')['effectScope']
+  const getCookie: typeof import('./composables/fetch')['getCookie']
   const getCurrentInstance: typeof import('vue')['getCurrentInstance']
   const getCurrentScope: typeof import('vue')['getCurrentScope']
   const getI18n: typeof import('./composables/i18n')['getI18n']
   const getLocale: typeof import('./composables/locales')['getLocale']
   const h: typeof import('vue')['h']
   const inject: typeof import('vue')['inject']
-  const isClient: typeof import('./composables/auth-lucia')['isClient']
+  const isClient: (typeof import('./composables/auth-lucia'))['isClient']
   const isDark: typeof import('./composables/dark')['isDark']
   const isProxy: typeof import('vue')['isProxy']
   const isReactive: typeof import('vue')['isReactive']
@@ -65,7 +66,7 @@ declare global {
   const pageContext: typeof import('./composables/index')['pageContext']
   const preferredDark: typeof import('./composables/dark')['preferredDark']
   const provide: typeof import('vue')['provide']
-  const provideAuth: typeof import('./composables/auth-lucia')['provideAuth']
+  const provideAuth: (typeof import('./composables/auth-lucia'))['provideAuth']
   const provideLuciaAuth: typeof import('./composables/auth-lucia')['provideLuciaAuth']
   const provideNextAuth: typeof import('./composables/auth-authjs')['provideNextAuth']
   const reactive: typeof import('vue')['reactive']
@@ -125,13 +126,13 @@ declare module 'vue' {
     readonly $ref: UnwrapRef<typeof import('vue/macros')['$ref']>
     readonly $shallowRef: UnwrapRef<typeof import('vue/macros')['$shallowRef']>
     readonly $toRef: UnwrapRef<typeof import('vue/macros')['$toRef']>
+    readonly // LUCIAAUTH_COOKIES_USER_TOKEN: UnwrapRef<typeof import('./composables/auth-lucia')['// LUCIAAUTH_COOKIES_USER_TOKEN']>
     readonly AUTHJS_COOKIES_AUTHJS_SESSION_TOKEN: UnwrapRef<typeof import('./composables/auth-authjs')['AUTHJS_COOKIES_AUTHJS_SESSION_TOKEN']>
     readonly AUTHJS_COOKIES_USER_TOKEN: UnwrapRef<typeof import('./composables/auth-authjs')['AUTHJS_COOKIES_USER_TOKEN']>
     readonly AUTHJS_SESSION_TOKEN_EXPIRY: UnwrapRef<typeof import('./composables/auth-authjs')['AUTHJS_SESSION_TOKEN_EXPIRY']>
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
     readonly FetchError: UnwrapRef<typeof import('./composables/fetch')['FetchError']>
-    readonly LUCIAAUTH_COOKIES_LUCIAAUTH_SESSION_TOKEN: UnwrapRef<typeof import('./composables/auth-lucia')['LUCIAAUTH_COOKIES_LUCIAAUTH_SESSION_TOKEN']>
-    readonly LUCIAAUTH_COOKIES_USER_TOKEN: UnwrapRef<typeof import('./composables/auth-lucia')['LUCIAAUTH_COOKIES_USER_TOKEN']>
+    readonly LUCIAAUTH_COOKIES_SESSION_TOKEN: UnwrapRef<typeof import('./composables/auth-lucia')['LUCIAAUTH_COOKIES_SESSION_TOKEN']>
     readonly LUCIAAUTH_SESSION_TOKEN_EXPIRY: UnwrapRef<typeof import('./composables/auth-lucia')['LUCIAAUTH_SESSION_TOKEN_EXPIRY']>
     readonly Locale: UnwrapRef<typeof import('./composables/locales')['Locale']>
     readonly RequestConfig: UnwrapRef<typeof import('./composables/fetch')['RequestConfig']>
@@ -144,6 +145,7 @@ declare module 'vue' {
     readonly defineAsyncComponent: UnwrapRef<typeof import('vue')['defineAsyncComponent']>
     readonly defineComponent: UnwrapRef<typeof import('vue')['defineComponent']>
     readonly effectScope: UnwrapRef<typeof import('vue')['effectScope']>
+    readonly getCookie: UnwrapRef<typeof import('./composables/fetch')['getCookie']>
     readonly getCurrentInstance: UnwrapRef<typeof import('vue')['getCurrentInstance']>
     readonly getCurrentScope: UnwrapRef<typeof import('vue')['getCurrentScope']>
     readonly getI18n: UnwrapRef<typeof import('./composables/i18n')['getI18n']>
@@ -225,13 +227,13 @@ declare module '@vue/runtime-core' {
     readonly $ref: UnwrapRef<typeof import('vue/macros')['$ref']>
     readonly $shallowRef: UnwrapRef<typeof import('vue/macros')['$shallowRef']>
     readonly $toRef: UnwrapRef<typeof import('vue/macros')['$toRef']>
+    readonly // LUCIAAUTH_COOKIES_USER_TOKEN: UnwrapRef<typeof import('./composables/auth-lucia')['// LUCIAAUTH_COOKIES_USER_TOKEN']>
     readonly AUTHJS_COOKIES_AUTHJS_SESSION_TOKEN: UnwrapRef<typeof import('./composables/auth-authjs')['AUTHJS_COOKIES_AUTHJS_SESSION_TOKEN']>
     readonly AUTHJS_COOKIES_USER_TOKEN: UnwrapRef<typeof import('./composables/auth-authjs')['AUTHJS_COOKIES_USER_TOKEN']>
     readonly AUTHJS_SESSION_TOKEN_EXPIRY: UnwrapRef<typeof import('./composables/auth-authjs')['AUTHJS_SESSION_TOKEN_EXPIRY']>
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
     readonly FetchError: UnwrapRef<typeof import('./composables/fetch')['FetchError']>
-    readonly LUCIAAUTH_COOKIES_LUCIAAUTH_SESSION_TOKEN: UnwrapRef<typeof import('./composables/auth-lucia')['LUCIAAUTH_COOKIES_LUCIAAUTH_SESSION_TOKEN']>
-    readonly LUCIAAUTH_COOKIES_USER_TOKEN: UnwrapRef<typeof import('./composables/auth-lucia')['LUCIAAUTH_COOKIES_USER_TOKEN']>
+    readonly LUCIAAUTH_COOKIES_SESSION_TOKEN: UnwrapRef<typeof import('./composables/auth-lucia')['LUCIAAUTH_COOKIES_SESSION_TOKEN']>
     readonly LUCIAAUTH_SESSION_TOKEN_EXPIRY: UnwrapRef<typeof import('./composables/auth-lucia')['LUCIAAUTH_SESSION_TOKEN_EXPIRY']>
     readonly Locale: UnwrapRef<typeof import('./composables/locales')['Locale']>
     readonly RequestConfig: UnwrapRef<typeof import('./composables/fetch')['RequestConfig']>
@@ -244,6 +246,7 @@ declare module '@vue/runtime-core' {
     readonly defineAsyncComponent: UnwrapRef<typeof import('vue')['defineAsyncComponent']>
     readonly defineComponent: UnwrapRef<typeof import('vue')['defineComponent']>
     readonly effectScope: UnwrapRef<typeof import('vue')['effectScope']>
+    readonly getCookie: UnwrapRef<typeof import('./composables/fetch')['getCookie']>
     readonly getCurrentInstance: UnwrapRef<typeof import('vue')['getCurrentInstance']>
     readonly getCurrentScope: UnwrapRef<typeof import('vue')['getCurrentScope']>
     readonly getI18n: UnwrapRef<typeof import('./composables/i18n')['getI18n']>

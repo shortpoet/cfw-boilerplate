@@ -43,5 +43,4 @@ CREATE UNIQUE INDEX IF NOT EXISTS user_key_id
 CREATE UNIQUE INDEX IF NOT EXISTS user_session_id
   ON user_session(id);
 
-CREATE UNIQUE INDEX IF NOT EXISTS user_session_user_id
-  ON user_session(user_id);
+DROP INDEX IF EXISTS user_session_user_id

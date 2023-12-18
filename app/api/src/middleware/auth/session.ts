@@ -22,6 +22,8 @@ export const withSession =
       const authRequest = auth.handleRequest(req);
       console.log(`[api] [middleware] [auth] [withSession] -> authRequest ->`);
       const session = await authRequest.validate();
+      console.log(`[api] [middleware] [auth] [withSession] -> session ->`);
+      console.log(session);
       if (!session) {
         return;
       }

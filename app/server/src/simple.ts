@@ -52,6 +52,7 @@ const server = http.createServer(async (req, res) => {
     logger.info(`[server] req.url: ${req.url}`);
     serverLogStart(req, contentType ?? '');
     // console.log(req);
+    console.log(`[server] [simple] -> mappedHeaders -> ${JSON.stringify(mappedHeaders, null, 2)}`);
     const apiReq = new Request(new URL(req.url, 'http://' + req.headers.host), {
       method: req.method,
       headers: mappedHeaders,

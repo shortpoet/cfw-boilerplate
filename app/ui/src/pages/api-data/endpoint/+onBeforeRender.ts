@@ -14,6 +14,7 @@ const onBeforeRender: OnBeforeRenderAsync = async (
   const user = pageContext.session?.user;
   const { urlPathname, csrfToken, sessionToken, callbackUrl } = pageContext;
   console.log(`[ui] [api-data] [onBeforeRender] urlPathname: ${urlPathname}`);
+  // const sessionToken = getCookie(LUCIAAUTH_COOKIES_SESSION_TOKEN);
 
   // overrides renderer/_default.page.server.ts
   const protectedRoutes = [

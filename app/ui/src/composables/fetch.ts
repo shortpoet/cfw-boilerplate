@@ -20,8 +20,8 @@ interface RequestConfig {
   callbackUrl?: string;
   user?: any;
   session?: any;
-  credentials?: RequestCredentials; // include, *same-origin, omit
   // Cloudflare Error: The 'mode, credentials' field on 'RequestInitializerDict' is not implemented.
+  // credentials?: RequestCredentials; // include, *same-origin, omit
   // referrerPolicy?: ReferrerPolicy; // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
   // cache?: RequestCache; // *default, no-cache, reload, force-cache, only-if-cached
   // mode?: RequestMode; // no-cors, *cors, same-origin
@@ -31,11 +31,11 @@ const USE_FETCH_REQ_INIT: RequestConfig = {
   method: 'GET',
   headers: {
     'Content-Type': 'application/json',
-    'Access-Control-Allow-Credentials': 'true',
+    // 'Access-Control-Allow-Credentials': 'true',
     Accept: 'application/json',
   },
   redirect: 'follow',
-  credentials: 'include',
+  // credentials: 'include',
   // referrerPolicy: 'no-referrer',
   // cache: 'no-cache',
   // credentials: 'same-origin',
@@ -58,6 +58,14 @@ interface UseFetchResult<T> {
   dataLoading: Ref<boolean>;
   error: Ref<FetchError | undefined>;
 }
+
+export const getCookie = (name: string) => {
+  console.log(`[ui] [getCookie] name: ${name}`);
+  console.log(`[ui] [getCookie] document.cookie: ${document.cookie}`);
+  const cookie = document.cookie.split(';').find((c) => c.trim().startsWith(`${name}=`));
+  if (!cookie) return;
+  return cookie.split('=')[1];
+};
 
 const useFetch = async <T>(
   path: string,
@@ -85,7 +93,8 @@ const useFetch = async <T>(
     'accept-language': 'en-US,en;q=0.9',
     connection: 'keep-alive',
     'content-type': 'application/json',
-    cookie: `next-auth.session-token=${sessionToken.value}; next-auth.csrf-token=${csrfToken.value}; next-auth.callback-url=${callbackUrl.value};`,
+    // cookie: `next-auth.session-token=${sessionToken.value}; next-auth.csrf-token=${csrfToken.value}; next-auth.callback-url=${callbackUrl.value};`,
+    cookie: `${[LUCIAAUTH_COOKIES_SESSION_TOKEN]}=${sessionToken.value};`,
     host: 'localhost:3000',
     'sec-fetch-dest': 'empty',
     'sec-fetch-mode': 'cors',

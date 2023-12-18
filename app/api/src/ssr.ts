@@ -4,18 +4,18 @@ import { logger, tryLogHeaders, logObjs, getAuthCookies } from '#/utils';
 // import { getSessionItty } from './middleware';
 import { UserRole } from '#/types';
 
-const FILE_LOG_LEVEL = 'info';
+const FILE_LOG_LEVEL = 'debug';
 
 export { handleSsr };
 
 async function handleSsr(request: Request, res: Response, env: Env, ctx: ExecutionContext) {
   const log = logger(FILE_LOG_LEVEL, env);
-  log(`[api] [ssr] handleSsr -> url -> ${request.url}`);
+  console.log(`[api] [ssr] handleSsr -> url -> ${request.url}`);
   // const session = await getSessionItty(request, res, env);
   const cookieHeader = request.headers.get('cookie') || '';
-  log(`[api] [ssr] handleSsr -> cookieHeader -> ${cookieHeader}`);
+  console.log(`[api] [ssr] handleSsr -> cookieHeader -> ${cookieHeader}`);
   const { sessionToken, csrfToken, callbackUrl, pkceCodeVerifier } = getAuthCookies(cookieHeader);
-
+  console.log(`[api] [ssr] handleSsr -> sessionToken -> ${sessionToken}`);
   const userAgent = request.headers.get('User-Agent') || '';
   const pageContextInit = {
     urlOriginal: request.url,
@@ -32,6 +32,7 @@ async function handleSsr(request: Request, res: Response, env: Env, ctx: Executi
   };
   console.log(`[api] [ssr] handleSsr -> pageContextInit ->`);
   // logObjs([pageContextInit]);
+  console.log(pageContextInit);
   const pageContext = await renderPage(pageContextInit);
   const { httpResponse } = pageContext;
   if (!httpResponse) {

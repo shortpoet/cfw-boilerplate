@@ -17,8 +17,8 @@ import { useAuthStore } from '../stores';
 import { storeToRefs } from 'pinia';
 
 export {
-  LUCIAAUTH_COOKIES_LUCIAAUTH_SESSION_TOKEN,
-  LUCIAAUTH_COOKIES_USER_TOKEN,
+  LUCIAAUTH_COOKIES_SESSION_TOKEN,
+  // LUCIAAUTH_COOKIES_USER_TOKEN,
   LUCIAAUTH_SESSION_TOKEN_EXPIRY,
   useLuciaAuth,
 };
@@ -35,8 +35,8 @@ const audience = `https://ssr.shortpoet.com`;
 const scope = 'openid profile email offline_access';
 const response_type = 'code';
 
-const LUCIAAUTH_COOKIES_USER_TOKEN = `${process.env.VITE_APP_NAME}-next-user-token`;
-const LUCIAAUTH_COOKIES_LUCIAAUTH_SESSION_TOKEN = `${process.env.VITE_APP_NAME}-next-session-token`;
+// const LUCIAAUTH_COOKIES_USER_TOKEN = `${process.env.VITE_APP_NAME}-next-user-token`;
+const LUCIAAUTH_COOKIES_SESSION_TOKEN = `auth_session`;
 const LUCIAAUTH_SESSION_TOKEN_EXPIRY = 60 * 60; // 1 hour
 
 export const provideLuciaAuth = () => {
@@ -137,7 +137,11 @@ const login = async (opts: LoginOptions) => {
   const { urlBase } = useBaseUrlApi();
   const url = new URL(`${urlBase}/${process.env.AUTH_PATH}/login/${opts.provider}`);
   console.log(`[ui] [useAuth] login url: ${url.href}`);
-  const { data, error, dataLoading } = await useFetch(url.href);
+  const { data, error, dataLoading } = await useFetch(url.href, {
+    headers: {
+      cookie: `${LUCIAAUTH_COOKIES_SESSION_TOKEN}=${opts.sessionToken}`,
+    },
+  });
   const { logger, correlationId } = useSsrLogger();
 
   if (error.value) {
@@ -154,6 +158,7 @@ const login = async (opts: LoginOptions) => {
     res = { result: 'Success', status: 'Success' };
   }
   console.log(data.value);
+  // @ts-ignore
   window.location.replace(data.value.url);
 };
 

@@ -6,6 +6,7 @@ import { redirectResponse } from '#/api/src/middleware/redirect';
 import { OAuthRequestError } from '@lucia-auth/oauth';
 import { parseCookie } from 'lucia/utils';
 import { json } from 'stream/consumers';
+import { unsign } from 'cookie-signature';
 
 type CF = [env: Env, ctx: ExecutionContext];
 const router = OpenAPIRouter<IRequest, CF>({ base: '/api/auth/login' });
@@ -24,15 +25,18 @@ router.get('/github', async (req: Request, res: Response, env: Env, ctx: Executi
   console.log(`[api] [auth] [login] [github] -> url: ${url}`);
 
   res.cookie(req, res, env, 'github_oauth_state', state, {
-    httpOnly: true,
+    httpOnly: false,
     secure: process.env.NODE_ENV === 'production',
     path: '/',
     maxAge: 60 * 60,
     sameSite: 'lax',
   });
   res.headers.set('Access-Control-Expose-Headers', 'Set-Cookie');
-  res.headers.set('Access-Control-Allow-Credentials', 'true');
-  res.headers.set('Access-Control-Allow-Origin', '*');
+  // res.headers.set('Access-Control-Allow-Credentials', 'true');
+  // res.headers.set(
+  //   'Access-Control-Allow-Origin',
+  //   'http://localhost:3000, http://localhost:3333, https://cfw-boilerplate.pages.dev, https://github.com'
+  // );
   res.headers.set(
     'Access-Control-Allow-Headers',
     'Origin, X-Requested-With, Content-Type, Accept, authorization'
@@ -82,7 +86,10 @@ router.get(
     }
     const cookies = parseCookie(req.headers.get('cookie') ?? '');
     console.log(`[api] [auth] [login] [github] -> cookies: ${cookies}`);
-    const storedState = cookies.github_oauth_state;
+    const secret = env.NEXTAUTH_SECRET;
+    const storedState = cookies.github_oauth_state
+      ? unsign(cookies.github_oauth_state.replace('s:', ''), secret)
+      : '';
     const state = req.query?.state;
     const code = req.query?.code;
     console.log(`[api] [auth] [login] [github] -> storedState: ${storedState}`);
@@ -93,10 +100,13 @@ router.get(
       return badResponse('Invalid state', undefined, res);
     }
     try {
+      console.log(`[api] [auth] [login] [github] -> validateCallback`);
       const { getExistingUser, githubUser, createUser } = await githubAuth.validateCallback(code);
-
+      console.log(`[api] [auth] [login] [github] -> githubUser`);
       const getUser = async () => {
         const existingUser = await getExistingUser();
+        console.log(`[api] [auth] [login] [github] -> existingUser`);
+        console.log(existingUser);
         if (existingUser) return existingUser;
         const user = await createUser({
           attributes: {
@@ -107,12 +117,32 @@ router.get(
       };
 
       const user = await getUser();
+      console.log(`[api] [auth] [login] [github] -> user`);
+      console.log(user);
       const session = await auth.createSession({
         userId: user.userId,
         attributes: {},
       });
-      authRequest.setSession(session);
-      return redirectResponse('/', res, 302);
+      console.log(`[api] [auth] [login] [github] -> session`);
+      console.log(session);
+      console.log(`[api] [auth] [login] [github] -> setSession`);
+      // authRequest.setSession(session);
+      const sessionCookie = auth.createSessionCookie(session);
+      sessionCookie.attributes.httpOnly = false;
+      console.log(`[api] [auth] [login] [github] -> sessionCookie`);
+      console.log(sessionCookie);
+      console.log(sessionCookie.serialize());
+      res.headers.set('Set-Cookie', sessionCookie.serialize());
+      res.headers.set('Access-Control-Expose-Headers', 'Set-Cookie');
+      res.headers.set('Access-Control-Allow-Credentials', 'true');
+      res.headers.set(
+        'Access-Control-Allow-Headers',
+        'Origin, X-Requested-With, Content-Type, Accept, authorization'
+      );
+
+      console.log(`[api] [auth] [login] [github] -> redirectResponse`);
+      return jsonOkResponse({ session }, res);
+      // return redirectResponse(`http://${env.HOST}:${env.VITE_PORT}`, res, 302);
     } catch (e) {
       if (e instanceof OAuthRequestError) {
         // invalid code

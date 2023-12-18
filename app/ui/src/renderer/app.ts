@@ -24,8 +24,8 @@ const initialStateUi: StoreState<UiState> = {
 const getInitialStateUi = () => initialStateUi;
 
 function createApp(Page: Page, pageProps: PageProps | undefined, pageContext: PageContext) {
-  const { session, csrfToken, callbackUrl, isAdmin, cf } = pageContext;
-
+  const { session, csrfToken, callbackUrl, isAdmin, cf, sessionToken } = pageContext;
+  console.log(`[ui] [app] [createApp] sessionToken: ${sessionToken}`);
   let rootComponent: any;
   // sxee comments below
   // let rootComponent: Component & { Page: Component; pageProps: PageProps };

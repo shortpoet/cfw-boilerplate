@@ -44,7 +44,7 @@ export const createCors = (options: CorsOptions = {}) => {
     const origin = r.headers.get('origin') || '';
     console.log(`[api] [middleware] [createCors] [preflight] -> origin: ${origin}`);
     // set allowOrigin globally
-    allowOrigin = isAllowOrigin(origin) && { 'Access-Control-Allow-Origin': '*' };
+    allowOrigin = isAllowOrigin(origin) && { 'Access-Control-Allow-Origin': origin };
 
     console.log(`[api] [middleware] [createCors] [preflight] -> allowOrigin: `);
     console.log(allowOrigin);

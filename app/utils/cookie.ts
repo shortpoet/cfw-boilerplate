@@ -1,5 +1,6 @@
 export { getCookieAuthToken, getAuthCookies };
 import { CookieSetOptions } from 'universal-cookie';
+const LUCIAAUTH_COOKIES_SESSION_TOKEN = `auth_session`;
 
 const cookieOptions: CookieSetOptions = {
   path: '/',
@@ -46,7 +47,7 @@ interface NextAuthCookies {
 const getAuthCookies = (
   cookieHeader: string,
   cookieNames = {
-    sessionToken: 'authjs.session-token',
+    sessionToken: `${LUCIAAUTH_COOKIES_SESSION_TOKEN}`,
     csrfToken: 'authjs.csrf-token',
     callbackUrl: 'authjs.callback-url',
     pkceCodeVerifier: 'authjs.pkce.code_verifier',
