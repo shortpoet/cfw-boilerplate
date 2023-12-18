@@ -42,18 +42,22 @@ async function handleFetchEvent(
   const resp = new Response('', { cf: request.cf });
   const path = url.pathname;
   let res;
+  const logger = getLogger({
+    isSsr: env.SSR,
+    nodeEnv: env.NODE_ENV,
+    envLogLevel: env.VITE_LOG_LEVEL,
+  });
+  request.logger = logger;
   switch (true) {
     case isAssetURL(url):
       // must early return or assets missing
       res = await handleStaticAssets(request, env, ctx);
       break;
     case isAPiURL(url):
-      const logger = getLogger({
-        isSsr: env.SSR,
-        nodeEnv: env.NODE_ENV,
-        envLogLevel: env.VITE_LOG_LEVEL,
-      }).child({ correlationId: getCorrelationId(request.headers) });
-      request.logger = logger;
+      request.logger.child({
+        correlationId: getCorrelationId(request.headers),
+        isApiURL: isAPiURL(url),
+      });
       logger.info(`[api] [index] [handleApiRequest] -> ${request.method} -> ${path}`);
       res = await Api.handle(request, resp, env, ctx, data);
       logger.info(`[api] [isAPiURL] index.handleFetchEvent -> api response`);
@@ -61,7 +65,11 @@ async function handleFetchEvent(
       // console.log(await res.clone().json());
       break;
     default:
-      console.log(`[api] [default] index.handleFetchEvent -> ${url.pathname}`);
+      request.logger.child({
+        correlationId: getCorrelationId(request.headers),
+        isAPiURL: isAPiURL(url),
+      });
+      logger.info(`[api] [default] index.handleFetchEvent -> ${url.pathname}`);
       // this is only logged on page reload due to client routing
       // log(
       //   `[api] handleFetchEvent ${url.pathname} is SSR ${isSSR(

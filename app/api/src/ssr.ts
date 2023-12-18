@@ -4,35 +4,30 @@ import { logger, tryLogHeaders, logObjs, getAuthCookies } from '#/utils';
 // import { getSessionItty } from './middleware';
 import { UserRole } from '#/types';
 
-const FILE_LOG_LEVEL = 'debug';
-
 export { handleSsr };
 
-async function handleSsr(request: Request, res: Response, env: Env, ctx: ExecutionContext) {
-  const log = logger(FILE_LOG_LEVEL, env);
-  console.log(`[api] [ssr] handleSsr -> url -> ${request.url}`);
-  // const session = await getSessionItty(request, res, env);
-  const cookieHeader = request.headers.get('cookie') || '';
-  console.log(`[api] [ssr] handleSsr -> cookieHeader -> ${cookieHeader}`);
+async function handleSsr(req: Request, res: Response, env: Env, ctx: ExecutionContext) {
+  req.logger.info(`[api] [ssr] handleSsr -> url -> ${req.url}`);
+  const cookieHeader = req.headers.get('cookie') || '';
+  req.logger.debug(`[api] [ssr] handleSsr -> cookieHeader -> ${cookieHeader}`);
   const { sessionToken, csrfToken, callbackUrl, pkceCodeVerifier } = getAuthCookies(cookieHeader);
-  console.log(`[api] [ssr] handleSsr -> sessionToken -> ${sessionToken}`);
-  const userAgent = request.headers.get('User-Agent') || '';
+  req.logger.debug(`[api] [ssr] handleSsr -> sessionToken -> ${sessionToken}`);
+  const userAgent = req.headers.get('User-Agent') || '';
   const pageContextInit = {
-    urlOriginal: request.url,
+    urlOriginal: req.url,
     fetch: (...args: Parameters<typeof fetch>) => fetch(...args),
     // isAdmin: session?.user?.roles?.includes(UserRole.Admin) || false,
     userAgent,
-    // session,
-    cf: request.cf,
+    session: res.session,
+    cf: req.cf,
     csrfToken,
     callbackUrl,
     // authRedirectUrl,
     sessionToken,
     pkceCodeVerifier,
   };
-  console.log(`[api] [ssr] handleSsr -> pageContextInit ->`);
-  // logObjs([pageContextInit]);
-  // console.log(pageContextInit);
+  req.logger.debug(`[api] [ssr] handleSsr -> pageContextInit ->`);
+  req.logger.debug(pageContextInit);
   const pageContext = await renderPage(pageContextInit);
   const { httpResponse } = pageContext;
   if (!httpResponse) {

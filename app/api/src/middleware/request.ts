@@ -6,17 +6,16 @@ const FILE_LOG_LEVEL = 'debug';
 const fromEntries = (ent: [string, string][]) =>
   ent.reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {});
 
-export const withQueryParams = () => async (request: Request, env: Env) => {
-  console.log(`[api] middlware.withQueryParams -> ${request.method} -> ${request.url}`);
-  const url = new URL(request.url);
-  request.query = Object.fromEntries(url.searchParams);
-  // request.query = fromEntries([...url.searchParams.entries()]);
-  console.log(`[api] middlware.withQueryParams ->  END`);
-  console.log(request.query);
+export const withQueryParams = () => async (req: Request, env: Env) => {
+  const url = new URL(req.url);
+  req.query = Object.fromEntries(url.searchParams);
+  // req.query = fromEntries([...url.searchParams.entries()]);
+  req.logger.info(`[api] [middlware] [withQueryParams] ->`);
+  req.logger.info(req.query);
 };
 
-export const withListOptions = (request: Request) => {
-  const { query } = request;
+export const withListOptions = (req: Request) => {
+  const { query } = req;
   if (!query) {
     return;
   }
@@ -44,38 +43,34 @@ export const withListOptions = (request: Request) => {
     listOptions.indexKey = indexKey;
   }
 
-  request.listOptions = listOptions;
+  req.listOptions = listOptions;
 };
 
 export const withCfSummary =
   ({ level = 'basic' } = {}) =>
-  async (request: Request, env: Env) => {
-    console.log(`[api] middlware.withCfSummary -> ${request.method} -> ${request.url}`);
-    request.logger.info(`[api] middlware.withCfSummary -> ${request.method} -> ${request.url}`);
-    request.cf_summary = request.cf
+  async (req: Request, env: Env) => {
+    req.cf_summary = req.cf
       ? {
-          longitude: request.cf.longitude,
-          latitude: request.cf.latitude,
-          country: request.cf.country,
-          tlsVersion: request.cf.tlsVersion,
-          colo: request.cf.colo,
-          timezone: request.cf.timezone,
-          city: request.cf.city,
-          region: request.cf.region,
-          regionCode: request.cf.regionCode,
-          asOrganization: request.cf.asOrganization,
-          postalCode: request.cf.postalCode,
-          metroCode: request.cf.metroCode,
-          botManagement: request.cf.botManagement,
+          longitude: req.cf.longitude,
+          latitude: req.cf.latitude,
+          country: req.cf.country,
+          tlsVersion: req.cf.tlsVersion,
+          colo: req.cf.colo,
+          timezone: req.cf.timezone,
+          city: req.cf.city,
+          region: req.cf.region,
+          regionCode: req.cf.regionCode,
+          asOrganization: req.cf.asOrganization,
+          postalCode: req.cf.postalCode,
+          metroCode: req.cf.metroCode,
+          botManagement: req.cf.botManagement,
         }
       : {};
   };
 export const withCfHeaders =
   ({ level = 'basic' } = {}) =>
-  async (request: Request, res: Response, env: Env) => {
-    console.log(`[api] middlware.withCfHeaders -> ${request.method} -> ${request.url}`);
-    request.logger.info(`[api] middlware.withCfHeaders -> ${request.method} -> ${request.url}`);
-    const { cf } = request;
+  async (req: Request, res: Response, env: Env) => {
+    const { cf } = req;
     if (cf) {
       const { colo, clientTcpRtt } = cf;
       if (clientTcpRtt) {
@@ -86,6 +81,4 @@ export const withCfHeaders =
       }
     }
     res.headers.set('x-api-env', env.NODE_ENV);
-    console.log(`[api] middlware.withCfHeaders ->  END`);
-    request.logger.info(`[api] middlware.withCfHeaders ->  END`);
   };

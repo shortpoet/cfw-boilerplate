@@ -1,4 +1,4 @@
-import { RequestLike, IRequest, error } from 'itty-router';
+import { RequestLike, IRequest, error, createCors } from 'itty-router';
 import { ExecutionContext } from '@cloudflare/workers-types';
 import { ServerResponse } from 'http';
 import { OpenAPIRouter } from '@cloudflare/itty-router-openapi';
@@ -23,7 +23,7 @@ import { health_router } from 'api/router';
 import { task_router } from 'api/router';
 import { auth_router } from 'api/router';
 import withCookies from '../middleware/cookie';
-import { createCors } from '../middleware/createCors';
+// import { createCors } from '../middleware/createCors';
 
 const FILE_LOG_LEVEL = 'debug';
 

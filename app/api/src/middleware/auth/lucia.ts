@@ -35,8 +35,6 @@ export const createAuth = async (env: Env) => {
       };
     },
   });
-  console.log(`[api] [middleware] [auth] [lucia] [createAuth] -> auth: ${auth}`);
-
   const githubAuth = github(auth, {
     clientId: env.GITHUB_CLIENT_ID,
     clientSecret: env.GITHUB_CLIENT_SECRET,
@@ -45,7 +43,6 @@ export const createAuth = async (env: Env) => {
         ? `http://${env.HOST}:${env.VITE_PORT_API}/api/auth/login/github/callback`
         : `https://${env.HOST}/api/auth/login/github/callback`,
   });
-
   return { auth, githubAuth };
 };
 

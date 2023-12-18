@@ -18,14 +18,8 @@ export const withSession =
     });
     try {
       const { auth } = await createAuth(env);
-      console.log(`[api] [middleware] [auth] [withSession] -> auth ->`);
-      console.log(`[api] [middleware] [auth] [withSession] -> headers ->`);
-      console.log(req.headers);
       const authRequest = auth.handleRequest(req);
-      console.log(`[api] [middleware] [auth] [withSession] -> authRequest ->`);
       const session = await authRequest.validate();
-      console.log(`[api] [middleware] [auth] [withSession] -> session ->`);
-      console.log(session);
       if (!session) {
         return;
       }
@@ -33,21 +27,7 @@ export const withSession =
       if (!result.success) {
         throw new Error(result.error.toString());
       }
-      console.log(`[api] [middleware] [auth] [withSession] -> result ->`);
-      console.log(result);
       const user = result.data;
-      console.log(`[api] [middleware] [auth] [withSession] -> user ->`);
-      console.log(user);
-
-      log(`[api] [middleware] [auth] [withSession] -> session ->`);
-      logObjs([session]);
-      // if (!session) {
-      //   log(`[api] [middleware] [auth] [withSession] -> !session ->`);
-      //   return unauthorizedResponse('Unauthorized - no session', res);
-      // }
-      log(
-        `[api] [middleware] [auth] [withSession] -> setting res.session to session from itty res ->`
-      );
       res.session = session;
       // const db = await getDatabaseFromEnv(env);
       // if (!db || !session?.sessionToken) return;

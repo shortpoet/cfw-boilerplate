@@ -25,7 +25,11 @@ const getInitialStateUi = () => initialStateUi;
 
 function createApp(Page: Page, pageProps: PageProps | undefined, pageContext: PageContext) {
   const { session, csrfToken, callbackUrl, isAdmin, cf, sessionToken } = pageContext;
-  console.log(`[ui] [app] [createApp] sessionToken: ${sessionToken}`);
+  const { logger, correlationId } = useSsrLogger();
+  logger.info(`[ui] [app] [createApp] sessionToken: ${sessionToken}`);
+  logger.info(`[ui] [app] [createApp] correlationId: ${correlationId}`);
+  logger.info(`[ui] [app] [createApp] session:`);
+  logger.info(session);
   let rootComponent: any;
   // sxee comments below
   // let rootComponent: Component & { Page: Component; pageProps: PageProps };

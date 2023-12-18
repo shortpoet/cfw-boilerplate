@@ -65,7 +65,7 @@ const clearCookie = async (
 ) => {
   const opts = (<any>Object).assign({}, options);
   opts.expires = new Date(1);
-  withCookie(req, res, env, name, '', opts);
+  await withCookie(req, res, env, name, '', opts);
 };
 
 export default function withCookies() {
