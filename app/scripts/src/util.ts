@@ -11,6 +11,7 @@ import { exec, execSync, spawn } from 'node:child_process';
 import colors from 'kleur';
 import { Arrayable, Config, WrangleConfig, WranglerToml } from './types';
 import * as log from './log';
+import { createInterface } from 'node:readline';
 
 // @ts-ignore - Node 14.14
 export const rmdir = fs.rm || fs.rmdir;
@@ -32,34 +33,34 @@ export { exists };
 
 // export function assert(input: unknown, msg: string, isFile?: boolean, exitCode = 2): boolean {
 export function assert(input: unknown, msg: string, isFile?: boolean, exitCode = 2): void | false {
-  console.log(
-    colors.green(
-      `\n[wrangle] [util] asserting with input ${input} isFile ${isFile} and exit code ${exitCode}`
-    )
-  );
-  console.log(
-    colors.cyan(
-      `\n[wrangle] [util] asserting with exists(input as string) ${exists(input as string)}`
-    )
-  );
-  console.log(colors.cyan(`[wrangle] [util] asserting with !!input ${!!input}`));
-  console.log(
-    colors.cyan(
-      `[wrangle] [util] asserting with isFile && exists(input as string) ${
-        isFile && exists(input as string)
-      }`
-    )
-  );
-  console.log(
-    colors.cyan(
-      `[wrangle] [util] asserting with isFile && exists(input as string) && !!input ${
-        isFile && exists(input as string) && !!input
-      }`
-    )
-  );
-  console.log(
-    colors.cyan(`[wrangle] [util] asserting with !isFile && !!input ${!isFile && !!input}`)
-  );
+  // console.log(
+  //   colors.green(
+  //     `\n[wrangle] [util] asserting with input ${input} isFile ${isFile} and exit code ${exitCode}`
+  //   )
+  // );
+  // console.log(
+  //   colors.cyan(
+  //     `\n[wrangle] [util] asserting with exists(input as string) ${exists(input as string)}`
+  //   )
+  // );
+  // console.log(colors.cyan(`[wrangle] [util] asserting with !!input ${!!input}`));
+  // console.log(
+  //   colors.cyan(
+  //     `[wrangle] [util] asserting with isFile && exists(input as string) ${
+  //       isFile && exists(input as string)
+  //     }`
+  //   )
+  // );
+  // console.log(
+  //   colors.cyan(
+  //     `[wrangle] [util] asserting with isFile && exists(input as string) && !!input ${
+  //       isFile && exists(input as string) && !!input
+  //     }`
+  //   )
+  // );
+  // console.log(
+  //   colors.cyan(`[wrangle] [util] asserting with !isFile && !!input ${!isFile && !!input}`)
+  // );
   // console.log(
   //   colors.cyan(
   //     `[wrangle] [util] asserting with !isFile && !!input || error(msg, exitCode) ${
@@ -90,6 +91,19 @@ export async function load<T = unknown>(str: string, dir = '.'): Promise<T | fal
   } finally {
     return m || error(`Error loading "${str}" file`);
   }
+}
+
+export async function promptForInput(prompt: string) {
+  const readline = createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+  return new Promise((resolve) => {
+    readline.question(prompt, (answer: string) => {
+      readline.close();
+      resolve(answer);
+    });
+  });
 }
 
 const formatBindingId = (
@@ -160,7 +174,7 @@ const writeToml = async (data: any, conf: Pick<Config, 'wranglerFile' | 'debug' 
 
 const writeFile = async (file: string, data: string) => {
   try {
-    // console.log(colors.magenta(`[wrangle] [util] writing ${file}`));
+    console.log(colors.magenta(`[wrangle] [util] writing ${file}`));
     await write(file, data);
   } catch (error) {
     console.error(error);

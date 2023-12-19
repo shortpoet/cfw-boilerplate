@@ -1,9 +1,8 @@
 import crypto from 'crypto';
 import colors from 'kleur';
-import { command, writeFile, readFile, assert } from '../util';
+import { command, writeFile, readFile, assert, promptForInput } from '../util';
 import { Config, Options } from '../types';
 import { __rootDir } from '#/utils/root';
-import { createInterface } from 'readline';
 
 export { writeSecretToKv, setSecretFile, setSecrets, assertPassUnlocked };
 
@@ -25,54 +24,46 @@ async function setSecrets(
   targetEnv?: Options['targetEnv'],
   generateLength = 32
 ) {
+  const { env, debug, wranglerFile, goLive } = opts;
   const res = await assertPassUnlocked();
   if (res === false) {
     process.exit(1);
   }
 
   const hasSecretFile = assert(secretsFilePath, `[wrangle] [config] No secret file`, true, 0);
-  console.log(colors.yellow(`[wrangle] [secret] checking secret file exists\n`));
-  console.log(colors.yellow(`[wrangle] [secret] hasSecretFile ${hasSecretFile}\n`));
-  return;
   if (!hasSecretFile) {
     console.log(
       colors.yellow(
-        `[wrangle] [secret] No secret file found. Creating new file at ${secretsFilePath}`
+        `[wrangle] [secret] No secret file found. ${
+          goLive || 'DRY RUN'
+        } Creating new file at ${secretsFilePath}`
       )
     );
-    writeFile(secretsFilePath, '');
+    if (goLive) writeFile(secretsFilePath, '');
   }
-
+  const targetEnvStr = targetEnv ? ` to ${targetEnv}` : '';
   console.log(colors.green(`[wrangle] [secret] Pass is unlocked`));
-  console.log(colors.magenta(`[wrangle] [secret] Setting secrets for ${opts.env}`));
+  console.log(colors.magenta(`[wrangle] [secret] Setting secrets for ${env}${targetEnvStr}`));
 
   for (const [secretName, passPath] of Object.entries(secrets)) {
-    const secret = await getOrCreateSecret(secretName, passPath, generateLength);
+    const secret = await getOrCreateSecret(secretName, passPath, goLive, generateLength);
     if (opts.debug) {
       console.log(colors.cyan(`[wrangle] [secret] secret ${secretName}: ${secret}\n`));
     }
     if (targetEnv) opts.env = targetEnv;
     await writeSecretToKv(secretName, secret, opts);
-    await setSecretFile(secretName, secret, secretsFilePath);
+    if (goLive) await setSecretFile(secretName, secret, secretsFilePath);
   }
 
   return secrets;
 }
 
-async function promptForInput(prompt: string) {
-  const readline = createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-  return new Promise((resolve) => {
-    readline.question(prompt, (answer: string) => {
-      readline.close();
-      resolve(answer);
-    });
-  });
-}
-
-async function getOrCreateSecret(secretName: string, passKey: string, generateLength = 32) {
+async function getOrCreateSecret(
+  secretName: string,
+  passKey: string,
+  goLive: boolean,
+  generateLength = 32
+) {
   let secret;
   console.log(colors.cyan(`[wrangle] [secret] getOrCreateSecret ${secretName} ${passKey}`));
   secret = await passGet(passKey);
@@ -86,7 +77,7 @@ async function getOrCreateSecret(secretName: string, passKey: string, generateLe
     } else {
       secret = generateSecret(generateLength);
     }
-    await passWrite(passKey, secret);
+    if (goLive) await passWrite(passKey, secret);
   }
   return secret;
 }
@@ -111,10 +102,10 @@ async function writeSecretToKv(
   value: string,
   opts: Pick<Config, 'env' | 'debug' | 'wranglerFile' | 'goLive'>
 ) {
-  console.log(colors.magenta(`[wrangle] [secret] writing ${key} to ${opts.env}\n`));
+  console.log(colors.magenta(`[wrangle] [secret] writing secret ${key} to kv in ${opts.env}`));
   const cmd = `echo "${value}" | npx wrangler --env ${opts.env} --config ${opts.wranglerFile} secret put ${key}`;
   if (opts.debug) {
-    console.log(colors.magenta(`[wrangle] [secret] writeSecretToKv.cmd ${cmd}\n`));
+    console.log(colors.magenta(`[wrangle] [secret] cmd\n`), colors.cyan(`${cmd}\n`));
   }
   if (opts.goLive) {
     const res = await command(cmd);
