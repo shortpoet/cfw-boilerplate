@@ -23,10 +23,13 @@
     "proxy:mig:list": "pnpm exec wrangler d1 migrations list local-CFW_BOILERPLATE_DB_LOCAL --local --config=../api/wrangler/wrangler.dev.toml",
     "proxy:mig:apply": "pnpm exec wrangler d1 migrations apply local-CFW_BOILERPLATE_DB_LOCAL --local --config=../api/wrangler/wrangler.dev.toml",
     "========= Deploy": "",
-    "deploy:dev": "pnpm exec wrangler deploy --env dev --config ./wrangler/wrangler.dev.toml.json",
-    "deploy:rng": "pnpm exec wrangler deploy --env rng --config ./wrangler/wrangler.rng.toml.json",
-    "deploy:qa": "pnpm exec wrangler deploy --env qa --config ./wrangler/wrangler.qa.toml.json",
-    "deploy:prod": "pnpm exec wrangler deploy --env prod --config ./wrangler/wrangler.prod.toml.json"
+    "dep:dev": "pnpm exec wrangler deploy --env dev --config ./wrangler/wrangler.dev.toml.json",
+    "dep:rng": "pnpm exec wrangler deploy --env rng --config ./wrangler/wrangler.rng.toml.json",
+    "dep:qa": "pnpm exec wrangler deploy --env qa --config ./wrangler/wrangler.qa.toml.json",
+    "dep:prod": "pnpm exec wrangler deploy --env prod --config ./wrangler/wrangler.prod.toml.json",
+    "========= Log": "",
+    "log:dev": "pnpm exec wrangler tail --env dev --config ./wrangler/wrangler.dev.toml.json",
+    "log:rng": "pnpm exec wrangler tail --env rng --config ./wrangler/wrangler.rng.toml.json"
   },
   "dependencies": {
     "@auth/kysely-adapter": "^0.1.5",

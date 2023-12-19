@@ -8,21 +8,21 @@
     "bucket": "../../ui/build/client"
   },
   "build": {
-    "command": "npm run build"
+    "command": "npm run build:d"
   },
   "dev": {
     "port": 3000,
-    "ip": "cfw-boilerplate.shortpoet.workers.dev"
+    "ip": "localhost"
   },
   "env": {
     "dev": {
       "vars": {
-        "HOST": "cfw-boilerplate.shortpoet.workers.dev",
+        "HOST": "localhost",
         "VITE_PORT": "3000",
-        "VITE_PORT_API": "3333",
-        "VITE_LOG_LEVEL": "debug",
-        "NODE_ENV": "production",
-        "WORKER_ENVIRONMENT": "prod",
+        "VITE_PORT_API": "3000",
+        "VITE_LOG_LEVEL": "info",
+        "NODE_ENV": "staging",
+        "WORKER_ENVIRONMENT": "dev",
         "VITE_APP_NAME": "cfw-boilerplate",
         "VITE_API_VERSION": "0.0.1",
         "VITE_UI_VERSION": "0.0.1",
@@ -34,6 +34,12 @@
         "SSR_BASE_PATHS": "_error,about,api-data,auth,index"
       },
       "name": "cfw-boilerplate",
+      "routes": [
+        {
+          "pattern": "cfw-dev.marshmallowmeat.com",
+          "custom_domain": true
+        }
+      ],
       "kv_namespaces": [
         {
           "binding": "CFW_BOILERPLATE_UI",

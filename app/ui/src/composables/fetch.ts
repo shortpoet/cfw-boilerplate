@@ -98,7 +98,7 @@ const useFetch = async <T>(
     host: `${urlBaseApp}`,
     'sec-fetch-dest': 'empty',
     'sec-fetch-mode': 'cors',
-    origin: `${urlBaseApi}`,
+    origin: `${urlBaseApp}`,
   };
 
   const headers = IS_SSR

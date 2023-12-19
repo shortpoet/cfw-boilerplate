@@ -8,7 +8,7 @@
     "bucket": "../../ui/build/client"
   },
   "build": {
-    "command": "npm run build:d"
+    "command": "npm run build"
   },
   "dev": {
     "port": 3000,
@@ -18,12 +18,12 @@
     "rng": {
       "name": "cfw-boilerplate",
       "vars": {
-        "HOST": "localhost",
+        "HOST": "cfw-dev.marshmallowmeat.com",
         "VITE_PORT": "3000",
         "VITE_PORT_API": "3000",
         "VITE_LOG_LEVEL": "info",
-        "NODE_ENV": "staging",
-        "WORKER_ENVIRONMENT": "rng",
+        "NODE_ENV": "production",
+        "WORKER_ENVIRONMENT": "prod",
         "VITE_APP_NAME": "cfw-boilerplate",
         "VITE_API_VERSION": "0.0.1",
         "VITE_UI_VERSION": "0.0.1",
@@ -34,18 +34,24 @@
         "EMAIL_FROM": "cfw-boilerplate-signups@shortpoet.com",
         "SSR_BASE_PATHS": "_error,about,api-data,auth,index"
       },
-      "d1_databases": [
+      "routes": [
         {
-          "binding": "CFW_BOILERPLATE_DB",
-          "database_name": "cfw-boilerplate-rng-CFW_BOILERPLATE_DB",
-          "database_id": "82fba1af-a784-40cd-a9d3-b564da779e80"
+          "pattern": "cfw-dev.marshmallowmeat.com",
+          "custom_domain": true
         }
       ],
       "kv_namespaces": [
         {
           "binding": "CFW_BOILERPLATE_UI",
-          "id": "cd48c1596e884b8293fc5b8004150679",
-          "preview_id": "9e268d3abf994568a16cb5032a1c0982"
+          "id": "7b7fe7525dba47b1a3b063f7c71a6373",
+          "preview_id": "81d71e89fbd34b8fb982066af9407578"
+        }
+      ],
+      "d1_databases": [
+        {
+          "binding": "CFW_BOILERPLATE_DB",
+          "database_name": "cfw-boilerplate-rng-CFW_BOILERPLATE_DB",
+          "database_id": "82fba1af-a784-40cd-a9d3-b564da779e80"
         }
       ]
     }

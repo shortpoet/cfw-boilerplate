@@ -34,6 +34,9 @@ export default {
     title: {
       env: { server: true, client: true },
     },
+    onBeforeRender: {
+      env: { server: false, client: true },
+    },
     // logger: {
     //   env: { server: true, client: true },
     // },

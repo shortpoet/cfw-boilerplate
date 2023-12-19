@@ -62,7 +62,12 @@ const router = OpenAPIRouter<IRequest, CF>({
 const protectedRoutes = {
   '/api/health/debug': { route: '/api/health/debug', isAdmin: true },
 };
+const todos = Array.from({ length: 8 }, (_, i) => i + 1).map((id) => ({
+  id,
+  title: `Todo #${id}`,
+}));
 
+// GET collection index
 router
   .all('*', preflight)
   .all('*', withPino({ level: FILE_LOG_LEVEL }), withCfHeaders())
@@ -78,13 +83,24 @@ router
   })
   .get(
     '/hello',
-    withCfSummary(),
+    // withCfSummary(),
     // withUser(),
     (req: IRequest, res: Response, env: Env, ctx: ExecutionContext) => {
-      res.cookie(req, res, env, 'hello', 'world', { httpOnly: true, secure: false });
+      res.cookie(req, res, env, 'hello', 'world', {
+        httpOnly: false,
+        secure: env.NODE_ENV === 'production',
+        sameSite: 'lax',
+      });
+      res.headers.set('x-hello', 'world');
+      // added path `/api` to cookie in firefox
+      // also 'session' to max-age
+      res.headers.set('Set-Cookie', 'hello=world; SameSite=Lax');
       return jsonData(req, res, env, { hello: 'world' });
     }
   )
+  .get('/todos', (req: IRequest, res: Response, env: Env, ctx: ExecutionContext) => {
+    return jsonData(req, res, env, todos);
+  })
   // .all("*", error_handler)
   .all('*', () => error(404, 'Oops... Are you sure about that? FAaFO'));
 
