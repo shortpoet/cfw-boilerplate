@@ -8,12 +8,21 @@ import build from './commands/build';
 import go from './commands/go';
 
 const cli = sade('wrangle')
-  .version('0.0.1')
+  .version('0.0.2')
   // .version('$$VERSION$$') // Note: Inject via build step
   .option('-C, --cwd', 'The relative working directory', '.')
   .option('-g, --goLive', 'Go live', false)
   .option('-e, --env', 'The environment to list', 'dev')
   .option('-d, --debug', 'Debug mode', false)
+  // .option('-q, --quiet', 'Quiet mode', false)
+  // .option('-o, --output', 'The output directory', 'dist')
+  // .option('-i, --ignore', 'The list of Worker names to skip')
+  // .option('-s, --single', 'The target is a single Worker')
+  // .option('-p, --profile', 'The profile to use')
+  // .option('-m, --migration', 'The migration to apply')
+  // .option('-b, --bindingName', 'The binding name')
+  .option('-f, --file', 'The secret file || sql file')
+  .option('-s, --sql', 'The sql to execute')
 
   .command('kv list')
   .alias('kv ls')
@@ -37,7 +46,8 @@ const cli = sade('wrangle')
   .action(vars.set)
 
   .command('secret set')
-  .describe('Set KV secrets')
+  .describe('Set KV secrets - can use with any env and secret file')
+  .option('-f, --file', 'The secret file')
   .action(secret.set)
 
   .command('git set')
@@ -64,7 +74,7 @@ const cli = sade('wrangle')
   .command('db exec')
   .describe('Execute D1 sql')
   .action(db.exec)
-  .option('-f, --sqlFile', 'The file to execute')
+  .option('-f, --file', 'The file to execute')
   .option('-s, --sql', 'The sql to execute')
 
   .command('build')
@@ -72,9 +82,9 @@ const cli = sade('wrangle')
   .option('-C, --cwd', 'The relative working directory', '.')
   .option('-e, --env', 'The environment to list', 'dev')
   // .option('-d, --dir', 'The directory containing Worker scripts', 'api')
-  .option('-o, --only', 'The list of Worker names to build; overrides `--ignore` list!')
-  .option('-i, --ignore', 'The list of Worker names to skip')
-  .option('-s, --single', 'The target is a single Worker')
+  // .option('-o, --only', 'The list of Worker names to build; overrides `--ignore` list!')
+  // .option('-i, --ignore', 'The list of Worker names to skip')
+  // .option('-s, --single', 'The target is a single Worker')
   .action(build)
 
   .command('go')
@@ -84,17 +94,22 @@ const cli = sade('wrangle')
   .action(go);
 
 cli.parse(process.argv, {
-  boolean: ['debug', 'single', 'quiet', 'goLive'],
+  boolean: [
+    'debug',
+    // 'single',
+    //  'quiet',
+    'goLive',
+  ],
   string: [
     'env',
-    'dir',
-    'output',
-    'only',
-    'ignore',
-    'profile',
-    'migration',
-    'bindingName',
-    'sqlFile',
+    // 'dir',
+    // 'output',
+    // 'only',
+    // 'ignore',
+    // 'profile',
+    // 'migration',
+    // 'bindingName',
+    'file',
     'sql',
   ],
 });

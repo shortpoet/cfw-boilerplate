@@ -27,7 +27,7 @@ interface Options {
   ignore?: Arrayable<string>;
   migration?: string;
   bindingName?: string;
-  sqlFile?: string;
+  file?: string;
   sql?: string;
 }
 

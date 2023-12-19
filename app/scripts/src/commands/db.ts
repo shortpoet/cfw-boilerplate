@@ -53,7 +53,7 @@ export async function create(opts: Options) {
 export async function exec(opts: Options) {
   const { env, debug, wranglerFile, databaseName, goLive } = await getConfig(opts);
   const conf = { env, debug, wranglerFile, databaseName, goLive };
-  const { sqlFile, sql } = opts;
+  const { file: sqlFile, sql } = opts;
   const input = sqlFile || sql;
   if (!input) throw new Error('[command] [db] No sql or sqlFile');
   log.info(`[command] [db] Executing SQL: ${input}`);
