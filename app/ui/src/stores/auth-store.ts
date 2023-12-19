@@ -59,6 +59,7 @@ export const useAuthStore = defineStore('auth', {
     nonce: '',
     idToken: '',
     accessToken: '',
+    sessionToken: '',
     isLoggedIn: false,
     currentUser: {} as UserUnion,
     gitHubUser: {} as GithubUser,
@@ -82,6 +83,9 @@ export const useAuthStore = defineStore('auth', {
     },
     setAccessToken(token: string) {
       this.accessToken = token;
+    },
+    setSessionToken(token: string) {
+      this.sessionToken = token;
     },
     setLoggedIn(loggedIn: boolean) {
       this.isLoggedIn = loggedIn;

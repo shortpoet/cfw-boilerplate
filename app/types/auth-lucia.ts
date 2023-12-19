@@ -12,6 +12,9 @@ import {
 
 export { LuciaAuthInstance };
 
+export const LUCIA_AUTH_GITHUB_OAUTH_STATE = 'github_oauth_state';
+export const LUCIA_AUTH_COOKIES_SESSION_TOKEN = `auth_session`;
+
 interface LuciaAuthInstance extends AuthInstance {
   authLoading: Ref<boolean>;
   authError: Ref<any>;
@@ -23,6 +26,7 @@ interface LuciaAuthInstance extends AuthInstance {
   session?: Ref<SessionUnion | undefined>;
   idToken?: Ref<string>;
   accessToken?: Ref<string>;
+  sessionToken?: Ref<string>;
   loginRedirectPath?: Ref<string>;
   // popupOpen: Ref<boolean>;
 
@@ -34,6 +38,7 @@ interface LuciaAuthInstance extends AuthInstance {
   setLoggedIn?: (loggedIn: boolean) => void;
   setCurrentUser?: (user: UserUnion) => void;
   setAccessToken?: (token: string) => void;
+  setSessionToken?: (token: string) => void;
   setNonce?: (nonce: string) => void;
   setAuthState?: (state: string) => void;
   setLoginRedirectPath?: (path: string) => void;

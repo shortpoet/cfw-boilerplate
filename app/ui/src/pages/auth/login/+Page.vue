@@ -4,11 +4,13 @@
     <Link :href="`/auth`" :title="'back'">
     <i class="i-carbon-page-first" inline-block /><span>back</span>
     </Link>
-
-    <Link :href="`${urlBaseApi}/api/auth/session`" :title="'back'">
-    <i class="i-carbon-user-activity" inline-block /><span>Session</span>
-    </Link>
-
+    <div>
+      <i class="i-carbon-user-activity" inline-block /><span>Session</span>
+    </div>
+    <div v-if="!session" i-carbon-not-available />
+    <div v-else>
+      <JsonTree :data="session" />
+    </div>
     <Login>
       <template #login="loginProps">
         <button class="btn m-3 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
@@ -38,5 +40,5 @@
 </template>
 
 <script setup lang="ts">
-const { urlBaseApi } = useBaseUrl();
+const session = await useSession();
 </script>

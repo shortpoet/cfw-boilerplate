@@ -19,6 +19,8 @@ export const withSession =
     });
     try {
       const session = await getSession(req, env);
+      req.logger.info(`[api] [middleware] [auth] [withSession] -> session ->`);
+      req.logger.info(session);
       if (!session) {
         return;
       }
@@ -26,12 +28,10 @@ export const withSession =
       if (!result.success) {
         throw new Error(result.error.toString());
       }
-      const user = result.data;
       res.session = session;
+      const user = result.data;
       req.logger.info(`[api] [middleware] [auth] [withSession] -> user ->`);
       req.logger.info(user);
-      req.logger.info(`[api] [middleware] [auth] [withSession] -> session ->`);
-      req.logger.info(res.session);
       // const db = await getDatabaseFromEnv(env);
       // if (!db || !session?.sessionToken) return;
       // const dbSession = await q.getSession(session.sessionToken, db);

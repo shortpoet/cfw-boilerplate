@@ -9,6 +9,7 @@ import {
   serverErrorResponse,
   getBaseUrl,
 } from '../../middleware';
+import { LUCIA_AUTH_COOKIES_SESSION_TOKEN } from '#/types';
 
 export const loginGithub = async (req: Request, res: Response, env: Env, ctx: ExecutionContext) => {
   const { auth, githubAuth } = await createAuth(env);
@@ -20,7 +21,7 @@ export const loginGithub = async (req: Request, res: Response, env: Env, ctx: Ex
   }
   const [url, state] = await githubAuth.getAuthorizationUrl();
   console.log(`[api] [auth] [login] [github] -> url: ${url}`);
-  await res.cookie(req, res, env, 'github_oauth_state', state, {
+  await res.cookie(req, res, env, LUCIA_AUTH_COOKIES_SESSION_TOKEN, state, {
     httpOnly: false,
     secure: process.env.NODE_ENV === 'production',
     path: '/',
@@ -46,8 +47,8 @@ export const loginGithubCallback = async (
   }
   const cookies = parseCookie(req.headers.get('cookie') ?? '');
   const secret = env.NEXTAUTH_SECRET;
-  const storedState = cookies.github_oauth_state
-    ? await sig.unsign(cookies.github_oauth_state.replace('s:', ''), secret)
+  const storedState = cookies[LUCIA_AUTH_COOKIES_SESSION_TOKEN]
+    ? await sig.unsign(cookies[LUCIA_AUTH_COOKIES_SESSION_TOKEN].replace('s:', ''), secret)
     : '';
   const state = req.query?.state;
   const code = req.query?.code;

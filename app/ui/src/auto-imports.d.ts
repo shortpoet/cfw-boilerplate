@@ -87,7 +87,7 @@ declare global {
   const triggerRef: typeof import('vue')['triggerRef']
   const unref: typeof import('vue')['unref']
   const useAttrs: typeof import('vue')['useAttrs']
-  const useAuthStore: typeof import('./stores/auth')['useAuthStore']
+  const useAuthStore: typeof import('./stores/auth-store')['useAuthStore']
   const useBaseUrl: typeof import('./composables/baseUrl')['useBaseUrl']
   const useCssModule: typeof import('vue')['useCssModule']
   const useCssVars: typeof import('vue')['useCssVars']
@@ -101,6 +101,7 @@ declare global {
   const usePageContext: typeof import('./composables/pageContext')['usePageContext']
   const usePageTitle: typeof import('./composables/pageTitle')['usePageTitle']
   const useSeoMeta: typeof import('@vueuse/head')['useSeoMeta']
+  const useSession: typeof import('./composables/session')['useSession']
   const useSlots: typeof import('vue')['useSlots']
   const useSsrLogger: typeof import('./composables/logger')['useSsrLogger']
   const useUiStore: typeof import('./stores/ui')['useUiStore']
@@ -195,7 +196,7 @@ declare module 'vue' {
     readonly triggerRef: UnwrapRef<typeof import('vue')['triggerRef']>
     readonly unref: UnwrapRef<typeof import('vue')['unref']>
     readonly useAttrs: UnwrapRef<typeof import('vue')['useAttrs']>
-    readonly useAuthStore: UnwrapRef<typeof import('./stores/auth')['useAuthStore']>
+    readonly useAuthStore: UnwrapRef<typeof import('./stores/auth-store')['useAuthStore']>
     readonly useBaseUrl: UnwrapRef<typeof import('./composables/baseUrl')['useBaseUrl']>
     readonly useCssModule: UnwrapRef<typeof import('vue')['useCssModule']>
     readonly useCssVars: UnwrapRef<typeof import('vue')['useCssVars']>
@@ -209,6 +210,7 @@ declare module 'vue' {
     readonly usePageContext: UnwrapRef<typeof import('./composables/pageContext')['usePageContext']>
     readonly usePageTitle: UnwrapRef<typeof import('./composables/pageTitle')['usePageTitle']>
     readonly useSeoMeta: UnwrapRef<typeof import('@vueuse/head')['useSeoMeta']>
+    readonly useSession: UnwrapRef<typeof import('./composables/session')['useSession']>
     readonly useSlots: UnwrapRef<typeof import('vue')['useSlots']>
     readonly useSsrLogger: UnwrapRef<typeof import('./composables/logger')['useSsrLogger']>
     readonly useUiStore: UnwrapRef<typeof import('./stores/ui')['useUiStore']>
@@ -296,7 +298,7 @@ declare module '@vue/runtime-core' {
     readonly triggerRef: UnwrapRef<typeof import('vue')['triggerRef']>
     readonly unref: UnwrapRef<typeof import('vue')['unref']>
     readonly useAttrs: UnwrapRef<typeof import('vue')['useAttrs']>
-    readonly useAuthStore: UnwrapRef<typeof import('./stores/auth')['useAuthStore']>
+    readonly useAuthStore: UnwrapRef<typeof import('./stores/auth-store')['useAuthStore']>
     readonly useBaseUrl: UnwrapRef<typeof import('./composables/baseUrl')['useBaseUrl']>
     readonly useCssModule: UnwrapRef<typeof import('vue')['useCssModule']>
     readonly useCssVars: UnwrapRef<typeof import('vue')['useCssVars']>
@@ -310,6 +312,7 @@ declare module '@vue/runtime-core' {
     readonly usePageContext: UnwrapRef<typeof import('./composables/pageContext')['usePageContext']>
     readonly usePageTitle: UnwrapRef<typeof import('./composables/pageTitle')['usePageTitle']>
     readonly useSeoMeta: UnwrapRef<typeof import('@vueuse/head')['useSeoMeta']>
+    readonly useSession: UnwrapRef<typeof import('./composables/session')['useSession']>
     readonly useSlots: UnwrapRef<typeof import('vue')['useSlots']>
     readonly useSsrLogger: UnwrapRef<typeof import('./composables/logger')['useSsrLogger']>
     readonly useUiStore: UnwrapRef<typeof import('./stores/ui')['useUiStore']>

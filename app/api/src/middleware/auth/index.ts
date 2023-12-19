@@ -1,3 +1,3 @@
 export * from './lucia';
-export * from './session';
-export * from './user';
+export * from './session-middleware';
+export * from './user-middleware';
