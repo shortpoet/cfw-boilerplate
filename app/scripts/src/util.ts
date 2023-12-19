@@ -30,10 +30,48 @@ export {
 
 export { exists };
 
+// export function assert(input: unknown, msg: string, isFile?: boolean, exitCode = 2): boolean {
 export function assert(input: unknown, msg: string, isFile?: boolean, exitCode = 2): void | false {
-  // console.log(colors.magenta(`[wrangle] [util] asserting ${input}`));
-  // console.log(exists(input as string));
+  console.log(
+    colors.green(
+      `\n[wrangle] [util] asserting with input ${input} isFile ${isFile} and exit code ${exitCode}`
+    )
+  );
+  console.log(
+    colors.cyan(
+      `\n[wrangle] [util] asserting with exists(input as string) ${exists(input as string)}`
+    )
+  );
+  console.log(colors.cyan(`[wrangle] [util] asserting with !!input ${!!input}`));
+  console.log(
+    colors.cyan(
+      `[wrangle] [util] asserting with isFile && exists(input as string) ${
+        isFile && exists(input as string)
+      }`
+    )
+  );
+  console.log(
+    colors.cyan(
+      `[wrangle] [util] asserting with isFile && exists(input as string) && !!input ${
+        isFile && exists(input as string) && !!input
+      }`
+    )
+  );
+  console.log(
+    colors.cyan(`[wrangle] [util] asserting with !isFile && !!input ${!isFile && !!input}`)
+  );
+  // console.log(
+  //   colors.cyan(
+  //     `[wrangle] [util] asserting with !isFile && !!input || error(msg, exitCode) ${
+  //       (!isFile && !!input) || error(msg, exitCode)
+  //     }`
+  //   )
+  // );
   // (isFile && exists(input as string)) || !!input || error(msg, 0);
+  // const out =
+  //   (isFile && exists(input as string) && !!input) || (!isFile && !!input) || error(msg, exitCode);
+  // console.log(colors.green(`[wrangle] [util] assert out ${out}`));
+  // return out;
   (isFile && exists(input as string) && !!input) || (!isFile && !!input) || error(msg, exitCode);
 }
 

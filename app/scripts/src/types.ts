@@ -22,6 +22,7 @@ interface Options {
   /** Name of source directory */
   dir?: string;
   env?: 'dev' | 'rng' | 'qa' | 'prod';
+  targetEnv?: 'dev' | 'rng' | 'qa' | 'prod';
   debug?: boolean;
   only?: Arrayable<string>;
   ignore?: Arrayable<string>;

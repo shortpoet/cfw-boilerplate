@@ -23,6 +23,7 @@ const cli = sade('wrangle')
   // .option('-b, --bindingName', 'The binding name')
   .option('-f, --file', 'The secret file || sql file')
   .option('-s, --sql', 'The sql to execute')
+  .option('-t, --targetEnv', 'The environment to set')
 
   .command('kv list')
   .alias('kv ls')
@@ -46,8 +47,12 @@ const cli = sade('wrangle')
   .action(vars.set)
 
   .command('secret set')
-  .describe('Set KV secrets - can use with any env and secret file')
+  .describe(
+    `Set KV secrets - can use with any secret file
+    \t\t  optional target env - from env is always -e`
+  )
   .option('-f, --file', 'The secret file')
+  .option('-t, --targetEnv', 'The environment to set')
   .action(secret.set)
 
   .command('git set')
@@ -102,6 +107,7 @@ cli.parse(process.argv, {
   ],
   string: [
     'env',
+    'targetEnv',
     // 'dir',
     // 'output',
     // 'only',

@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import colors from 'kleur';
 import { command, writeFile, readFile, assert } from '../util';
-import { Config } from '../types';
+import { Config, Options } from '../types';
 import { __rootDir } from '#/utils/root';
 import { createInterface } from 'readline';
 
@@ -21,7 +21,8 @@ async function assertPassUnlocked() {
 async function setSecrets(
   secrets: Record<string, string>,
   secretsFilePath: string,
-  opts: Pick<Config, 'env' | 'debug' | 'wranglerFile'>,
+  opts: Pick<Config, 'env' | 'debug' | 'wranglerFile' | 'goLive'>,
+  targetEnv?: Options['targetEnv'],
   generateLength = 32
 ) {
   const res = await assertPassUnlocked();
@@ -30,6 +31,9 @@ async function setSecrets(
   }
 
   const hasSecretFile = assert(secretsFilePath, `[wrangle] [config] No secret file`, true, 0);
+  console.log(colors.yellow(`[wrangle] [secret] checking secret file exists\n`));
+  console.log(colors.yellow(`[wrangle] [secret] hasSecretFile ${hasSecretFile}\n`));
+  return;
   if (!hasSecretFile) {
     console.log(
       colors.yellow(
@@ -47,6 +51,7 @@ async function setSecrets(
     if (opts.debug) {
       console.log(colors.cyan(`[wrangle] [secret] secret ${secretName}: ${secret}\n`));
     }
+    if (targetEnv) opts.env = targetEnv;
     await writeSecretToKv(secretName, secret, opts);
     await setSecretFile(secretName, secret, secretsFilePath);
   }
@@ -104,15 +109,17 @@ async function setSecretFile(secretName: string, secretValue: string, secretsFil
 async function writeSecretToKv(
   key: string,
   value: string,
-  opts: Pick<Config, 'env' | 'debug' | 'wranglerFile'>
+  opts: Pick<Config, 'env' | 'debug' | 'wranglerFile' | 'goLive'>
 ) {
   console.log(colors.magenta(`[wrangle] [secret] writing ${key} to ${opts.env}\n`));
   const cmd = `echo "${value}" | npx wrangler --env ${opts.env} --config ${opts.wranglerFile} secret put ${key}`;
   if (opts.debug) {
     console.log(colors.magenta(`[wrangle] [secret] writeSecretToKv.cmd ${cmd}\n`));
   }
-  const res = await command(cmd);
-  console.log(colors.cyan(res + '\n'));
+  if (opts.goLive) {
+    const res = await command(cmd);
+    console.log(colors.cyan(res + '\n'));
+  }
 }
 
 function generateSecret(length: number) {
