@@ -30,7 +30,7 @@ export async function getConfig(opts: Options): Promise<Config> {
   const ignore = opts.ignore;
 
   const wranglerFile = `${dir}/wrangler.${env}.toml.json`;
-  const envFile = env === 'dev' ? `${__appDir}/.env` : `${__appDir}/.env.${env}`;
+  const envFile = `${__appDir}/.env.${env}`;
 
   assert(envFile, `[wrangle] [config] Env file does not exist: "${envFile}"`, true);
   assert(wranglerFile, `[wrangle] [config] Wrangler file does not exist: "${wranglerFile}"`, true);

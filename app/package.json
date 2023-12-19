@@ -20,6 +20,7 @@
     "prev": "pnpm run wrangle:kv && pnpm run w:dev",
     "lint": "eslint --ext .ts,.tsx .",
     "prepare": "cd .. && husky install app/.husky",
+    "dep": "pnpm ui build:wp && pnpm w:deploy",
     "========= Wskp": "",
     "api": "pnpm --filter api",
     "db": "pnpm --filter db",
@@ -36,9 +37,10 @@
     "w:dev": "pnpm api dev:dev",
     "w:rng": "pnpm api dev:rng",
     "w:qa": "pnpm api dev:qa",
-    "w:deploy": "pnpm api deploy",
+    "w:deploy": "pnpm api deploy:dev",
     "========= Ui": "",
     "v:build": "pnpm ui build",
+    "v:build:p": "pnpm ui build:wp",
     "v:dev": "pnpm ui dev"
   },
   "devDependencies": {

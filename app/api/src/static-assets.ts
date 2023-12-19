@@ -1,6 +1,8 @@
 import { getAssetFromKV } from '@cloudflare/kv-asset-handler';
 import { ExecutionContext } from '@cloudflare/workers-types';
 import { setCacheOptions } from '#/utils';
+// @ts-expect-error
+import rawManifest from '__STATIC_CONTENT_MANIFEST';
 
 export { handleStaticAssets };
 function isWorker() {
@@ -37,7 +39,7 @@ async function handleStaticAssets(request: Request, env: Env, ctx: ExecutionCont
         ASSET_MANIFEST:
           '__STATIC_CONTENT_MANIFEST' in env
             ? env.__STATIC_CONTENT_MANIFEST
-            : JSON.parse(await getManifest(env)),
+            : JSON.parse(rawManifest),
       };
       const page = await getAssetFromKV(getAssetFromKVArgs, options);
       const response = new Response(page.body, page);

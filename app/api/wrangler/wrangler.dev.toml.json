@@ -12,17 +12,17 @@
   },
   "dev": {
     "port": 3000,
-    "ip": "localhost"
+    "ip": "cfw-boilerplate.shortpoet.workers.dev"
   },
   "env": {
     "dev": {
       "vars": {
-        "HOST": "127.0.0.1",
+        "HOST": "cfw-boilerplate.shortpoet.workers.dev",
         "VITE_PORT": "3000",
-        "VITE_PORT_API": "3000",
-        "VITE_LOG_LEVEL": "info",
-        "NODE_ENV": "staging",
-        "WORKER_ENVIRONMENT": "dev",
+        "VITE_PORT_API": "3333",
+        "VITE_LOG_LEVEL": "debug",
+        "NODE_ENV": "production",
+        "WORKER_ENVIRONMENT": "prod",
         "VITE_APP_NAME": "cfw-boilerplate",
         "VITE_API_VERSION": "0.0.1",
         "VITE_UI_VERSION": "0.0.1",
