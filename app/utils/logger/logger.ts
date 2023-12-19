@@ -23,7 +23,6 @@ type GetLoggerOpts = {
 };
 export const getLogger = (opts: GetLoggerOpts) => {
   // console.log('[logger] init START');
-  // console.log(opts);
   const { isSsr, nodeEnv, envLogLevel } = opts;
   const loggerConfig: LoggerOptions =
     // VITE sets this to VITE_USER_NODE_ENV

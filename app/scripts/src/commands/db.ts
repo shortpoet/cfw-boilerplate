@@ -3,16 +3,12 @@ import * as log from '../log';
 import { getConfig } from '../config/config';
 import { Options } from '../types';
 import { __appDir, __rootDir, __wranglerDir } from '#/utils/root';
-import { assert, formatBindingId } from '../util';
 import { applyMigration, createMigration } from '../db/migration';
 import { executeD1Sql } from '../db/sql';
 import { assertDatabase, deleteDatabase, getDatabase, getDatabases } from '../db/db';
 import { writeDatabaseToToml } from '../db/toml';
 
 export async function list(opts: Options) {
-  log.print('green', `${colors.cyan(log.ARROW)} opts`);
-  console.info(JSON.stringify(opts));
-  // console.log(opts);
   const { env, debug, envFile, wranglerFile, goLive } = await getConfig(opts);
   const conf = { env, envFile, debug, wranglerFile, goLive };
   log.info('[command] [db] Retrieving Databases:');
@@ -21,8 +17,6 @@ export async function list(opts: Options) {
 }
 
 export async function apply(opts: Options) {
-  log.print('green', `${colors.cyan(log.ARROW)} opts`);
-  console.info(JSON.stringify(opts));
   const { env, debug, envFile, wranglerFile, appName, databaseName, bindingNameDb, goLive } =
     await getConfig(opts);
   const conf = { env, envFile, debug, wranglerFile, appName, databaseName, bindingNameDb, goLive };
@@ -36,8 +30,6 @@ export async function apply(opts: Options) {
 }
 
 export async function deleteDb(opts: Options) {
-  log.print('green', `${colors.cyan(log.ARROW)} opts`);
-  console.info(JSON.stringify(opts));
   const _conf = await getConfig(opts);
   const { env, debug, envFile, wranglerFile, appName, databaseName, bindingNameDb, goLive } =
     await getConfig(opts);
@@ -50,8 +42,6 @@ export async function deleteDb(opts: Options) {
 }
 
 export async function create(opts: Options) {
-  log.print('green', `${colors.cyan(log.ARROW)} opts`);
-  console.info(JSON.stringify(opts));
   const _conf = await getConfig(opts);
   const { env, debug, envFile, wranglerFile, appName, databaseName, bindingNameDb, goLive } =
     await getConfig(opts);
@@ -59,18 +49,24 @@ export async function create(opts: Options) {
   log.info('[command] [db] Creating - Asserting Database:');
   assertDatabase(conf);
 }
+
 export async function exec(opts: Options) {
-  log.print('green', `${colors.cyan(log.ARROW)} opts`);
-  console.info(JSON.stringify(opts));
-  // console.log(opts);
+  const { env, debug, wranglerFile, databaseName, goLive } = await getConfig(opts);
+  const conf = { env, debug, wranglerFile, databaseName, goLive };
+  const { sqlFile, sql } = opts;
+  const input = sqlFile || sql;
+  if (!input) throw new Error('[command] [db] No sql or sqlFile');
+  log.info(`[command] [db] Executing SQL: ${input}`);
+  executeD1Sql(conf, sqlFile, sql);
+}
+
+export async function assert(opts: Options) {
   const { env, debug, envFile, wranglerFile } = await getConfig(opts);
   const conf = { env, envFile, debug, wranglerFile };
-  log.info('[command] [db] Executing Command:');
+  log.info('[command] [db] :');
 }
+
 export async function _db(opts: Options) {
-  log.print('green', `${colors.cyan(log.ARROW)} opts`);
-  console.info(JSON.stringify(opts));
-  // console.log(opts);
   const { env, debug, envFile, wranglerFile } = await getConfig(opts);
   const conf = { env, envFile, debug, wranglerFile };
   log.info('[command] [db] :');

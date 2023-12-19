@@ -61,6 +61,12 @@ const cli = sade('wrangle')
   .describe('Delete D1 databases')
   .action(db.deleteDb)
 
+  .command('db exec')
+  .describe('Execute D1 sql')
+  .action(db.exec)
+  .option('-f, --sqlFile', 'The file to execute')
+  .option('-s, --sql', 'The sql to execute')
+
   .command('build')
   .describe('Compile the Worker(s) within a directory.')
   .option('-C, --cwd', 'The relative working directory', '.')
@@ -79,5 +85,16 @@ const cli = sade('wrangle')
 
 cli.parse(process.argv, {
   boolean: ['debug', 'single', 'quiet', 'goLive'],
-  string: ['env', 'dir', 'output', 'only', 'ignore', 'profile', 'migration', 'bindingName'],
+  string: [
+    'env',
+    'dir',
+    'output',
+    'only',
+    'ignore',
+    'profile',
+    'migration',
+    'bindingName',
+    'sqlFile',
+    'sql',
+  ],
 });

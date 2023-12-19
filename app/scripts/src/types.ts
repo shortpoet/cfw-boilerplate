@@ -27,6 +27,8 @@ interface Options {
   ignore?: Arrayable<string>;
   migration?: string;
   bindingName?: string;
+  sqlFile?: string;
+  sql?: string;
 }
 
 type Config = {

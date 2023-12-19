@@ -9,9 +9,6 @@ import { setSecrets } from '../secret/secret';
 
 export async function set(opts: Options) {
   log.info('[command] [vars] Retrieving Config');
-  log.print('green', `${colors.cyan(log.ARROW)} opts`);
-  console.info(JSON.stringify(opts));
-  // console.log(opts);
   const { envVars, env, debug, envFile, wranglerFile, secrets } = await getConfig(opts);
   const conf = { env, envFile, debug, wranglerFile };
   log.info('[command] [vars] Setting Vars:');

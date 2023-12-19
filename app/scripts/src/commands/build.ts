@@ -10,8 +10,6 @@ import { __appDir } from '#/utils/root';
 
 export default async function (opts: Options) {
   log.info('Retrieving Config');
-  log.print('green', `${colors.cyan(log.ARROW)} opts`);
-  console.info(JSON.stringify(opts));
   const conf = await getConfig(opts);
   const { env, debug, wranglerFile, secrets } = conf;
   log.info('[command] [build] Building:');

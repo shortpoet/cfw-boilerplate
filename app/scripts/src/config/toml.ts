@@ -5,18 +5,24 @@ import * as log from '../log';
 import { merge } from '#/utils';
 
 export async function assertTomlEnv(
-  conf: Pick<Config, 'env' | 'wranglerFile' | 'appName' | 'debug' | 'envVars'>
+  conf: Pick<Config, 'env' | 'wranglerFile' | 'appName' | 'debug' | 'envVars' | 'goLive'>
 ) {
-  console.log(
-    colors.green(`[wrangle] [toml] Asserting toml env ${conf.env} in ${conf.wranglerFile}`)
-  );
-  const { env, wranglerFile, appName, debug, envVars } = conf;
+  const { env, wranglerFile, appName, debug, envVars, goLive } = conf;
+  if (debug)
+    console.log(
+      colors.green(`\n[wrangle] [toml]`),
+      colors.white(`Asserting toml env`),
+      colors.magenta(`${conf.env}`),
+      colors.yellow(` in \n${conf.wranglerFile}`)
+    );
   let config = await getToml(conf.wranglerFile);
   if (!config) {
     throw new Error('no config');
   }
-  console.log(envVars);
-  // console.log(config);
+  if (debug) {
+    log.print('green', `[toml] [config] config:`);
+    console.log(config);
+  }
   const defaultConfig = {
     name: appName,
     compatibility_date: '2023-11-21',
@@ -54,6 +60,6 @@ export async function assertTomlEnv(
   // config['env'][`${env}`] =
   //   env != 'dev' ? { ...defaultEnvConfig, ...config['env'][`${env}`] } : config['env'][`${env}`];
   if (config['vars']) config['env'][`${env}`]['vars'] = config['vars'];
-  // console.log(config);
-  await writeToml(config, { wranglerFile, debug, env });
+  // if (debug) console.log(config);
+  if (goLive) await writeToml(config, { wranglerFile, debug, env });
 }

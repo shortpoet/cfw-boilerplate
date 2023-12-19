@@ -9,9 +9,6 @@ import { setGitconfig } from '../git/git';
 
 export async function set(opts: Options) {
   log.info('[command] [git set] Retrieving Config');
-  log.print('green', `${colors.cyan(log.ARROW)} opts`);
-  console.info(JSON.stringify(opts));
-  // console.log(opts);
   const conf = await getConfig(opts);
   assert(
     gitDataPath,

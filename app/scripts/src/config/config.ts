@@ -1,15 +1,13 @@
 import { resolve } from 'node:path';
 import * as dotenv from 'dotenv';
+import colors from 'kleur';
 
 import * as log from '../log';
-
 import { Config, Options, WranglerToml, WrangleConfig } from '../types';
 import { __appDir, __rootDir, __wranglerDir } from '#/utils/root';
 import { assert, formatBindingId, getToml, writeToml } from '../util';
-import { setSecrets } from '../secret/secret';
 import { assertTomlEnv } from './toml';
 // import { setBindings } from '../cf/name';
-// import * as log from '../log';
 
 const __dataDir = `${__appDir}/data`;
 export const gitDataPath = `${__dataDir}/git.json`;
@@ -17,6 +15,9 @@ export const ssrDir = `${__appDir}/ui/src/pages`;
 export const secretsFilePath = `${__wranglerDir}/.dev.vars`;
 
 export async function getConfig(opts: Options): Promise<Config> {
+  if (opts.debug) {
+    log.print('cyan', `[wrangle] [config] Options: ${JSON.stringify(opts, null, 2)}`);
+  }
   opts.cwd = resolve(opts.cwd as Options['cwd']);
 
   const dir = opts.dir || resolve(__wranglerDir);
@@ -44,7 +45,7 @@ export async function getConfig(opts: Options): Promise<Config> {
 
   const appName = process.env.VITE_APP_NAME;
   assert(appName, `[wrangle] [config] No app name found`, false);
-  log.print('cyan', `[wrangle] [config] App name: ${appName}`);
+  log.print('cyan', `[wrangle] [config] App name: ${colors.cyan(appName)}`);
   const secrets = {
     __SECRET__: `Cloud/auth0/${appName}/${env}/__SECRET__`,
     NEXTAUTH_SECRET: `Cloud/nextauth/${appName}/${env}/NEXTAUTH_SECRET`,
@@ -54,7 +55,7 @@ export async function getConfig(opts: Options): Promise<Config> {
     JMAP_TOKEN: `Mail/fastmail/ai-maps-email-send-token`,
   };
 
-  await assertTomlEnv({ env, wranglerFile, appName, debug, envVars });
+  await assertTomlEnv({ env, wranglerFile, appName, debug, envVars, goLive });
 
   const bindingNameBase = `${appName.toUpperCase().replace(/-/g, '_')}`;
   const bindingNameSuffixes = [

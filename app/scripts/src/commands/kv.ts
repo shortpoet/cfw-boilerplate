@@ -8,8 +8,6 @@ import { setBindings } from '../cf/kv';
 
 export async function list(opts: Options) {
   log.info('Retrieving Config');
-  log.print('green', `${colors.cyan(log.ARROW)} opts`);
-  console.info(JSON.stringify(opts));
   const conf = await getConfig(opts);
   log.info('Retrieving KV namespaces:');
   const items = await getNamespaces({ ...conf, goLive: true });
@@ -18,8 +16,6 @@ export async function list(opts: Options) {
 
 export async function deleteKV(opts: Options) {
   log.info('Retrieving Config');
-  log.print('green', `${colors.cyan(log.ARROW)} opts`);
-  console.info(JSON.stringify(opts));
   const conf = await getConfig(opts);
   log.info('Deleting KV namespace:');
   if (!opts.bindingName) {
@@ -31,8 +27,6 @@ export async function deleteKV(opts: Options) {
 
 export async function create(opts: Options) {
   log.info('Retrieving Config');
-  log.print('green', `${colors.cyan(log.ARROW)} opts`);
-  console.info(JSON.stringify(opts));
   const conf = await getConfig(opts);
   log.info('Creating KV namespaces:');
   const { env, appName, wranglerFile, debug, goLive, bindingNameDb, bindingNameUI } = conf;

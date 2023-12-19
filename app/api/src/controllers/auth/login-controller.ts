@@ -27,11 +27,6 @@ export const loginGithub = async (req: Request, res: Response, env: Env, ctx: Ex
     maxAge: 60 * 60,
     sameSite: 'none',
   });
-  // res.headers.set('Access-Control-Expose-Headers', 'Set-Cookie');
-  // res.headers.set(
-  //   'Access-Control-Allow-Headers',
-  //   'Origin, X-Requested-With, Content-Type, Accept, authorization'
-  // );
   return jsonOkResponse({ url }, res);
 };
 
@@ -50,18 +45,13 @@ export const loginGithubCallback = async (
     return redirectResponse(dataPage, 302, res.headers);
   }
   const cookies = parseCookie(req.headers.get('cookie') ?? '');
-  // console.log(`[api] [auth] [login] [github] -> cookies: ${cookies}`);
-  // console.log(cookies);
   const secret = env.NEXTAUTH_SECRET;
-  console.log(cookies.github_oauth_state);
   const storedState = cookies.github_oauth_state
     ? await sig.unsign(cookies.github_oauth_state.replace('s:', ''), secret)
     : '';
   const state = req.query?.state;
   const code = req.query?.code;
-  // console.log(`[api] [auth] [login] [github] -> storedState: ${storedState}`);
-  // console.log(`[api] [auth] [login] [github] -> state: ${state}`);
-  // console.log(`[api] [auth] [login] [github] -> code: ${code}`);
+  req.logger.debug(`[api] [auth] [login] [github] -> storedState: ${storedState}`);
   // validate state
   if (!storedState || !state || storedState !== state || typeof code !== 'string') {
     return badResponse('Invalid state', undefined, res);
@@ -70,8 +60,6 @@ export const loginGithubCallback = async (
     const { getExistingUser, githubUser, createUser } = await githubAuth.validateCallback(code);
     const getUser = async () => {
       const existingUser = await getExistingUser();
-      // console.log(`[api] [auth] [login] [github] -> existingUser`);
-      // console.log(existingUser);
       if (existingUser) return existingUser;
       const user = await createUser({
         attributes: {
@@ -82,26 +70,14 @@ export const loginGithubCallback = async (
     };
 
     const user = await getUser();
-    // console.log(`[api] [auth] [login] [github] -> user`);
-    // console.log(user);
     const session = await auth.createSession({
       userId: user.userId,
       attributes: {},
     });
-    // console.log(`[api] [auth] [login] [github] -> session`);
-    // console.log(session);
     const sessionCookie = auth.createSessionCookie(session);
     sessionCookie.attributes.httpOnly = false;
-    // console.log(`[api] [auth] [login] [github] -> sessionCookie`);
-    // console.log(sessionCookie);
-    // console.log(sessionCookie.serialize());
     res.headers.set('Set-Cookie', sessionCookie.serialize());
-    // res.headers.set('Access-Control-Expose-Headers', 'Set-Cookie');
-    // res.headers.set('Access-Control-Allow-Credentials', 'true');
-    // res.headers.set(
-    //   'Access-Control-Allow-Headers',
-    //   'Origin, X-Requested-With, Content-Type, Accept, authorization'
-    // );
+
     // return Response.redirect(dataPage, 302).headers.set('Set-Cookie', sessionCookie.serialize());
     return jsonOkResponse({ session }, res);
   } catch (e) {

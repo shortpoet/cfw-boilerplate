@@ -15,8 +15,6 @@ import { applyMigration } from '../db/migration';
 
 export default async function (opts: Options) {
   log.info('Retrieving Config');
-  log.print('green', `${colors.cyan(log.ARROW)} opts`);
-  console.info(JSON.stringify(opts));
   const conf = await getConfig(opts);
   const {
     env,

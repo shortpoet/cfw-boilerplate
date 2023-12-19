@@ -8,11 +8,11 @@ export const logout = async (req: Request, res: Response, env: Env, ctx: Executi
   const session = await authRequest.validate(); // or `authRequest.validateBearerToken()`
   req.logger.info(`[api] [auth] [logout] -> session:`);
   console.log(session);
-  if (!session) {
-    return new Response('Unauthorized', {
-      status: 401,
-    });
-  }
+  // if (!session) {
+  //   return new Response('Unauthorized', {
+  //     status: 401,
+  //   });
+  // }
   // make sure to invalidate the current session!
   await auth.invalidateSession(session.sessionId);
 

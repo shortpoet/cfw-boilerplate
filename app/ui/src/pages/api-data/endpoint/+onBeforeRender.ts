@@ -51,7 +51,6 @@ const onBeforeRender: OnBeforeRenderAsync = async (
       },
     } as RequestConfig;
     // console.log(`[ui] [api-data] [onBeforeRender] opts`);
-    // console.log(opts);
     ({ dataLoading, error, data } = await useFetch(pathMapping[urlPathname].route, opts));
 
     if (error.value) {

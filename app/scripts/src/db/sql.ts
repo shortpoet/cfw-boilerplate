@@ -2,8 +2,7 @@ import { Config } from '../types';
 import { executeWranglerCommand } from '../util';
 
 export async function executeD1Sql(
-  databaseName: string,
-  opts: Pick<Config, 'env' | 'debug' | 'wranglerFile' | 'goLive'>,
+  opts: Pick<Config, 'env' | 'debug' | 'wranglerFile' | 'goLive' | 'databaseName'>,
   file?: string,
   sql?: string
 ) {
@@ -13,10 +12,10 @@ export async function executeD1Sql(
     base = `${base} --local`;
   }
   if (sql) {
-    cmd = `${base} ${databaseName} --command "${sql}"`;
+    cmd = `${base} ${opts.databaseName} --command "${sql}"`;
   }
   if (file) {
-    cmd = `${base} ${databaseName} --file ${file}`;
+    cmd = `${base} ${opts.databaseName} --file ${file}`;
   }
   if (!cmd) {
     throw new Error('no d1 execute command');
