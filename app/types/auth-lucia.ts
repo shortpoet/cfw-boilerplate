@@ -32,7 +32,7 @@ interface LuciaAuthInstance extends AuthInstance {
   onLoad: () => Promise<void>;
   login(options: LoginOptions): Promise<void>;
   logout(options?: any): Promise<void>;
-  setSession: (_session: SessionUnion | string) => Promise<SessionUnion | undefined>;
+  setSession: (_session?: SessionUnion | string) => Promise<SessionUnion | undefined>;
   setSessionAuthStore: (session: SessionUnion | null) => void;
   setSessionToken: (token: string) => void;
   setLoggedIn: (loggedIn: boolean) => void;
