@@ -130,6 +130,7 @@ const useLuciaAuth = () => {
   };
 
   const login = async (opts: LoginOptions) => {
+    if (auth.isLoggedIn.value) window.location.replace('/');
     const { urlBaseApi } = useBaseUrl();
     const url = new URL(`${urlBaseApi}/${process.env.AUTH_PATH}/login/${opts.provider}`);
     console.log(`[ui] [useAuth] login url: ${url.href}`);
