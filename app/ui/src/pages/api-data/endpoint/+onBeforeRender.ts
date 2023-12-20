@@ -13,7 +13,7 @@ const onBeforeRender: OnBeforeRenderAsync = async (
   const pathMapping = PATH_MAPPING;
   const user = pageContext.session?.user;
   const { urlPathname, csrfToken, sessionToken, callbackUrl } = pageContext;
-  console.log(`[ui] [api-data] [onBeforeRender] urlPathname: ${urlPathname}`);
+  console.log(`[ui] [api-data] [endpoint] [onBeforeRender] urlPathname: ${urlPathname}`);
   // const sessionToken = getCookie(LUCIAAUTH_COOKIES_SESSION_TOKEN);
 
   // overrides renderer/_default.page.server.ts

@@ -1,9 +1,10 @@
-import { SessionUnion } from '#/types';
+import { Session } from '#/types';
 
-export const useSession = async (sessionToken: string) => {
+export const useSession = async (sessionToken?: string): Promise<Session | undefined> => {
   console.log(`[ui] [composables] [session] [useSession] -> sessionToken ->`);
   console.log(sessionToken);
+  if (!sessionToken) return;
   const { urlBaseApi } = useBaseUrl();
-  const { data } = await useFetch<SessionUnion>(`${urlBaseApi}/api/auth/session`, { sessionToken });
+  const { data } = await useFetch<Session>(`${urlBaseApi}/api/auth/session`, { sessionToken });
   return data.value;
 };

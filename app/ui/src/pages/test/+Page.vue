@@ -10,7 +10,7 @@
       </ul>
     </div>
 
-    <div flex flex-row align-items justify-center>
+    <div flex flex-row justify-center>
 
       <div flex flex-col p-3>
         <h3>On Before Render Props</h3>

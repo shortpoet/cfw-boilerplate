@@ -4,19 +4,25 @@
   "version": "1.0.0",
   "description": "",
   "source": "src/index.ts",
-  "main": "dist/server.js",
-  "module": "dist/server.module.js",
   "scripts": {
-    "serve": "cross-env PORT=3333 tsx watch ./src/simple.ts"
+    "serve": "cross-env PORT=3333 tsx watch ./src/simple.ts",
+    "vike": "tsx ./src/vike.ts",
+    "vike:watch": "nodemon server -e ts,json --exec \"npm run vike\""
   },
   "keywords": [],
   "author": "CarlosSoriano",
   "license": "ISC",
   "devDependencies": {
+    "@types/compression": "^1.7.2",
+    "@types/express": "^4.17.17",
     "@types/node": "^20.10.4",
     "chalk": "^5.3.0",
+    "compression": "^1.7.4",
     "cross-env": "^7.0.3",
     "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "sirv": "^2.0.3",
+    "vite": "^4.4.9",
     "wrangler": "^3.19.0"
   },
   "dependencies": {

@@ -1,13 +1,15 @@
 <template>
   <div class="page-container" flex-col items-center flex wrap>
-    <!-- constrain row to 5 elements -->
     <nav flex flex-row flex-wrap items-center justify-center :class="getClass">
+
       <div v-for="ep in endpoints" :key="ep.path" class="w-1/4 box-border" p-1>
         <Link btn-purple v-bind="attrsObj" :href="`${ep.path}`">{{ ep.title }}</Link>
       </div>
+
     </nav>
   </div>
 </template>
+
 <script setup lang="ts">
 import { useAttrs } from 'vue';
 const attrsObj = {
@@ -25,7 +27,7 @@ defineProps({
   },
 });
 
-console.log(`[ui] [api-data] [index.page.vue] [setup] ::`);
+console.log(`[ui] [api-data] [index +Page] [setup] ::`);
 
 const emit = defineEmits(['loaded']);
 

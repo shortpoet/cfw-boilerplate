@@ -1,8 +1,10 @@
 <template>
   <main class="page-shell-main">
+
     <div class="layout">
       <MainNav />
       <div class="main-container">
+
         <Suspense>
           <template v-if="loading">
             <div flex flex-col class="items-center justify-center p-5">
@@ -12,6 +14,7 @@
               <slot name="fallback" />
             </div>
           </template>
+
           <template v-else>
             <div class="suspense-wrapper">
               <component :is="BlueLayout">
@@ -20,11 +23,15 @@
             </div>
           </template>
         </Suspense>
+
         <div class="footer">
           <Footer />
         </div>
+
       </div>
+
     </div>
+
   </main>
 </template>
 <style scoped>

@@ -7,7 +7,7 @@
       <div class="dropdown-menu" v-if="isActive" ref="dd-menu" @click="closeDropdown">
         <!-- <slot></slot> -->
         <Suspense>
-          <ProfileGithub :icon-class="'i-carbon-user-filled'" />
+          <Profile :icon-class="'i-carbon-user-filled'" />
         </Suspense>
       </div>
     </transition>
@@ -21,7 +21,7 @@
         <div class="dropup-menu" v-if="isDropupActive" ref="du-menu" @click="closeDropup">
           <ul>
             <li>
-              <ProfileGithub :icon-class="'i-carbon-user-filled'" />
+              <Profile :icon-class="'i-carbon-user-filled'" :user="user" />
             </li>
           </ul>
         </div>
@@ -52,17 +52,17 @@ const closeDropup = () => {
   isDropupActive.value = false;
 };
 
-const props = defineProps({
+defineProps({
   iconClass: {
     type: String,
     required: false,
     default: 'i-carbon-user-filled',
   },
-  // user: {
-  //   type: Object,
-  //   required: false,
-  //   default: null,
-  // },
+  user: {
+    type: Object,
+    required: false,
+    default: null,
+  }
 });
 </script>
 

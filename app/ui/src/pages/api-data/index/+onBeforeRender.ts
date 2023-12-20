@@ -10,7 +10,7 @@ const onBeforeRender: OnBeforeRenderAsync = async (
 ): ReturnType<OnBeforeRenderAsync> => {
   const user = pageContext.session?.user;
   const { urlPathname, csrfToken, sessionToken, callbackUrl } = pageContext;
-  console.log(`[ui] [api-data] [onBeforeRender] urlPathname: ${urlPathname}`);
+  console.log(`[ui] [api-data] [index] [onBeforeRender] urlPathname: ${urlPathname}`);
   const pathMapping = PATH_MAPPING;
 
   const endpoints: Endpoint[] = (await getEndpoints()).reduce((acc, ep) => {

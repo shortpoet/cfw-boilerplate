@@ -16,7 +16,7 @@ declare module 'vue' {
     Link: typeof import('./components/base/Link.vue')['default']
     Login: typeof import('./components/auth/Login.vue')['default']
     MainNav: typeof import('./components/base/MainNav.vue')['default']
-    ProfileGithub: typeof import('./components/auth/ProfileGithub.vue')['default']
+    Profile: typeof import('./components/auth/Profile.vue')['default']
     TextInput: typeof import('./components/base/TextInput.vue')['default']
     TheCounter: typeof import('./components/base/TheCounter.vue')['default']
     TheInput: typeof import('./components/base/TheInput.vue')['default']

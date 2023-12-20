@@ -26,7 +26,7 @@ import type {
   Session,
   UserRole,
   UserType,
-  SessionUnion,
+  Session,
 } from './types';
 import { Database } from './api/db';
 import { UiState } from '#/ui/src/stores';
@@ -249,7 +249,7 @@ declare global {
       /** Title defined dynamically by onBeforeRender() */
       title?: string;
       pageProps?: PageProps;
-      session?: SessionUnion | null;
+      session?: Session | null;
       redirectTo?: string;
       // httpResponse: HttpResponse;
       csrfToken?: string;

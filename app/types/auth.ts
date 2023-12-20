@@ -1,129 +1,54 @@
-export {
-  Session,
-  EmailUser,
-  GithubUser,
-  CredentialsUser,
-  User,
-  BaseUser,
-  SessionUnion,
-  UserUnion,
-  AuthInstance,
-  LoginOptions,
-};
+export { UserType, UserRole, User, Session, AuthInstance, LoginOptions };
 
 type ISODateString = string;
 
-type SessionUnion = GithubSession | EmailSession | CredentialsSession;
-type UserUnion = EmailUser | GithubUser | CredentialsUser | BaseUser;
 type User = UserUnion;
+type UserUnion = BaseUser;
 
-interface Session {
-  sessionId: string;
-  user: UserUnion;
-  activePerdiodExpiresAt: ISODateString;
-  idlePerdiodExpiresAt: ISODateString;
-  state: string;
-  fresh: boolean;
-}
+type Session = SessionUnion;
+type SessionUnion = BaseSession;
 
-export enum UserType {
+enum UserType {
   _ = 'not_set',
   Email = 'email',
   GitHub = 'github',
   Credentials = 'credentials',
 }
 
-export enum UserRole {
+enum UserRole {
   _ = 'not_set',
   Guest = 'guest',
   Admin = 'admin',
   User = 'user',
 }
 
+type BaseSession = {
+  sessionId: string;
+  user: User;
+  activePerdiodExpiresAt: ISODateString;
+  idlePerdiodExpiresAt: ISODateString;
+  state: string;
+  fresh: boolean;
+};
+
 type BaseUser = {
   id: string;
   userId: string;
   roles: UserRole[];
-};
-
-type GithubSession = {
-  sessionId: string;
-  user: UserUnion;
-  activePerdiodExpiresAt: ISODateString;
-  idlePerdiodExpiresAt: ISODateString;
-  state: string;
-  fresh: boolean;
-};
-
-type GithubUser = {
-  id: string;
-  userId: string;
-  roles: UserRole[];
-  githubUserName: string;
-  userType: UserType.GitHub;
-};
-
-type CredentialsUser = {
-  id: string;
-  userId: string;
-  roles: UserRole[];
-  email: string;
-  emailVerified: Date | string | null;
-  name: string | null;
-  created_at: Date;
-  updated_at: Date;
-  userType: UserType.Credentials;
+  userType: UserType;
   image?: string | null;
   username?: string | null;
-  password?: string | null;
-  sub?: string;
-  passwordHash?: string;
-};
-
-type CredentialsSession = {
-  sessionId: string;
-  user: UserUnion;
-  activePerdiodExpiresAt: ISODateString;
-  idlePerdiodExpiresAt: ISODateString;
-  state: string;
-  fresh: boolean;
-};
-
-type EmailUser = {
-  id: string;
-  userId: string;
-  roles: UserRole[];
-  email: string;
-  emailVerified: Date | string | null;
-  name: string | null;
-  created_at: Date;
-  updated_at: Date;
-  userType: UserType.Email;
-  image?: string | null;
-  username?: string | null;
-  password?: string | null;
-  sub?: string;
-  passwordHash?: string;
-};
-
-type EmailSession = {
-  sessionId: string;
-  user: UserUnion;
-  activePerdiodExpiresAt: ISODateString;
-  idlePerdiodExpiresAt: ISODateString;
-  state: string;
-  fresh: boolean;
+  email?: string | null;
 };
 
 interface AuthInstance {
   authLoading: Ref<boolean>;
   authError: Ref<any>;
   isLoggedIn: Ref<boolean>;
-  user?: Ref<UserUnion | undefined | null>;
-  githubUser?: Ref<GithubUser | undefined>;
+  user?: Ref<User | undefined>;
   authState?: Ref<string>;
   nonce?: Ref<string>;
-  session?: Ref<SessionUnion | undefined>;
+  session?: Ref<Session | undefined>;
   idToken?: Ref<string>;
   accessToken?: Ref<string>;
   loginRedirectPath?: Ref<string>;
@@ -132,11 +57,11 @@ interface AuthInstance {
   onLoad: () => Promise<void>;
   login(options: LoginOptions): Promise<void>;
   logout(options?: any): Promise<void>;
-  setSession: (_session?: SessionUnion | string) => Promise<SessionUnion | undefined>;
-  setSessionAuthStore: (session: SessionUnion | null) => void;
+  setSession: (_session?: Session | string) => Promise<Session | undefined>;
+  setSessionAuthStore: (session: Session | undefined) => void;
   setSessionToken: (token: string) => void;
   setLoggedIn: (loggedIn: boolean) => void;
-  setCurrentUser: (user: UserUnion | null) => void;
+  setCurrentUser: (user: User | undefined) => void;
   setAccessToken?: (token: string) => void;
   setNonce?: (nonce: string) => void;
   setAuthState?: (state: string) => void;

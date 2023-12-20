@@ -1,4 +1,4 @@
-import { LuciaAuthInstance, UserUnion, SessionUnion, LoginOptions } from '#/types';
+import { LuciaAuthInstance, User, Session, LoginOptions } from '#/types';
 import { InjectionKey, ref, provide, inject } from 'vue';
 import { useFetch } from './fetch';
 import { useAuthStore } from '../stores';
@@ -13,8 +13,8 @@ export {
 
 const AuthSymbol: InjectionKey<LuciaAuthInstance> = Symbol();
 
-const user = ref<UserUnion>();
-const session = ref<SessionUnion | undefined>();
+const user = ref<User>();
+const session = ref<Session | undefined>();
 const token = ref<string>();
 const authLoading = ref(true);
 const error = ref<any>();
@@ -38,7 +38,7 @@ export const provideLuciaAuth = () => {
     onLoad: async () => {},
     login: async () => {},
     logout: async () => {},
-    setSession: async () => ({}) as SessionUnion,
+    setSession: async () => ({}) as Session,
     setSessionAuthStore: async () => {},
     setAccessToken: async () => {},
     setSessionToken: async () => {},
@@ -107,14 +107,12 @@ const useLuciaAuth = () => {
     // const correlationId = getCookie(X_CORRELATION_ID);
   };
 
-  const setSession = async (
-    _session?: SessionUnion | string
-  ): Promise<SessionUnion | undefined> => {
+  const setSession = async (_session?: Session | string): Promise<Session | undefined> => {
     if (!_session) {
       auth.setSessionToken('');
       auth.setLoggedIn(false);
-      auth.setSessionAuthStore(null);
-      auth.setCurrentUser(null);
+      auth.setSessionAuthStore(undefined);
+      auth.setCurrentUser(undefined);
       return;
     }
     let session;

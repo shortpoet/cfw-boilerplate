@@ -1,5 +1,5 @@
 import { acceptHMRUpdate, defineStore } from 'pinia';
-import { SessionUnion, UserUnion } from '#/types';
+import { Session, User } from '#/types';
 
 export const useAuthStore = defineStore('auth', {
   persist: true,
@@ -10,9 +10,9 @@ export const useAuthStore = defineStore('auth', {
     accessToken: '',
     sessionToken: '',
     isLoggedIn: false,
-    currentUser: null as UserUnion | null,
+    currentUser: undefined as User | undefined,
     loginRedirectPath: '',
-    session: null as SessionUnion | null,
+    session: undefined as Session | undefined,
   }),
   actions: {
     initRandomAuthState() {
@@ -38,7 +38,7 @@ export const useAuthStore = defineStore('auth', {
     setLoggedIn(loggedIn: boolean) {
       this.isLoggedIn = loggedIn;
     },
-    setCurrentUser(user: UserUnion | null) {
+    setCurrentUser(user: User | undefined) {
       this.currentUser = user;
     },
     setNonce(nonce: string) {
@@ -50,7 +50,7 @@ export const useAuthStore = defineStore('auth', {
     setLoginRedirectPath(path: string) {
       this.loginRedirectPath = path;
     },
-    setSession(session: SessionUnion | null) {
+    setSession(session: Session | undefined) {
       this.session = session;
     },
   },

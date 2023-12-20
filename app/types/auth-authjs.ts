@@ -6,9 +6,9 @@ import {
   CredentialsUser,
   EmailUser,
   GithubUser,
-  SessionUnion,
-  SetSessionResult,
-  UserUnion,
+  LoginOptions,
+  Session,
+  User,
 } from './auth';
 
 export { NextAuthInstance };
@@ -17,31 +17,29 @@ interface NextAuthInstance extends AuthInstance {
   authLoading: Ref<boolean>;
   authError: Ref<any>;
   isLoggedIn: Ref<boolean>;
-  user?: Ref<UserUnion | undefined>;
+  user?: Ref<User | undefined>;
   githubUser?: Ref<GithubUser | undefined>;
   authState?: Ref<string>;
   nonce?: Ref<string>;
-  session?: Ref<SessionUnion | undefined>;
+  session?: Ref<Session | undefined>;
   idToken?: Ref<string>;
   accessToken?: Ref<string>;
   loginRedirectPath?: Ref<string>;
   // popupOpen: Ref<boolean>;
 
-  onLoad: () => Promise<UserUnion | null | undefined>;
-  login(options?: any): Promise<void>;
+  onLoad: () => Promise<void>;
+  login(options: LoginOptions): Promise<void>;
   logout(options?: any): Promise<void>;
-  setSession?: (user: UserUnion) => Promise<SetSessionResult>;
-  setSessionStore?: (session: SessionUnion) => void;
-  setLoggedIn?: (loggedIn: boolean) => void;
-  setCurrentUser?: (user: UserUnion) => void;
+  setSession: (_session?: Session | string) => Promise<Session | undefined>;
+  setSessionAuthStore: (session: Session | undefined) => void;
+  setSessionToken: (token: string) => void;
+  setLoggedIn: (loggedIn: boolean) => void;
+  setCurrentUser: (user: User | undefined) => void;
   setAccessToken?: (token: string) => void;
   setNonce?: (nonce: string) => void;
   setAuthState?: (state: string) => void;
   setLoginRedirectPath?: (path: string) => void;
   setIdToken?: (token: string) => void;
-  isGithubUser?: (user: UserUnion) => user is GithubUser;
-  isEmailUser?: (user: UserUnion) => user is EmailUser;
-  isCredentialsUser?: (user: UserUnion) => user is CredentialsUser;
 
   // createAuthClient: (
   //   onRedirectCallback: (appState: any) => void,

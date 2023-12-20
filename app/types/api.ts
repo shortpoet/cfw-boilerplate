@@ -1,5 +1,5 @@
 import type { Commit } from 'git-last-commit';
-import { User, UserUnion } from './auth';
+import { User, User } from './auth';
 
 export interface ListOptions {
   indexKey?: string;
@@ -49,7 +49,7 @@ export interface ResponseOptions extends ResponseInit {
 }
 
 export interface BodyContext {
-  user: UserUnion;
+  user: User;
   data: any;
 }
 

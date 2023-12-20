@@ -7,11 +7,13 @@
     <div>
       <i class="i-carbon-user-activity" inline-block /><span>Session</span>
     </div>
+
     <div v-if="!session" i-carbon-not-available />
     <div v-else>
       <JsonTree :data="session" />
     </div>
-    <Login>
+
+    <Login :session="session">
       <template #login="loginProps">
         <button class="btn m-3 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
           id="login-button" :disabled="loginProps.isLoggedIn" @click="loginProps.onLogin">
@@ -40,5 +42,14 @@
 </template>
 
 <script setup lang="ts">
-const session = await useSession();
+import { Session } from '#/types';
+const props = defineProps<{
+  session?: Session;
+}>();
+let session = ref(props.session);
+if (typeof window !== "undefined" && !session.value) {
+  console.log(`[ui] [auth] [login} [+Page] [setup] :: no props session, try to load from cookie`);
+  session.value = await useSession(getCookie(LUCIAAUTH_COOKIES_SESSION_TOKEN))
+}
+
 </script>

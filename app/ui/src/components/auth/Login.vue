@@ -21,10 +21,20 @@
       <slot name="logout" :onLogout="onLogout" :isLoggedIn="isLoggedIn" />
     </div>
     <ul>
-      <li>User Info</li>
-      <div v-if="!session?.expires" i-carbon-bot />
+      <li>User Info - Props</li>
+      <div v-if="!session" i-carbon-bot />
       <div v-else>
         {{ session }}
+      </div>
+      <li>User Info - Page</li>
+      <div v-if="!pageSession" i-carbon-bot />
+      <div v-else>
+        {{ pageSession }}
+      </div>
+      <li>User Info - Store</li>
+      <div v-if="!storeSession" i-carbon-bot />
+      <div v-else>
+        {{ storeSession }}
       </div>
     </ul>
   </div>
@@ -32,9 +42,10 @@
 
 <script setup lang="ts">
 
-import { UserUnion } from '#/types';
+import { User, Session } from '#/types';
 
 defineProps<{
+  session?: Session;
   usePopup?: boolean;
 }>();
 let onLogin = ref((event: any) => { console.log(`[ui] [login.component] womp login ${event}`); });
@@ -43,7 +54,9 @@ let onLoginPopup = ref((event: any) => { console.log(`[ui] [login.component] log
 const slots = useSlots()
 // @ts-ignore
 const loginSlot = slots.login;
-let user = ref<UserUnion>();
+let user = ref<User>();
+let storeSession = ref<Session>();
+
 let authLoading = ref(false);
 let authError = ref(null);
 let isLoggedIn = ref(false);
@@ -52,15 +65,12 @@ const providers = ref([
   'github'
 ])
 
-console.log("[ui] [login.component] setup");
-console.log(`[ui] [login.component] providers`);
-console.log(providers.value);
+// console.log("[ui] [login.component] setup");
+// console.log(`[ui] [login.component] providers`);
+// console.log(providers.value);
 
 const pageContext = usePageContext();
-const session = pageContext.session;
-
-// const { useCookies } = await import('@vueuse/integrations/useCookies');
-// const cookies = useCookies([COOKIES_USER_TOKEN]);
+const pageSession = ref(pageContext.session);
 
 if (import.meta.env.VITE_LOG_LEVEL === 'debug') {
   console.log("[ui] [login.component] setup done");
@@ -75,6 +85,7 @@ if (typeof window !== "undefined") {
   ({ authError, isLoggedIn } = auth);
   user = auth.user || user;
   const authStore = useAuthStore();
+  storeSession.value = authStore.session || storeSession.value;
   console.log(`[ui] [login.component] authLoading.value ${authLoading.value}`);
   onLogin.value = async (event: any) => {
     console.log("[ui] [login.component] onLogin");

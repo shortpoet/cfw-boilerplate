@@ -2,18 +2,17 @@
   <ul>
     <li>
       <Link href="/orig/about" :title="'about'">
-      <div v-if="!loggedIn && !githubUser" i-carbon-dicom-overlay />
-      <img v-else :src="githubUser?.image || 'TODO ALT'" class="w-8 h-8 rounded-full" />
+      <div v-if="!user" i-carbon-dicom-overlay />
+      <img v-else :src="user?.image || 'TODO ALT'" class="w-8 h-8 rounded-full" />
       </Link>
     </li>
-    <li>{{ githubUser?.name }}</li>
-    <li>{{ githubUser?.email }}</li>
-    <li>{{ githubUser?.nickname }}</li>
+    <li>{{ user?.username }}</li>
+    <li>{{ user?.email }}</li>
     <li>Other info</li>
     <Login>
       <template #login-github="loginProps">
         <li>
-          <button class="c-yellow btn m-3 text-sm py-2 px-4 rounded-full" id="login-button" :disabled="loggedIn"
+          <button class="c-yellow btn m-3 text-sm py-2 px-4 rounded-full" id="login-button" :disabled="!!user"
             @click="loginProps.onLogin">Log in</button>
         </li>
       </template>
@@ -21,7 +20,7 @@
         <li>
           <button
             class="c-yellow btn m-3 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-            id="logout-button" :disabled="!loggedIn" @click="logoutProps.onLogout">Log out</button>
+            id="logout-button" :disabled="!user" @click="logoutProps.onLogout">Log out</button>
         </li>
       </template>
     </Login>
@@ -30,47 +29,11 @@
 </template>
 
 <script setup lang="ts">
-import { GithubUser } from '#/types';
+import { User } from '#/types';
 defineProps<{
   iconClass: string;
-  // user: UserUnion;
+  user?: User;
 }>();
-let githubUser = ref<GithubUser>();
-let loggedIn = ref(false);
-if (typeof window !== "undefined") {
-  console.log("[ui] ProfileGithub.typeof window !== 'undefined' -> can now load things that would break SSR");
-  console.log(`[ui] ProfileGithub setup`)
-  const authStore = useAuthStore();
-  const pageContext = usePageContext();
-  const session = ref(pageContext.session);
-
-  let { currentUser, isLoggedIn, isGithubUser, gitHubUser } = authStore;
-  const user = ref(currentUser);
-  loggedIn = ref(isLoggedIn && !!user.value);
-  const isGhUser = ref((session.value && session.value.user && isGithubUser(session.value?.user)))
-
-  console.log(`[ui] ProfileGithub setup loggedIn: ${loggedIn.value}`)
-  console.log(`[ui] ProfileGithub setup user: ${user.value}`)
-  console.log(`[ui] ProfileGithub setup githubUser: ${githubUser.value}`)
-  console.log(`[ui] ProfileGithub setup isGithubUser: ${isGhUser.value}`)
-  console.log(`[ui] ProfileGithub setup session: ${session}`)
-  console.log(session)
-  if (loggedIn.value && isGhUser.value && session.value?.user) {
-    console.log('user is a github user');
-    authStore.initUser(session.value?.user);
-    githubUser.value = gitHubUser;
-  }
-  watch(() => authStore.currentUser, () => {
-    console.log('user changed');
-    if (loggedIn.value && isGhUser.value && session.value?.user) {
-      console.log('user is a github user');
-      // user.value = authStore.currentUser;
-      githubUser.value = gitHubUser;
-      loggedIn.value = authStore.isLoggedIn;
-    }
-
-  });
-}
 
 </script>
 

@@ -7,8 +7,8 @@ import {
   isCredentialsUser,
   isEmailUser,
   isGithubUser,
-  UserUnion,
-  SessionUnion,
+  User,
+  Session,
 } from '#/types';
 import { InjectionKey, ref, provide, inject } from 'vue';
 import { useFetch } from './fetch';
@@ -24,8 +24,8 @@ export {
 
 const AuthSymbol: InjectionKey<NextAuthInstance> = Symbol();
 
-const user = ref<UserUnion>();
-const session = ref<SessionUnion | undefined>();
+const user = ref<User>();
+const session = ref<Session | undefined>();
 const token = ref<string>();
 const authLoading = ref(true);
 const error = ref<any>();

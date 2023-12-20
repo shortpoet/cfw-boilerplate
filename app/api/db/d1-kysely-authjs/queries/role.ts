@@ -2,7 +2,7 @@
 import { ExpressionBuilder, InsertQueryBuilder, InsertResult, Kysely } from 'kysely';
 import { jsonArrayFrom, jsonObjectFrom } from 'kysely/helpers/sqlite';
 
-import { User, UserRole, UserType, UserUnion } from '#/types';
+import { User, UserRole, UserType, User } from '#/types';
 import { Database, getDatabaseFromEnv } from '..';
 import { format, propertiesToFormat } from '../cast';
 const { to, from } = format;
@@ -22,7 +22,7 @@ export function withRoles(eb: ExpressionBuilder<Database, 'User'>) {
   ).as('roles');
 }
 
-type UserResult = Omit<UserUnion, 'roles'> & { roles: { role: UserRole }[] };
+type UserResult = Omit<User, 'roles'> & { roles: { role: UserRole }[] };
 
 export function withRoleResult(result: UserResult) {
   const temp: Omit<User, 'roles'> = result;
