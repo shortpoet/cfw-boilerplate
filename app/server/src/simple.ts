@@ -82,8 +82,6 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
-    console.log(await resp.clone().text());
-
     const incomingHeaders = Array.from(resp.headers.entries()) as any;
     logger.debug(`server] incomingHeaders -> ${JSON.stringify(incomingHeaders, null, 2)}`);
 

@@ -1,16 +1,4 @@
-import {
-  BaseUser,
-  LuciaAuthInstance,
-  Session,
-  SetSessionResult,
-  User,
-  isCredentialsUser,
-  isEmailUser,
-  isGithubUser,
-  UserUnion,
-  SessionUnion,
-  LoginOptions,
-} from '#/types';
+import { LuciaAuthInstance, UserUnion, SessionUnion, LoginOptions } from '#/types';
 import { InjectionKey, ref, provide, inject } from 'vue';
 import { useFetch } from './fetch';
 import { useAuthStore } from '../stores';
@@ -47,12 +35,15 @@ export const provideLuciaAuth = () => {
     authError: error,
     session,
 
+    onLoad: async () => {},
     login: async () => {},
     logout: async () => {},
-    onLoad,
-    isGithubUser,
-    isEmailUser,
-    isCredentialsUser,
+    setSession: async () => ({}) as SessionUnion,
+    setSessionAuthStore: async () => {},
+    setAccessToken: async () => {},
+    setSessionToken: async () => {},
+    setLoggedIn: async () => {},
+    setCurrentUser: async () => {},
   };
 
   provide(AuthSymbol, auth);
@@ -84,7 +75,7 @@ const useLuciaAuth = () => {
     setNonce,
     setAuthState,
     setLoginRedirectPath,
-    setSession: setSessionStore,
+    setSession: setSessionAuthStore,
   } = authStore;
   setNonce(nonce.value !== '' ? nonce.value : initRandomNonce());
   setAuthState(authState.value !== '' ? authState.value : initRandomAuthState());
@@ -104,44 +95,47 @@ const useLuciaAuth = () => {
   auth.setNonce = setNonce;
   auth.setAuthState = setAuthState;
   auth.setLoginRedirectPath = setLoginRedirectPath;
-  auth.setSessionStore = setSessionStore;
+  auth.setSessionAuthStore = setSessionAuthStore;
   // console.log(`authStore: ${JSON.stringify(authStore, null, 2)}`);
 
-  const sessionCookie = getCookie(LUCIAAUTH_COOKIES_SESSION_TOKEN);
-  if (sessionCookie) {
-    auth.setSessionToken(sessionCookie);
-    auth.setLoggedIn(true);
-  }
-  // const correlationId = getCookie(X_CORRELATION_ID);
+  const onLoad = async () => {
+    // const sessionCookie = getCookie(LUCIAAUTH_COOKIES_SESSION_TOKEN);
+    // if (sessionCookie) {
+    //   const session = await auth.setSession(sessionCookie);
+    // }
+    authLoading.value = false;
+    // const correlationId = getCookie(X_CORRELATION_ID);
+  };
 
-  const setSession = async (): Promise<SetSessionResult> => {
-    // TODO set session type
-    const { urlBaseApi } = useBaseUrl();
-    const url = new URL(`${urlBaseApi}/${process.env.AUTH_PATH}/session`);
-    const { data, error, dataLoading } = await useFetch<any>(url.href);
-    let res: SetSessionResult = { session: undefined, status: 'Loading' };
-    if (error.value) {
-      // if (process.env.VITE_LOG_LEVEL === 'debug')
-      console.error(`[ui] useAuth.setSession error: ${error.value}`);
-      res = { session: undefined, status: 'Error' };
+  const setSession = async (
+    _session?: SessionUnion | string
+  ): Promise<SessionUnion | undefined> => {
+    if (!_session) {
+      auth.setSessionToken('');
+      auth.setLoggedIn(false);
+      auth.setSessionAuthStore(null);
+      auth.setCurrentUser(null);
+      return;
     }
-    if (dataLoading.value) {
-      // if (process.env.VITE_LOG_LEVEL === 'debug')
-      console.log(`[ui] useAuth.setSession dataLoading: ${dataLoading.value}`);
+    let session;
+    if (typeof _session === 'string') {
+      session = await useSession(_session);
     }
-    if (data.value) {
-      console.log(`[ui] useAuth.setSession data: ${JSON.stringify(data.value, null, 2)}`);
-      res = { session: data.value, status: 'Success' };
-    }
-    return res;
+    if (!session) return;
+    console.log(`[ui] [useAuth] [setSession] -> session ->`);
+    console.log(session);
+    auth.setCurrentUser(session.user);
+    auth.setSessionToken(session.sessionId);
+    auth.setLoggedIn(true);
+    auth.setSessionAuthStore(session);
+    return session;
   };
 
   const login = async (opts: LoginOptions) => {
-    let res;
     const { urlBaseApi } = useBaseUrl();
     const url = new URL(`${urlBaseApi}/${process.env.AUTH_PATH}/login/${opts.provider}`);
     console.log(`[ui] [useAuth] login url: ${url.href}`);
-    const { data, error, dataLoading } = await useFetch(url.href, {
+    const { data, error, dataLoading } = await useFetch<{ url: string }>(url.href, {
       // headers: {
       //   cookie: `${LUCIAAUTH_COOKIES_SESSION_TOKEN}=${sessionToken.value}`,
       // },
@@ -152,55 +146,38 @@ const useLuciaAuth = () => {
       logger.error(`[ui] [useAuth] error:`);
       logger.error(error.value);
     }
-
     if (dataLoading.value) {
       logger.info(`[ui] [useAuth] dataLoading: ${dataLoading.value}`);
-      res = { result: 'Loading', status: 'Loading' };
     }
     if (data.value) {
       logger.debug(`[ui] [useAuth] data: ${JSON.stringify(data.value, null, 2)}`);
-      res = { result: 'Success', status: 'Success' };
+      window.location.replace(data.value.url);
     }
-    console.log(data.value);
-    // @ts-ignore
-    window.location.replace(data.value.url);
-    // auth.setCurrentUser(data.value.user);
   };
 
   const logout = async () => {
-    let res;
     const { urlBaseApi } = useBaseUrl();
     const url = new URL(`${urlBaseApi}/${process.env.AUTH_PATH}/logout`);
-    const { data, error, dataLoading } = await useFetch(url.href, {
+    const { data, error, dataLoading } = await useFetch<{ url: string }>(url.href, {
       sessionToken: auth.sessionToken?.value,
     });
-    window.location.replace(url.href);
-    // navigate(url.pathname);
     if (error.value) {
       console.error(`error: ${error.value}`);
     }
 
     if (dataLoading.value) {
       console.log(`dataLoading: ${dataLoading.value}`);
-      res = { result: 'Loading', status: 'Loading' };
     }
     if (data.value) {
       console.log(`data: ${JSON.stringify(data.value, null, 2)}`);
+      auth.setSession();
+      window.location.replace('/');
     }
   };
 
+  auth.onLoad = onLoad;
   auth.login = login;
   auth.logout = logout;
   auth.setSession = setSession;
   return auth;
-};
-const onLoad = async () => {
-  // this conflicts with getSession on server side and causes a mini redirect loop/series of unnecessary fetches
-  // const _session = await setSession();
-  // if (_session.status === 'Success') {
-  //   console.log(`_session: ${JSON.stringify(_session, null, 2)}`);
-  //   session.value = _session.session;
-  // }
-  authLoading.value = false;
-  return null;
 };

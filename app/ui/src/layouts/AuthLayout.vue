@@ -67,16 +67,17 @@ const pageComponent = computed(() => {
 
 
 onMounted(async () => {
-  const authStore = useAuthStore();
   const session = ref(pageContext.session);
+  const authStore = useAuthStore();
+  const auth = useLuciaAuth();
+  const { onLoad } = auth;
+
   if (session.value) {
     console.log('[ui] [AuthLayout] [onMounted] session -> ', session.value);
     console.log('[ui] [AuthLayout] [onMounted] authStore.session -> ', authStore.session);
     authStore.setSession(session.value);
+    auth.setSession(session.value);
   }
-
-  const auth = useLuciaAuth();
-  const { onLoad } = auth;
   await onLoad();
   authLoading.value = auth.authLoading.value;
 })

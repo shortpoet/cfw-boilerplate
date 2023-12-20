@@ -6,7 +6,6 @@ import {
   GithubUser,
   LoginOptions,
   SessionUnion,
-  SetSessionResult,
   UserUnion,
 } from './auth';
 
@@ -19,7 +18,7 @@ interface LuciaAuthInstance extends AuthInstance {
   authLoading: Ref<boolean>;
   authError: Ref<any>;
   isLoggedIn: Ref<boolean>;
-  user?: Ref<UserUnion | undefined>;
+  user?: Ref<UserUnion | undefined | null>;
   githubUser?: Ref<GithubUser | undefined>;
   authState?: Ref<string>;
   nonce?: Ref<string>;
@@ -30,20 +29,17 @@ interface LuciaAuthInstance extends AuthInstance {
   loginRedirectPath?: Ref<string>;
   // popupOpen: Ref<boolean>;
 
-  onLoad: () => Promise<UserUnion | null | undefined>;
+  onLoad: () => Promise<void>;
   login(options: LoginOptions): Promise<void>;
   logout(options?: any): Promise<void>;
-  setSession?: (user: UserUnion) => Promise<SetSessionResult>;
-  setSessionStore?: (session: SessionUnion) => void;
-  setLoggedIn?: (loggedIn: boolean) => void;
-  setCurrentUser?: (user: UserUnion) => void;
+  setSession: (_session: SessionUnion | string) => Promise<SessionUnion | undefined>;
+  setSessionAuthStore: (session: SessionUnion | null) => void;
+  setSessionToken: (token: string) => void;
+  setLoggedIn: (loggedIn: boolean) => void;
+  setCurrentUser: (user: UserUnion | null) => void;
   setAccessToken?: (token: string) => void;
-  setSessionToken?: (token: string) => void;
   setNonce?: (nonce: string) => void;
   setAuthState?: (state: string) => void;
   setLoginRedirectPath?: (path: string) => void;
   setIdToken?: (token: string) => void;
-  isGithubUser?: (user: UserUnion) => user is GithubUser;
-  isEmailUser?: (user: UserUnion) => user is EmailUser;
-  isCredentialsUser?: (user: UserUnion) => user is CredentialsUser;
 }

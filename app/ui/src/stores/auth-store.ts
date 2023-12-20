@@ -1,56 +1,5 @@
 import { acceptHMRUpdate, defineStore } from 'pinia';
-import {
-  BaseUser,
-  GithubUser,
-  Session,
-  SessionUnion,
-  User,
-  UserUnion,
-  isGithubUser,
-  UserType,
-} from '#/types';
-import { useStorage } from '@vueuse/core';
-import { usePageContext } from '../composables';
-import { uuidv4 } from '#/utils';
-
-const initBaseUser = (user: SessionUnion['user']): BaseUser => {
-  const id = uuidv4();
-  const email = user.email;
-  const emailVerified = user.emailVerified;
-  const name = user.name;
-  const roles = user.roles;
-  const created_at = user.created_at;
-  const updated_at = user.updated_at;
-  let userType: UserType;
-  let image: any;
-  let username: string | undefined;
-  let password: string | undefined;
-  let sub: string | undefined;
-
-  switch (true) {
-    case isGithubUser(user):
-      userType = UserType.GitHub;
-      image = user.image;
-      break;
-    default:
-      throw new Error('invalid user type');
-  }
-  const baseUser: BaseUser = {
-    id,
-    email,
-    emailVerified,
-    name,
-    created_at,
-    updated_at,
-    roles,
-    userType,
-    image,
-    username,
-    password,
-    sub,
-  };
-  return baseUser;
-};
+import { SessionUnion, UserUnion } from '#/types';
 
 export const useAuthStore = defineStore('auth', {
   persist: true,
@@ -61,10 +10,9 @@ export const useAuthStore = defineStore('auth', {
     accessToken: '',
     sessionToken: '',
     isLoggedIn: false,
-    currentUser: {} as UserUnion,
-    gitHubUser: {} as GithubUser,
+    currentUser: null as UserUnion | null,
     loginRedirectPath: '',
-    session: {} as SessionUnion,
+    session: null as SessionUnion | null,
   }),
   actions: {
     initRandomAuthState() {
@@ -90,11 +38,8 @@ export const useAuthStore = defineStore('auth', {
     setLoggedIn(loggedIn: boolean) {
       this.isLoggedIn = loggedIn;
     },
-    setCurrentUser(user: UserUnion) {
-      this.currentUser = user as UserUnion;
-    },
-    setGithubUser(user: GithubUser) {
-      this.gitHubUser = user;
+    setCurrentUser(user: UserUnion | null) {
+      this.currentUser = user;
     },
     setNonce(nonce: string) {
       this.nonce = nonce;
@@ -105,18 +50,8 @@ export const useAuthStore = defineStore('auth', {
     setLoginRedirectPath(path: string) {
       this.loginRedirectPath = path;
     },
-    isGithubUser: isGithubUser,
-    setSession(session: SessionUnion) {
+    setSession(session: SessionUnion | null) {
       this.session = session;
-      this.isLoggedIn = true;
-    },
-    initUser(user: SessionUnion['user']) {
-      const githubUser = isGithubUser(user) ? user : undefined;
-      if (githubUser) {
-        const initUser = initBaseUser(githubUser);
-        this.setCurrentUser(initUser);
-        this.setGithubUser(githubUser);
-      }
     },
   },
   // persist: [
