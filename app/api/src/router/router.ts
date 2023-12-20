@@ -43,7 +43,7 @@ const { preflight, corsify } = createCors({
   },
 });
 
-export { corsify };
+export { corsify, router };
 
 type CF = [env: Env, context: ExecutionContext];
 

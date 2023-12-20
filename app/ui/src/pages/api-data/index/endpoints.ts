@@ -55,29 +55,30 @@ const getEndpoints = async () => {
       title: formatPath(path),
     };
   });
-  // let { dataLoading, error, data } = {
-  //   dataLoading: ref(false),
-  //   error: ref(),
-  //   data: ref<DiscoveryEndpoint>(),
-  // };
-  // const opts = {} as RequestConfig;
+  if (process.env.NODE_ENV !== 'development') return endpoints;
+  let { dataLoading, error, data } = {
+    dataLoading: ref(false),
+    error: ref(),
+    data: ref<DiscoveryEndpoint>(),
+  };
+  const opts = {} as RequestConfig;
 
-  // try {
-  //   ({ dataLoading, error, data } = await useFetch<DiscoveryEndpoint>('api/openapi.json', opts));
-  //   const { text } = data.value || { text: '{}' };
-  //   // console.log(`[ui] [api-data] [onBeforePrerenderStart] endpoints`);
-  //   const openApi = JSON.parse(text) as OpenApi;
-  //   const e = Object.keys(openApi.paths)
-  //     .filter((path) => !path.match(/[\*\{]/))
-  //     .reverse();
-  //   endpoints = e.map((path) => {
-  //     return {
-  //       path,
-  //       title:
-  //         openApi.paths[path].get?.summary || openApi.paths[path].post?.summary || formatPath(path),
-  //     };
-  //   });
-  //   // console.log(endpoints);
-  // } catch (error) {}
+  try {
+    ({ dataLoading, error, data } = await useFetch<DiscoveryEndpoint>('api/openapi.json', opts));
+    const { text } = data.value || { text: '{}' };
+    // console.log(`[ui] [api-data] [onBeforePrerenderStart] endpoints`);
+    const openApi = JSON.parse(text) as OpenApi;
+    const e = Object.keys(openApi.paths)
+      .filter((path) => !path.match(/[\*\{]/))
+      .reverse();
+    endpoints = e.map((path) => {
+      return {
+        path,
+        title:
+          openApi.paths[path].get?.summary || openApi.paths[path].post?.summary || formatPath(path),
+      };
+    });
+    // console.log(endpoints);
+  } catch (error) {}
   return endpoints;
 };

@@ -1,21 +1,14 @@
 import http from 'http';
-import dotenv from 'dotenv';
 import { error, json } from 'itty-router';
-import path from 'node:path';
-import { corsify, Api } from '@cfw-boilerplate/api/src/router';
+import fs from 'node:fs';
+import { corsify, Api, router } from '@cfw-boilerplate/api/src/router';
 import { mapHttpHeaders, serverLogStart, ctx, serverLogEnd } from './util';
 import { __rootDir, __appDir, __wranglerDir } from '#/utils/root';
-import { unstable_dev } from 'wrangler';
-import type { UnstableDevWorker } from 'wrangler';
-// const worker: UnstableDevWorker = await unstable_dev(`${__wranglerDir}/src/index.ts`, {
-//   experimental: { disableExperimentalWarning: true },
-// });
-// const envDir = path.resolve(process.cwd(), '.');
-// const __appDir = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../..');
-// const __wranglerDir = path.resolve(__appDir, 'api');
+import fetch from 'node-fetch';
 
 import { config } from '#/utils/config';
 import { getCorrelationId, getLogger } from '#/utils/logger/logger';
+import { clearCookie, withCookie } from '#/api/src/middleware/cookie';
 const isSsr = config.env.SSR;
 const nodeEnv = config.env.NODE_ENV;
 const envLogLevel = config.env.VITE_LOG_LEVEL;
@@ -51,30 +44,19 @@ const server = http.createServer(async (req, res) => {
     });
     logger.info(`[server] req.url: ${req.url}`);
     serverLogStart(req, contentType ?? '');
-    // console.log(req);
+    console.log(`[server] [simple] -> apiReq -> ${config.env.__appDir}`);
+    console.log(`[server] [simple] -> apiReq -> ${config.env.__wranglerDir}`);
     console.log(`[server] [simple] -> mappedHeaders -> ${JSON.stringify(mappedHeaders, null, 2)}`);
     const apiReq = new Request(new URL(req.url, 'http://' + req.headers.host), {
       method: req.method,
       headers: mappedHeaders,
-      // body: req.read(),
-    });
-    const data = req.read();
-    const response = new Response();
-    // const response = new Response("", { cf: req.cf });
-    console.log(`[server] [simple] -> apiReq -> ${config.env.__appDir}`);
-    console.log(`[server] [simple] -> apiReq -> ${config.env.__wranglerDir}`);
-    // @ts-expect-error
-    const resp = await Api.handle(apiReq, response, config.env, ctx, data)
+    }) as unknown as Request;
+    const response = new Response() as unknown as Response;
+
+    const resp = await Api.handle(apiReq, response, config.env, ctx, req.read())
       .then(json)
       .catch(error)
       .then(corsify);
-
-    // const resp = await worker.fetch(new URL(req.url, 'http://' + req.headers.host), {
-    //   method: req.method,
-    //   headers: mappedHeaders,
-    //   duplex: 'half',
-    //   // body: req.read(),
-    // });
 
     if (!resp) {
       res.statusCode = 404;
@@ -108,4 +90,8 @@ server.on('error', (e: NodeJS.ErrnoException) => {
 
 server.listen(PORT, HOST, () => {
   logger.info(`Server running at http://${HOST}:${PORT}/`);
+  const openapi_schema = router.schema;
+  const schemaPath = `${__appDir}/api/openapi.json`;
+  fs.writeFileSync(schemaPath, JSON.stringify(openapi_schema, null, 2));
+  logger.info(`[server] [simple] [openapi_schema] -> written to ${schemaPath}`);
 });

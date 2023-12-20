@@ -13,7 +13,7 @@ const append = (res: Response, field: string, val: string | string[]) => {
   res.headers.set(field, valArray.join(', '));
 };
 
-const withCookie = async (
+export const withCookie = async (
   req: Request,
   res: Response,
   env: Env,
@@ -56,7 +56,7 @@ const withCookie = async (
   append(res, 'Set-Cookie', cookie.serialize(name, String(val), opts));
 };
 
-const clearCookie = async (
+export const clearCookie = async (
   req: Request,
   res: Response,
   env: Env,

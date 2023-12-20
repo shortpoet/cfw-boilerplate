@@ -122,7 +122,7 @@ declare global {
     params?: Record<string, string>;
     query?: Record<string, string>;
     logger: LoggerType;
-    universalCookies: Cookies;
+    universalCookies?: Cookies;
     isAuthenticated?: boolean;
     cf?: CFRequest['cf'];
     cf_summary?: Partial<CFRequest['cf']>;

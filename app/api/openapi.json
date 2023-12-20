@@ -1,0 +1,511 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "CFW Vue AI API",
+    "version": "1.0"
+  },
+  "components": {
+    "schemas": {},
+    "parameters": {}
+  },
+  "paths": {
+    "/api/auth/login/github": {
+      "get": {
+        "operationId": "get__github",
+        "responses": {
+          "200": {
+            "description": "Object with user data."
+          }
+        }
+      }
+    },
+    "/api/auth/login/github/callback": {
+      "get": {
+        "operationId": "get__github_callback",
+        "responses": {
+          "200": {
+            "description": "Object with user data."
+          }
+        }
+      }
+    },
+    "/api/auth/session": {
+      "get": {
+        "operationId": "get__",
+        "responses": {
+          "200": {
+            "description": "Object with user data."
+          }
+        }
+      }
+    },
+    "/api/auth//logout": {
+      "get": {
+        "operationId": "get__logout",
+        "responses": {
+          "200": {
+            "description": "Object with user data."
+          }
+        }
+      }
+    },
+    "/api/task/tasks": {
+      "get": {
+        "tags": [
+          "Tasks"
+        ],
+        "summary": "List Tasks",
+        "operationId": "get_TaskList",
+        "parameters": [
+          {
+            "schema": {
+              "type": "number",
+              "description": "Page number"
+            },
+            "required": true,
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "boolean",
+              "description": "Filter by completed flag"
+            },
+            "required": false,
+            "name": "isCompleted",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a list of tasks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "result": {
+                      "type": "object",
+                      "properties": {
+                        "tasks": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "example": "lorem"
+                              },
+                              "slug": {
+                                "type": "string"
+                              },
+                              "description": {
+                                "type": "string"
+                              },
+                              "completed": {
+                                "type": "boolean"
+                              },
+                              "due_date": {
+                                "type": "string",
+                                "format": "date-time"
+                              }
+                            },
+                            "required": [
+                              "name",
+                              "slug",
+                              "completed",
+                              "due_date"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "tasks"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "result"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Tasks"
+        ],
+        "summary": "Create a new Task",
+        "operationId": "post_TaskCreate",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "lorem"
+                  },
+                  "slug": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "completed": {
+                    "type": "boolean"
+                  },
+                  "due_date": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                },
+                "required": [
+                  "name",
+                  "slug",
+                  "completed",
+                  "due_date"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the created task",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "result": {
+                      "type": "object",
+                      "properties": {
+                        "task": {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "type": "string",
+                              "example": "lorem"
+                            },
+                            "slug": {
+                              "type": "string"
+                            },
+                            "description": {
+                              "type": "string"
+                            },
+                            "completed": {
+                              "type": "boolean"
+                            },
+                            "due_date": {
+                              "type": "string",
+                              "format": "date-time"
+                            }
+                          },
+                          "required": [
+                            "name",
+                            "slug",
+                            "completed",
+                            "due_date"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "task"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "result"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/task/tasks/{taskSlug}": {
+      "get": {
+        "tags": [
+          "Tasks"
+        ],
+        "summary": "Get a single Task by slug",
+        "operationId": "get_TaskFetch",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "description": "Task slug"
+            },
+            "required": true,
+            "name": "taskSlug",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a single task if found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "result": {
+                      "type": "object",
+                      "properties": {
+                        "task": {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "type": "string",
+                              "example": "lorem"
+                            },
+                            "slug": {
+                              "type": "string"
+                            },
+                            "description": {
+                              "type": "string"
+                            },
+                            "completed": {
+                              "type": "boolean"
+                            },
+                            "due_date": {
+                              "type": "string",
+                              "format": "date-time"
+                            }
+                          },
+                          "required": [
+                            "name",
+                            "slug",
+                            "completed",
+                            "due_date"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "task"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "result"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Task not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Tasks"
+        ],
+        "summary": "Delete a Task",
+        "operationId": "delete_TaskDelete",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "description": "Task slug"
+            },
+            "required": true,
+            "name": "taskSlug",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns if the task was deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "result": {
+                      "type": "object",
+                      "properties": {
+                        "task": {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "type": "string",
+                              "example": "lorem"
+                            },
+                            "slug": {
+                              "type": "string"
+                            },
+                            "description": {
+                              "type": "string"
+                            },
+                            "completed": {
+                              "type": "boolean"
+                            },
+                            "due_date": {
+                              "type": "string",
+                              "format": "date-time"
+                            }
+                          },
+                          "required": [
+                            "name",
+                            "slug",
+                            "completed",
+                            "due_date"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "task"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "result"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/db-v1/find": {
+      "get": {
+        "operationId": "get__find",
+        "responses": {
+          "200": {
+            "description": "Object with user data."
+          }
+        }
+      }
+    },
+    "/api/health/debug": {
+      "get": {
+        "operationId": "get__debug",
+        "responses": {
+          "200": {
+            "description": "Object with user data."
+          }
+        }
+      },
+      "post": {
+        "operationId": "post__debug",
+        "responses": {
+          "200": {
+            "description": "Object with user data."
+          }
+        }
+      }
+    },
+    "/api/health/check": {
+      "get": {
+        "operationId": "get__check",
+        "responses": {
+          "200": {
+            "description": "Object with user data."
+          }
+        }
+      },
+      "post": {
+        "operationId": "post__check",
+        "responses": {
+          "200": {
+            "description": "Object with user data."
+          }
+        }
+      }
+    },
+    "/api/health/check2": {
+      "get": {
+        "operationId": "get__check2",
+        "responses": {
+          "200": {
+            "description": "Object with user data."
+          }
+        }
+      }
+    },
+    "/api/health/check-root": {
+      "get": {
+        "operationId": "get__check-root",
+        "responses": {
+          "200": {
+            "description": "Object with user data."
+          }
+        }
+      }
+    },
+    "/api/json-data": {
+      "get": {
+        "operationId": "get__json-data",
+        "responses": {
+          "200": {
+            "description": "Object with user data."
+          }
+        }
+      }
+    },
+    "/api/hello": {
+      "get": {
+        "operationId": "get__hello",
+        "responses": {
+          "200": {
+            "description": "Object with user data."
+          }
+        }
+      }
+    },
+    "/api/todos": {
+      "get": {
+        "operationId": "get__todos",
+        "responses": {
+          "200": {
+            "description": "Object with user data."
+          }
+        }
+      }
+    }
+  },
+  "webhooks": {}
+}
