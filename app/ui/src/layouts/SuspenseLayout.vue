@@ -18,7 +18,9 @@
           <template v-else>
             <div class="suspense-wrapper">
               <component :is="BlueLayout">
-                <slot name="default" />
+                <Hydrate>
+                  <slot name="default" />
+                </Hydrate>
               </component>
             </div>
           </template>
@@ -41,6 +43,7 @@
 <script lang="ts" setup>
 import BlueLayout from './BlueLayout.vue';
 import { meta, title, link } from '../renderer/meta';
+import Hydrate from './Hydrate.vue';
 
 useHead({
   title,

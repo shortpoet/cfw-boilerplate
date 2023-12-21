@@ -9,8 +9,8 @@ export const getBaseUrl = (env: Env) => {
   return {
     baseUrlApi:
       env.NODE_ENV === 'development' || env.NODE_ENV === 'staging'
-        ? `http://${env.HOST}:${env.VITE_PORT_API}`
-        : `https://${env.HOST}`,
+        ? `http://${env.API_HOST}:${env.VITE_PORT_API}`
+        : `https://${env.API_HOST}`,
     baseUrlApp:
       env.NODE_ENV === 'development' || env.NODE_ENV === 'staging'
         ? `http://${env.HOST}:${env.VITE_PORT}`

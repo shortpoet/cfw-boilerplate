@@ -19,6 +19,7 @@ if (!parsed || !parsedDev) {
 const env: EnvVars = createEnv({
   server: {
     HOST: z.string(),
+    API_HOST: z.string(),
     VITE_PORT: z.string(),
     VITE_PORT_API: z.string(),
     VITE_LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']),

@@ -2,6 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { TaskListResponse } from '../models/TaskListResponse';
+
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -10,7 +12,7 @@ export class TasksService {
 
   /**
    * List Tasks
-   * @returns any Returns a list of tasks
+   * @returns TaskListResponse Returns a list of tasks
    * @throws ApiError
    */
   public static getTaskList({
@@ -19,18 +21,7 @@ export class TasksService {
   }: {
     page: number,
     isCompleted?: boolean,
-  }): CancelablePromise<{
-    success: boolean;
-    result: {
-      tasks: Array<{
-        name: string;
-        slug: string;
-        description?: string;
-        completed: boolean;
-        due_date: string;
-      }>;
-    };
-  }> {
+  }): CancelablePromise<TaskListResponse> {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/api/task/tasks',

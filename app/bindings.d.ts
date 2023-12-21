@@ -26,7 +26,6 @@ import type {
   Session,
   UserRole,
   UserType,
-  Session,
 } from './types';
 import { Database } from './api/db';
 import { UiState } from '#/ui/src/stores';
@@ -61,6 +60,7 @@ declare global {
     __wranglerDir: string;
     __appDir: string;
     HOST: string;
+    API_HOST: string;
     PORT: string;
     NODE_ENV: 'development' | 'staging' | 'production';
     WORKER_ENVIRONMENT: 'dev' | 'rng' | 'qa' | 'prod';
@@ -162,6 +162,7 @@ declare global {
       __wranglerDir: string;
       __appDir: string;
       HOST: string;
+      API_HOST: string;
       PORT: string;
       NODE_ENV: 'development' | 'staging' | 'production';
       WORKER_ENVIRONMENT: 'dev' | 'rng' | 'qa' | 'prod';

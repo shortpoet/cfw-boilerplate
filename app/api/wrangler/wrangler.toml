@@ -17,6 +17,7 @@ NODE_ENV = "development"
 SSR = "true"
 WORKER_ENVIRONMENT = 'dev'
 HOST = 'localhost'
+API_HOST = 'localhost'
 VITE_PORT = 3000
 VITE_PORT_API = 3000
 VITE_LOG_LEVEL = 'info'

@@ -6,6 +6,7 @@ import { render, redirect } from 'vike/abort';
 import { UserRole } from '#/types';
 import { RequestConfig, useFetch } from '../../../composables';
 import { PATH_MAPPING } from '../index/endpoints';
+import { QueryClient, dehydrate } from '@tanstack/vue-query';
 
 const onBeforeRender: OnBeforeRenderAsync = async (
   pageContext
@@ -72,6 +73,9 @@ const onBeforeRender: OnBeforeRenderAsync = async (
       }
     }
   }
+  const queryClient = new QueryClient();
+  // await queryClient.prefetchQuery(['characters', characterId], () => getCharacter(characterId))
+  const vueQueryState = dehydrate(queryClient);
 
   return {
     pageContext: {
@@ -82,6 +86,7 @@ const onBeforeRender: OnBeforeRenderAsync = async (
         apiData: data.value,
         apiDataLoading: dataLoading.value,
         apiDataError: error.value,
+        vueQueryState,
       },
       title: 'API Data',
     },

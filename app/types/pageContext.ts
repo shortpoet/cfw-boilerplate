@@ -1,4 +1,5 @@
 import type { ComponentPublicInstance } from 'vue';
+import type { QueryClient } from '@tanstack/vue-query';
 import { ResponseCfProperties } from './cf';
 import { Session } from './auth';
 
@@ -31,4 +32,5 @@ type PageProps = {
   apiData?: any;
   apiDataLoading?: boolean;
   apiDataError?: any;
+  vueQueryState?: QueryClient | undefined;
 };

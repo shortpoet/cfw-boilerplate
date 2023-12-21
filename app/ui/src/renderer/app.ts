@@ -9,6 +9,8 @@ import { StoreState } from 'pinia';
 import { UiState } from '../stores';
 import { createHead } from '@vueuse/head';
 import { provideLogger } from '../modules/logger';
+import { VUE_QUERY_STATE } from '../modules/vue-query';
+import { VueQueryPlugin } from '@tanstack/vue-query';
 
 export { createApp, isClient, defaultWindow, getInitialStateUi };
 const isClient = typeof window !== 'undefined';
@@ -83,6 +85,7 @@ function createApp(Page: Page, pageProps: PageProps | undefined, pageContext: Pa
   const app = createSSRApp(PageWithWrapper);
   installPinia(app, isClient, getInitialStateUi());
 
+  app.use(VueQueryPlugin);
   // We use `app.changePage()` to do Client Routing, see `_default.page.client.js`
   objectAssign(app, {
     changePage: (pageContext: PageContext) => {

@@ -133,22 +133,23 @@ export default ({ mode }: { mode: string }) => {
       // },
     },
 
-    // optimizeDeps: {
-    //   esbuildOptions: {
-    //     // Node.js global to browser globalThis
-    //     define: {
-    //       global: 'globalThis',
-    //     },
-    //     // Enable esbuild polyfill plugins
-    //     plugins: [
-    //       NodeGlobalsPolyfillPlugin({
-    //         process: true,
-    //         buffer: true,
-    //       }),
-    //       NodeModulesPolyfillPlugin(),
-    //     ],
-    //   },
-    // },
+    optimizeDeps: {
+      exclude: ['nprogress'],
+      // esbuildOptions: {
+      //   // Node.js global to browser globalThis
+      //   define: {
+      //     global: 'globalThis',
+      //   },
+      //   // Enable esbuild polyfill plugins
+      //   plugins: [
+      //     NodeGlobalsPolyfillPlugin({
+      //       process: true,
+      //       buffer: true,
+      //     }),
+      //     NodeModulesPolyfillPlugin(),
+      //   ],
+      // },
+    },
     // build: {
     //   rollupOptions: {
     //     plugins: [

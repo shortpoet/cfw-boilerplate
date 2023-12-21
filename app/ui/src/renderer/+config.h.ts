@@ -36,7 +36,7 @@ export default {
     },
     // server false to prevent 522 on cloudflare
     onBeforeRender: {
-      env: { server: false, client: true },
+      env: { server: true, client: true },
     },
     // logger: {
     //   env: { server: true, client: true },

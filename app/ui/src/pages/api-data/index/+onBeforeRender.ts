@@ -4,6 +4,7 @@ export { onBeforeRender };
 import type { OnBeforeRenderAsync } from 'vike/types';
 import { UserRole } from '#/types';
 import { Endpoint, PATH_MAPPING, getEndpoints } from './endpoints';
+import { QueryClient, dehydrate } from '@tanstack/vue-query';
 
 const onBeforeRender: OnBeforeRenderAsync = async (
   pageContext
@@ -12,6 +13,10 @@ const onBeforeRender: OnBeforeRenderAsync = async (
   const { urlPathname, csrfToken, sessionToken, callbackUrl } = pageContext;
   console.log(`[ui] [api-data] [index] [onBeforeRender] urlPathname: ${urlPathname}`);
   const pathMapping = PATH_MAPPING;
+
+  const queryClient = new QueryClient();
+  // await queryClient.prefetchQuery(['characters', characterId], () => getCharacter(characterId))
+  const vueQueryState = dehydrate(queryClient);
 
   const endpoints: Endpoint[] = (await getEndpoints()).reduce((acc, ep) => {
     const { path, title } = ep;
@@ -30,6 +35,7 @@ const onBeforeRender: OnBeforeRenderAsync = async (
       pageProps: {
         isAdmin: user?.roles.includes(UserRole.Admin) || false,
         endpoints,
+        vueQueryState,
       },
       title: 'API Data',
     },

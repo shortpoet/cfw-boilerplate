@@ -19,7 +19,6 @@
 
 <script lang="ts" setup>
 import { meta, title, link } from '../renderer/meta';
-
 useHead({
   title,
   meta,
