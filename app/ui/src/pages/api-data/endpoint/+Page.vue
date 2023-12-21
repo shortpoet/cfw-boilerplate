@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import { initFlashMessage, onErrorFlash, useFlashMessage } from '#/ui/src/modules';
 
-defineProps({
+const props = defineProps({
   title: {
     type: String,
     required: true,
@@ -46,17 +46,20 @@ defineProps({
 //   console.log('#######################################################')
 //   return false;
 // });
+const { apiDataError } = props;
+if (apiDataError) {
+  throw ('There was an error fetching the API data.');
+}
 
-
-const $flashMessage = inject('$flashMessage', initFlashMessage());
-const error = ref(false);
-onErrorCaptured((callback) => {
-  error.value = true;
-  $flashMessage.duration = 999999; // show message in 16 minutes
-  $flashMessage.show = true;
-  $flashMessage.text = t('common.errors.unknown');
-  console.error(callback);
-  return false;
-})
+// const $flashMessage = inject('$flashMessage', initFlashMessage());
+// const error = ref(false);
+// onErrorCaptured((callback) => {
+//   error.value = true;
+//   $flashMessage.duration = 999999; // show message in 16 minutes
+//   $flashMessage.show = true;
+//   $flashMessage.text = t('common.errors.unknown');
+//   console.error(callback);
+//   return false;
+// })
 
 </script>

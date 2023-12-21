@@ -85,6 +85,18 @@ function createApp(Page: Page, pageProps: PageProps | undefined, pageContext: Pa
   app.use(createHead());
   app.use(VueQueryPlugin);
   provideFlashMessage(app);
+
+  app.config.errorHandler = (err, instance, info) => {
+    // handle error, e.g. report to a service
+    console.log('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
+    console.log(`[ui] [app] [errorHandler] err:`);
+    console.log(err);
+    console.log(`[ui] [app] [errorHandler] instance:`);
+    console.log(instance);
+    console.log(`[ui] [app] [errorHandler] info:`);
+    console.log(info);
+  };
+
   // We use `app.changePage()` to do Client Routing, see `_default.page.client.js`
   objectAssign(app, {
     changePage: (pageContext: PageContext) => {
