@@ -35,6 +35,7 @@ export default {
       env: { server: true, client: true },
     },
     // server false to prevent 522 on cloudflare
+    // or use workers.dev url for api
     onBeforeRender: {
       env: { server: true, client: true },
     },

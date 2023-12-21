@@ -5,17 +5,7 @@ import type { OnBeforeRenderAsync } from 'vike/types';
 import { QueryClient, dehydrate } from '@tanstack/vue-query';
 import { UserRole } from '#/types';
 import { TasksService } from '../../services/TasksService';
-
-export const getTaskList = async (page: number) => {
-  const { urlBaseApi } = useBaseUrl();
-  const url = `${urlBaseApi}/api/task/tasks?page=${page}`;
-  console.log(`[ui] [task] [index] [onBeforeRender] fetching url: ${url}`);
-  const response = await fetch(url);
-  const data = await response.json();
-  console.log(`[ui] [task] [index] [onBeforeRender] data:`);
-  console.log(data);
-  return data;
-};
+import { getTaskList } from './taskList';
 
 const onBeforeRender: OnBeforeRenderAsync = async (
   pageContext
@@ -23,7 +13,9 @@ const onBeforeRender: OnBeforeRenderAsync = async (
   const user = pageContext.session?.user;
   const { urlPathname, csrfToken, sessionToken, callbackUrl } = pageContext;
   console.log(`[ui] [task] [index] [onBeforeRender] urlPathname: ${urlPathname}`);
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { staleTime: 5000 } },
+  });
   const { routeParams } = pageContext;
 
   const page = parseInt(routeParams.taskPage) || 8;
