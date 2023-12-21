@@ -14,7 +14,7 @@
     "wr": "pnpm scripts wrangle",
     "start": "cross-env NODE_ENV=development && concurrently \"pnpm serve\" \"pnpm v:dev\"",
     "d": "pnpm ui build:w && pnpm w:d",
-    "dev": "pnpm ui build:w && pnpm w:dev",
+    "dev": "pnpm ui build:d && pnpm w:dev",
     "rng": "pnpm ui build:w && pnpm w:rng",
     "qa": "pnpm ui build:w && pnpm w:qa",
     "prev": "pnpm run wrangle:kv && pnpm run w:dev",

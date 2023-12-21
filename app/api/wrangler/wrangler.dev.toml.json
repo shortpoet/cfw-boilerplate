@@ -34,12 +34,6 @@
         "SSR_BASE_PATHS": "_error,about,api-data,auth,index"
       },
       "name": "cfw-boilerplate",
-      "routes": [
-        {
-          "pattern": "cfw-dev.marshmallowmeat.com",
-          "custom_domain": true
-        }
-      ],
       "kv_namespaces": [
         {
           "binding": "CFW_BOILERPLATE_UI",

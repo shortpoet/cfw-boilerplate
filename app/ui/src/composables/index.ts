@@ -7,6 +7,7 @@ export * from './i18n';
 export * from './guard';
 export * from './auth-lucia';
 export * from './logger';
+export * from './pageContext';
 
 import * as pageContext from './pageContext';
 

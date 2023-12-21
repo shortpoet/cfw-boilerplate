@@ -21,12 +21,17 @@ export type OpenAPIConfig = {
 
 export const OpenAPI: OpenAPIConfig = {
   BASE: '',
+  // BASE: `${process.env.API_HOST}:${process.env.VITE_PORT_API}`,
   VERSION: '1.0',
   WITH_CREDENTIALS: false,
   CREDENTIALS: 'include',
   TOKEN: undefined,
   USERNAME: undefined,
   PASSWORD: undefined,
-  HEADERS: undefined,
+  HEADERS: {
+    'Content-Type': 'application/json',
+    // 'Access-Control-Allow-Credentials': 'true',
+    Accept: 'application/json',
+  },
   ENCODE_PATH: undefined,
 };
