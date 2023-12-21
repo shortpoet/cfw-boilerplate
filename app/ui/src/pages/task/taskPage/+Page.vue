@@ -1,9 +1,9 @@
 <template>
   <div v-if="isPending" class="update">Loading...</div>
   <div v-else-if="isError">An error has occurred: {{ error }}</div>
-  <div v-else-if="taskList">
+  <div v-else-if="data">
     <ul>
-      <li v-for="task in taskList" :key="task.name">
+      <li v-for="task in data.tasks" :key="task.name">
         <div>name: {{ task.name }}</div>
         <div>desc: {{ task.description }}</div>
         <div>completed: {{ task.completed }}</div>
@@ -29,10 +29,8 @@
 
 <script setup lang="ts">
 import { useQuery } from '@tanstack/vue-query'
-import { TaskListResponse } from '../../models/TaskListResponse'
-import { TasksService } from '../../services/TasksService'
-import { getTaskList } from './taskList';
-import { ref } from 'vue'
+import { TaskListResponse } from '../../../models/TaskListResponse'
+import { TasksService } from '../../../services/TasksService'
 
 const { page } = defineProps({
   page: {
@@ -48,17 +46,5 @@ const query = useQuery<TaskListResponse>({
 });
 const { isPending, isError, isFetching, data, error, refetch, suspense } = query
 await suspense()
-const taskList = data.value?.tasks
-
-// const taskList = ref<TaskListResponse['tasks']>([])
-// if (data.value) {
-//   const { tasks } = data.value
-//   console.log('tasks', tasks)
-//   for (const task of tasks) {
-//     console.log('task', task)
-//     taskList.value.push(task)
-//   }
-// }
-// console.log('tasks', taskList)
 
 </script>

@@ -1,6 +1,7 @@
 import { Task } from './types';
 import { OpenAPIRoute, OpenAPIRouteSchema, Query } from '@cloudflare/itty-router-openapi';
 import { GetTaskSchema } from '../task-oa';
+import { taskFaker } from './task-faker';
 
 export class TaskList extends OpenAPIRoute {
   static schema = GetTaskSchema;
@@ -36,6 +37,7 @@ export class TaskList extends OpenAPIRoute {
           completed: true,
           due_date: '2022-12-24',
         },
+        ...taskFaker(24),
       ],
     };
   }

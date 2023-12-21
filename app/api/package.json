@@ -48,6 +48,7 @@
   "devDependencies": {
     "@cloudflare/kv-asset-handler": "^0.3.0",
     "@cloudflare/workers-types": "^4.20231121.0",
+    "@faker-js/faker": "^8.3.1",
     "@libsql/client": "0.4.0-pre.5",
     "@types/better-sqlite3": "^7.6.8",
     "@types/cookie": "^0.6.0",

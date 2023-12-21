@@ -4,8 +4,8 @@ export { onBeforeRender };
 import type { OnBeforeRenderAsync } from 'vike/types';
 import { QueryClient, dehydrate } from '@tanstack/vue-query';
 import { UserRole } from '#/types';
-import { TasksService } from '../../services/TasksService';
-import { getTaskList } from './taskList';
+import { TasksService } from '../../../services/TasksService';
+// import { getTaskList } from '../taskList';
 
 const onBeforeRender: OnBeforeRenderAsync = async (
   pageContext
@@ -27,25 +27,6 @@ const onBeforeRender: OnBeforeRenderAsync = async (
     queryFn: ({ queryKey }) => TasksService.getTaskList({ page: queryKey[1] as number }),
   });
   const vueQueryState = dehydrate(queryClient);
-
-  // // const check = queryClient.ensureQueryData({
-  // //   queryKey: ['result', page],
-  // // });
-
-  // // console.log(`[ui] [task] [index] [onBeforeRender] check:`);
-  // // console.log(check);
-
-  // // console.log(`[ui] [task] [index] [onBeforeRender] vueQueryState:`);
-  // // console.log(vueQueryState);
-  // console.log(`[ui] [task] [index] [onBeforeRender] tasks:`);
-  // console.log(`[ui] [task] [index] [onBeforeRender] tasks:`);
-  // console.log(`[ui] [task] [index] [onBeforeRender] tasks:`);
-  // const tasksFetch = await getTaskList(page);
-  // const tasksService = await TasksService.getTaskList({ page });
-  // console.log(`[ui] [task] [index] [onBeforeRender] tasksFetch:`);
-  // console.log(tasksFetch);
-  // console.log(`[ui] [task] [index] [onBeforeRender] tasksService:`);
-  // console.log(tasksService);
 
   return {
     pageContext: {
