@@ -105,18 +105,24 @@ router
   .all('*', () => error(404, 'Oops... Are you sure about that? FAaFO'));
 
 const Api = {
-  handle: (
-    req: Request,
-    resp: Response | ServerResponse,
-    env: Env,
-    ctx: ExecutionContext,
-    data?: Record<string, any>
-  ) => {
+  handle: ({
+    req,
+    res,
+    env,
+    ctx,
+    data,
+  }: {
+    req: Request;
+    res: Response | ServerResponse;
+    env: Env;
+    ctx: ExecutionContext;
+    data?: Record<string, any>;
+  }) => {
     let out;
     if (data) {
-      out = router.handle(req, resp, env, ctx, data);
+      out = router.handle(req, res, env, ctx, data).catch(error).then(corsify);
     } else {
-      out = router.handle(req, resp, env, ctx).catch(error).then(corsify);
+      out = router.handle(req, res, env, ctx).catch(error).then(corsify);
     }
     return out;
   },

@@ -10,14 +10,14 @@ import { getCorrelationId, getLogger } from '#/utils/logger/logger';
 
 export default {
   async fetch(
-    request: Request,
+    req: Request,
     env: Env,
     ctx: ExecutionContext,
     data: Record<string, any>
   ): Promise<Response> {
     try {
-      logWorkerStart(request, env);
-      return await handleFetchEvent(request, env, ctx, data);
+      logWorkerStart(req, env);
+      return await handleFetchEvent(req, env, ctx, data);
     } catch (e) {
       console.error(e);
       if (e instanceof NotFoundError) {
@@ -32,41 +32,41 @@ export default {
 };
 
 async function handleFetchEvent(
-  request: Request,
+  req: Request,
   env: Env,
   ctx: ExecutionContext,
   data: Record<string, any>
 ): Promise<Response> {
-  const url = new URL(request.url);
-  // const resp = new Response('');
-  const resp = new Response('', { cf: request.cf });
+  const url = new URL(req.url);
+  // const res = new Response('');
+  const res = new Response('', { cf: req.cf });
   const path = url.pathname;
-  let res;
+  let resp;
   const logger = getLogger({
     isSsr: env.SSR,
     nodeEnv: env.NODE_ENV,
     envLogLevel: env.VITE_LOG_LEVEL,
   });
-  request.logger = logger;
+  req.logger = logger;
   switch (true) {
     case isAssetURL(url):
       // must early return or assets missing
-      res = await handleStaticAssets(request, env, ctx);
+      resp = await handleStaticAssets(req, env, ctx);
       break;
     case isAPiURL(url):
-      request.logger.child({
-        correlationId: getCorrelationId(request.headers),
+      req.logger.child({
+        correlationId: getCorrelationId(req.headers),
         isApiURL: isAPiURL(url),
       });
-      logger.info(`[api] [index] [handleApiRequest] -> ${request.method} -> ${path}`);
-      res = await Api.handle(request, resp, env, ctx, data);
+      logger.info(`[api] [index] [handleApiRequest] -> ${req.method} -> ${path}`);
+      resp = await Api.handle({ req, res, env, ctx, data });
       logger.info(`[api] [isAPiURL] index.handleFetchEvent -> api response`);
       // logObjs([res.headers, res.body]);
       // console.log(await res.clone().json());
       break;
     default:
-      request.logger.child({
-        correlationId: getCorrelationId(request.headers),
+      req.logger.child({
+        correlationId: getCorrelationId(req.headers),
         isAPiURL: isAPiURL(url),
       });
       logger.info(`[api] [default] index.handleFetchEvent -> ${url.pathname}`);
@@ -77,9 +77,8 @@ async function handleFetchEvent(
       //     env.SSR_BASE_PATHS.split(',')
       //   )}`
       // );
-      res =
-        (await handleSsr(request, resp, env, ctx)) ?? new Response('Not Found', { status: 404 });
+      resp = (await handleSsr(req, res, env, ctx)) ?? new Response('Not Found', { status: 404 });
   }
-  logWorkerEnd(request, res);
-  return res;
+  logWorkerEnd(req, resp);
+  return resp;
 }

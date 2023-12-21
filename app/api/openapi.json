@@ -5,7 +5,62 @@
     "version": "1.0"
   },
   "components": {
-    "schemas": {},
+    "schemas": {
+      "Task": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Clean my room"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "completed": {
+            "type": "boolean"
+          },
+          "due_date": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "name",
+          "slug",
+          "completed",
+          "due_date"
+        ]
+      },
+      "TaskListResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "result": {
+            "type": "object",
+            "properties": {
+              "tasks": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            },
+            "required": [
+              "tasks"
+            ]
+          }
+        },
+        "required": [
+          "success",
+          "result"
+        ]
+      }
+    },
     "parameters": {}
   },
   "paths": {
@@ -59,7 +114,7 @@
         "parameters": [
           {
             "schema": {
-              "type": "number",
+              "type": "integer",
               "description": "Page number"
             },
             "required": true,
@@ -82,55 +137,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "result": {
-                      "type": "object",
-                      "properties": {
-                        "tasks": {
-                          "type": "array",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "name": {
-                                "type": "string",
-                                "example": "lorem"
-                              },
-                              "slug": {
-                                "type": "string"
-                              },
-                              "description": {
-                                "type": "string"
-                              },
-                              "completed": {
-                                "type": "boolean"
-                              },
-                              "due_date": {
-                                "type": "string",
-                                "format": "date-time"
-                              }
-                            },
-                            "required": [
-                              "name",
-                              "slug",
-                              "completed",
-                              "due_date"
-                            ]
-                          }
-                        }
-                      },
-                      "required": [
-                        "tasks"
-                      ]
-                    }
-                  },
-                  "required": [
-                    "success",
-                    "result"
-                  ]
+                  "$ref": "#/components/schemas/TaskListResponse"
                 }
               }
             }

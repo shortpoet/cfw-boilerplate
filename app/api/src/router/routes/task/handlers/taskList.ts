@@ -1,32 +1,9 @@
 import { Task } from './types';
 import { OpenAPIRoute, OpenAPIRouteSchema, Query } from '@cloudflare/itty-router-openapi';
+import { GetTaskSchema } from '../task-oa';
 
 export class TaskList extends OpenAPIRoute {
-  static schema: OpenAPIRouteSchema = {
-    tags: ['Tasks'],
-    summary: 'List Tasks',
-    parameters: {
-      page: Query(Number, {
-        description: 'Page number',
-        default: 0,
-      }),
-      isCompleted: Query(Boolean, {
-        description: 'Filter by completed flag',
-        required: false,
-      }),
-    },
-    responses: {
-      '200': {
-        description: 'Returns a list of tasks',
-        schema: {
-          success: Boolean,
-          result: {
-            tasks: [Task],
-          },
-        },
-      },
-    },
-  };
+  static schema = GetTaskSchema;
 
   async handle(
     req: Request,

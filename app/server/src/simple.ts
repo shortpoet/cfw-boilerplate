@@ -47,13 +47,15 @@ const server = http.createServer(async (req, res) => {
     console.log(`[server] [simple] -> apiReq -> ${config.env.__appDir}`);
     console.log(`[server] [simple] -> apiReq -> ${config.env.__wranglerDir}`);
     console.log(`[server] [simple] -> mappedHeaders -> ${JSON.stringify(mappedHeaders, null, 2)}`);
-    const apiReq = new Request(new URL(req.url, 'http://' + req.headers.host), {
+    const _req = new Request(new URL(req.url, 'http://' + req.headers.host), {
       method: req.method,
       headers: mappedHeaders,
     }) as unknown as Request;
-    const response = new Response() as unknown as Response;
+    const _res = new Response() as unknown as Response;
+    const env = config.env;
+    const data = req.read();
 
-    const resp = await Api.handle(apiReq, response, config.env, ctx, req.read())
+    const resp = await Api.handle({ req: _req, res: _res, env, ctx, data })
       .then(json)
       .catch(error)
       .then(corsify);
