@@ -7,8 +7,8 @@ import type { Task } from './Task';
 
 export type TaskListResponse = {
   success: boolean;
-  result: {
-    tasks: Array<Task>;
-  };
+  page: number;
+  isCompleted?: boolean;
+  tasks: Array<Task>;
 };
 

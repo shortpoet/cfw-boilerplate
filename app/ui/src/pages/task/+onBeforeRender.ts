@@ -23,7 +23,6 @@ const onBeforeRender: OnBeforeRenderAsync = async (
   const user = pageContext.session?.user;
   const { urlPathname, csrfToken, sessionToken, callbackUrl } = pageContext;
   console.log(`[ui] [task] [index] [onBeforeRender] urlPathname: ${urlPathname}`);
-  const { characterId } = pageContext.routeParams;
   const queryClient = new QueryClient();
   const { routeParams } = pageContext;
 
@@ -33,29 +32,28 @@ const onBeforeRender: OnBeforeRenderAsync = async (
   await queryClient.prefetchQuery({
     queryKey: ['result', page],
     // queryFn: () => getTaskList(page),
-    queryFn: ({ queryKey }) =>
-      TasksService.getTaskList({ page: queryKey[1] as number }).then((response) => response),
+    queryFn: ({ queryKey }) => TasksService.getTaskList({ page: queryKey[1] as number }),
   });
-
-  // const check = queryClient.ensureQueryData({
-  //   queryKey: ['result', page],
-  // });
-
-  // console.log(`[ui] [task] [index] [onBeforeRender] check:`);
-  // console.log(check);
-
   const vueQueryState = dehydrate(queryClient);
-  // console.log(`[ui] [task] [index] [onBeforeRender] vueQueryState:`);
-  // console.log(vueQueryState);
-  console.log(`[ui] [task] [index] [onBeforeRender] tasks:`);
-  console.log(`[ui] [task] [index] [onBeforeRender] tasks:`);
-  console.log(`[ui] [task] [index] [onBeforeRender] tasks:`);
-  const tasksFetch = await getTaskList(page);
-  const tasksService = await TasksService.getTaskList({ page });
-  console.log(`[ui] [task] [index] [onBeforeRender] tasksFetch:`);
-  console.log(tasksFetch);
-  console.log(`[ui] [task] [index] [onBeforeRender] tasksService:`);
-  console.log(tasksService);
+
+  // // const check = queryClient.ensureQueryData({
+  // //   queryKey: ['result', page],
+  // // });
+
+  // // console.log(`[ui] [task] [index] [onBeforeRender] check:`);
+  // // console.log(check);
+
+  // // console.log(`[ui] [task] [index] [onBeforeRender] vueQueryState:`);
+  // // console.log(vueQueryState);
+  // console.log(`[ui] [task] [index] [onBeforeRender] tasks:`);
+  // console.log(`[ui] [task] [index] [onBeforeRender] tasks:`);
+  // console.log(`[ui] [task] [index] [onBeforeRender] tasks:`);
+  // const tasksFetch = await getTaskList(page);
+  // const tasksService = await TasksService.getTaskList({ page });
+  // console.log(`[ui] [task] [index] [onBeforeRender] tasksFetch:`);
+  // console.log(tasksFetch);
+  // console.log(`[ui] [task] [index] [onBeforeRender] tasksService:`);
+  // console.log(tasksService);
 
   return {
     pageContext: {

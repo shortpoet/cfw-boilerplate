@@ -9,6 +9,7 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 
 export class TasksService {
+
   /**
    * List Tasks
    * @returns TaskListResponse Returns a list of tasks
@@ -18,21 +19,17 @@ export class TasksService {
     page,
     isCompleted,
   }: {
-    page: number;
-    isCompleted?: boolean;
+    page: number,
+    isCompleted?: boolean,
   }): CancelablePromise<TaskListResponse> {
-    console.log(`[ui] [task] [services] [TasksService] [getTaskList] page: ${page}`);
-    const res = __request(OpenAPI, {
+    return __request(OpenAPI, {
       method: 'GET',
       url: '/api/task/tasks',
       query: {
-        page: page,
-        isCompleted: isCompleted,
+        'page': page,
+        'isCompleted': isCompleted,
       },
     });
-    console.log(`[ui] [task] [services] [TasksService] [getTaskList] res:`);
-    console.log(res);
-    return res as CancelablePromise<TaskListResponse>;
   }
 
   /**
@@ -49,7 +46,7 @@ export class TasksService {
       description?: string;
       completed: boolean;
       due_date: string;
-    };
+    },
   }): CancelablePromise<{
     success: boolean;
     result: {
@@ -75,7 +72,11 @@ export class TasksService {
    * @returns any Returns a single task if found
    * @throws ApiError
    */
-  public static getTaskFetch({ taskSlug }: { taskSlug: string }): CancelablePromise<{
+  public static getTaskFetch({
+    taskSlug,
+  }: {
+    taskSlug: string,
+  }): CancelablePromise<{
     success: boolean;
     result: {
       task: {
@@ -91,7 +92,7 @@ export class TasksService {
       method: 'GET',
       url: '/api/task/tasks/{taskSlug}',
       path: {
-        taskSlug: taskSlug,
+        'taskSlug': taskSlug,
       },
       errors: {
         404: `Task not found`,
@@ -104,7 +105,11 @@ export class TasksService {
    * @returns any Returns if the task was deleted successfully
    * @throws ApiError
    */
-  public static deleteTaskDelete({ taskSlug }: { taskSlug: string }): CancelablePromise<{
+  public static deleteTaskDelete({
+    taskSlug,
+  }: {
+    taskSlug: string,
+  }): CancelablePromise<{
     success: boolean;
     result: {
       task: {
@@ -120,8 +125,9 @@ export class TasksService {
       method: 'DELETE',
       url: '/api/task/tasks/{taskSlug}',
       path: {
-        taskSlug: taskSlug,
+        'taskSlug': taskSlug,
       },
     });
   }
+
 }
