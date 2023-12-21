@@ -69,6 +69,7 @@ declare global {
   const provideAuth: (typeof import('./composables/auth-lucia'))['provideAuth']
   const provideLuciaAuth: typeof import('./composables/auth-lucia')['provideLuciaAuth']
   const provideNextAuth: typeof import('./composables/auth-authjs')['provideNextAuth']
+  const providePageContext: typeof import('./composables/pageContext')['providePageContext']
   const reactive: typeof import('vue')['reactive']
   const readonly: typeof import('vue')['readonly']
   const ref: typeof import('vue')['ref']
@@ -178,11 +179,11 @@ declare module 'vue' {
     readonly provide: UnwrapRef<typeof import('vue')['provide']>
     readonly provideLuciaAuth: UnwrapRef<typeof import('./composables/auth-lucia')['provideLuciaAuth']>
     readonly provideNextAuth: UnwrapRef<typeof import('./composables/auth-authjs')['provideNextAuth']>
+    readonly providePageContext: UnwrapRef<typeof import('./composables/pageContext')['providePageContext']>
     readonly reactive: UnwrapRef<typeof import('vue')['reactive']>
     readonly readonly: UnwrapRef<typeof import('vue')['readonly']>
     readonly ref: UnwrapRef<typeof import('vue')['ref']>
     readonly resolveComponent: UnwrapRef<typeof import('vue')['resolveComponent']>
-    readonly setPageContext: UnwrapRef<typeof import('./composables/pageContext')['setPageContext']>
     readonly shallowReactive: UnwrapRef<typeof import('vue')['shallowReactive']>
     readonly shallowReadonly: UnwrapRef<typeof import('vue')['shallowReadonly']>
     readonly shallowRef: UnwrapRef<typeof import('vue')['shallowRef']>
@@ -280,11 +281,11 @@ declare module '@vue/runtime-core' {
     readonly provide: UnwrapRef<typeof import('vue')['provide']>
     readonly provideLuciaAuth: UnwrapRef<typeof import('./composables/auth-lucia')['provideLuciaAuth']>
     readonly provideNextAuth: UnwrapRef<typeof import('./composables/auth-authjs')['provideNextAuth']>
+    readonly providePageContext: UnwrapRef<typeof import('./composables/pageContext')['providePageContext']>
     readonly reactive: UnwrapRef<typeof import('vue')['reactive']>
     readonly readonly: UnwrapRef<typeof import('vue')['readonly']>
     readonly ref: UnwrapRef<typeof import('vue')['ref']>
     readonly resolveComponent: UnwrapRef<typeof import('vue')['resolveComponent']>
-    readonly setPageContext: UnwrapRef<typeof import('./composables/pageContext')['setPageContext']>
     readonly shallowReactive: UnwrapRef<typeof import('vue')['shallowReactive']>
     readonly shallowReadonly: UnwrapRef<typeof import('vue')['shallowReadonly']>
     readonly shallowRef: UnwrapRef<typeof import('vue')['shallowRef']>

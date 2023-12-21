@@ -1,15 +1,7 @@
 import { Ref } from 'vue';
 // import type { AuthAction, Session as OAuthSession } from '@auth/core/types';
 
-import {
-  AuthInstance,
-  CredentialsUser,
-  EmailUser,
-  GithubUser,
-  LoginOptions,
-  Session,
-  User,
-} from './auth';
+import { AuthInstance, LoginOptions, Session, User } from './auth';
 
 export { NextAuthInstance };
 
@@ -18,7 +10,6 @@ interface NextAuthInstance extends AuthInstance {
   authError: Ref<any>;
   isLoggedIn: Ref<boolean>;
   user?: Ref<User | undefined>;
-  githubUser?: Ref<GithubUser | undefined>;
   authState?: Ref<string>;
   nonce?: Ref<string>;
   session?: Ref<Session | undefined>;

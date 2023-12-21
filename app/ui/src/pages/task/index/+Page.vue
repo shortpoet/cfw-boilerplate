@@ -3,9 +3,9 @@
   <div v-else-if="isError">An error has occurred: {{ error }}</div>
   <div v-else-if="data">
     <nav>
-      <nav-item v-for="task in data.tasks" :key="task.name">
+      <div v-for="task in data.tasks" :key="task.name">
         <Link :href="`${task.name}`"> {{ task.name }} </Link>
-      </nav-item>
+      </div>
     </nav>
     <br>
     <button @click="refetch()">

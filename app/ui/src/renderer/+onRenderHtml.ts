@@ -10,7 +10,7 @@ import { dangerouslySkipEscape, escapeInject, stampPipe } from 'vike/server';
 import { createApp, getInitialStateUi } from './app';
 import type { OnRenderHtmlAsync } from 'vike/types';
 import type { Writable } from 'stream';
-import { VUE_QUERY_STATE } from '../modules/vue-query';
+import { VUE_QUERY_STATE, provideVueQuery } from '../modules/vue-query';
 
 const onRenderHtml: OnRenderHtmlAsync = async (pageContext): ReturnType<OnRenderHtmlAsync> => {
   const { session, cf, callbackUrl, csrfToken, isAdmin, Page, pageProps, redirectTo } = pageContext;
@@ -18,7 +18,7 @@ const onRenderHtml: OnRenderHtmlAsync = async (pageContext): ReturnType<OnRender
   // onRenderHtml() to support SPA
   if (!Page) throw new Error('My render() hook expects pageContext.Page to be defined');
   const app = createApp(Page, pageProps, pageContext);
-  app.provide(VUE_QUERY_STATE, pageContext.pageProps?.vueQueryState);
+  provideVueQuery(app, pageContext);
 
   // See https://vike.dev/head
   const { documentProps } = pageContext.exports;

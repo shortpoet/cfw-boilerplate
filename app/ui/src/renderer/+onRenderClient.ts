@@ -1,7 +1,7 @@
 // https://vike.dev/onRenderClient
 export { onRenderClient };
 
-import { VUE_QUERY_STATE } from '../modules/vue-query';
+import { provideVueQuery } from '../modules/vue-query';
 import { createApp } from './app';
 import type { OnRenderClientAsync } from 'vike/types';
 
@@ -16,7 +16,7 @@ const onRenderClient: OnRenderClientAsync = async (
   if (!Page) throw new Error('Client-side render() hook expects pageContext.Page to be defined');
   if (!app) {
     app = createApp(Page, pageProps, pageContext);
-    app.provide(VUE_QUERY_STATE, pageContext.pageProps?.vueQueryState);
+    provideVueQuery(app, pageContext);
     app.mount('#app');
   } else {
     app.changePage(pageContext);

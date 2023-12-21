@@ -1,16 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { toggleDark, toggleLocales, usePageContext } from '../../composables';
 // import { t } from '#/composables/i18n';
 import Link from './Link.vue';
 
 const pageContext = usePageContext()
-// console.log('pageContext')
-// console.log(pageContext)
-// console.log(pageContext.urlPathname)
-// WARNING THIS LEAKS TOKEN  
-// console.log(pageContext.urlOriginal)
-// WARNING THIS LEAKS TOKEN
 
 // this worked once i made it computed. it reloads the SPA though when you click it
 // also fails in data fetching because the route guard is tied to pagecontext
@@ -23,14 +16,6 @@ const homeTitle = ref('Home');
 const toggleDarkTitle = ref('Toggle Dark');
 const toggleLangsTitle = ref('Toggle Langs');
 
-// const props = defineProps({
-//   user: {
-//     type: Object,
-//     required: false,
-//     default: null
-//   }
-// });
-// const user = ref(props.user);
 </script>
 
 <template>

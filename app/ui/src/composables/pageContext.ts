@@ -6,7 +6,7 @@ import type { App, InjectionKey } from 'vue';
 import { PageContext } from '#/types/index';
 
 export { usePageContext };
-export { setPageContext };
+export { providePageContext };
 
 const key: InjectionKey<PageContext> = Symbol();
 
@@ -16,6 +16,6 @@ function usePageContext() {
   return pageContext;
 }
 
-function setPageContext(app: App, pageContext: PageContext) {
+function providePageContext(app: App, pageContext: PageContext) {
   app.provide(key, pageContext);
 }

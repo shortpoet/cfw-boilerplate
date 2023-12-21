@@ -3,14 +3,12 @@ import { Component, PageContext, PageProps, Page } from '#/types';
 import '@unocss/reset/tailwind.css';
 import 'uno.css';
 import '../styles/main.css';
-import { PageShell } from '../layouts';
-import { install as installPinia } from '../modules/pinia';
 import { StoreState } from 'pinia';
+import { PageShell } from '../layouts';
 import { UiState } from '../stores';
 import { createHead } from '@vueuse/head';
-import { provideLogger } from '../modules/logger';
-import { VUE_QUERY_STATE } from '../modules/vue-query';
 import { VueQueryPlugin } from '@tanstack/vue-query';
+import { provideFlashMessage, install as installPinia, provideLogger } from '../modules';
 
 export { createApp, isClient, defaultWindow, getInitialStateUi };
 const isClient = typeof window !== 'undefined';
@@ -84,8 +82,9 @@ function createApp(Page: Page, pageProps: PageProps | undefined, pageContext: Pa
 
   const app = createSSRApp(PageWithWrapper);
   installPinia(app, isClient, getInitialStateUi());
-
+  app.use(createHead());
   app.use(VueQueryPlugin);
+  provideFlashMessage(app);
   // We use `app.changePage()` to do Client Routing, see `_default.page.client.js`
   objectAssign(app, {
     changePage: (pageContext: PageContext) => {
@@ -109,8 +108,7 @@ function createApp(Page: Page, pageProps: PageProps | undefined, pageContext: Pa
   const pageContextReactive = reactive(pageContext);
 
   // Make `pageContext` accessible from any Vue component
-  setPageContext(app, pageContextReactive);
-  app.use(createHead());
+  providePageContext(app, pageContextReactive);
 
   return app;
 }

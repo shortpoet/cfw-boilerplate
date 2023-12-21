@@ -1,5 +1,5 @@
 import type { Commit } from 'git-last-commit';
-import { User, User } from './auth';
+import { User } from './auth';
 
 export interface ListOptions {
   indexKey?: string;
