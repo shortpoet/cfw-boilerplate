@@ -23,25 +23,34 @@
 import { useQuery } from '@tanstack/vue-query'
 import { TaskListResponse } from '../../models/TaskListResponse'
 import { TasksService } from '../../services/TasksService'
+import { getTaskList } from './+onBeforeRender';
 
-const { page } = defineProps(['page'])
+const { page } = defineProps({
+  page: {
+    type: Number,
+    required: true,
+  },
+})
 
-const { data, isLoading, refetch } = useQuery<TaskListResponse>({
+const query = useQuery<TaskListResponse>({
   queryKey: ["result", page],
-  queryFn: () =>
-    TasksService.getTaskList({ page }),
+  // queryFn: () => getTaskList(page),
+  queryFn: ({ queryKey }) => TasksService.getTaskList({ page: queryKey[1] as number }).then((response) => response),
 });
+// console.log(`[TaskPage] query:`)
+// for (const [key, value] of Object.entries(query)) {
+//   console.log(`${key}: ${value.value}`);
+// }
+const { data, isLoading, refetch } = query
 
-console.log(data.value)
+console.log(`[TaskPage] page: ${page}`)
+console.log(`[TaskPage] data.value:`)
 const result = data.value?.result
+console.log(`[TaskPage] result:`)
 console.log(result)
 
-const getTaskList = async () => {
-  const response = await fetch('http://localhost:3000/api/task/tasks?page=2');
-  const data = await response.json();
-  console.log(`data: ${data}`) // data: [object Object]
-  return data;
-}
+console.log(`[TaskPage] query:`)
+// console.log(query)
 
 
 

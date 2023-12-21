@@ -40,24 +40,23 @@
           "success": {
             "type": "boolean"
           },
-          "result": {
-            "type": "object",
-            "properties": {
-              "tasks": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Task"
-                }
-              }
-            },
-            "required": [
-              "tasks"
-            ]
+          "page": {
+            "type": "number"
+          },
+          "isCompleted": {
+            "type": "boolean"
+          },
+          "tasks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Task"
+            }
           }
         },
         "required": [
           "success",
-          "result"
+          "page",
+          "tasks"
         ]
       }
     },

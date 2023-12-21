@@ -18,9 +18,9 @@ export type OpenAPIConfig = {
   HEADERS?: Headers | Resolver<Headers> | undefined;
   ENCODE_PATH?: ((path: string) => string) | undefined;
 };
-
+const { urlBaseApi } = useBaseUrl();
 export const OpenAPI: OpenAPIConfig = {
-  BASE: '',
+  BASE: urlBaseApi,
   // BASE: `${process.env.API_HOST}:${process.env.VITE_PORT_API}`,
   VERSION: '1.0',
   WITH_CREDENTIALS: false,

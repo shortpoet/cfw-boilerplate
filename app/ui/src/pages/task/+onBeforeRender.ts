@@ -6,6 +6,17 @@ import { QueryClient, dehydrate } from '@tanstack/vue-query';
 import { UserRole } from '#/types';
 import { TasksService } from '../../services/TasksService';
 
+export const getTaskList = async (page: number) => {
+  const { urlBaseApi } = useBaseUrl();
+  const url = `${urlBaseApi}/api/task/tasks?page=${page}`;
+  console.log(`[ui] [task] [index] [onBeforeRender] fetching url: ${url}`);
+  const response = await fetch(url);
+  const data = await response.json();
+  console.log(`[ui] [task] [index] [onBeforeRender] data:`);
+  console.log(data);
+  return data;
+};
+
 const onBeforeRender: OnBeforeRenderAsync = async (
   pageContext
 ): ReturnType<OnBeforeRenderAsync> => {
@@ -17,17 +28,13 @@ const onBeforeRender: OnBeforeRenderAsync = async (
   const { routeParams } = pageContext;
 
   const page = parseInt(routeParams.taskPage) || 8;
-  const getTaskList = async () => {
-    const response = await fetch('http://localhost:3000/api/task/tasks?page=2');
-    const data = await response.json();
-    console.log(`[ui] [task] [index] [onBeforeRender] data:`);
-    console.log(data);
-    return data;
-  };
 
+  console.log(`[ui] [task] [index] [onBeforeRender] prequery:`);
   await queryClient.prefetchQuery({
     queryKey: ['result', page],
-    queryFn: () => TasksService.getTaskList({ page }),
+    // queryFn: () => getTaskList(page),
+    queryFn: ({ queryKey }) =>
+      TasksService.getTaskList({ page: queryKey[1] as number }).then((response) => response),
   });
 
   // const check = queryClient.ensureQueryData({
@@ -40,8 +47,15 @@ const onBeforeRender: OnBeforeRenderAsync = async (
   const vueQueryState = dehydrate(queryClient);
   // console.log(`[ui] [task] [index] [onBeforeRender] vueQueryState:`);
   // console.log(vueQueryState);
-  // console.log('tasks');
-  // console.log(await TasksService.getTaskList({ page }));
+  console.log(`[ui] [task] [index] [onBeforeRender] tasks:`);
+  console.log(`[ui] [task] [index] [onBeforeRender] tasks:`);
+  console.log(`[ui] [task] [index] [onBeforeRender] tasks:`);
+  const tasksFetch = await getTaskList(page);
+  const tasksService = await TasksService.getTaskList({ page });
+  console.log(`[ui] [task] [index] [onBeforeRender] tasksFetch:`);
+  console.log(tasksFetch);
+  console.log(`[ui] [task] [index] [onBeforeRender] tasksService:`);
+  console.log(tasksService);
 
   return {
     pageContext: {

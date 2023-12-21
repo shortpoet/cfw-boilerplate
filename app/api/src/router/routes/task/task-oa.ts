@@ -15,9 +15,9 @@ export type TaskComponentType = z.infer<typeof TaskComponent>;
 export const TaskListResponseComponent = z
   .object({
     success: z.boolean(),
-    result: z.object({
-      tasks: z.array(TaskComponent),
-    }),
+    page: z.number(),
+    isCompleted: z.boolean().optional(),
+    tasks: z.array(TaskComponent),
   })
   .openapi('TaskListResponse');
 export type TaskListResponseComponentType = z.infer<typeof TaskListResponseComponent>;
