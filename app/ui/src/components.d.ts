@@ -11,6 +11,7 @@ declare module 'vue' {
     ApiViewerFetch: typeof import('./components/base/ApiViewerFetch.vue')['default']
     Counter: typeof import('./components/base/Counter.vue')['default']
     DropMenu: typeof import('./components/auth/DropMenu.vue')['default']
+    FlashMessage: typeof import('./components/base/FlashMessage.vue')['default']
     Footer: typeof import('./components/base/Footer.vue')['default']
     JsonTree: typeof import('./components/base/JsonTree.vue')['default']
     Link: typeof import('./components/base/Link.vue')['default']

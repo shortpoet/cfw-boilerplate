@@ -1,0 +1,44 @@
+<template>
+  <transition :duration="{ enter: $flashMessage.duration || 5000, leave: 250 }" @after-enter="$flashMessage.show = false">
+    <div class="alert" v-if="$flashMessage.show" :modifiers="$flashMessage.modifiers" :icon="$flashMessage.icon"
+      @close="($flashMessage.show = false)">
+      <strong>{{ $flashMessage?.title }}</strong> {{ $flashMessage?.text }}
+    </div>
+  </transition>
+</template>
+
+<script setup lang="ts">
+import { inject } from 'vue';
+import { initFlashMessage } from '../../modules'
+
+const $flashMessage = inject('$flashMessage', initFlashMessage());
+</script>
+
+<style scoped>
+/* enter transitions */
+
+.alert {
+  padding: 15px;
+  background-color: #f44336;
+  /* Red background color */
+  color: white;
+  font-weight: bold;
+}
+
+.v-enter-from {
+  transform: translateY(-66px);
+}
+
+.v-enter-to {
+  transition: all 0.3s ease;
+  transform: translateY(0px);
+  position: sticky;
+  top: 0;
+}
+
+/* leave transitions */
+.v-leave-active {
+  transition: all 0.4s ease;
+  transform: translateY(-66px);
+}
+</style>

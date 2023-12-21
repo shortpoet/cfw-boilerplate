@@ -1,4 +1,7 @@
 <template>
+  <!DOCTYPE html>
+  <FlashMessage />
+
   <main class="page-shell-main">
 
     <div class="layout">
@@ -44,6 +47,7 @@
 import BlueLayout from './BlueLayout.vue';
 import { meta, title, link } from '../renderer/meta';
 import Hydrate from './Hydrate.vue';
+import { onErrorFlash, useFlashMessage } from '../modules';
 
 useHead({
   title,
@@ -56,4 +60,19 @@ const loading = ref(true);
 onMounted(async () => {
   loading.value = false;
 })
+const message = 'There was an error fetching the API data.'
+const duration = 5000;
+onErrorFlash(message);
+const error = ref(false);
+const $flashMessage = useFlashMessage();
+onErrorCaptured((callback) => {
+  error.value = true;
+  $flashMessage.duration = duration;
+  $flashMessage.show = true;
+  $flashMessage.text = message;
+  console.error(callback);
+  console.log('#######################################################')
+  return false;
+});
+
 </script>
