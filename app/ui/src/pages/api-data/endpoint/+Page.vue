@@ -1,6 +1,11 @@
 <template>
   <div class="page-container">
-    <ApiViewerFetch :title="title" :data="apiData" :loading="apiDataLoading" :error="apiDataError" />
+    <ApiViewerFetch
+      :title="title"
+      :data="apiData"
+      :loading="apiDataLoading"
+      :error="apiDataError"
+    />
   </div>
 </template>
 
@@ -10,33 +15,29 @@
   flex-direction: column;
 }
 </style>
-  
-<script setup lang="ts">
-import { onErrorFlash } from '#/ui/src/modules';
 
+<script setup lang="ts">
 const props = defineProps({
   title: {
     type: String,
-    required: true,
+    required: true
   },
   apiData: {
     type: Object,
-    required: false,
+    required: false
   },
   apiDataLoading: {
     type: Boolean,
-    required: true,
+    required: true
   },
   apiDataError: {
     type: Object,
-    required: false,
-  },
-});
+    required: false
+  }
+})
 
-const { apiDataError } = props;
+const { apiDataError } = props
 if (apiDataError) {
-  throw ('There was an error fetching the API data.');
+  throw 'There was an error fetching the API data.'
 }
-onErrorFlash('There was an error fetching the API data.', 15);
-
 </script>

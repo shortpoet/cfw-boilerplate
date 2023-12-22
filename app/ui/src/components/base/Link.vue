@@ -12,7 +12,7 @@ a {
 
 a.active {
   background-color: rgb(130, 94, 130);
-  border-radius: .25rem;
+  border-radius: 0.25rem;
 }
 </style>
 <script lang="ts" setup>

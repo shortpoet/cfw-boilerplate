@@ -1,35 +1,51 @@
 <template>
   <span class="json-tree" :class="{ 'json-tree-root': parsed.depth === 0 }">
     <span class="json-tree-row" v-if="parsed.primitive">
-      <span class="json-tree-indent" v-for="n in (parsed.depth * 2 + 3)" :key="n">&nbsp;</span>
+      <span class="json-tree-indent" v-for="n in parsed.depth * 2 + 3" :key="n">&nbsp;</span>
       <span class="json-tree-key" v-if="parsed.key">{{ parsed.key }}</span>
       <span class="json-tree-colon" v-if="parsed.key">:&nbsp;</span>
-      <span class="json-tree-value" :class="'json-tree-value-' + parsed.type" :title="`${parsed.value}`">{{
-        `${parsed.value}` }}</span>
+      <span
+        class="json-tree-value"
+        :class="'json-tree-value-' + parsed.type"
+        :title="`${parsed.value}`"
+        >{{ `${parsed.value}` }}</span
+      >
       <span class="json-tree-comma" v-if="!parsed.last">,</span>
       <span class="json-tree-indent">&nbsp;</span>
     </span>
     <span class="json-tree-deep" v-if="!parsed.primitive">
-      <span class="json-tree-row json-tree-expando" @click="expanded = !expanded" @mouseover="hovered = true"
-        @mouseout="hovered = false">
+      <span
+        class="json-tree-row json-tree-expando"
+        @click="expanded = !expanded"
+        @mouseover="hovered = true"
+        @mouseout="hovered = false"
+      >
         <span class="json-tree-indent">&nbsp;</span>
         <span class="json-tree-sign">{{ expanded ? '-' : '+' }}</span>
-        <span class="json-tree-indent" v-for="n in (parsed.depth * 2 + 1)" :key="n">&nbsp;</span>
+        <span class="json-tree-indent" v-for="n in parsed.depth * 2 + 1" :key="n">&nbsp;</span>
         <span class="json-tree-key" v-if="parsed.key">{{ parsed.key }}</span>
         <span class="json-tree-colon" v-if="parsed.key">:&nbsp;</span>
         <span class="json-tree-open">{{ parsed.type === 'array' ? '[' : '{' }}</span>
-        <span class="json-tree-collapsed" v-show="!expanded">&nbsp;/*&nbsp;{{ format(parsed.value.length)
-        }}&nbsp;*/&nbsp;</span>
-        <span class="json-tree-close" v-show="!expanded">{{ parsed.type === 'array' ? ']' : '}' }}</span>
+        <span class="json-tree-collapsed" v-show="!expanded"
+          >&nbsp;/*&nbsp;{{ format(parsed.value.length) }}&nbsp;*/&nbsp;</span
+        >
+        <span class="json-tree-close" v-show="!expanded">{{
+          parsed.type === 'array' ? ']' : '}'
+        }}</span>
         <span class="json-tree-comma" v-show="!expanded && !parsed.last">,</span>
         <span class="json-tree-indent">&nbsp;</span>
       </span>
       <span class="json-tree-deeper" v-show="expanded">
-        <json-tree v-for="(item, index) in parsed.value" :key="index" :kv="item" :level="level"></json-tree>
+        <json-tree
+          v-for="(item, index) in parsed.value"
+          :key="index"
+          :kv="item"
+          :level="level"
+        ></json-tree>
       </span>
       <span class="json-tree-row" v-show="expanded">
         <span class="json-tree-ending" :class="{ 'json-tree-paired': hovered }">
-          <span class="json-tree-indent" v-for="n in (parsed.depth * 2 + 3)" :key="n">&nbsp;</span>
+          <span class="json-tree-indent" v-for="n in parsed.depth * 2 + 3" :key="n">&nbsp;</span>
           <span class="json-tree-close">{{ parsed.type === 'array' ? ']' : '}' }}</span>
           <span class="json-tree-comma" v-if="!parsed.last">,</span>
           <span class="json-tree-indent">&nbsp;</span>
@@ -41,72 +57,72 @@
 
 <script setup lang="js">
 function parse(data, depth = 0, last = true, key = undefined) {
-  let kv = { depth, last, primitive: true, key: JSON.stringify(key) };
+  let kv = { depth, last, primitive: true, key: JSON.stringify(key) }
   if (typeof data !== 'object') {
-    return Object.assign(kv, { type: typeof data, value: JSON.stringify(data) });
+    return Object.assign(kv, { type: typeof data, value: JSON.stringify(data) })
   } else if (data === null) {
-    return Object.assign(kv, { type: 'null', value: 'null' });
+    return Object.assign(kv, { type: 'null', value: 'null' })
   } else if (Array.isArray(data)) {
     let value = data.map((item, index) => {
-      return parse(item, depth + 1, index === data.length - 1);
-    });
-    return Object.assign(kv, { primitive: false, type: 'array', value });
+      return parse(item, depth + 1, index === data.length - 1)
+    })
+    return Object.assign(kv, { primitive: false, type: 'array', value })
   } else {
-    let keys = Object.keys(data);
+    let keys = Object.keys(data)
     let value = keys.map((key, index) => {
-      return parse(data[key], depth + 1, index === keys.length - 1, key);
-    });
-    return Object.assign(kv, { primitive: false, type: 'object', value });
+      return parse(data[key], depth + 1, index === keys.length - 1, key)
+    })
+    return Object.assign(kv, { primitive: false, type: 'object', value })
   }
 }
 
-import { ref, computed } from 'vue';
+import { ref, computed } from 'vue'
 
 const props = defineProps({
   level: {
     type: Number,
-    default: Infinity,
+    default: Infinity
   },
   kv: {
-    type: Object,
+    type: Object
   },
   raw: {
-    type: String,
+    type: String
   },
-  data: {},
-});
+  data: {}
+})
 
-const expanded = ref(true);
-const hovered = ref(false);
+const expanded = ref(true)
+const hovered = ref(false)
 
 const parsed = computed(() => {
   if (props.kv) {
-    return props.kv;
+    return props.kv
   }
-  let result;
+  let result
   try {
     if (props.raw) {
-      result = JSON.parse(props.raw);
+      result = JSON.parse(props.raw)
     } else if (typeof props.data !== 'undefined') {
-      result = props.data;
+      result = props.data
     } else {
-      result = '[Vue JSON Tree] No data passed.';
-      console.warn(result);
+      result = '[Vue JSON Tree] No data passed.'
+      console.warn(result)
     }
   } catch (e) {
-    result = '[Vue JSON Tree] Invalid raw JSON.';
-    console.warn(result);
+    result = '[Vue JSON Tree] Invalid raw JSON.'
+    console.warn(result)
   } finally {
-    return parse(result);
+    return parse(result)
   }
-});
+})
 
 function format(n) {
-  if (n > 1) return `${n} items`;
-  return n ? '1 item' : 'no items';
+  if (n > 1) return `${n} items`
+  return n ? '1 item' : 'no items'
 }
 
-expanded.value = parsed.value.depth < props.level;
+expanded.value = parsed.value.depth < props.level
 </script>
 
 <style>

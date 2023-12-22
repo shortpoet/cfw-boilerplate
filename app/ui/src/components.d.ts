@@ -7,6 +7,7 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    _f: typeof import('./components/base/flash/_f.vue')['default']
     404: typeof import('./layouts/404.vue')['default']
     AdminLayout: typeof import('./layouts/AdminLayout.vue')['default']
     ApiViewer: typeof import('./components/base/ApiViewer.vue')['default']
@@ -15,6 +16,7 @@ declare module 'vue' {
     BlueLayout: typeof import('./layouts/BlueLayout.vue')['default']
     Counter: typeof import('./components/base/Counter.vue')['default']
     DropMenu: typeof import('./components/auth/DropMenu.vue')['default']
+    Flash: typeof import('./components/base/flash/Flash.vue')['default']
     FlashMessage: typeof import('./components/base/flash/FlashMessage.vue')['default']
     FlashMsg: typeof import('./components/base/flash/FlashMsg.vue')['default']
     Footer: typeof import('./components/base/Footer.vue')['default']

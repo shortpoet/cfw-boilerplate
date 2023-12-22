@@ -1,17 +1,16 @@
 <template>
-  <!DOCTYPE html>
   <FlashMessage />
 
   <main class="page-shell-main">
-
     <div class="layout">
       <MainNav />
       <div class="main-container">
-
         <Suspense>
           <template v-if="loading">
             <div flex flex-col class="items-center justify-center p-5">
-              <h1 class="block whitespace-pre-line bg-orange-300 p-5 rounded-xl text-center text-4xl font-bold">
+              <h1
+                class="block whitespace-pre-line bg-orange-300 p-5 rounded-xl text-center text-4xl font-bold"
+              >
                 {{ `\nLoading ...` }}
               </h1>
               <slot name="fallback" />
@@ -32,11 +31,8 @@
         <div class="footer">
           <Footer />
         </div>
-
       </div>
-
     </div>
-
   </main>
 </template>
 <style scoped>
@@ -44,25 +40,25 @@
 </style>
 
 <script lang="ts" setup>
-import BlueLayout from './BlueLayout.vue';
-import { meta, title, link } from '../renderer/meta';
-import Hydrate from './Hydrate.vue';
-import { onErrorFlash } from '../modules';
+import BlueLayout from './BlueLayout.vue'
+import { meta, title, link } from '../renderer/meta'
+import Hydrate from './Hydrate.vue'
+import { onErrorFlash } from '../modules'
 
 useHead({
   title,
   meta,
-  link,
+  link
 })
 
-const loading = ref(true);
+const loading = ref(true)
 
 onMounted(async () => {
-  loading.value = false;
+  loading.value = false
 })
 // const message = 'There was an error fetching the API data.'
 // const duration = 5000;
 // onErrorFlash(message);
-onErrorFlash('There was an error fetching the API data.', 3000);
-
+const errorTitle = 'Fetch Error'
+onErrorFlash(errorTitle, 'There was an error fetching the API data.', 15)
 </script>

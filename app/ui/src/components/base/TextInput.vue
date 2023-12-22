@@ -1,9 +1,18 @@
 <template>
   <div>
     <label class="hidden" for="input">{{ label }}</label>
-    <input :placeholder="placeholder" data-cy="text-input" class="text-input" type="text" v-model="modelValue"
-      @input="onInput" @update:modelValue="$emit('update:modelValue', $event)" />
-    <p><span>{{ message }}</span> {{ modelValue }}</p>
+    <input
+      :placeholder="placeholder"
+      data-cy="text-input"
+      class="text-input"
+      type="text"
+      v-model="modelValue"
+      @input="onInput"
+      @update:modelValue="$emit('update:modelValue', $event)"
+    />
+    <p>
+      <span>{{ message }}</span> {{ modelValue }}
+    </p>
   </div>
 </template>
 

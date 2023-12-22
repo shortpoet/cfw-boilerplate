@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import logoUrl from '../../../../public/Old_map_icon.svg';
+import logoUrl from '../../../../public/Old_map_icon.svg'
 </script>
 <style scoped>
 .logo {
