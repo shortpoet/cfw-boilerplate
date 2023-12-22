@@ -15,19 +15,30 @@ declare global {
   const AUTHJS_COOKIES_AUTHJS_SESSION_TOKEN: typeof import('./composables/auth-authjs')['AUTHJS_COOKIES_AUTHJS_SESSION_TOKEN']
   const AUTHJS_COOKIES_USER_TOKEN: typeof import('./composables/auth-authjs')['AUTHJS_COOKIES_USER_TOKEN']
   const AUTHJS_SESSION_TOKEN_EXPIRY: typeof import('./composables/auth-authjs')['AUTHJS_SESSION_TOKEN_EXPIRY']
+  const ApiError: typeof import('./core/ApiError')['ApiError']
   const COOKIES_SESSION_TOKEN: (typeof import('./composables/auth-authjs'))['COOKIES_SESSION_TOKEN']
   const COOKIES_USER_TOKEN: (typeof import('./composables/auth-authjs'))['COOKIES_USER_TOKEN']
+  const CancelError: typeof import('./core/CancelablePromise')['CancelError']
+  const CancelablePromise: typeof import('./core/CancelablePromise')['CancelablePromise']
+  const DefaultService: typeof import('./services/DefaultService')['DefaultService']
   const EffectScope: typeof import('vue')['EffectScope']
   const FetchError: typeof import('./composables/fetch')['FetchError']
+  const InitialStateSymbol: typeof import('./modules/pinia')['InitialStateSymbol']
   const LUCIAAUTH_COOKIES_SESSION_TOKEN: typeof import('./composables/auth-lucia')['LUCIAAUTH_COOKIES_SESSION_TOKEN']
   const LUCIAAUTH_COOKIES_USER_TOKEN: (typeof import('./composables/auth-lucia'))['LUCIAAUTH_COOKIES_USER_TOKEN']
   const LUCIAAUTH_SESSION_TOKEN_EXPIRY: typeof import('./composables/auth-lucia')['LUCIAAUTH_SESSION_TOKEN_EXPIRY']
   const Locale: typeof import('./composables/locales')['Locale']
+  const LoggerSymbol: typeof import('./modules/logger')['LoggerSymbol']
+  const OpenAPI: typeof import('./core/OpenAPI')['OpenAPI']
   const RequestConfig: typeof import('./composables/fetch')['RequestConfig']
   const SESSION_TOKEN_EXPIRY: (typeof import('./composables/auth-authjs'))['SESSION_TOKEN_EXPIRY']
+  const TasksService: typeof import('./services/TasksService')['TasksService']
   const USE_FETCH_REQ_INIT: typeof import('./composables/fetch')['USE_FETCH_REQ_INIT']
   const UseFetchResult: typeof import('./composables/fetch')['UseFetchResult']
+  const VUE_QUERY_STATE: typeof import('./modules/vue-query')['VUE_QUERY_STATE']
   const X_CORRELATION_ID: typeof import('./composables/logger')['X_CORRELATION_ID']
+  const base64: typeof import('./core/request')['base64']
+  const catchErrorCodes: typeof import('./core/request')['catchErrorCodes']
   const computed: typeof import('vue')['computed']
   const cookieOptions: (typeof import('./composables/auth-lucia'))['cookieOptions']
   const createApp: typeof import('vue')['createApp']
@@ -38,16 +49,31 @@ declare global {
   const getCookie: typeof import('./composables/fetch')['getCookie']
   const getCurrentInstance: typeof import('vue')['getCurrentInstance']
   const getCurrentScope: typeof import('vue')['getCurrentScope']
+  const getFormData: typeof import('./core/request')['getFormData']
+  const getHeaders: typeof import('./core/request')['getHeaders']
   const getI18n: typeof import('./composables/i18n')['getI18n']
   const getLocale: typeof import('./composables/locales')['getLocale']
+  const getQueryString: typeof import('./core/request')['getQueryString']
+  const getRequestBody: typeof import('./core/request')['getRequestBody']
+  const getResponseBody: typeof import('./core/request')['getResponseBody']
+  const getResponseHeader: typeof import('./core/request')['getResponseHeader']
   const h: typeof import('vue')['h']
+  const initFlashMessage: typeof import('./modules/flash-message')['initFlashMessage']
+  const initialPage: typeof import('./modules/vue-query')['initialPage']
   const inject: typeof import('vue')['inject']
+  const install: (typeof import('./modules/pinia'))['install']
+  const installPinia: typeof import('./modules/pinia')['installPinia']
+  const isBlob: typeof import('./core/request')['isBlob']
   const isClient: (typeof import('./composables/auth-lucia'))['isClient']
   const isDark: typeof import('./composables/dark')['isDark']
+  const isDefined: typeof import('./core/request')['isDefined']
+  const isFormData: typeof import('./core/request')['isFormData']
   const isProxy: typeof import('vue')['isProxy']
   const isReactive: typeof import('vue')['isReactive']
   const isReadonly: typeof import('vue')['isReadonly']
   const isRef: typeof import('vue')['isRef']
+  const isString: typeof import('./core/request')['isString']
+  const isStringWithValue: typeof import('./core/request')['isStringWithValue']
   const markRaw: typeof import('vue')['markRaw']
   const nextTick: typeof import('vue')['nextTick']
   const onActivated: typeof import('vue')['onActivated']
@@ -56,6 +82,8 @@ declare global {
   const onBeforeUpdate: typeof import('vue')['onBeforeUpdate']
   const onDeactivated: typeof import('vue')['onDeactivated']
   const onErrorCaptured: typeof import('vue')['onErrorCaptured']
+  const onErrorClient: typeof import('./modules/error-client')['onErrorClient']
+  const onErrorFlash: typeof import('./modules/flash-message')['onErrorFlash']
   const onMounted: typeof import('vue')['onMounted']
   const onRenderTracked: typeof import('vue')['onRenderTracked']
   const onRenderTriggered: typeof import('vue')['onRenderTriggered']
@@ -63,18 +91,24 @@ declare global {
   const onServerPrefetch: typeof import('vue')['onServerPrefetch']
   const onUnmounted: typeof import('vue')['onUnmounted']
   const onUpdated: typeof import('vue')['onUpdated']
-  const pageContext: typeof import('./composables/index')['pageContext']
+  const pageContext: (typeof import('./composables/index'))['pageContext']
   const preferredDark: typeof import('./composables/dark')['preferredDark']
   const provide: typeof import('vue')['provide']
   const provideAuth: (typeof import('./composables/auth-lucia'))['provideAuth']
+  const provideFlashMessage: typeof import('./modules/flash-message')['provideFlashMessage']
+  const provideLogger: typeof import('./modules/logger')['provideLogger']
   const provideLuciaAuth: typeof import('./composables/auth-lucia')['provideLuciaAuth']
   const provideNextAuth: typeof import('./composables/auth-authjs')['provideNextAuth']
   const providePageContext: typeof import('./composables/pageContext')['providePageContext']
+  const provideVueQuery: typeof import('./modules/vue-query')['provideVueQuery']
   const reactive: typeof import('vue')['reactive']
   const readonly: typeof import('vue')['readonly']
   const ref: typeof import('vue')['ref']
+  const request: typeof import('./core/request')['request']
+  const resolve: typeof import('./core/request')['resolve']
   const resolveComponent: typeof import('vue')['resolveComponent']
-  const setPageContext: typeof import('./composables/pageContext')['setPageContext']
+  const sendRequest: typeof import('./core/request')['sendRequest']
+  const setPageContext: (typeof import('./composables/pageContext'))['setPageContext']
   const shallowReactive: typeof import('vue')['shallowReactive']
   const shallowReadonly: typeof import('vue')['shallowReadonly']
   const shallowRef: typeof import('vue')['shallowRef']
@@ -93,6 +127,7 @@ declare global {
   const useCssModule: typeof import('vue')['useCssModule']
   const useCssVars: typeof import('vue')['useCssVars']
   const useFetch: typeof import('./composables/fetch')['useFetch']
+  const useFlashMessage: typeof import('./modules/flash-message')['useFlashMessage']
   const useGuard: typeof import('./composables/guard')['useGuard']
   const useHead: typeof import('@vueuse/head')['useHead']
   const useI18n: typeof import('./composables/i18n')['useI18n']
@@ -132,15 +167,25 @@ declare module 'vue' {
     readonly AUTHJS_COOKIES_AUTHJS_SESSION_TOKEN: UnwrapRef<typeof import('./composables/auth-authjs')['AUTHJS_COOKIES_AUTHJS_SESSION_TOKEN']>
     readonly AUTHJS_COOKIES_USER_TOKEN: UnwrapRef<typeof import('./composables/auth-authjs')['AUTHJS_COOKIES_USER_TOKEN']>
     readonly AUTHJS_SESSION_TOKEN_EXPIRY: UnwrapRef<typeof import('./composables/auth-authjs')['AUTHJS_SESSION_TOKEN_EXPIRY']>
+    readonly ApiError: UnwrapRef<typeof import('./core/ApiError')['ApiError']>
+    readonly CancelError: UnwrapRef<typeof import('./core/CancelablePromise')['CancelError']>
+    readonly CancelablePromise: UnwrapRef<typeof import('./core/CancelablePromise')['CancelablePromise']>
+    readonly DefaultService: UnwrapRef<typeof import('./services/DefaultService')['DefaultService']>
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
     readonly FetchError: UnwrapRef<typeof import('./composables/fetch')['FetchError']>
+    readonly InitialStateSymbol: UnwrapRef<typeof import('./modules/pinia')['InitialStateSymbol']>
     readonly LUCIAAUTH_COOKIES_SESSION_TOKEN: UnwrapRef<typeof import('./composables/auth-lucia')['LUCIAAUTH_COOKIES_SESSION_TOKEN']>
     readonly LUCIAAUTH_SESSION_TOKEN_EXPIRY: UnwrapRef<typeof import('./composables/auth-lucia')['LUCIAAUTH_SESSION_TOKEN_EXPIRY']>
     readonly Locale: UnwrapRef<typeof import('./composables/locales')['Locale']>
-    readonly RequestConfig: UnwrapRef<typeof import('./composables/fetch')['RequestConfig']>
+    readonly LoggerSymbol: UnwrapRef<typeof import('./modules/logger')['LoggerSymbol']>
+    readonly OpenAPI: UnwrapRef<typeof import('./core/OpenAPI')['OpenAPI']>
+    readonly TasksService: UnwrapRef<typeof import('./services/TasksService')['TasksService']>
     readonly USE_FETCH_REQ_INIT: UnwrapRef<typeof import('./composables/fetch')['USE_FETCH_REQ_INIT']>
     readonly UseFetchResult: UnwrapRef<typeof import('./composables/fetch')['UseFetchResult']>
+    readonly VUE_QUERY_STATE: UnwrapRef<typeof import('./modules/vue-query')['VUE_QUERY_STATE']>
     readonly X_CORRELATION_ID: UnwrapRef<typeof import('./composables/logger')['X_CORRELATION_ID']>
+    readonly base64: UnwrapRef<typeof import('./core/request')['base64']>
+    readonly catchErrorCodes: UnwrapRef<typeof import('./core/request')['catchErrorCodes']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
     readonly createApp: UnwrapRef<typeof import('vue')['createApp']>
     readonly customRef: UnwrapRef<typeof import('vue')['customRef']>
@@ -150,15 +195,29 @@ declare module 'vue' {
     readonly getCookie: UnwrapRef<typeof import('./composables/fetch')['getCookie']>
     readonly getCurrentInstance: UnwrapRef<typeof import('vue')['getCurrentInstance']>
     readonly getCurrentScope: UnwrapRef<typeof import('vue')['getCurrentScope']>
+    readonly getFormData: UnwrapRef<typeof import('./core/request')['getFormData']>
+    readonly getHeaders: UnwrapRef<typeof import('./core/request')['getHeaders']>
     readonly getI18n: UnwrapRef<typeof import('./composables/i18n')['getI18n']>
     readonly getLocale: UnwrapRef<typeof import('./composables/locales')['getLocale']>
+    readonly getQueryString: UnwrapRef<typeof import('./core/request')['getQueryString']>
+    readonly getRequestBody: UnwrapRef<typeof import('./core/request')['getRequestBody']>
+    readonly getResponseBody: UnwrapRef<typeof import('./core/request')['getResponseBody']>
+    readonly getResponseHeader: UnwrapRef<typeof import('./core/request')['getResponseHeader']>
     readonly h: UnwrapRef<typeof import('vue')['h']>
+    readonly initFlashMessage: UnwrapRef<typeof import('./modules/flash-message')['initFlashMessage']>
+    readonly initialPage: UnwrapRef<typeof import('./modules/vue-query')['initialPage']>
     readonly inject: UnwrapRef<typeof import('vue')['inject']>
+    readonly installPinia: UnwrapRef<typeof import('./modules/pinia')['installPinia']>
+    readonly isBlob: UnwrapRef<typeof import('./core/request')['isBlob']>
     readonly isDark: UnwrapRef<typeof import('./composables/dark')['isDark']>
+    readonly isDefined: UnwrapRef<typeof import('./core/request')['isDefined']>
+    readonly isFormData: UnwrapRef<typeof import('./core/request')['isFormData']>
     readonly isProxy: UnwrapRef<typeof import('vue')['isProxy']>
     readonly isReactive: UnwrapRef<typeof import('vue')['isReactive']>
     readonly isReadonly: UnwrapRef<typeof import('vue')['isReadonly']>
     readonly isRef: UnwrapRef<typeof import('vue')['isRef']>
+    readonly isString: UnwrapRef<typeof import('./core/request')['isString']>
+    readonly isStringWithValue: UnwrapRef<typeof import('./core/request')['isStringWithValue']>
     readonly markRaw: UnwrapRef<typeof import('vue')['markRaw']>
     readonly nextTick: UnwrapRef<typeof import('vue')['nextTick']>
     readonly onActivated: UnwrapRef<typeof import('vue')['onActivated']>
@@ -167,6 +226,8 @@ declare module 'vue' {
     readonly onBeforeUpdate: UnwrapRef<typeof import('vue')['onBeforeUpdate']>
     readonly onDeactivated: UnwrapRef<typeof import('vue')['onDeactivated']>
     readonly onErrorCaptured: UnwrapRef<typeof import('vue')['onErrorCaptured']>
+    readonly onErrorClient: UnwrapRef<typeof import('./modules/error-client')['onErrorClient']>
+    readonly onErrorFlash: UnwrapRef<typeof import('./modules/flash-message')['onErrorFlash']>
     readonly onMounted: UnwrapRef<typeof import('vue')['onMounted']>
     readonly onRenderTracked: UnwrapRef<typeof import('vue')['onRenderTracked']>
     readonly onRenderTriggered: UnwrapRef<typeof import('vue')['onRenderTriggered']>
@@ -174,16 +235,21 @@ declare module 'vue' {
     readonly onServerPrefetch: UnwrapRef<typeof import('vue')['onServerPrefetch']>
     readonly onUnmounted: UnwrapRef<typeof import('vue')['onUnmounted']>
     readonly onUpdated: UnwrapRef<typeof import('vue')['onUpdated']>
-    readonly pageContext: UnwrapRef<typeof import('./composables/index')['pageContext']>
     readonly preferredDark: UnwrapRef<typeof import('./composables/dark')['preferredDark']>
     readonly provide: UnwrapRef<typeof import('vue')['provide']>
+    readonly provideFlashMessage: UnwrapRef<typeof import('./modules/flash-message')['provideFlashMessage']>
+    readonly provideLogger: UnwrapRef<typeof import('./modules/logger')['provideLogger']>
     readonly provideLuciaAuth: UnwrapRef<typeof import('./composables/auth-lucia')['provideLuciaAuth']>
     readonly provideNextAuth: UnwrapRef<typeof import('./composables/auth-authjs')['provideNextAuth']>
     readonly providePageContext: UnwrapRef<typeof import('./composables/pageContext')['providePageContext']>
+    readonly provideVueQuery: UnwrapRef<typeof import('./modules/vue-query')['provideVueQuery']>
     readonly reactive: UnwrapRef<typeof import('vue')['reactive']>
     readonly readonly: UnwrapRef<typeof import('vue')['readonly']>
     readonly ref: UnwrapRef<typeof import('vue')['ref']>
+    readonly request: UnwrapRef<typeof import('./core/request')['request']>
+    readonly resolve: UnwrapRef<typeof import('./core/request')['resolve']>
     readonly resolveComponent: UnwrapRef<typeof import('vue')['resolveComponent']>
+    readonly sendRequest: UnwrapRef<typeof import('./core/request')['sendRequest']>
     readonly shallowReactive: UnwrapRef<typeof import('vue')['shallowReactive']>
     readonly shallowReadonly: UnwrapRef<typeof import('vue')['shallowReadonly']>
     readonly shallowRef: UnwrapRef<typeof import('vue')['shallowRef']>
@@ -202,6 +268,7 @@ declare module 'vue' {
     readonly useCssModule: UnwrapRef<typeof import('vue')['useCssModule']>
     readonly useCssVars: UnwrapRef<typeof import('vue')['useCssVars']>
     readonly useFetch: UnwrapRef<typeof import('./composables/fetch')['useFetch']>
+    readonly useFlashMessage: UnwrapRef<typeof import('./modules/flash-message')['useFlashMessage']>
     readonly useGuard: UnwrapRef<typeof import('./composables/guard')['useGuard']>
     readonly useHead: UnwrapRef<typeof import('@vueuse/head')['useHead']>
     readonly useI18n: UnwrapRef<typeof import('./composables/i18n')['useI18n']>
@@ -234,15 +301,25 @@ declare module '@vue/runtime-core' {
     readonly AUTHJS_COOKIES_AUTHJS_SESSION_TOKEN: UnwrapRef<typeof import('./composables/auth-authjs')['AUTHJS_COOKIES_AUTHJS_SESSION_TOKEN']>
     readonly AUTHJS_COOKIES_USER_TOKEN: UnwrapRef<typeof import('./composables/auth-authjs')['AUTHJS_COOKIES_USER_TOKEN']>
     readonly AUTHJS_SESSION_TOKEN_EXPIRY: UnwrapRef<typeof import('./composables/auth-authjs')['AUTHJS_SESSION_TOKEN_EXPIRY']>
+    readonly ApiError: UnwrapRef<typeof import('./core/ApiError')['ApiError']>
+    readonly CancelError: UnwrapRef<typeof import('./core/CancelablePromise')['CancelError']>
+    readonly CancelablePromise: UnwrapRef<typeof import('./core/CancelablePromise')['CancelablePromise']>
+    readonly DefaultService: UnwrapRef<typeof import('./services/DefaultService')['DefaultService']>
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
     readonly FetchError: UnwrapRef<typeof import('./composables/fetch')['FetchError']>
+    readonly InitialStateSymbol: UnwrapRef<typeof import('./modules/pinia')['InitialStateSymbol']>
     readonly LUCIAAUTH_COOKIES_SESSION_TOKEN: UnwrapRef<typeof import('./composables/auth-lucia')['LUCIAAUTH_COOKIES_SESSION_TOKEN']>
     readonly LUCIAAUTH_SESSION_TOKEN_EXPIRY: UnwrapRef<typeof import('./composables/auth-lucia')['LUCIAAUTH_SESSION_TOKEN_EXPIRY']>
     readonly Locale: UnwrapRef<typeof import('./composables/locales')['Locale']>
-    readonly RequestConfig: UnwrapRef<typeof import('./composables/fetch')['RequestConfig']>
+    readonly LoggerSymbol: UnwrapRef<typeof import('./modules/logger')['LoggerSymbol']>
+    readonly OpenAPI: UnwrapRef<typeof import('./core/OpenAPI')['OpenAPI']>
+    readonly TasksService: UnwrapRef<typeof import('./services/TasksService')['TasksService']>
     readonly USE_FETCH_REQ_INIT: UnwrapRef<typeof import('./composables/fetch')['USE_FETCH_REQ_INIT']>
     readonly UseFetchResult: UnwrapRef<typeof import('./composables/fetch')['UseFetchResult']>
+    readonly VUE_QUERY_STATE: UnwrapRef<typeof import('./modules/vue-query')['VUE_QUERY_STATE']>
     readonly X_CORRELATION_ID: UnwrapRef<typeof import('./composables/logger')['X_CORRELATION_ID']>
+    readonly base64: UnwrapRef<typeof import('./core/request')['base64']>
+    readonly catchErrorCodes: UnwrapRef<typeof import('./core/request')['catchErrorCodes']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
     readonly createApp: UnwrapRef<typeof import('vue')['createApp']>
     readonly customRef: UnwrapRef<typeof import('vue')['customRef']>
@@ -252,15 +329,29 @@ declare module '@vue/runtime-core' {
     readonly getCookie: UnwrapRef<typeof import('./composables/fetch')['getCookie']>
     readonly getCurrentInstance: UnwrapRef<typeof import('vue')['getCurrentInstance']>
     readonly getCurrentScope: UnwrapRef<typeof import('vue')['getCurrentScope']>
+    readonly getFormData: UnwrapRef<typeof import('./core/request')['getFormData']>
+    readonly getHeaders: UnwrapRef<typeof import('./core/request')['getHeaders']>
     readonly getI18n: UnwrapRef<typeof import('./composables/i18n')['getI18n']>
     readonly getLocale: UnwrapRef<typeof import('./composables/locales')['getLocale']>
+    readonly getQueryString: UnwrapRef<typeof import('./core/request')['getQueryString']>
+    readonly getRequestBody: UnwrapRef<typeof import('./core/request')['getRequestBody']>
+    readonly getResponseBody: UnwrapRef<typeof import('./core/request')['getResponseBody']>
+    readonly getResponseHeader: UnwrapRef<typeof import('./core/request')['getResponseHeader']>
     readonly h: UnwrapRef<typeof import('vue')['h']>
+    readonly initFlashMessage: UnwrapRef<typeof import('./modules/flash-message')['initFlashMessage']>
+    readonly initialPage: UnwrapRef<typeof import('./modules/vue-query')['initialPage']>
     readonly inject: UnwrapRef<typeof import('vue')['inject']>
+    readonly installPinia: UnwrapRef<typeof import('./modules/pinia')['installPinia']>
+    readonly isBlob: UnwrapRef<typeof import('./core/request')['isBlob']>
     readonly isDark: UnwrapRef<typeof import('./composables/dark')['isDark']>
+    readonly isDefined: UnwrapRef<typeof import('./core/request')['isDefined']>
+    readonly isFormData: UnwrapRef<typeof import('./core/request')['isFormData']>
     readonly isProxy: UnwrapRef<typeof import('vue')['isProxy']>
     readonly isReactive: UnwrapRef<typeof import('vue')['isReactive']>
     readonly isReadonly: UnwrapRef<typeof import('vue')['isReadonly']>
     readonly isRef: UnwrapRef<typeof import('vue')['isRef']>
+    readonly isString: UnwrapRef<typeof import('./core/request')['isString']>
+    readonly isStringWithValue: UnwrapRef<typeof import('./core/request')['isStringWithValue']>
     readonly markRaw: UnwrapRef<typeof import('vue')['markRaw']>
     readonly nextTick: UnwrapRef<typeof import('vue')['nextTick']>
     readonly onActivated: UnwrapRef<typeof import('vue')['onActivated']>
@@ -269,6 +360,8 @@ declare module '@vue/runtime-core' {
     readonly onBeforeUpdate: UnwrapRef<typeof import('vue')['onBeforeUpdate']>
     readonly onDeactivated: UnwrapRef<typeof import('vue')['onDeactivated']>
     readonly onErrorCaptured: UnwrapRef<typeof import('vue')['onErrorCaptured']>
+    readonly onErrorClient: UnwrapRef<typeof import('./modules/error-client')['onErrorClient']>
+    readonly onErrorFlash: UnwrapRef<typeof import('./modules/flash-message')['onErrorFlash']>
     readonly onMounted: UnwrapRef<typeof import('vue')['onMounted']>
     readonly onRenderTracked: UnwrapRef<typeof import('vue')['onRenderTracked']>
     readonly onRenderTriggered: UnwrapRef<typeof import('vue')['onRenderTriggered']>
@@ -276,16 +369,21 @@ declare module '@vue/runtime-core' {
     readonly onServerPrefetch: UnwrapRef<typeof import('vue')['onServerPrefetch']>
     readonly onUnmounted: UnwrapRef<typeof import('vue')['onUnmounted']>
     readonly onUpdated: UnwrapRef<typeof import('vue')['onUpdated']>
-    readonly pageContext: UnwrapRef<typeof import('./composables/index')['pageContext']>
     readonly preferredDark: UnwrapRef<typeof import('./composables/dark')['preferredDark']>
     readonly provide: UnwrapRef<typeof import('vue')['provide']>
+    readonly provideFlashMessage: UnwrapRef<typeof import('./modules/flash-message')['provideFlashMessage']>
+    readonly provideLogger: UnwrapRef<typeof import('./modules/logger')['provideLogger']>
     readonly provideLuciaAuth: UnwrapRef<typeof import('./composables/auth-lucia')['provideLuciaAuth']>
     readonly provideNextAuth: UnwrapRef<typeof import('./composables/auth-authjs')['provideNextAuth']>
     readonly providePageContext: UnwrapRef<typeof import('./composables/pageContext')['providePageContext']>
+    readonly provideVueQuery: UnwrapRef<typeof import('./modules/vue-query')['provideVueQuery']>
     readonly reactive: UnwrapRef<typeof import('vue')['reactive']>
     readonly readonly: UnwrapRef<typeof import('vue')['readonly']>
     readonly ref: UnwrapRef<typeof import('vue')['ref']>
+    readonly request: UnwrapRef<typeof import('./core/request')['request']>
+    readonly resolve: UnwrapRef<typeof import('./core/request')['resolve']>
     readonly resolveComponent: UnwrapRef<typeof import('vue')['resolveComponent']>
+    readonly sendRequest: UnwrapRef<typeof import('./core/request')['sendRequest']>
     readonly shallowReactive: UnwrapRef<typeof import('vue')['shallowReactive']>
     readonly shallowReadonly: UnwrapRef<typeof import('vue')['shallowReadonly']>
     readonly shallowRef: UnwrapRef<typeof import('vue')['shallowRef']>
@@ -304,6 +402,7 @@ declare module '@vue/runtime-core' {
     readonly useCssModule: UnwrapRef<typeof import('vue')['useCssModule']>
     readonly useCssVars: UnwrapRef<typeof import('vue')['useCssVars']>
     readonly useFetch: UnwrapRef<typeof import('./composables/fetch')['useFetch']>
+    readonly useFlashMessage: UnwrapRef<typeof import('./modules/flash-message')['useFlashMessage']>
     readonly useGuard: UnwrapRef<typeof import('./composables/guard')['useGuard']>
     readonly useHead: UnwrapRef<typeof import('@vueuse/head')['useHead']>
     readonly useI18n: UnwrapRef<typeof import('./composables/i18n')['useI18n']>

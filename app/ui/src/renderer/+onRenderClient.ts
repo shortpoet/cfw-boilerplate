@@ -1,7 +1,6 @@
 // https://vike.dev/onRenderClient
 export { onRenderClient };
 
-import { provideVueQuery } from '../modules/vue-query';
 import { createApp } from './app';
 import type { OnRenderClientAsync } from 'vike/types';
 

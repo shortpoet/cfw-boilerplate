@@ -7,19 +7,28 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    404: typeof import('./layouts/404.vue')['default']
+    AdminLayout: typeof import('./layouts/AdminLayout.vue')['default']
     ApiViewer: typeof import('./components/base/ApiViewer.vue')['default']
     ApiViewerFetch: typeof import('./components/base/ApiViewerFetch.vue')['default']
+    AuthLayout: typeof import('./layouts/AuthLayout.vue')['default']
+    BlueLayout: typeof import('./layouts/BlueLayout.vue')['default']
     Counter: typeof import('./components/base/Counter.vue')['default']
     DropMenu: typeof import('./components/auth/DropMenu.vue')['default']
-    FlashMessage: typeof import('./components/base/FlashMessage.vue')['default']
+    FlashMessage: typeof import('./components/base/flash/FlashMessage.vue')['default']
+    FlashMsg: typeof import('./components/base/flash/FlashMsg.vue')['default']
     Footer: typeof import('./components/base/Footer.vue')['default']
+    Hydrate: typeof import('./layouts/Hydrate.vue')['default']
     JsonTree: typeof import('./components/base/JsonTree.vue')['default']
     Link: typeof import('./components/base/Link.vue')['default']
     Login: typeof import('./components/auth/Login.vue')['default']
     MainNav: typeof import('./components/base/MainNav.vue')['default']
+    PageShell: typeof import('./layouts/PageShell.vue')['default']
     Profile: typeof import('./components/auth/Profile.vue')['default']
+    SuspenseLayout: typeof import('./layouts/SuspenseLayout.vue')['default']
     TextInput: typeof import('./components/base/TextInput.vue')['default']
     TheCounter: typeof import('./components/base/TheCounter.vue')['default']
     TheInput: typeof import('./components/base/TheInput.vue')['default']
+    UserLayout: typeof import('./layouts/UserLayout.vue')['default']
   }
 }

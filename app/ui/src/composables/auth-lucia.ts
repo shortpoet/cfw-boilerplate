@@ -1,7 +1,4 @@
 import { LuciaAuthInstance, User, Session, LoginOptions } from '#/types';
-import { InjectionKey, ref, provide, inject } from 'vue';
-import { useFetch } from './fetch';
-import { useAuthStore } from '../stores';
 import { storeToRefs } from 'pinia';
 
 export {

@@ -1,14 +1,14 @@
 import { createSSRApp, defineComponent, h } from 'vue';
 import { Component, PageContext, PageProps, Page } from '#/types';
+import { StoreState } from 'pinia';
+import { createHead } from '@vueuse/head';
+import { VueQueryPlugin } from '@tanstack/vue-query';
+
 import '@unocss/reset/tailwind.css';
 import 'uno.css';
 import '../styles/main.css';
-import { StoreState } from 'pinia';
+import { UiState } from '#/types';
 import { PageShell } from '../layouts';
-import { UiState } from '../stores';
-import { createHead } from '@vueuse/head';
-import { VueQueryPlugin } from '@tanstack/vue-query';
-import { provideFlashMessage, install as installPinia, provideLogger } from '../modules';
 
 export { createApp, isClient, defaultWindow, getInitialStateUi };
 const isClient = typeof window !== 'undefined';
@@ -48,9 +48,10 @@ function createApp(Page: Page, pageProps: PageProps | undefined, pageContext: Pa
     }),
     created() {
       rootComponent = this;
-      // provideNextAuth();
+      // needing window defined
       provideLuciaAuth();
       provideLogger(import.meta.env as unknown as EnvVars);
+      // provideNextAuth();
     },
     render() {
       // @ts-expect-error
@@ -81,21 +82,12 @@ function createApp(Page: Page, pageProps: PageProps | undefined, pageContext: Pa
   });
 
   const app = createSSRApp(PageWithWrapper);
-  installPinia(app, isClient, getInitialStateUi());
+  app.config.errorHandler = onErrorClient;
+
   app.use(createHead());
+  installPinia(app, isClient, getInitialStateUi());
   app.use(VueQueryPlugin);
   provideFlashMessage(app);
-
-  app.config.errorHandler = (err, instance, info) => {
-    // handle error, e.g. report to a service
-    console.log('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
-    console.log(`[ui] [app] [errorHandler] err:`);
-    console.log(err);
-    console.log(`[ui] [app] [errorHandler] instance:`);
-    console.log(instance);
-    console.log(`[ui] [app] [errorHandler] info:`);
-    console.log(info);
-  };
 
   // We use `app.changePage()` to do Client Routing, see `_default.page.client.js`
   objectAssign(app, {

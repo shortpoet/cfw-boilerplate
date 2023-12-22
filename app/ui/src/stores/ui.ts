@@ -1,23 +1,16 @@
-import { acceptHMRUpdate, defineStore } from "pinia";
-import { ComputedRef, Ref, computed, ref } from "vue";
-
-export interface UiState {
-  alaCartePath: Ref<string>;
-  otherPaths: ComputedRef<string[]>;
-  setNewPath: (name: string) => void;
-}
+import { acceptHMRUpdate, defineStore } from 'pinia';
 
 // export const useUiStore = defineStore<string, UiState>("ui", () => {
 export const useUiStore = defineStore(
-  "ui",
+  'ui',
   () => {
-    if (import.meta.env.VITE_LOG_LEVEL === "debug") {
-      console.log("creating ui store");
+    if (import.meta.env.VITE_LOG_LEVEL === 'debug') {
+      console.log('creating ui store');
     }
     /**
      * Current value of selected a la carte URI
      */
-    const alaCartePath = ref("");
+    const alaCartePath = ref('');
     const previousPaths = ref(new Set<string>());
 
     const usedPaths = computed(() => Array.from(previousPaths.value));
@@ -36,8 +29,8 @@ export const useUiStore = defineStore(
 
       alaCartePath.value = name;
     }
-    if (import.meta.env.VITE_LOG_LEVEL === "debug") {
-      console.log("user store created");
+    if (import.meta.env.VITE_LOG_LEVEL === 'debug') {
+      console.log('user store created');
     }
     return {
       setNewPath,
@@ -53,5 +46,4 @@ export const useUiStore = defineStore(
 // https://github.com/vuejs/pinia/issues/690
 // https://www.reddit.com/r/vuejs/comments/snh25a/cryptic_error_with_pinia_vue_3_typescript/
 // https://stackoverflow.com/questions/70681667/cant-use-vue-router-and-pinia-inside-a-single-store
-if (import.meta.hot)
-  import.meta.hot.accept(acceptHMRUpdate(useUiStore, import.meta.hot));
+if (import.meta.hot) import.meta.hot.accept(acceptHMRUpdate(useUiStore, import.meta.hot));

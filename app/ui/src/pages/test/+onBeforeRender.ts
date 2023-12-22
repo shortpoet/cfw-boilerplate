@@ -2,6 +2,7 @@
 export { onBeforeRender };
 
 import type { OnBeforeRenderAsync } from 'vike/types';
+
 import { Todo, getTodos } from './todos';
 
 const onBeforeRender: OnBeforeRenderAsync = async (

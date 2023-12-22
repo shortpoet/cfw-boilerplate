@@ -1,6 +1,5 @@
 import { LogLevel } from '#/types';
 import { getCorrelationId, getLogger, X_CORRELATION_ID } from '#/utils/logger/logger';
-import { LoggerSymbol } from '../modules/logger';
 
 export { X_CORRELATION_ID, useLogger, useSsrLogger };
 

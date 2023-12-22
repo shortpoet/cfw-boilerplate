@@ -3,8 +3,8 @@ export { onBeforeRender };
 
 import type { OnBeforeRenderAsync } from 'vike/types';
 import { QueryClient, dehydrate } from '@tanstack/vue-query';
+
 import { UserRole } from '#/types';
-import { TasksService } from '../../../services/TasksService';
 // import { getTaskList } from '../taskList';
 
 const onBeforeRender: OnBeforeRenderAsync = async (

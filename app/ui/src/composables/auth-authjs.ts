@@ -1,18 +1,5 @@
-import {
-  BaseUser,
-  NextAuthInstance,
-  Session,
-  SetSessionResult,
-  User,
-  isCredentialsUser,
-  isEmailUser,
-  isGithubUser,
-  User,
-  Session,
-} from '#/types';
+import { NextAuthInstance, Session, User } from '#/types';
 import { InjectionKey, ref, provide, inject } from 'vue';
-import { useFetch } from './fetch';
-import { useAuthStore } from '../stores';
 import { storeToRefs } from 'pinia';
 
 export {
@@ -50,9 +37,6 @@ export const provideNextAuth = () => {
     onLoad,
     logout,
     setSession,
-    isGithubUser,
-    isEmailUser,
-    isCredentialsUser,
   };
 
   provide(AuthSymbol, auth);

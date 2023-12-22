@@ -18,7 +18,7 @@ export const InitialStateSymbol: InjectionKey<StoreState<any>> = Symbol();
 //   return pinia as StoreState<any>;
 // };
 
-export const install = (app: App, isClient: boolean, initialState: StoreState<any>) => {
+export const installPinia = (app: App, isClient: boolean, initialState: StoreState<any>) => {
   // console.log("installing pinia");
   const pinia = createPinia();
   pinia.use(
@@ -29,7 +29,7 @@ export const install = (app: App, isClient: boolean, initialState: StoreState<an
       afterRestore: (ctx) => {
         console.log(`[ui] [pinia.use.createPersistedState] afterRestore`);
         // console.log(ctx);
-      }
+      },
     })
   );
   // console.log("pinia created");

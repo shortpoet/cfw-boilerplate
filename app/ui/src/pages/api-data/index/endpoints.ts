@@ -1,6 +1,6 @@
-import { RequestConfig, useFetch } from '../../../composables';
-
 export { getEndpoints, Endpoint, PATH_MAPPING };
+
+import { RequestConfig } from '#/types';
 
 type DiscoveryEndpoint = {
   text: string;

@@ -2,9 +2,10 @@
 export { onBeforeRender };
 
 import type { OnBeforeRenderAsync } from 'vike/types';
+import { QueryClient, dehydrate } from '@tanstack/vue-query';
+
 import { UserRole } from '#/types';
 import { Endpoint, PATH_MAPPING, getEndpoints } from './endpoints';
-import { QueryClient, dehydrate } from '@tanstack/vue-query';
 
 const onBeforeRender: OnBeforeRenderAsync = async (
   pageContext

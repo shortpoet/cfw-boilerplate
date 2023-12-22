@@ -3,10 +3,10 @@ export { onBeforeRender };
 
 import type { OnBeforeRenderAsync, PageContextBuiltInServer } from 'vike/types';
 import { render, redirect } from 'vike/abort';
-import { UserRole } from '#/types';
-import { RequestConfig, useFetch } from '../../../composables';
-import { PATH_MAPPING } from '../index/endpoints';
 import { QueryClient, dehydrate } from '@tanstack/vue-query';
+
+import { UserRole, RequestConfig } from '#/types';
+import { PATH_MAPPING } from '../index/endpoints';
 
 const onBeforeRender: OnBeforeRenderAsync = async (
   pageContext

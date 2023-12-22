@@ -1,16 +1,15 @@
 // https://vike.dev/onRenderHtml
 export { onRenderHtml };
-import { renderToString as renderToString_ } from '@vue/server-renderer';
-import type { App } from 'vue';
 
+import type { App } from 'vue';
+import { renderToString as renderToString_ } from '@vue/server-renderer';
 import { pipeToWebWritable, pipeToNodeWritable } from '@vue/server-renderer';
 import { createHead, renderHeadToString } from '@vueuse/head';
-
 import { dangerouslySkipEscape, escapeInject, stampPipe } from 'vike/server';
-import { createApp, getInitialStateUi } from './app';
 import type { OnRenderHtmlAsync } from 'vike/types';
 import type { Writable } from 'stream';
-import { VUE_QUERY_STATE, provideVueQuery } from '../modules/vue-query';
+
+import { createApp, getInitialStateUi } from './app';
 
 const onRenderHtml: OnRenderHtmlAsync = async (pageContext): ReturnType<OnRenderHtmlAsync> => {
   const { session, cf, callbackUrl, csrfToken, isAdmin, Page, pageProps, redirectTo } = pageContext;

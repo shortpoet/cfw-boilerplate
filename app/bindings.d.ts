@@ -28,7 +28,7 @@ import type {
   UserType,
 } from './types';
 import { Database } from './api/db';
-import { UiState } from '#/ui/src/stores';
+import { UiState } from '#/types/ui/src/stores';
 
 type Mutable<T> = {
   -readonly [K in keyof T]-?: T[K];
