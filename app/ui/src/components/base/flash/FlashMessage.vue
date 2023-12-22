@@ -1,5 +1,6 @@
 <template>
-  <FlashMsg :flashMessage="$flashMessage" />
+  <!-- <FlashMsg :flashMessage="$flashMessage" /> -->
+  <Flash :flashMessage="$flashMessage" />
 </template>
 
 <script setup lang="ts">

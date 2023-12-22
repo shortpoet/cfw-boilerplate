@@ -39,20 +39,31 @@ export const useFlashMessage = (options?: Partial<FlashMessage>) => {
   return $flashMessage
 }
 
-export const onErrorFlash = (title: string, text: string, duration = 999999 /* 16 mins */) => {
-  console.log(`[ui] onErrorFlash: ${title} - ${text}`)
-  const error = ref(false)
+const assertNonEmptyString = (value: unknown) => typeof value !== 'string' || !value
+
+export const onErrorFlash = ({
+  title,
+  text,
+  duration = 999999 /* 16 mins */
+}: {
+  title: string
+  text: string
+  duration?: number
+}) => {
+  console.log(`[ui] onErrorFlash: ${title} - ${text} - ${duration}`)
+  const error = { value: false }
   console.log(`[ui] onErrorFlash: ${error.value}`)
   const $flashMessage = useFlashMessage({ title, text, duration })
+
   onErrorCaptured((callback) => {
-    const errText = typeof callback === 'string' ? callback : text
+    const errText = typeof callback === 'string' && !!callback ? callback : text
     $flashMessage.title = title
     $flashMessage.text = errText
     error.value = true
     $flashMessage.duration = duration
     $flashMessage.show = true
     $flashMessage.modifiers = ['error']
-    console.error(callback)
+    console.error(errText)
     return false
   })
 }

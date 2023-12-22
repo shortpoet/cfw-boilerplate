@@ -8,9 +8,7 @@
         <Suspense>
           <template v-if="loading">
             <div flex flex-col class="items-center justify-center p-5">
-              <h1
-                class="block whitespace-pre-line bg-orange-300 p-5 rounded-xl text-center text-4xl font-bold"
-              >
+              <h1 class="block whitespace-pre-line bg-orange-300 p-5 rounded-xl text-center text-4xl font-bold">
                 {{ `\nLoading ...` }}
               </h1>
               <slot name="fallback" />
@@ -56,9 +54,5 @@ const loading = ref(true)
 onMounted(async () => {
   loading.value = false
 })
-// const message = 'There was an error fetching the API data.'
-// const duration = 5000;
-// onErrorFlash(message);
-const errorTitle = 'Fetch Error'
-onErrorFlash(errorTitle, 'There was an error fetching the API data.', 15)
+onErrorFlash({ title: 'Fetch Error', text: 'There was an error fetching the API data.', duration: 5000 })
 </script>

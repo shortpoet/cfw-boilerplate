@@ -1,11 +1,6 @@
 <template>
   <div class="page-container">
-    <ApiViewerFetch
-      :title="title"
-      :data="apiData"
-      :loading="apiDataLoading"
-      :error="apiDataError"
-    />
+    <ApiViewerFetch :title="title" :data="apiData" :loading="apiDataLoading" :error="apiDataError" />
   </div>
 </template>
 
@@ -38,6 +33,6 @@ const props = defineProps({
 
 const { apiDataError } = props
 if (apiDataError) {
-  throw 'There was an error fetching the API data.'
+  throw 'This will trigger the upstream error boundary.'
 }
 </script>
