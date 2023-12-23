@@ -41,12 +41,22 @@ export class TaskList extends OpenAPIRoute {
     // You can access limit, cursor, and indexKey from listOptions
     const { limit, cursor, indexKey } = listOptions
 
+    console.log(
+      `[api] [task-list] [handle] page: ${page}, limit: ${limit}, cursor: ${cursor}, indexKey: ${indexKey}`
+    )
+
     // Assuming you have some data source to fetch tasks
 
     // Implement pagination logic
     let startIndex = (page - 1) * (limit || 10) // Default limit to 10 if not specified
     // let startIndex = 0;
-    const endIndex = startIndex + (limit || 10) // Adjust limit if provided
+    let endIndex = startIndex + (limit || 10) // Adjust limit if provided
+
+    if (limit === 0) {
+      // If limit is set to 0, retrieve all data without limit
+      startIndex = 0
+      endIndex = allTasks.length
+    }
 
     // Implement pagination logic using cursor and indexKey
     if (cursor && indexKey) {

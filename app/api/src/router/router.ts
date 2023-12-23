@@ -1,9 +1,9 @@
-import { RequestLike, IRequest, error, createCors } from 'itty-router';
-import { ExecutionContext } from '@cloudflare/workers-types';
-import { ServerResponse } from 'http';
-import { OpenAPIRouter } from '@cloudflare/itty-router-openapi';
+import { RequestLike, IRequest, error, createCors } from 'itty-router'
+import { ExecutionContext } from '@cloudflare/workers-types'
+import { ServerResponse } from 'http'
+import { OpenAPIRouter } from '@cloudflare/itty-router-openapi'
 
-import sampleData from '##/db/data.json';
+import sampleData from '##/db/data.json'
 // const sampleData = {
 //   hello: 'world',
 // };
@@ -15,17 +15,18 @@ import {
   jsonData,
   withPino,
   withQueryParams,
+  withListOptions
   // withUser,
-} from '../middleware';
+} from '../middleware'
 
-import { auth_dbv1_router } from '#/api/src/router';
-import { health_router } from '#/api/src/router';
-import { task_router } from '#/api/src/router';
-import { auth_router } from '#/api/src/router';
-import withCookies from '../middleware/cookie';
+import { auth_dbv1_router } from '#/api/src/router'
+import { health_router } from '#/api/src/router'
+import { task_router } from '#/api/src/router'
+import { auth_router } from '#/api/src/router'
+import withCookies from '../middleware/cookie'
 // import { createCors } from '../middleware/createCors';
 
-const FILE_LOG_LEVEL = 'debug';
+const FILE_LOG_LEVEL = 'debug'
 
 const { preflight, corsify } = createCors({
   origins: [
@@ -34,52 +35,52 @@ const { preflight, corsify } = createCors({
     'http://localhost:3000',
     'http://localhost:3333',
     'https://cfw-boilerplate.pages.dev',
-    'https://github.com',
+    'https://github.com'
   ],
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   headers: {
     'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, authorization',
-    'Access-Control-Allow-Credentials': 'true',
-  },
-});
+    'Access-Control-Allow-Credentials': 'true'
+  }
+})
 
-export { corsify, router };
+export { corsify, router }
 
-type CF = [env: Env, context: ExecutionContext];
+type CF = [env: Env, context: ExecutionContext]
 
 const router = OpenAPIRouter<IRequest, CF>({
   schema: {
     info: {
       title: 'CFW Vue AI API',
-      version: '1.0',
-    },
+      version: '1.0'
+    }
   },
   base: '/api',
   docs_url: '/docs',
-  openapi_url: '/openapi.json',
-});
+  openapi_url: '/openapi.json'
+})
 
 const protectedRoutes = {
-  '/api/health/debug': { route: '/api/health/debug', isAdmin: true },
-};
+  '/api/health/debug': { route: '/api/health/debug', isAdmin: true }
+}
 const todos = Array.from({ length: 8 }, (_, i) => i + 1).map((id) => ({
   id,
-  title: `Todo #${id}`,
-}));
+  title: `Todo #${id}`
+}))
 
 // GET collection index
 router
   .all('*', preflight)
   .all('*', withPino({ level: FILE_LOG_LEVEL }), withCfHeaders())
-  .all('*', withQueryParams(), withCookies(), withSession())
+  .all('*', withQueryParams(), withListOptions(), withCookies(), withSession())
   .all('/auth/*', auth_router)
   .all('/task/*', task_router)
   .all('/db-v1/*', auth_dbv1_router)
   .all('/health/*', health_router)
   .get('/json-data', (req: IRequest, res: Response, env: Env, ctx: ExecutionContext) => {
-    console.log(`[api] /json-data -> ${req.method} -> ${req.url} -> req`);
-    console.log(sampleData);
-    return jsonData(req, res, env, sampleData);
+    console.log(`[api] /json-data -> ${req.method} -> ${req.url} -> req`)
+    console.log(sampleData)
+    return jsonData(req, res, env, sampleData)
   })
   .get(
     '/hello',
@@ -89,20 +90,20 @@ router
       res.cookie(req, res, env, 'hello', 'world', {
         httpOnly: false,
         secure: env.NODE_ENV === 'production',
-        sameSite: 'lax',
-      });
-      res.headers.set('x-hello', 'world');
+        sameSite: 'lax'
+      })
+      res.headers.set('x-hello', 'world')
       // added path `/api` to cookie in firefox
       // also 'session' to max-age
-      res.headers.set('Set-Cookie', 'hello=world; SameSite=Lax');
-      return jsonData(req, res, env, { hello: 'world' });
+      res.headers.set('Set-Cookie', 'hello=world; SameSite=Lax')
+      return jsonData(req, res, env, { hello: 'world' })
     }
   )
   .get('/todos', (req: IRequest, res: Response, env: Env, ctx: ExecutionContext) => {
-    return jsonData(req, res, env, todos);
+    return jsonData(req, res, env, todos)
   })
   // .all("*", error_handler)
-  .all('*', () => error(404, 'Oops... Are you sure about that? FAaFO'));
+  .all('*', () => error(404, 'Oops... Are you sure about that? FAaFO'))
 
 const Api = {
   handle: ({
@@ -110,22 +111,22 @@ const Api = {
     res,
     env,
     ctx,
-    data,
+    data
   }: {
-    req: Request;
-    res: Response | ServerResponse;
-    env: Env;
-    ctx: ExecutionContext;
-    data?: Record<string, any>;
+    req: Request
+    res: Response | ServerResponse
+    env: Env
+    ctx: ExecutionContext
+    data?: Record<string, any>
   }) => {
-    let out;
+    let out
     if (data) {
-      out = router.handle(req, res, env, ctx, data).catch(error).then(corsify);
+      out = router.handle(req, res, env, ctx, data).catch(error).then(corsify)
     } else {
-      out = router.handle(req, res, env, ctx).catch(error).then(corsify);
+      out = router.handle(req, res, env, ctx).catch(error).then(corsify)
     }
-    return out;
-  },
-};
+    return out
+  }
+}
 
-export default Api;
+export default Api

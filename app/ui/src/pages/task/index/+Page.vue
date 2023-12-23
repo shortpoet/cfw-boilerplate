@@ -1,18 +1,8 @@
 <template>
-  <div v-if="isPending" class="update">Loading...</div>
-  <div v-else-if="isError">An error has occurred: {{ error }}</div>
-  <div v-else-if="data">
-    <nav>
-      <div v-for="task in data.tasks" :key="task.name">
-        <Link :href="`${task.name}`"> {{ task.name }} </Link>
-      </div>
-    </nav>
-    <br>
-    <button @click="refetch()">
-      Refetch
-    </button>
-    <br>
-    <div v-if="isFetching" class="update">Background Updating...</div>
+  <div>
+    <ListViewer :isPending="isPending" :isError="isError" :isFetching="isFetching" :items="items" :error="error"
+      :refetch="refetch">
+    </ListViewer>
   </div>
 </template>
 
@@ -27,9 +17,14 @@
 import { useQuery } from '@tanstack/vue-query'
 import { TaskListResponse } from '../../../models/TaskListResponse'
 import { TasksService } from '../../../services/TasksService'
+import ListViewer, { ListItems, ListItem } from '#/ui/src/components/base/ListViewer.vue';
 
-const { page } = defineProps({
+const { page, limit } = defineProps({
   page: {
+    type: Number,
+    required: true,
+  },
+  limit: {
     type: Number,
     required: true,
   },
@@ -40,7 +35,34 @@ const query = useQuery<TaskListResponse>({
   // queryFn: () => getTaskList(page),
   queryFn: ({ queryKey }) => TasksService.getTaskList({ page: queryKey[1] as number }),
 });
+// @ts-ignore
 const { isPending, isError, isFetching, data, error, refetch, suspense } = query
-await suspense()
+let items: Ref<ListItems<ListItem>> = ref([]) as unknown as Ref<ListItems<ListItem>>
+// await suspense()
+// onServerPrefetch(suspense)
+
+if (data.value) {
+  const length = data.value?.tasks.length
+  console.log(data.value)
+  console.log(length)
+
+  const pages = Math.ceil(length / limit === 0 ? 1 : limit)
+  console.log('pages', pages)
+  items.value.items = Array.from({ length: pages }, (_, i) => {
+    return {
+      id: i + 1,
+    }
+  })
+  console.log(items.value.items)
+
+  // items.value.items = data.value?.tasks.map((task) => {
+  //   return {
+  //     id: task.name,
+  //   }
+  // })
+}
+if (isError.value) {
+  console.log(error.value)
+}
 
 </script>

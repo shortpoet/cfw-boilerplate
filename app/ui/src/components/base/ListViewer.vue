@@ -31,14 +31,14 @@ defineProps<{
 import { PropType } from 'vue';
 
 export type ListItem = {
-  id: string;
+  id: string | number;
 };
 
 export type ListItems<T extends ListItem> = {
   items: T[];
 };
 
-defineProps({
+const props = defineProps({
   isPending: {
     type: Boolean,
     required: true,
@@ -66,4 +66,15 @@ defineProps({
     required: true,
   },
 })
+console.log(`[ListViewer] LOAD`)
+console.log(props.items)
+console.log('is error', props.isError)
+console.log('is pending', props.isPending)
+console.log('is fetching', props.isFetching)
+console.log('error', props.error)
+console.log('refetch', props.refetch)
+if (props.isError) {
+  throw 'This will trigger the upstream error boundary.'
+}
+
 </script>

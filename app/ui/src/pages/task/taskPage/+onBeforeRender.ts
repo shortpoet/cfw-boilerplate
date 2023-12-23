@@ -11,7 +11,7 @@ const onBeforeRender: OnBeforeRenderAsync = async (
 ): ReturnType<OnBeforeRenderAsync> => {
   const user = pageContext.session?.user
   const { urlPathname, csrfToken, sessionToken, callbackUrl } = pageContext
-  console.log(`[ui] [task] [index] [onBeforeRender] urlPathname: ${urlPathname}`)
+  console.log(`[ui] [task] [taskPage] [onBeforeRender] urlPathname: ${urlPathname}`)
   const queryClient = new QueryClient({
     // defaultOptions: { queries: { staleTime: 50000 } }
   })

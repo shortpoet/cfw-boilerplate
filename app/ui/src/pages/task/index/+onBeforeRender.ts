@@ -19,20 +19,26 @@ const onBeforeRender: OnBeforeRenderAsync = async (
   const { routeParams } = pageContext
 
   const page = parseInt(routeParams.taskPage) || 8
+  const limit = 0
+  let vueQueryState
 
-  console.log(`[ui] [task] [index] [onBeforeRender] prequery:`)
-  await queryClient.prefetchQuery({
-    queryKey: ['result', page],
-    // queryFn: () => getTaskList(page),
-    queryFn: ({ queryKey }) => TasksService.getTaskList({ page: queryKey[1] as number })
-  })
-  const vueQueryState = dehydrate(queryClient)
+  console.log(`[ui] [task] [index] [onBeforeRender] prequery: page: ${page}, limit: ${limit}`)
+  try {
+    await queryClient.prefetchQuery({
+      queryKey: ['result', page, limit],
+      // queryFn: () => getTaskList(page),
+      queryFn: ({ queryKey }) =>
+        TasksService.getTaskList({ page: queryKey[1] as number, limit: queryKey[2] as number })
+    })
+    vueQueryState = dehydrate(queryClient)
+  } catch (error) {}
 
   return {
     pageContext: {
       pageProps: {
         isAdmin: user?.roles.includes(UserRole.Admin) || false,
         vueQueryState,
+        limit,
         page
       },
       title: 'API Data'

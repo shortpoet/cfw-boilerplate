@@ -1,7 +1,10 @@
 <template>
-  <ListViewer :isPending="isPending" :isError="isError" :isFetching="isFetching" :items="items" :error="error"
+  <div>
+    TEST
+  </div>
+  <!-- <ListViewer :isPending="isPending" :isError="isError" :isFetching="isFetching" :items="items" :error="error"
     :refetch="refetch">
-  </ListViewer>
+  </ListViewer> -->
 </template>
 
 <style scoped>
@@ -15,6 +18,7 @@
 import { useQuery } from '@tanstack/vue-query'
 import { TaskListResponse } from '../../../models/TaskListResponse'
 import { TasksService } from '../../../services/TasksService'
+// @ts-ignore
 import ListViewer, { ListItems, ListItem } from '#/ui/src/components/base/ListViewer.vue';
 
 const { page } = defineProps({
@@ -29,9 +33,12 @@ const query = useQuery<TaskListResponse>({
   // queryFn: () => getTaskList(page),
   queryFn: ({ queryKey }) => TasksService.getTaskList({ page: queryKey[1] as number }),
 });
+// @ts-ignore
 const { isPending, isError, isFetching, data, error, refetch, suspense } = query
 let items: Ref<ListItems<ListItem>> = ref([]) as unknown as Ref<ListItems<ListItem>>
 // await suspense()
+onServerPrefetch(suspense)
+
 if (data.value) {
   items.value.items = data.value?.tasks.map((task) => {
     return {

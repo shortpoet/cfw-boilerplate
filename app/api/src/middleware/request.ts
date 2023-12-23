@@ -1,50 +1,52 @@
-import { badResponse } from './response';
-import { ListOptions } from '#/types';
+import { badResponse } from './response'
+import { ListOptions } from '#/types'
 
-const FILE_LOG_LEVEL = 'debug';
+const FILE_LOG_LEVEL = 'debug'
 
 const fromEntries = (ent: [string, string][]) =>
-  ent.reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {});
+  ent.reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {})
 
 export const withQueryParams = () => async (req: Request, env: Env) => {
-  const url = new URL(req.url);
-  req.query = Object.fromEntries(url.searchParams);
+  const url = new URL(req.url)
+  req.query = Object.fromEntries(url.searchParams)
   // req.query = fromEntries([...url.searchParams.entries()]);
-  req.logger.info(`[api] [middlware] [withQueryParams] ->`);
-  req.logger.info(req.query);
-};
+  req.logger.info(`[api] [middlware] [withQueryParams] ->`)
+  req.logger.info(req.query)
+}
 
-export const withListOptions = (req: Request) => {
-  const { query } = req;
+export const withListOptions = () => async (req: Request) => {
+  req.logger.info(`[api] [middlware] [withListOptions] ->`)
+  const { query } = req
+  req.logger.info(query)
   if (!query) {
-    return;
+    return
   }
-  const { limit, cursor, indexKey } = query;
+  const { limit, cursor, indexKey } = query
 
-  const listOptions = {} as ListOptions;
+  const listOptions = {} as ListOptions
   if (limit) {
-    const limitAsNumber = Number(limit);
+    const limitAsNumber = Number(limit)
 
     if (limitAsNumber !== limitAsNumber) {
-      return badResponse('', new Error('[limit] query must be a number.'));
+      return badResponse('', new Error('[limit] query must be a number.'))
     }
 
     if (limitAsNumber > 1000 || limitAsNumber < 1) {
-      return badResponse('', new Error('[limit] query must be between 1 and 1000.'));
+      return badResponse('', new Error('[limit] query must be between 1 and 1000.'))
     }
 
-    listOptions.limit = limitAsNumber;
+    listOptions.limit = limitAsNumber
   }
 
   if (cursor) {
-    listOptions.cursor = cursor;
+    listOptions.cursor = cursor
   }
   if (indexKey) {
-    listOptions.indexKey = indexKey;
+    listOptions.indexKey = indexKey
   }
-
-  req.listOptions = listOptions;
-};
+  req.logger.info(listOptions)
+  req.listOptions = listOptions
+}
 
 export const withCfSummary =
   ({ level = 'basic' } = {}) =>
@@ -63,22 +65,22 @@ export const withCfSummary =
           asOrganization: req.cf.asOrganization,
           postalCode: req.cf.postalCode,
           metroCode: req.cf.metroCode,
-          botManagement: req.cf.botManagement,
+          botManagement: req.cf.botManagement
         }
-      : {};
-  };
+      : {}
+  }
 export const withCfHeaders =
   ({ level = 'basic' } = {}) =>
   async (req: Request, res: Response, env: Env) => {
-    const { cf } = req;
+    const { cf } = req
     if (cf) {
-      const { colo, clientTcpRtt } = cf;
+      const { colo, clientTcpRtt } = cf
       if (clientTcpRtt) {
-        res.headers.set('x-client-tcp-rtt', clientTcpRtt.toString());
+        res.headers.set('x-client-tcp-rtt', clientTcpRtt.toString())
       }
       if (colo) {
-        res.headers.set('x-colo', colo.toString());
+        res.headers.set('x-colo', colo.toString())
       }
     }
-    res.headers.set('x-api-env', env.NODE_ENV);
-  };
+    res.headers.set('x-api-env', env.NODE_ENV)
+  }
