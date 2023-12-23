@@ -122,11 +122,29 @@
           },
           {
             "schema": {
+              "type": "integer",
+              "description": "Number of items per page"
+            },
+            "required": true,
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
               "type": "boolean",
               "description": "Filter by completed flag"
             },
             "required": false,
             "name": "isCompleted",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "Cursor for pagination"
+            },
+            "required": false,
+            "name": "cursor",
             "in": "query"
           }
         ],
