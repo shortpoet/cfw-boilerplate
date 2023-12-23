@@ -21,6 +21,7 @@ declare module 'vue' {
     Hydrate: typeof import('./layouts/Hydrate.vue')['default']
     JsonTree: typeof import('./components/base/JsonTree.vue')['default']
     Link: typeof import('./components/base/Link.vue')['default']
+    ListViewer: typeof import('./components/base/ListViewer.vue')['default']
     Login: typeof import('./components/auth/Login.vue')['default']
     MainNav: typeof import('./components/base/MainNav.vue')['default']
     PageShell: typeof import('./layouts/PageShell.vue')['default']

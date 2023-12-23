@@ -4,23 +4,6 @@ import { GetTaskSchema } from '../task-oa'
 import { taskFaker } from './task-faker'
 import { TaskComponentType } from '../task-oa'
 
-const allTasks: TaskComponentType[] = [
-  {
-    name: 'Clean my room',
-    slug: 'clean-room',
-    description: undefined,
-    completed: false,
-    due_date: '2025-01-05'
-  },
-  {
-    name: 'Build something awesome with Cloudflare Workers',
-    slug: 'cloudflare-workers',
-    description: 'Lorem Ipsum',
-    completed: true,
-    due_date: '2022-12-24'
-  },
-  ...taskFaker(134)
-]
 export class TaskList extends OpenAPIRoute {
   static schema = GetTaskSchema
 
@@ -31,6 +14,24 @@ export class TaskList extends OpenAPIRoute {
     ctx: ExecutionContext,
     data: Record<string, any>
   ) {
+    const allTasks: TaskComponentType[] = [
+      {
+        name: 'Clean my room',
+        slug: 'clean-room',
+        description: undefined,
+        completed: false,
+        due_date: '2025-01-05'
+      },
+      {
+        name: 'Build something awesome with Cloudflare Workers',
+        slug: 'cloudflare-workers',
+        description: 'Lorem Ipsum',
+        completed: true,
+        due_date: '2022-12-24'
+      },
+      ...taskFaker(134)
+    ]
+
     // Retrieve the validated parameters
     const { page, isCompleted } = data.query
 
@@ -62,12 +63,14 @@ export class TaskList extends OpenAPIRoute {
     // Slice the dataset based on the calculated start and end indexes
     const paginatedTasks = allTasks.slice(startIndex, endIndex)
     // Return paginated tasks along with other metadata
-    return {
+    const out = {
       success: true,
       page,
       isCompleted,
       tasks: paginatedTasks
       // Optionally, you can include metadata like next/previous page links, total count, etc.
     }
+    console.log(`[api] [task-list] [handle] out:`, out)
+    return out
   }
 }

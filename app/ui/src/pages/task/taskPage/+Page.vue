@@ -1,23 +1,7 @@
 <template>
-  <div v-if="isPending" class="update">Loading...</div>
-  <div v-else-if="isError">An error has occurred: {{ error }}</div>
-  <div v-else-if="data">
-    <ul>
-      <li v-for="task in data.tasks" :key="task.name">
-        <div>name: {{ task.name }}</div>
-        <div>desc: {{ task.description }}</div>
-        <div>completed: {{ task.completed }}</div>
-        <div>due date: {{ task.due_date }}</div>
-        <div>slug: {{ task.slug }}</div>
-      </li>
-    </ul>
-    <br>
-    <button @click="refetch()">
-      Refetch
-    </button>
-    <br>
-    <div v-if="isFetching" class="update">Background Updating...</div>
-  </div>
+  <ListViewer :isPending="isPending" :isError="isError" :isFetching="isFetching" :items="items" :error="error"
+    :refetch="refetch">
+  </ListViewer>
 </template>
 
 <style scoped>
@@ -31,6 +15,7 @@
 import { useQuery } from '@tanstack/vue-query'
 import { TaskListResponse } from '../../../models/TaskListResponse'
 import { TasksService } from '../../../services/TasksService'
+import ListViewer, { ListItems, ListItem } from '#/ui/src/components/base/ListViewer.vue';
 
 const { page } = defineProps({
   page: {
@@ -45,6 +30,14 @@ const query = useQuery<TaskListResponse>({
   queryFn: ({ queryKey }) => TasksService.getTaskList({ page: queryKey[1] as number }),
 });
 const { isPending, isError, isFetching, data, error, refetch, suspense } = query
+let items: Ref<ListItems<ListItem>> = ref([]) as unknown as Ref<ListItems<ListItem>>
 await suspense()
+if (data.value) {
+  items.value.items = data.value?.tasks.map((task) => {
+    return {
+      id: task.name,
+    }
+  })
+}
 
 </script>
