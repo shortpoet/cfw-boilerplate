@@ -77,10 +77,8 @@ export const onErrorFlash = ({
   duration?: number
   icon?: string
 }) => {
-  // console.log(`[ui] onErrorFlash: ${title} - ${text} - ${duration}`)
-  // console.log(`[ui] onErrorFlash: ${error.value}`)
-  const $flashMessage = useFlashMessage({ title, duration, icon, modifiers: ['error'] })
   onErrorCaptured((callback) => {
+    const $flashMessage = useFlashMessage({ title, duration, icon, modifiers: ['error'] })
     const errText =
       typeof callback === 'string' && !!callback
         ? callback

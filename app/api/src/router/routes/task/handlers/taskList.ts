@@ -80,7 +80,11 @@ export class TaskList extends OpenAPIRoute {
       tasks: paginatedTasks
       // Optionally, you can include metadata like next/previous page links, total count, etc.
     }
-    console.log(`[api] [task-list] [handle] out:`, out)
+    console.log(
+      `\n^^^^^^^^\n[api] [task-list] [handle] out count:\n^^^^^^^^\n`,
+      out.tasks.length,
+      '\n^^^^^^^^\n'
+    )
     return {
       success: true,
       page,

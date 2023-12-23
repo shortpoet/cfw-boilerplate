@@ -42,7 +42,8 @@ const query = useQuery<TaskListResponse, ApiError>({
   queryKey: ['result', page, limit],
   // queryFn: () => getTaskList(page),
   queryFn: ({ queryKey }) =>
-    TasksService.getTaskList({ page: queryKey[1] as number, limit: queryKey[2] as number })
+    TasksService.getTaskList({ page: queryKey[1] as number, limit: queryKey[2] as number }),
+  staleTime: 1000 * 60 * 5 // 5 minutes
 })
 // @ts-ignore
 const { isPending, isError, isFetching, data, error, refetch, suspense } = query

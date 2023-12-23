@@ -8,7 +8,9 @@
         <Suspense>
           <template v-if="loading">
             <div flex flex-col class="items-center justify-center p-5">
-              <h1 class="block whitespace-pre-line bg-orange-300 p-5 rounded-xl text-center text-4xl font-bold">
+              <h1
+                class="block whitespace-pre-line bg-orange-300 p-5 rounded-xl text-center text-4xl font-bold"
+              >
                 {{ `\nLoading ...` }}
               </h1>
               <slot name="fallback" />
@@ -41,7 +43,7 @@
 import BlueLayout from './BlueLayout.vue'
 import { meta, title, link } from '../renderer/meta'
 import Hydrate from './Hydrate.vue'
-// 
+//
 useHead({
   title,
   meta,
@@ -53,5 +55,9 @@ const loading = ref(true)
 onMounted(async () => {
   loading.value = false
 })
-onErrorFlash({ title: 'Fetch Error', text: 'There was an error fetching the API data.', duration: 5000 })
+onErrorFlash({
+  title: 'Fetch Error',
+  text: 'There was an error fetching the API data.',
+  duration: 5000
+})
 </script>
