@@ -31,7 +31,7 @@ const query = useQuery<TaskListResponse>({
 });
 const { isPending, isError, isFetching, data, error, refetch, suspense } = query
 let items: Ref<ListItems<ListItem>> = ref([]) as unknown as Ref<ListItems<ListItem>>
-await suspense()
+// await suspense()
 if (data.value) {
   items.value.items = data.value?.tasks.map((task) => {
     return {
