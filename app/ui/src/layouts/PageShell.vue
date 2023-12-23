@@ -3,7 +3,6 @@
 
   <main class="page-shell-main">
     <div class="layout">
-
       <MainNav />
       <div class="main-container">
         <div class="content">
@@ -14,27 +13,24 @@
           <Footer />
         </div>
       </div>
-
     </div>
   </main>
 </template>
 
 <script lang="ts" setup>
-// @ts-expect-error figure out why this works but is linted
-import IconDataSuccess from '~icons/carbon/rocket'
+// // @ts-expect-error figure out why this works but is linted
+// import IconDataSuccess from '~icons/carbon/rocket'
 
-onInfoFlash({ title: 'Info Greeting', text: 'Greetings earthling', duration: 5000, icon: markRaw(IconDataSuccess) })
+// onInfoFlash({ title: 'Info Greeting', text: 'Greetings earthling', duration: 5000, icon: markRaw(IconDataSuccess) })
 
-import { meta, title, link } from '../renderer/meta';
+import { meta, title, link } from '../renderer/meta'
 useHead({
   title,
   meta,
-  link,
+  link
 })
 
-onMounted(async () => {
-})
-
+onMounted(async () => {})
 </script>
 
 <style scoped>

@@ -10,14 +10,14 @@ export interface FlashMessage {
 }
 
 // @ts-expect-error figure out why this works but is linted
-import IconDataError from '~icons/carbon/data-error'
+import IconInfo from '~icons/carbon/information'
 
 export function initFlashMessage(options?: Partial<FlashMessage>): FlashMessage {
   const defaults = {
     show: false,
     duration: 5000,
     modifiers: ['error'],
-    icon: markRaw(IconDataError)
+    icon: markRaw(IconInfo)
   }
 
   return {
@@ -62,28 +62,30 @@ const hook = (callback: (str: string) => void) => {
   callback('hello' + ' world')
 }
 
-export const onInfoFlash = ({
+export const onFlash = ({
   title,
   text,
+  modifiers,
   icon,
   duration = 5000 /* 5 seconds */,
   show = true
 }: {
   title: string
   text: string
-  duration?: number
   icon?: string
+  modifiers?: string[]
+  duration?: number
   show?: boolean
 }) => {
   onMounted(() => {
-    const modifiers = ['info']
+    modifiers = modifiers || ['info']
     const $flashMessage = useFlashMessage({ title, text, duration, icon, modifiers })
     // $flashMessage.modifiers = ['success']
     $flashMessage.show = true
-    hook((string) => {
-      console.log(`[ui] onInfoFlash: ${string}`)
-      return $flashMessage
-    })
+    // hook((string) => {
+    //   console.log(`[ui] onInfoFlash: ${string}`)
+    //   return $flashMessage
+    // })
   })
 
   clearFlashMessage()

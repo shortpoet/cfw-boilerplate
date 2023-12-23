@@ -2,7 +2,12 @@
   <FlashMessage />
 
   <div class="page-container">
-    <ApiViewerFetch :title="title" :data="apiData" :loading="apiDataLoading" :error="apiDataError" />
+    <ApiViewerFetch
+      :title="title"
+      :data="apiData"
+      :loading="apiDataLoading"
+      :error="apiDataError"
+    />
   </div>
 </template>
 
@@ -14,11 +19,15 @@
 </style>
 
 <script setup lang="ts">
-// @ts-expect-error figure out why this works but is linted
-import IconDataSuccess from '~icons/carbon/rocket'
+// // @ts-expect-error figure out why this works but is linted
+// import IconDataSuccess from '~icons/carbon/rocket'
 
-onInfoFlash({ title: 'Info Greeting', text: 'Greetings earthling', duration: 5000, icon: markRaw(IconDataSuccess) })
-
+// onInfoFlash({
+//   title: 'Info Greeting',
+//   text: 'Greetings earthling',
+//   duration: 5000,
+//   icon: markRaw(IconDataSuccess)
+// })
 
 const props = defineProps({
   title: {

@@ -1,14 +1,24 @@
 <template>
   <div class="fixed top-0 right-0 m-6">
-    <Transition name="slide-fade" :duration="{ enter: duration || 5000, leave: 250 }" @after-enter="show = false">
-      <div v-if="show" @close="show = false" :class="classStyle" class="rounded-lg shadow-md p-6 pr-10"
-        style="min-width: 240px">
+    <Transition
+      name="slide-fade"
+      :duration="{ enter: duration || 5000, leave: 250 }"
+      @after-enter="show = false"
+    >
+      <div
+        v-if="show"
+        @close="show = false"
+        :class="classStyle"
+        class="rounded-lg shadow-md p-6 pr-10"
+        style="min-width: 240px"
+      >
         <div>
-          Icon
           <component :is="icon" />
         </div>
-        <button class="opacity-75 cursor-pointer absolute top-0 right-0 py-2 px-3 hover:opacity-100"
-          @click="show = false">
+        <button
+          class="opacity-75 cursor-pointer absolute top-0 right-0 py-2 px-3 hover:opacity-100"
+          @click="show = false"
+        >
           &times;
         </button>
         <div class="flex items-center">
@@ -70,8 +80,6 @@ console.log(`[ui] [Flash.vue] duration: ${JSON.stringify(duration.value)}`)
   transform: translateY(-66px);
 } */
 
-
-
 .slide-fade-enter-active,
 .slide-fade-leave-active {
   transition: all 0.4s;
@@ -95,6 +103,7 @@ console.log(`[ui] [Flash.vue] duration: ${JSON.stringify(duration.value)}`)
 
 .alert-info {
   background-color: #2196f3;
+  color: black;
 }
 
 .alert-warning {

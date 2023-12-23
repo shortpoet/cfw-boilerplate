@@ -1,17 +1,16 @@
 <template>
   <div id="test-page-out">
-
     <div>
       <h1>Todo Test</h1>
       <ul>
-        <li>Interactive.
+        <li>
+          Interactive.
           <Counter />
         </li>
       </ul>
     </div>
 
     <div flex flex-row justify-center>
-
       <div flex flex-col p-3>
         <h3>On Before Render Props</h3>
         <br />
@@ -71,26 +70,34 @@
           <p>Loading...</p>
         </div>
       </div>
-
     </div>
-
   </div>
 </template>
 
 <script setup lang="ts">
-import { Todo, getTodos } from './todos';
+import { Todo, getTodos } from './todos'
+// @ts-expect-error figure out why this works but is linted
+import IconDataSuccess from '~icons/carbon/rocket'
+onInfoFlash({
+  title: 'Info Greeting',
+  text: 'Greetings earthling',
+  duration: 5000,
+  icon: markRaw(IconDataSuccess),
+  show: true
+})
+
 defineProps({
   todosProps: {
     type: Array as () => Todo[],
-    required: true,
+    required: true
   },
   todosFetchProps: {
     type: Array as () => Todo[],
-    required: true,
-  },
-});
-const { todos } = await getTodos();
-const { urlBaseApi } = useBaseUrl();
+    required: true
+  }
+})
+const { todos } = await getTodos()
+const { urlBaseApi } = useBaseUrl()
 const { data } = await useFetch<Todo[]>(`${urlBaseApi}/api/todos`)
-const todosFetch = ref<Todo[]>(data.value);
+const todosFetch = ref<Todo[]>(data.value)
 </script>

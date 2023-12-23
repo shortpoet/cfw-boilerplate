@@ -84,6 +84,7 @@ declare global {
   const onErrorCaptured: typeof import('vue')['onErrorCaptured']
   const onErrorClient: typeof import('./modules/error-client')['onErrorClient']
   const onErrorFlash: typeof import('./modules/flash-message')['onErrorFlash']
+  const onFlash: typeof import('./modules/flash-message')['onFlash']
   const onInfoFlash: typeof import('./modules/flash-message')['onInfoFlash']
   const onMounted: typeof import('vue')['onMounted']
   const onRenderTracked: typeof import('vue')['onRenderTracked']
@@ -229,7 +230,7 @@ declare module 'vue' {
     readonly onErrorCaptured: UnwrapRef<typeof import('vue')['onErrorCaptured']>
     readonly onErrorClient: UnwrapRef<typeof import('./modules/error-client')['onErrorClient']>
     readonly onErrorFlash: UnwrapRef<typeof import('./modules/flash-message')['onErrorFlash']>
-    readonly onInfoFlash: UnwrapRef<typeof import('./modules/flash-message')['onInfoFlash']>
+    readonly onFlash: UnwrapRef<typeof import('./modules/flash-message')['onFlash']>
     readonly onMounted: UnwrapRef<typeof import('vue')['onMounted']>
     readonly onRenderTracked: UnwrapRef<typeof import('vue')['onRenderTracked']>
     readonly onRenderTriggered: UnwrapRef<typeof import('vue')['onRenderTriggered']>
@@ -364,7 +365,7 @@ declare module '@vue/runtime-core' {
     readonly onErrorCaptured: UnwrapRef<typeof import('vue')['onErrorCaptured']>
     readonly onErrorClient: UnwrapRef<typeof import('./modules/error-client')['onErrorClient']>
     readonly onErrorFlash: UnwrapRef<typeof import('./modules/flash-message')['onErrorFlash']>
-    readonly onInfoFlash: UnwrapRef<typeof import('./modules/flash-message')['onInfoFlash']>
+    readonly onFlash: UnwrapRef<typeof import('./modules/flash-message')['onFlash']>
     readonly onMounted: UnwrapRef<typeof import('vue')['onMounted']>
     readonly onRenderTracked: UnwrapRef<typeof import('vue')['onRenderTracked']>
     readonly onRenderTriggered: UnwrapRef<typeof import('vue')['onRenderTriggered']>
