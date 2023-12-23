@@ -4,6 +4,7 @@
       <div v-if="show" @close="show = false" :class="classStyle" class="rounded-lg shadow-md p-6 pr-10"
         style="min-width: 240px">
         <div>
+          Icon
           <component :is="icon" />
         </div>
         <button class="opacity-75 cursor-pointer absolute top-0 right-0 py-2 px-3 hover:opacity-100"
@@ -11,7 +12,7 @@
           &times;
         </button>
         <div class="flex items-center">
-          <div i-carbon :icon="icon" class="mr-3"></div>
+          <div i-carbon-data-error class="mr-3"></div>
           <strong>{{ title }}&nbsp;</strong>&nbsp;{{ text }}
         </div>
       </div>
@@ -52,22 +53,22 @@ console.log(`[ui] [Flash.vue] duration: ${JSON.stringify(duration.value)}`)
 
 <style scoped>
 /* enter transitions */
-.v-enter-from {
+/* .v-enter-from {
   transform: translateY(-66px);
-}
+} */
 
-.v-enter-to {
+/* .v-enter-to {
   transition: all 0.3s ease;
   transform: translateY(0px);
   position: sticky;
   top: 0;
-}
+} */
 
 /* leave transitions */
-.v-leave-active {
+/* .v-leave-active {
   transition: all 0.4s ease;
   transform: translateY(-66px);
-}
+} */
 
 
 

@@ -41,8 +41,7 @@
 import BlueLayout from './BlueLayout.vue'
 import { meta, title, link } from '../renderer/meta'
 import Hydrate from './Hydrate.vue'
-import { onErrorFlash } from '../modules'
-
+// 
 useHead({
   title,
   meta,

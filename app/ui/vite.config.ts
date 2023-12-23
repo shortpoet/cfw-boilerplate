@@ -1,58 +1,60 @@
-import vue from '@vitejs/plugin-vue';
-import vike from 'vike/plugin';
-import Unocss from 'unocss/vite';
-import Markdown from 'unplugin-vue-markdown/vite';
-import Shiki from 'markdown-it-shikiji';
-import LinkAttributes from 'markdown-it-link-attributes';
-import Components from 'unplugin-vue-components/vite';
-import AutoImport from 'unplugin-auto-import/vite';
-import path from 'node:path';
-import { defineConfig, loadEnv, UserConfig } from 'vite';
-import { InlineConfig } from 'vitest';
-import { nodePolyfills } from 'vite-plugin-node-polyfills';
+import vue from '@vitejs/plugin-vue'
+import vike from 'vike/plugin'
+import Unocss from 'unocss/vite'
+import Markdown from 'unplugin-vue-markdown/vite'
+import Shiki from 'markdown-it-shikiji'
+import LinkAttributes from 'markdown-it-link-attributes'
+import Components from 'unplugin-vue-components/vite'
+import AutoImport from 'unplugin-auto-import/vite'
+import path from 'node:path'
+import { defineConfig, loadEnv, UserConfig } from 'vite'
+import { InlineConfig } from 'vitest'
+import { nodePolyfills } from 'vite-plugin-node-polyfills'
+import Icons from 'unplugin-icons/vite'
+import IconsResolver from 'unplugin-icons/resolver'
 
-import { getConfig } from './config';
+import { getConfig } from './config'
 
 interface VitestConfigExport extends UserConfig {
-  test: InlineConfig;
+  test: InlineConfig
 }
 const vitestConfig: InlineConfig = {
   include: ['test/**/*.test.ts'],
   environment: 'jsdom',
   deps: {
-    inline: ['@vue', '@vueuse', 'vue-demi'],
-  },
-};
+    inline: ['@vue', '@vueuse', 'vue-demi']
+  }
+}
 
 export default ({ mode }: { mode: string }) => {
-  const { envDir, parsedSecret, parsed } = getConfig(mode);
-  console.log(`[ui] [vite] loading... (${mode})`);
-  const loaded = loadEnv(mode, envDir, '');
+  const { envDir, parsedSecret, parsed } = getConfig(mode)
+  console.log(`[ui] [vite] loading... (${mode})`)
+  const loaded = loadEnv(mode, envDir, '')
   // console.log('[ui] [vite] loaded: ', loaded);
   // console.log('[ui] [vite] parsedSecret: ', parsedSecret);
   // console.log('[ui] [vite] process.env: ', parsed);
-  const env = { ...parsed, ...loaded, ...parsedSecret };
+  const env = { ...parsed, ...loaded, ...parsedSecret }
   const processEnvValues = {
     'process.env': Object.entries(env).reduce(
       (prev, [key, val]) => {
         return {
           ...prev,
-          [key]: val,
-        };
+          [key]: val
+        }
       },
       {
         __VUE_OPTIONS_API__: JSON.stringify(true),
-        __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
+        __VUE_PROD_DEVTOOLS__: JSON.stringify(false)
       }
-    ),
-  };
+    )
+  }
   // console.log('[ui] [vite] processEnvValues: ', processEnvValues);
   return defineConfig({
     envDir,
     define: processEnvValues,
     plugins: [
       vue({
-        include: [/\.vue$/, /\.md$/],
+        include: [/\.vue$/, /\.md$/]
       }),
       vike({ prerender: true }),
       nodePolyfills({
@@ -66,22 +68,22 @@ export default ({ mode }: { mode: string }) => {
         globals: {
           Buffer: true, // can also be 'build', 'dev', or false
           global: true,
-          process: true,
+          process: true
         },
         // Override the default polyfills for specific modules.
         overrides: {
           // Since `fs` is not supported in browsers, we can use the `memfs` package to polyfill it.
-          fs: 'memfs',
+          fs: 'memfs'
         },
         // Whether to polyfill `node:` protocol imports.
-        protocolImports: true,
+        protocolImports: true
       }),
       AutoImport({
         imports: [
           'vue',
           'vue/macros',
           // '@vueuse/core',
-          '@vueuse/head',
+          '@vueuse/head'
           // 'vue-demi'
         ],
         exclude: [],
@@ -92,16 +94,28 @@ export default ({ mode }: { mode: string }) => {
           'src/models/**',
           'src/modules/**',
           'src/services/**',
-          'src/stores/**',
+          'src/stores/**'
         ],
-        vueTemplate: true,
+        vueTemplate: true
       }),
       Unocss(),
+      Icons({
+        /* options */
+      }),
       Components({
         dirs: ['src/components', 'src/layouts'],
         extensions: ['vue'],
         include: [/\.vue$/, /\.vue\?vue/],
         dts: 'src/components.d.ts',
+        resolvers: [
+          IconsResolver({
+            // // componentPrefix: 'icon',
+            // enabledCollections: [
+            //   'carbon'
+            //   //  'fa', 'mdi', 'eva', 'entypo', 'feather', 'heroicons'
+            // ]
+          })
+        ]
       }),
       Markdown({
         wrapperClasses: 'prose prose-sm m-auto text-left',
@@ -111,26 +125,26 @@ export default ({ mode }: { mode: string }) => {
             matcher: (link: string) => /^https?:\/\//.test(link),
             attrs: {
               target: '_blank',
-              rel: 'noopener',
-            },
-          });
+              rel: 'noopener'
+            }
+          })
           md.use(
             await Shiki({
               defaultColor: false,
               themes: {
                 light: 'vitesse-light',
-                dark: 'vitesse-dark',
-              },
+                dark: 'vitesse-dark'
+              }
             })
-          );
-        },
-      }),
+          )
+        }
+      })
     ],
     server: {
       port: parseInt(env.VITE_PORT || '3000'),
       hmr: {
-        overlay: false,
-      },
+        overlay: false
+      }
       // to avoid CORS issues
       // proxy: {
       //   '/api': {
@@ -142,7 +156,7 @@ export default ({ mode }: { mode: string }) => {
     },
 
     optimizeDeps: {
-      exclude: ['nprogress'],
+      exclude: ['nprogress']
       // esbuildOptions: {
       //   // Node.js global to browser globalThis
       //   define: {
@@ -170,13 +184,13 @@ export default ({ mode }: { mode: string }) => {
 
     resolve: {
       alias: {
-        '#': path.resolve(__dirname, '..'),
-      },
+        '#': path.resolve(__dirname, '..')
+      }
     },
 
     build: {
       outDir: 'build',
-      target: 'esnext',
+      target: 'esnext'
       // rollupOptions: {
       //   plugins: [
       //     injectRp.default.bind({
@@ -187,6 +201,6 @@ export default ({ mode }: { mode: string }) => {
       //   ],
       // },
     },
-    test: vitestConfig,
-  });
-};
+    test: vitestConfig
+  })
+}

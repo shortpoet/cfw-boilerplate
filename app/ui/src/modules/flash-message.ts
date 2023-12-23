@@ -6,15 +6,18 @@ export interface FlashMessage {
   modifiers: string[]
   title?: string
   text?: string
-  icon: string
+  icon?: string
 }
+
+// @ts-expect-error figure out why this works but is linted
+import IconDataError from '~icons/carbon/data-error'
 
 export function initFlashMessage(options?: Partial<FlashMessage>): FlashMessage {
   const defaults = {
     show: false,
     duration: 5000,
     modifiers: ['error'],
-    icon: 'info'
+    icon: markRaw(IconDataError)
   }
 
   return {
@@ -30,32 +33,80 @@ export const provideFlashMessage = (app: App) => {
 }
 
 export const useFlashMessage = (options?: Partial<FlashMessage>) => {
+  console.log(`[ui] useFlashMessage:`)
   if (!$flashMessage) {
     $flashMessage = inject('$flashMessage', initFlashMessage())
   }
   if (options) {
-    Object.assign($flashMessage, options)
+    console.log(`[ui] useFlashMessage: options:`, options)
+    $flashMessage = Object.assign($flashMessage, options)
   }
   return $flashMessage
 }
 
-const assertNonEmptyString = (value: unknown) => typeof value !== 'string' || !value
+const clearFlashMessage = () => {
+  $flashMessage.show = false
+  $flashMessage.title = ''
+  $flashMessage.text = ''
+  $flashMessage.duration = 5000
+  $flashMessage.modifiers = ['error']
+}
 
-export const onErrorFlash = ({
+const timeoutHook = (callback: () => void, duration: number) => {
+  const timer = setTimeout(() => {
+    callback()
+    clearTimeout(timer)
+  }, duration)
+}
+const hook = (callback: (str: string) => void) => {
+  callback('hello' + ' world')
+}
+
+export const onInfoFlash = ({
   title,
   text,
-  duration = 999999 /* 16 mins */
+  icon,
+  duration = 5000 /* 5 seconds */,
+  show = true
 }: {
   title: string
   text: string
   duration?: number
+  icon?: string
+  show?: boolean
+}) => {
+  onMounted(() => {
+    const modifiers = ['info']
+    const $flashMessage = useFlashMessage({ title, text, duration, icon, modifiers })
+    // $flashMessage.modifiers = ['success']
+    $flashMessage.show = true
+    hook((string) => {
+      console.log(`[ui] onInfoFlash: ${string}`)
+      return $flashMessage
+    })
+  })
+
+  clearFlashMessage()
+}
+
+export const onErrorFlash = ({
+  title,
+  text,
+  duration = 999999 /* 16 mins */,
+  icon
+}: {
+  title: string
+  text: string
+  duration?: number
+  icon?: string
 }) => {
   console.log(`[ui] onErrorFlash: ${title} - ${text} - ${duration}`)
   const error = { value: false }
   console.log(`[ui] onErrorFlash: ${error.value}`)
-  const $flashMessage = useFlashMessage({ title, text, duration })
+  const $flashMessage = useFlashMessage({ title, text, duration, icon })
 
   onErrorCaptured((callback) => {
+    // const errText = 'An error occurred.'
     const errText = typeof callback === 'string' && !!callback ? callback : text
     $flashMessage.title = title
     $flashMessage.text = errText
@@ -66,4 +117,5 @@ export const onErrorFlash = ({
     console.error(errText)
     return false
   })
+  clearFlashMessage()
 }
