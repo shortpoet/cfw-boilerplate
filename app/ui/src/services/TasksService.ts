@@ -22,7 +22,7 @@ export class TasksService {
     cursor,
   }: {
     page: number,
-    limit: number,
+    limit?: number,
     isCompleted?: boolean,
     cursor?: string,
   }): CancelablePromise<TaskListResponse> {

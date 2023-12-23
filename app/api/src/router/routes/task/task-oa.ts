@@ -27,7 +27,7 @@ export const GetTaskSchema = {
   summary: 'List Tasks',
   parameters: {
     page: Query(Int, { description: 'Page number', default: 1 }), // Update default page to 1
-    limit: Query(Int, { description: 'Number of items per page', default: 10 }), // Add limit parameter
+    limit: Query(Int, { description: 'Number of items per page', default: 10, required: false }), // Add limit parameter
     isCompleted: Query(Boolean, { description: 'Filter by completed flag', required: false }),
     cursor: Query(Str, { description: 'Cursor for pagination', required: false }) // Add cursor parameter
   },
