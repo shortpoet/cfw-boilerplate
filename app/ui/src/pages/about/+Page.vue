@@ -8,9 +8,10 @@
 <script setup lang="ts">
 // @ts-expect-error figure out why this works but is linted
 import IconDataSuccess from '~icons/carbon/rocket'
-onInfoFlash({
+onFlash({
   title: 'Info Greeting',
   text: 'No suspense boundary - blank on refresh',
+  modifiers: ['success'],
   duration: 5000,
   icon: markRaw(IconDataSuccess),
   show: true

@@ -1,17 +1,21 @@
-import { faker } from '@faker-js/faker';
-import { TaskComponentType } from '../task-oa';
+import { faker } from '@faker-js/faker'
+import { TaskComponentType } from '../task-oa'
+import { capitalize } from 'lodash-es'
 
 export const taskFaker = (count: number): TaskComponentType[] => {
-  const tasks = Array.from({ length: count }, () => ({
-    name: faker.lorem.sentence(),
-    slug: faker.lorem.slug(),
-    description: faker.lorem.sentence(),
-    completed: faker.datatype.boolean(),
-    due_date: faker.date.future().toISOString(),
-  }));
+  const tasks = Array.from({ length: count }, () => {
+    const name = `${capitalize(faker.word.verb())} ${faker.commerce.productName()}`
+    return {
+      name,
+      slug: faker.commerce.product(),
+      description: `${name} ${faker.word.verb()} ${faker.commerce.productAdjective()} ${faker.commerce.productMaterial()}}`,
+      completed: faker.datatype.boolean(),
+      due_date: faker.date.future().toISOString()
+    }
+  })
 
-  return tasks;
-};
+  return tasks
+}
 
 export const taskFakerBatch = async (req: Request, res: Response) => {
   // const { page = 1 } = req.query;
@@ -36,4 +40,4 @@ export const taskFakerBatch = async (req: Request, res: Response) => {
   //   prevPage,
   //   nextPage,
   // });
-};
+}

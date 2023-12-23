@@ -77,7 +77,7 @@
 <script setup lang="ts">
 import { Todo, getTodos } from './todos'
 // @ts-expect-error figure out why this works but is linted
-import IconDataSuccess from '~icons/carbon/rocket'
+import IconDataSuccess from '~icons/carbon/test-tool'
 
 defineProps({
   todosProps: {
@@ -93,8 +93,6 @@ const { todos } = await getTodos()
 const { urlBaseApi } = useBaseUrl()
 const { data } = await useFetch<Todo[]>(`${urlBaseApi}/api/todos`)
 const todosFetch = ref<Todo[]>(data.value)
-console.log('todosFetch', todosFetch)
-console.log('todos', todos)
 onFlash({
   title: 'Info Greeting',
   text: 'Greetings earthling',

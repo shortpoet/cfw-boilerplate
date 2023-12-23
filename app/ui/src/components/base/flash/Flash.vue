@@ -1,28 +1,16 @@
 <template>
   <div class="fixed top-0 right-0 m-6">
-    <Transition
-      name="slide-fade"
-      :duration="{ enter: duration || 5000, leave: 250 }"
-      @after-enter="show = false"
-    >
-      <div
-        v-if="show"
-        @close="show = false"
-        :class="classStyle"
-        class="rounded-lg shadow-md p-6 pr-10"
-        style="min-width: 240px"
-      >
-        <div>
-          <component :is="icon" />
-        </div>
-        <button
-          class="opacity-75 cursor-pointer absolute top-0 right-0 py-2 px-3 hover:opacity-100"
-          @click="show = false"
-        >
+    <Transition name="slide-fade" :duration="{ enter: duration || 5000, leave: 250 }" @after-enter="show = false">
+      <div v-if="show" @close="show = false" :class="classStyle" class="rounded-lg shadow-md p-6 pr-10"
+        style="min-width: 240px">
+        <button class="opacity-75 cursor-pointer absolute top-0 right-0 py-2 px-3 hover:opacity-100"
+          @click="show = false">
           &times;
         </button>
         <div class="flex items-center">
-          <div i-carbon-data-error class="mr-3"></div>
+          <div mr-3>
+            <component :is="icon" />
+          </div>
           <strong>{{ title }}&nbsp;</strong>&nbsp;{{ text }}
         </div>
       </div>
@@ -50,15 +38,6 @@ const classStyle = computed(() =>
     'alert-info': modifiers.value.includes('info')
   })
 )
-console.log(`[ui] [Flash.vue] flashMessage: ${JSON.stringify(flashMessage.value)}`)
-console.log(`[ui] classStyle: ${JSON.stringify(classStyle.value)}`)
-//log params
-console.log(`[ui] [Flash.vue] show: ${JSON.stringify(show.value)}`)
-console.log(`[ui] [Flash.vue] title: ${JSON.stringify(title?.value || 'no title')}`)
-console.log(`[ui] [Flash.vue] text: ${JSON.stringify(text?.value)} || 'no text'`)
-console.log(`[ui] [Flash.vue] modifiers: ${JSON.stringify(modifiers.value)}`)
-console.log(`[ui] [Flash.vue] icon: ${JSON.stringify(icon.value)}`)
-console.log(`[ui] [Flash.vue] duration: ${JSON.stringify(duration.value)}`)
 </script>
 
 <style scoped>
@@ -99,6 +78,7 @@ console.log(`[ui] [Flash.vue] duration: ${JSON.stringify(duration.value)}`)
 
 .alert-success {
   background-color: #4caf50;
+  color: rgb(0, 0, 88)
 }
 
 .alert-info {
