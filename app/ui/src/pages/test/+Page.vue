@@ -93,7 +93,9 @@ const { todos } = await getTodos()
 const { urlBaseApi } = useBaseUrl()
 const { data } = await useFetch<Todo[]>(`${urlBaseApi}/api/todos`)
 const todosFetch = ref<Todo[]>(data.value)
-onInfoFlash({
+console.log('todosFetch', todosFetch)
+console.log('todos', todos)
+onFlash({
   title: 'Info Greeting',
   text: 'Greetings earthling',
   duration: 5000,

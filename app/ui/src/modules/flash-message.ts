@@ -44,24 +44,6 @@ export const useFlashMessage = (options?: Partial<FlashMessage>) => {
   return $flashMessage
 }
 
-const clearFlashMessage = () => {
-  $flashMessage.show = false
-  $flashMessage.title = ''
-  $flashMessage.text = ''
-  $flashMessage.duration = 5000
-  $flashMessage.modifiers = ['error']
-}
-
-const timeoutHook = (callback: () => void, duration: number) => {
-  const timer = setTimeout(() => {
-    callback()
-    clearTimeout(timer)
-  }, duration)
-}
-const hook = (callback: (str: string) => void) => {
-  callback('hello' + ' world')
-}
-
 export const onFlash = ({
   title,
   text,
@@ -80,15 +62,8 @@ export const onFlash = ({
   onMounted(() => {
     modifiers = modifiers || ['info']
     const $flashMessage = useFlashMessage({ title, text, duration, icon, modifiers })
-    // $flashMessage.modifiers = ['success']
     $flashMessage.show = true
-    // hook((string) => {
-    //   console.log(`[ui] onInfoFlash: ${string}`)
-    //   return $flashMessage
-    // })
   })
-
-  clearFlashMessage()
 }
 
 export const onErrorFlash = ({
@@ -102,22 +77,19 @@ export const onErrorFlash = ({
   duration?: number
   icon?: string
 }) => {
-  console.log(`[ui] onErrorFlash: ${title} - ${text} - ${duration}`)
-  const error = { value: false }
-  console.log(`[ui] onErrorFlash: ${error.value}`)
-  const $flashMessage = useFlashMessage({ title, text, duration, icon })
-
+  // console.log(`[ui] onErrorFlash: ${title} - ${text} - ${duration}`)
+  // console.log(`[ui] onErrorFlash: ${error.value}`)
+  const $flashMessage = useFlashMessage({ title, duration, icon, modifiers: ['error'] })
   onErrorCaptured((callback) => {
-    // const errText = 'An error occurred.'
-    const errText = typeof callback === 'string' && !!callback ? callback : text
-    $flashMessage.title = title
+    const errText =
+      typeof callback === 'string' && !!callback
+        ? callback
+        : callback instanceof Error
+          ? callback.message
+          : text
     $flashMessage.text = errText
-    error.value = true
-    $flashMessage.duration = duration
     $flashMessage.show = true
-    $flashMessage.modifiers = ['error']
     console.error(errText)
     return false
   })
-  clearFlashMessage()
 }
