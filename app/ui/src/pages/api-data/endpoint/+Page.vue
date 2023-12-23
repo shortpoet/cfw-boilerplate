@@ -1,7 +1,6 @@
 <template>
-  <FlashMessage />
-
   <div class="page-container">
+    <FlashMessage />
     <ApiViewerFetch
       :title="title"
       :data="apiData"

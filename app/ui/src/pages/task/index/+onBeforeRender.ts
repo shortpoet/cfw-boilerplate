@@ -23,14 +23,14 @@ const onBeforeRender: OnBeforeRenderAsync = async (
   let vueQueryState
 
   console.log(`[ui] [task] [index] [onBeforeRender] prequery: page: ${page}, limit: ${limit}`)
+  await queryClient.prefetchQuery({
+    queryKey: ['result', page, limit],
+    // queryFn: () => getTaskList(page),
+    queryFn: ({ queryKey }) =>
+      TasksService.getTaskList({ page: queryKey[1] as number, limit: queryKey[2] as number })
+  })
+  vueQueryState = dehydrate(queryClient)
   try {
-    await queryClient.prefetchQuery({
-      queryKey: ['result', page, limit],
-      // queryFn: () => getTaskList(page),
-      queryFn: ({ queryKey }) =>
-        TasksService.getTaskList({ page: queryKey[1] as number, limit: queryKey[2] as number })
-    })
-    vueQueryState = dehydrate(queryClient)
   } catch (error) {}
 
   return {

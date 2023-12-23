@@ -28,11 +28,15 @@ export const withListOptions = () => async (req: Request) => {
     const limitAsNumber = Number(limit)
 
     if (limitAsNumber !== limitAsNumber) {
-      return badResponse('', new Error('[limit] query must be a number.'))
+      req.logger.error(`[api] [middlware] [withListOptions] [limit] query must be a number.`)
+      return badResponse('[limit] query must be a number.')
     }
 
-    if (limitAsNumber > 1000 || limitAsNumber < 1) {
-      return badResponse('', new Error('[limit] query must be between 1 and 1000.'))
+    if (limitAsNumber > 1000 || limitAsNumber < 0) {
+      req.logger.error(
+        `[api] [middlware] [withListOptions] [limit] query must be between 0 and 1000.`
+      )
+      return badResponse('[limit] query must be between 0 and 1000.')
     }
 
     listOptions.limit = limitAsNumber
