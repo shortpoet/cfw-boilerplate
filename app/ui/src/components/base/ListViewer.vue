@@ -8,7 +8,7 @@
   <div v-else-if="items">
     <nav>
       <div v-for="item in items.items" :key="item.id">
-        <Link :href="`${item.id}`"> {{ item.id }} </Link>
+        <Link :href="`${item.href}`"> {{ item.name }} </Link>
       </div>
     </nav>
     <br />
@@ -29,14 +29,24 @@ defineProps<{
 
 <style scoped></style>
 
-<script setup lang="ts" generic="T extends ListItem">
+<script setup lang="ts" generic="T extends ListItemLink">
 import { PropType } from 'vue'
 import { ApiError } from '../..'
 export type ListItem = {
   id: string | number
 }
 
+export type ListItemLink = {
+  id: string | number
+  href: string
+  name: string
+}
+
 export type ListItems<T extends ListItem> = {
+  items: T[]
+}
+
+export type ListItemsLink<T extends ListItemLink> = {
   items: T[]
 }
 
@@ -56,7 +66,7 @@ const props = defineProps({
   items: {
     required: true,
     default() {
-      return { items: [] } as ListItems<T>
+      return { items: [] } as ListItemsLink<T>
     }
   },
   error: {

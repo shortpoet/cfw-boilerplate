@@ -24,7 +24,7 @@
 import { useQuery } from '@tanstack/vue-query'
 import { TaskListResponse } from '../../../models/TaskListResponse'
 import { TasksService } from '../../../services/TasksService'
-import ListViewer, { ListItems, ListItem } from '#/ui/src/components/base/ListViewer.vue'
+import ListViewer, { ListItemsLink, ListItemLink } from '#/ui/src/components/base/ListViewer.vue'
 import { ApiError } from '#/ui/src'
 
 const { page, limit } = defineProps({
@@ -37,9 +37,6 @@ const { page, limit } = defineProps({
     required: true
   }
 })
-// console.log(`[task] [index] [Page]`)
-// console.log(`page: ${page}`)
-// console.log(`limit: ${limit}`)
 
 const query = useQuery<TaskListResponse, ApiError>({
   queryKey: ['result', page, limit],
@@ -49,27 +46,20 @@ const query = useQuery<TaskListResponse, ApiError>({
 })
 // @ts-ignore
 const { isPending, isError, isFetching, data, error, refetch, suspense } = query
-let items: Ref<ListItems<ListItem>> = ref([]) as unknown as Ref<ListItems<ListItem>>
+let items: Ref<ListItemsLink<ListItemLink>> = ref([]) as unknown as Ref<ListItemsLink<ListItemLink>>
 // await suspense()
 // onServerPrefetch(suspense)
 if (data.value) {
   const length = data.value?.tasks.length
-  console.log(data.value)
-  console.log(length)
-
-  const pages = Math.ceil(length / limit === 0 ? 1 : limit)
-  console.log('pages', pages)
+  const pageSize = 10
+  const noLimit = limit === 0
+  const pages = Math.ceil(length / (noLimit ? pageSize : limit))
   items.value.items = Array.from({ length: pages }, (_, i) => {
     return {
-      id: i + 1
+      id: i + 1,
+      href: `/task/${i + 1}`,
+      name: `Page ${i + 1}`
     }
   })
-  console.log(items.value.items)
-
-  // items.value.items = data.value?.tasks.map((task) => {
-  //   return {
-  //     id: task.name,
-  //   }
-  // })
 }
 </script>
