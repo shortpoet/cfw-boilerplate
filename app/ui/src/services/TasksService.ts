@@ -17,17 +17,23 @@ export class TasksService {
    */
   public static getTaskList({
     page,
+    limit,
     isCompleted,
+    cursor,
   }: {
     page: number,
+    limit: number,
     isCompleted?: boolean,
+    cursor?: string,
   }): CancelablePromise<TaskListResponse> {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/api/task/tasks',
       query: {
         'page': page,
+        'limit': limit,
         'isCompleted': isCompleted,
+        'cursor': cursor,
       },
     });
   }
