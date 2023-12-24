@@ -1,8 +1,8 @@
 <template>
-  <div>TEST</div>
-  <!-- <ListViewer :isPending="isPending" :isError="isError" :isFetching="isFetching" :items="items" :error="error"
-    :refetch="refetch">
-  </ListViewer> -->
+  <div class="page-container">
+    <FlashMessage />
+    <ApiViewerFetch :title="title" :data="data" :loading="isPending" :error="error" />
+  </div>
 </template>
 
 <style scoped>
@@ -17,17 +17,17 @@ import { useQuery } from '@tanstack/vue-query'
 import { TaskListResponse } from '../../../models/TaskListResponse'
 import { TasksService } from '../../../services/TasksService'
 
-const { page } = defineProps({
-  page: {
+const { taskId } = defineProps({
+  taskId: {
     type: Number,
     required: true
   }
 })
 
 const query = useQuery<TaskListResponse>({
-  queryKey: ['result', page],
+  queryKey: ['result', taskId],
   // queryFn: () => getTaskList(page),
-  queryFn: ({ queryKey }) => TasksService.getTaskList({ page: queryKey[1] as number })
+  queryFn: ({ queryKey }) => TasksService.getTaskFetch(queryKey[1] as number),
 })
 // @ts-ignore
 const { isPending, isError, isFetching, data, error, refetch, suspense } = query
