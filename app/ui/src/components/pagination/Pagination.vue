@@ -86,7 +86,7 @@ const { items, initialPage, pageSize, maxPages, labels, styles, disableDefaultSt
     },
     maxPages: {
       type: Number,
-      default: 10
+      default: 5
     },
     labels: {
       type: Object,
