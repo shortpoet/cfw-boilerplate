@@ -19,7 +19,7 @@
 
           <template v-else>
             <div class="suspense-wrapper">
-              <component :is="BlueLayout">
+              <component :is="compuComp">
                 <Hydrate>
                   <slot name="default" />
                 </Hydrate>
@@ -41,6 +41,8 @@
 
 <script lang="ts" setup>
 import BlueLayout from './BlueLayout.vue'
+import BlackLayout from './BlackLayout.vue'
+import UserLayout from './UserLayout.vue'
 import { meta, title, link } from '../renderer/meta'
 import Hydrate from './Hydrate.vue'
 //
@@ -48,6 +50,23 @@ useHead({
   title,
   meta,
   link
+})
+
+const pageContext = usePageContext()
+
+const { urlPathname } = pageContext
+
+console.log('urlPathname', urlPathname)
+
+const compuComp = computed(() => {
+  switch (true) {
+    case urlPathname.startsWith('/api-data'):
+      return BlueLayout
+    case urlPathname.startsWith('/task'):
+      return BlackLayout
+    default:
+      return UserLayout
+  }
 })
 
 const loading = ref(true)

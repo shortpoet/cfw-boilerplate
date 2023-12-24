@@ -1,6 +1,7 @@
 <template>
   <div>
     <FlashMessage />
+    <h1 bg-teal-700 rounded>Task List</h1>
     <ListViewer
       :isPending="isPending"
       :isError="isError"
@@ -55,6 +56,7 @@ const { isPending, isError, isFetching, data, error, refetch, suspense } = query
 const dataItems: ComputedRef<ListItemLink[] | undefined> = computed(
   () =>
     data.value?.tasks.map((task, i) => {
+      // const id = task.id
       return {
         id: i,
         href: `/task/${i}`,

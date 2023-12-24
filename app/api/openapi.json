@@ -9,6 +9,9 @@
       "Task": {
         "type": "object",
         "properties": {
+          "id": {
+            "type": "string"
+          },
           "name": {
             "type": "string",
             "example": "Clean my room"
@@ -28,6 +31,7 @@
           }
         },
         "required": [
+          "id",
           "name",
           "slug",
           "completed",

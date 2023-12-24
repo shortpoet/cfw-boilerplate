@@ -6,6 +6,7 @@ import { TaskComponentType } from '../task-oa'
 
 const allTasks: TaskComponentType[] = [
   {
+    id: '1',
     name: 'Clean my room',
     slug: 'clean-room',
     description: undefined,
@@ -13,6 +14,7 @@ const allTasks: TaskComponentType[] = [
     due_date: '2025-01-05'
   },
   {
+    id: '2',
     name: 'Build something awesome with Cloudflare Workers',
     slug: 'cloudflare-workers',
     description: 'Lorem Ipsum',

@@ -3,6 +3,7 @@ import { z } from 'zod'
 
 export const TaskComponent = z
   .object({
+    id: z.string(),
     name: z.string().openapi({ example: 'Clean my room' }),
     slug: z.string(),
     description: z.string().optional(),

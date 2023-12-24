@@ -6,9 +6,9 @@
     <div>name: {{ error?.body }}</div>
   </div>
   <div v-else-if="items">
-    <nav>
-      <div v-for="item in items" :key="item.id">
-        <Link :href="`${item.href}`"> {{ item.name }} </Link>
+    <nav flex flex-col m-2>
+      <div v-for="item in items" :key="item.id" flex justify-left>
+        <Link :href="`${item.href}`">&rarr; {{ item.name }} </Link>
       </div>
     </nav>
     <br />

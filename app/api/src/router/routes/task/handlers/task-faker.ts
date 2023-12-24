@@ -3,9 +3,11 @@ import { TaskComponentType } from '../task-oa'
 import { capitalize } from 'lodash-es'
 
 export const taskFaker = (count: number): TaskComponentType[] => {
+  let id = 2
   const tasks = Array.from({ length: count }, () => {
     const name = `${capitalize(faker.word.verb())} ${faker.commerce.productName()}`
     return {
+      id: `${id++}`,
       name,
       slug: faker.commerce.product(),
       description: `${name} ${faker.word.verb()} ${faker.commerce.productAdjective()} ${faker.commerce.productMaterial()}}`,
