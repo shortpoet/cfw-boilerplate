@@ -1,6 +1,6 @@
 <template>
   <div class="dropdown inline-block">
-    <Link class="icon-btn-main mx-2 dropdown-trigger" @click="toggleDropdown" title="Profile">
+    <Link class="icon-btn mx-2 dropdown-trigger" @click="toggleDropdown" title="Profile">
       <div class="icon" :class="iconClass"></div>
     </Link>
     <transition name="dropdown">
@@ -13,7 +13,7 @@
     </transition>
   </div>
   <div class="dropup inline-block">
-    <Link class="icon-btn-main mx-2 dropdown-trigger" @click="toggleDropup" title="Profile">
+    <Link class="btn-main mx-2 dropdown-trigger" @click="toggleDropup" title="Profile">
       <div class="icon" :class="iconClass"></div>
       <transition name="dropup">
         <Suspense>

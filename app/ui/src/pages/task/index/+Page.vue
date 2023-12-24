@@ -1,7 +1,7 @@
 <template>
   <div>
     <FlashMessage />
-    <ListViewer
+    <!-- <ListViewer
       :isPending="isPending"
       :isError="isError"
       :isFetching="isFetching"
@@ -9,18 +9,11 @@
       :error="error"
       :refetch="refetch"
     >
-    </ListViewer>
+    </ListViewer> -->
     <Pagination :items="items" @changePage="onChangePage" />
     <!-- <Pagination v-model:page="currentPage" :page-count="totalPages" /> -->
   </div>
 </template>
-
-<style scoped>
-.update {
-  font-weight: bold;
-  color: green;
-}
-</style>
 
 <script setup lang="ts">
 import { useQuery } from '@tanstack/vue-query'
@@ -70,6 +63,8 @@ if (data.value) {
 }
 const onChangePage = (page: number) => {
   currentPage.value = page
+  console.log(`[ui] [Task] [onChangePage] [page] :: ${page}`)
+  console.log(`[ui] [Task] [onChangePage] [currentPage] :: ${currentPage.value}`)
   // query.refetch()
 }
 </script>

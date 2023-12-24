@@ -24,6 +24,7 @@ declare module 'vue' {
     ListViewer: typeof import('./components/api/ListViewer.vue')['default']
     Login: typeof import('./components/auth/Login.vue')['default']
     MainNav: typeof import('./components/nav/MainNav.vue')['default']
+    PageList: typeof import('./components/pagination/PageList.vue')['default']
     PageShell: typeof import('./layouts/PageShell.vue')['default']
     Pagination: typeof import('./components/pagination/Pagination.vue')['default']
     Profile: typeof import('./components/auth/Profile.vue')['default']
