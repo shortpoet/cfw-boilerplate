@@ -1,5 +1,5 @@
 <template>
-  <a :class="{ active: pageContext.urlPathname === $attrs.href }">
+  <a :class="classStyle">
     <slot />
   </a>
 </template>
@@ -16,5 +16,22 @@ a.active {
 }
 </style>
 <script lang="ts" setup>
+import clsx from 'clsx';
+
+const props = defineProps({
+  active: {
+    type: Boolean,
+    required: false,
+    default: () => undefined
+  }
+})
+const attrs = useAttrs()
+const classStyle = computed(() => {
+  return clsx({
+    active: props.active ?? pageContext.urlPathname === attrs.href
+  })
+}
+)
+
 const pageContext = usePageContext()
 </script>

@@ -1,40 +1,52 @@
 <template>
-  <ul v-if="pager.pages && pager.pages.length" class="pagination" :style="ulStyles">
-    <li class="page-item first" :class="{ disabled: pager.currentPage === 1 }" :style="liStyles">
-      <a class="page-link" @click="setPage(1)" :style="aStyles">{{ labels.first }}</a>
-    </li>
-    <li class="page-item previous" :class="{ disabled: pager.currentPage === 1 }" :style="liStyles">
-      <a class="page-link" @click="setPage(pager.currentPage - 1)" :style="aStyles">{{
-        labels.previous
-      }}</a>
-    </li>
-    <li
-      v-for="page in pager.pages"
-      :key="page"
-      class="page-item page-number"
-      :class="{ active: pager.currentPage === page }"
-      :style="liStyles"
-    >
-      <a class="page-link" @click="setPage(page)" :style="aStyles">{{ page }}</a>
-    </li>
-    <li
-      class="page-item next"
-      :class="{ disabled: pager.currentPage === pager.totalPages }"
-      :style="liStyles"
-    >
-      <a class="page-link" @click="setPage(pager.currentPage + 1)" :style="aStyles">{{
-        labels.next
-      }}</a>
-    </li>
-    <li
-      class="page-item last"
-      :class="{ disabled: pager.currentPage === pager.totalPages }"
-      :style="liStyles"
-    >
-      <a class="page-link" @click="setPage(pager.totalPages)" :style="aStyles">{{ labels.last }}</a>
-    </li>
-  </ul>
+  <div class="pagination">
+    <ul v-if="pager.pages && pager.pages.length" class="pagination" :style="ulStyles">
+      <!-- first -->
+      <li class="page-item first" :class="{ disabled: pager.currentPage === 1 }" :style="liStyles">
+
+        <a class="page-link" @click="setPage(1)" :style="aStyles">{{ labels.first }}</a>
+
+      </li>
+      <!-- previous -->
+      <li class="page-item previous" :class="{ disabled: pager.currentPage === 1 }" :style="liStyles">
+
+        <a class="page-link" @click="setPage(pager.currentPage - 1)" :style="aStyles">{{
+          labels.previous
+        }}</a>
+
+      </li>
+      <!-- numbers -->
+      <li v-for="(page) in pager.pages" :key="page" class="page-item page-number" :style="liStyles">
+
+        <Link class="page-link" @click="setPage(page)" :style="aStyles" :active="pager.currentPage === page">{{ page }}
+        </Link>
+
+      </li>
+      <!-- next -->
+      <li class="page-item next" :class="{ disabled: pager.currentPage === pager.totalPages }" :style="liStyles">
+
+        <a class="page-link" @click="setPage(pager.currentPage + 1)" :style="aStyles">{{
+          labels.next
+        }}</a>
+
+      </li>
+      <!-- last -->
+      <li class="page-item last" :class="{ disabled: pager.currentPage === pager.totalPages }" :style="liStyles">
+
+        <a class="page-link" @click="setPage(pager.totalPages)" :style="aStyles">{{ labels.last }}</a>
+
+      </li>
+
+    </ul>
+  </div>
 </template>
+
+<style scoped>
+.pagination {
+  justify-content: center;
+  flex-wrap: wrap;
+}
+</style>
 
 <script setup lang="ts" generic="T">
 import paginate, { Paginate } from './paginate'
