@@ -15,7 +15,7 @@ export class TaskFetch extends OpenAPIRoute {
     data: Record<string, any>
   ) {
     // Retrieve the validated slug
-    const { id } = data.params
+    const { taskId: id } = data.params
     let task
     try {
       task = allTasks.find((task) => task.id === id)

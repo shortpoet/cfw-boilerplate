@@ -66,7 +66,7 @@ export const GetTaskSchema = {
   tags: ['Tasks'],
   summary: 'Get a single Task by id',
   parameters: {
-    id: Path(String, {
+    taskId: Path(String, {
       description: 'Task id'
     })
   },

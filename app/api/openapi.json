@@ -316,7 +316,7 @@
         }
       }
     },
-    "/api/task/tasks/{taskSlug}": {
+    "/api/task/tasks/{taskId}": {
       "get": {
         "tags": [
           "Tasks"
@@ -330,7 +330,7 @@
               "description": "Task id"
             },
             "required": true,
-            "name": "id",
+            "name": "taskId",
             "in": "path"
           }
         ],
