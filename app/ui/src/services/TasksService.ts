@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { TaskListResponse } from '../models/TaskListResponse';
+import type { TaskResponse } from '../models/TaskResponse';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -74,34 +75,24 @@ export class TasksService {
   }
 
   /**
-   * Get a single Task by slug
-   * @returns any Returns a single task if found
+   * Get a single Task by id
+   * @returns TaskResponse Returns a single task if found
    * @throws ApiError
    */
   public static getTaskFetch({
-    taskSlug,
+    taskId,
   }: {
-    taskSlug: string,
-  }): CancelablePromise<{
-    success: boolean;
-    result: {
-      task: {
-        name: string;
-        slug: string;
-        description?: string;
-        completed: boolean;
-        due_date: string;
-      };
-    };
-  }> {
+    taskId: string,
+  }): CancelablePromise<TaskResponse> {
     return __request(OpenAPI, {
       method: 'GET',
-      url: '/api/task/tasks/{taskSlug}',
+      url: '/api/task/tasks/{taskId}',
       path: {
-        'taskSlug': taskSlug,
+        'taskId': taskId,
       },
       errors: {
         404: `Task not found`,
+        500: `Internal server error`,
       },
     });
   }
@@ -129,7 +120,7 @@ export class TasksService {
   }> {
     return __request(OpenAPI, {
       method: 'DELETE',
-      url: '/api/task/tasks/{taskSlug}',
+      url: '/api/task/tasks/{taskId}',
       path: {
         'taskSlug': taskSlug,
       },

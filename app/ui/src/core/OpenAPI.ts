@@ -2,36 +2,31 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { ApiRequestOptions } from './ApiRequestOptions'
+import type { ApiRequestOptions } from './ApiRequestOptions';
 
-type Resolver<T> = (options: ApiRequestOptions) => Promise<T>
-type Headers = Record<string, string>
+type Resolver<T> = (options: ApiRequestOptions) => Promise<T>;
+type Headers = Record<string, string>;
 
 export type OpenAPIConfig = {
-  BASE: string
-  VERSION: string
-  WITH_CREDENTIALS: boolean
-  CREDENTIALS: 'include' | 'omit' | 'same-origin'
-  TOKEN?: string | Resolver<string> | undefined
-  USERNAME?: string | Resolver<string> | undefined
-  PASSWORD?: string | Resolver<string> | undefined
-  HEADERS?: Headers | Resolver<Headers> | undefined
-  ENCODE_PATH?: ((path: string) => string) | undefined
-}
-const { urlBaseApi } = useBaseUrl()
+  BASE: string;
+  VERSION: string;
+  WITH_CREDENTIALS: boolean;
+  CREDENTIALS: 'include' | 'omit' | 'same-origin';
+  TOKEN?: string | Resolver<string> | undefined;
+  USERNAME?: string | Resolver<string> | undefined;
+  PASSWORD?: string | Resolver<string> | undefined;
+  HEADERS?: Headers | Resolver<Headers> | undefined;
+  ENCODE_PATH?: ((path: string) => string) | undefined;
+};
+
 export const OpenAPI: OpenAPIConfig = {
-  BASE: urlBaseApi,
-  // BASE: `${process.env.API_HOST}:${process.env.VITE_PORT_API}`,
+  BASE: '',
   VERSION: '1.0',
   WITH_CREDENTIALS: false,
   CREDENTIALS: 'include',
   TOKEN: undefined,
   USERNAME: undefined,
   PASSWORD: undefined,
-  HEADERS: {
-    'Content-Type': 'application/json',
-    // 'Access-Control-Allow-Credentials': 'true',
-    Accept: 'application/json'
-  },
-  ENCODE_PATH: undefined
-}
+  HEADERS: undefined,
+  ENCODE_PATH: undefined,
+};
