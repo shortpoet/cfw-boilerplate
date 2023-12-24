@@ -41,7 +41,6 @@
     "kysely": "^0.26.3",
     "kysely-d1": "^0.3.0",
     "lucia": "^2.7.4",
-    "providers": "link:@lucia-auth/oauth/providers",
     "universal-cookie": "4.0.4",
     "vike": "^0.4.147"
   },

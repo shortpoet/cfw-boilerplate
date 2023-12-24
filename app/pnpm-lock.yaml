@@ -131,9 +131,6 @@ importers:
       lucia:
         specifier: ^2.7.4
         version: 2.7.4
-      providers:
-        specifier: link:@lucia-auth/oauth/providers
-        version: link:@lucia-auth/oauth/providers
       universal-cookie:
         specifier: 4.0.4
         version: 4.0.4

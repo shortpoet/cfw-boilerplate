@@ -2,8 +2,9 @@ import esbuild from 'esbuild';
 import { NodeModulesPolyfillPlugin } from '@esbuild-plugins/node-modules-polyfill';
 import { polyfillNode } from 'esbuild-plugin-polyfill-node';
 import brode from '@geut/esbuild-plugin-brode';
+import fs from 'node:fs';
 
-function buildWorker({ entry, out, debug, external } = {}) {
+async function buildWorker({ entry, out, debug, external } = {}) {
   const plugins = [
     // brode(),
     polyfillNode({
@@ -25,6 +26,7 @@ function buildWorker({ entry, out, debug, external } = {}) {
     format: 'esm',
     target: 'esnext',
     minify: !debug,
+    metafile: true,
     bundle: true,
     // banner: {
     //   js: "const __filename = (await import('node:url')).fileURLToPath(import.meta.url);const __dirname = (await import('node:path')).dirname(__filename);",
@@ -37,12 +39,12 @@ function buildWorker({ entry, out, debug, external } = {}) {
     },
   };
   console.log('define', define);
-  return esbuild.build(define);
+  return await esbuild.build(define);
 }
 
 build(getArgs());
 
-export async function build({ entry, out, debug }) {
+export async function build({ entry, out, debug, metaOut }) {
   const external = [
     // "@vueuse/core",
     // "vue-demi",
@@ -61,12 +63,28 @@ export async function build({ entry, out, debug }) {
   const config = {
     entry,
     out,
+    metaOut,
     debug,
     external,
   };
   try {
-    await buildWorker(config);
+    const metaJson = await buildWorker(config);
+    const inputs = metaJson['metafile'].outputs['../api/build/worker.mjs'].inputs
+    const sorted = Object.entries(inputs).map(([k, v]) => {
+      return {
+        file: k,
+        bytes: v.bytesInOutput,
+      }
+    }).sort((a, b) => {
+      return b.bytes - a.bytes
+    })
+    const sortedFileName = 'sorted.json'
+    const base = metaOut.split('/').slice(0, -1).join('/')
+    const sortedFile = `${base}/${sortedFileName}`
     console.log('[build-worker] Worker built successfully.');
+    fs.writeFileSync(metaOut, JSON.stringify(metaJson, null, 2));
+    console.log(`[build-worker] Metafile written to ${metaOut}.`);
+    fs.writeFileSync(sortedFile, JSON.stringify(sorted, null, 2));
   } catch (err) {
     console.error('[build-worker] Failed to build worker.', err);
   }
@@ -75,6 +93,7 @@ export async function build({ entry, out, debug }) {
 function getArgs() {
   let entry;
   let out;
+  let metaOut;
   let debug = false;
 
   const args = process.argv.filter(Boolean);
@@ -92,12 +111,20 @@ function getArgs() {
       state = 'OUT';
       continue;
     }
+    if (arg === '--meta-out') {
+      state = 'META_OUT';
+      continue;
+    }
     if (state === 'ENTRY') {
       entry = arg;
       state = null;
     }
     if (state === 'OUT') {
       out = arg;
+      state = null;
+    }
+    if (state === 'META_OUT') {
+      metaOut = arg;
       state = null;
     }
   }
@@ -108,6 +135,9 @@ function getArgs() {
   if (!out) {
     throw new Error('[build-worker] CLI argument --out missing.');
   }
+  if (!metaOut) {
+    throw new Error('[build-worker] CLI argument --meta-out missing.');
+  }
 
-  return { entry, out, debug };
+  return { entry, out, debug, metaOut };
 }
