@@ -10,7 +10,8 @@
       :refetch="refetch"
     >
     </ListViewer>
-    <n-pagination v-model:page="currentPage" :page-count="totalPages" />
+    <Pagination :items="items" @changePage="onChangePage" />
+    <!-- <Pagination v-model:page="currentPage" :page-count="totalPages" /> -->
   </div>
 </template>
 
@@ -25,8 +26,8 @@
 import { useQuery } from '@tanstack/vue-query'
 import { TaskListResponse } from '../../../models/TaskListResponse'
 import { TasksService } from '../../../services/TasksService'
-import ListViewer, { ListItemLink } from '#/ui/src/components/base/ListViewer.vue'
 import { ApiError } from '#/ui/src'
+import { ListItemLink } from '#/ui/src/components/api/ListViewer.vue'
 
 const { page, limit } = defineProps({
   page: {
@@ -66,5 +67,9 @@ if (data.value) {
       name: `Page ${i + 1}`
     }
   })
+}
+const onChangePage = (page: number) => {
+  currentPage.value = page
+  // query.refetch()
 }
 </script>
