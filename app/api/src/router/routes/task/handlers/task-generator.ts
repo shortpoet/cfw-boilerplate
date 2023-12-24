@@ -1,4 +1,16 @@
-import { faker } from '@faker-js/faker'
+import {
+  randVerb,
+  randAccessory,
+  randLine,
+  randCatchPhrase,
+  randText,
+  randProductAdjective,
+  randProductMaterial,
+  randProductDescription,
+  randProductName,
+  randBoolean,
+  randSoonDate
+} from '@ngneat/falso'
 import { TaskComponentType } from '../task-oa'
 import { capitalize } from 'lodash-es'
 
@@ -21,18 +33,22 @@ const base: TaskComponentType[] = [
   }
 ]
 
-export const taskFaker = (count: number): TaskComponentType[] => {
+export const taskGenerator = (count: number): TaskComponentType[] => {
   let id = 3
   const tasks = base.concat(
     Array.from({ length: count }, () => {
-      const name = `${capitalize(faker.word.verb())} ${faker.commerce.productName()}`
+      const verb = randVerb()
+      const slug = randProductName()
+      const name = `${capitalize(verb)} ${slug}`
       return {
         id: `${id++}`,
         name,
-        slug: faker.commerce.product(),
-        description: `${name} ${faker.word.verb()} ${faker.commerce.productAdjective()} ${faker.commerce.productMaterial()}`,
-        completed: faker.datatype.boolean(),
-        due_date: faker.date.future().toISOString()
+        slug,
+        description: `${capitalize(
+          verb
+        )} ${randProductAdjective()} ${slug} - ${randProductDescription()}`,
+        completed: randBoolean(),
+        due_date: randSoonDate().toISOString()
       }
     })
   )

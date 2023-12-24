@@ -8,7 +8,7 @@
     "bucket": "../../ui/build/client"
   },
   "build": {
-    "command": "npm run build"
+    "command": "npm run build:d"
   },
   "dev": {
     "port": 3000,

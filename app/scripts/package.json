@@ -8,6 +8,7 @@
     "hello": "echo 'Hello World!'",
     "bundle": "rollup -c",
     "build": "cross-env NODE_ENV=production && node src/bild/build-worker.mjs --entry ../api/src/index.ts --out ../api/build/worker.mjs --meta-out ../api/build/worker-meta.json",
+    "build:d": "cross-env NODE_ENV=production && node src/bild/build-worker.mjs --entry ../api/src/index.ts --out ../api/build/worker.mjs --meta-out ../api/build/worker-meta.json --debug",
     "wrangle": "tsx src/bin.ts"
   },
   "keywords": [],

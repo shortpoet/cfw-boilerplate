@@ -34,7 +34,8 @@ const { preflight, corsify } = createCors({
     'http://127.0.0.1:3333',
     'http://localhost:3000',
     'http://localhost:3333',
-    'https://cfw-boilerplate.pages.dev',
+    'https://cfw-boilerplate.shortpoet.workers.dev',
+    'https://cfw-dev.marshmallowmeat.com',
     'https://github.com'
   ],
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],

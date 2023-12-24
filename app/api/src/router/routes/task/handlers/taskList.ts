@@ -1,10 +1,10 @@
 import { Task } from './types'
 import { OpenAPIRoute, OpenAPIRouteSchema, Query } from '@cloudflare/itty-router-openapi'
 import { GetTaskListSchema } from '../task-oa'
-import { taskFaker } from './task-faker'
+import { taskGenerator } from './task-generator'
 import { TaskComponentType } from '../task-oa'
 
-export const ALL_TASKS: TaskComponentType[] = taskFaker(134)
+export const ALL_TASKS: TaskComponentType[] = taskGenerator(134)
 
 export class TaskList extends OpenAPIRoute {
   static schema = GetTaskListSchema

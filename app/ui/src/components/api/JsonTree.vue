@@ -170,7 +170,8 @@ expanded.value = parsed.value.depth < props.level
 .json-tree-value {
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  /* white-space: nowrap; */
+  word-wrap: normal;
 }
 
 .json-tree-value-string {
