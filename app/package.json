@@ -22,7 +22,7 @@
     "prepare": "cd .. && husky install app/.husky",
     "dep:d": "pnpm ui build:wp && pnpm w:dep:d",
     "dep:r": "pnpm ui build:wp && pnpm w:dep:r",
-    "openapi": "git status --porcelain | grep . && { echo 'There are pending changes.';} || pnpm openapi --input ./api/openapi.json --output ./api-client --useOptions --indent 2 --exportCore false",
+    "generate": "git status --porcelain | grep . && { echo 'There are pending changes.';} || pnpm openapi --input ./api/openapi.json --output ./api-client --useOptions --indent 2 --exportCore false",
     "========= Wskp": "",
     "api": "pnpm --filter api",
     "db": "pnpm --filter db",
