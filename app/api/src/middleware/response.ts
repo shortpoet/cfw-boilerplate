@@ -4,6 +4,26 @@ import { JsonData } from '../../../types'
 interface Headers {
   [key: string]: string
 }
+enum ResText {
+  OK = 'OK',
+  CREATED = 'Created',
+  UNAUTHORIZED = 'Unauthorized',
+  NOT_FOUND = 'Resource Not Found',
+  BAD_REQUEST = 'Bad Request',
+  SERVER_ERROR = 'Server Error'
+}
+interface ApiError {
+  message: string
+  type: string
+  code: number
+  stack?: string
+  cause?: unknown
+}
+
+export interface ApiErrorResponse {
+  success: boolean
+  error: ApiError
+}
 
 export const getBaseUrl = (env: Env) => {
   return {
@@ -51,50 +71,49 @@ export const initResponse = (res: Response | undefined) => {
   return init
 }
 
-const formatErr = (type: string, code: number, err: Error) => {
-  return JSON.stringify(
-    {
-      error: {
-        message: err.message,
-        type: type,
-        code: code
-      }
-    },
-    null,
-    2
-  )
-}
+const createErr = (type: string, code: number, err: Error | unknown) => ({
+  success: false,
+  error: {
+    message: err instanceof Error ? err.message : `${err}`,
+    type: type,
+    code: code,
+    stack: err instanceof Error ? err.stack : undefined,
+    cause: err instanceof Error ? err.cause : undefined
+  }
+})
 
-export const notFoundResponse = (msg?: string, err?: Error, res?: Response) => {
-  const newErr = err || new Error(`${msg}` || 'Resource Not found')
+const formatErr = (err: ApiErrorResponse) => JSON.stringify(err, null, 2)
+
+export const notFoundResponse = (msg?: string, err?: Error | unknown, res?: Response) => {
+  const newErr = err instanceof Error ? err : new Error(`${msg}` || ResText.NOT_FOUND)
   const init = {
     ...res,
     status: 404,
     statusText: newErr.message
   } as ResponseInit
-  const body = formatErr('NotFound', 404, newErr)
+  const body = formatErr(createErr(ResText.NOT_FOUND, 404, newErr))
   return new Response(body, init)
 }
 
-export const badResponse = (msg = 'Bad Request', err?: Error, res?: Response) => {
-  const newErr = err || new Error(`${msg}`, { cause: msg })
+export const badResponse = (msg = ResText.BAD_REQUEST, err?: Error | unknown, res?: Response) => {
+  const newErr = err instanceof Error ? err : new Error(`${msg}` || ResText.NOT_FOUND)
   const init = {
     ...res,
     status: 400,
     statusText: newErr.message
   } as ResponseInit
-  const body = formatErr('BadRequest', 400, newErr)
+  const body = formatErr(createErr(ResText.BAD_REQUEST, 400, newErr))
   return new Response(body, init)
 }
 
-export const serverErrorResponse = (msg?: string, err?: Error, res?: Response) => {
-  const newErr = err || new Error(`${msg}` || 'Server Error')
+export const serverErrorResponse = (msg?: string, err?: Error | unknown, res?: Response) => {
+  const newErr = err instanceof Error ? err : new Error(`${msg}` || ResText.NOT_FOUND)
   const init = {
     ...res,
     status: 500,
     statusText: newErr.message
   } as ResponseInit
-  const body = formatErr('ServerError', 500, newErr)
+  const body = formatErr(createErr(ResText.SERVER_ERROR, 500, newErr))
   return new Response(body, init)
 }
 
@@ -108,12 +127,12 @@ export const jsonCreatedResponse = (data: any, res?: Response) => {
 
 export const okResponse = (data?: string, res?: Response) => {
   const init = initResponse(res)
-  return new Response(data || '{}', { ...init, status: 200, statusText: 'OK' })
+  return new Response(data || '{}', { ...init, status: 200, statusText: ResText.OK })
 }
 
 export const createdResponse = (data?: string, res?: Response) => {
   const init = initResponse(res)
-  return new Response(data, { ...init, status: 201, statusText: 'Created' })
+  return new Response(data, { ...init, status: 201, statusText: ResText.CREATED })
 }
 
 export const unauthorizedResponse = (data?: string, res?: Response, status = 401) => {
@@ -121,6 +140,6 @@ export const unauthorizedResponse = (data?: string, res?: Response, status = 401
   return new Response(data, {
     ...init,
     status,
-    statusText: 'Unauthorized'
+    statusText: ResText.UNAUTHORIZED
   })
 }

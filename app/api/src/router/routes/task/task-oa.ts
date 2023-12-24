@@ -23,7 +23,29 @@ export const TaskListResponseComponent = z
   .openapi('TaskListResponse')
 export type TaskListResponseComponentType = z.infer<typeof TaskListResponseComponent>
 
-export const GetTaskSchema = {
+export const TaskResponseComponent = z
+  .object({
+    success: z.boolean(),
+    task: TaskComponent
+  })
+  .openapi('TaskResponse')
+export type TaskResponseComponentType = z.infer<typeof TaskResponseComponent>
+
+export const ApiErrorResponseComponent = z
+  .object({
+    success: z.boolean(),
+    error: z.object({
+      message: z.string(),
+      type: z.string(),
+      code: z.number(),
+      stack: z.string().optional(),
+      cause: z.string().optional()
+    })
+  })
+  .openapi('ApiErrorResponse')
+export type ApiErrorResponseComponentType = z.infer<typeof ApiErrorResponseComponent>
+
+export const GetTaskListSchema = {
   tags: ['Tasks'],
   summary: 'List Tasks',
   parameters: {
@@ -36,6 +58,30 @@ export const GetTaskSchema = {
     '200': {
       description: 'Returns a list of tasks',
       schema: TaskListResponseComponent
+    }
+  }
+}
+
+export const GetTaskSchema = {
+  tags: ['Tasks'],
+  summary: 'Get a single Task by id',
+  parameters: {
+    id: Path(String, {
+      description: 'Task id'
+    })
+  },
+  responses: {
+    '200': {
+      description: 'Returns a single task if found',
+      schema: TaskResponseComponent
+    },
+    '404': {
+      description: 'Task not found',
+      schema: ApiErrorResponseComponent
+    },
+    '500': {
+      description: 'Internal server error',
+      schema: ApiErrorResponseComponent
     }
   }
 }

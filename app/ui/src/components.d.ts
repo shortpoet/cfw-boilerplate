@@ -14,7 +14,6 @@ declare module 'vue' {
     AuthLayout: typeof import('./layouts/AuthLayout.vue')['default']
     BlackLayout: typeof import('./layouts/BlackLayout.vue')['default']
     BlueLayout: typeof import('./layouts/BlueLayout.vue')['default']
-    copy: typeof import('./layouts/BlueLayout copy.vue')['default']
     Counter: typeof import('./components/base/Counter.vue')['default']
     DropMenu: typeof import('./components/auth/DropMenu.vue')['default']
     Flash: typeof import('./components/flash/Flash.vue')['default']

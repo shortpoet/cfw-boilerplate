@@ -55,11 +55,11 @@ const { isPending, isError, isFetching, data, error, refetch, suspense } = query
 
 const dataItems: ComputedRef<ListItemLink[] | undefined> = computed(
   () =>
-    data.value?.tasks.map((task, i) => {
-      // const id = task.id
+    data.value?.tasks.map((task) => {
+      const id = task.id
       return {
-        id: i,
-        href: `/task/${i}`,
+        id,
+        href: `/task/${id}`,
         name: task.name
       }
     })

@@ -62,6 +62,58 @@
           "page",
           "tasks"
         ]
+      },
+      "TaskResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "task": {
+            "$ref": "#/components/schemas/Task"
+          }
+        },
+        "required": [
+          "success",
+          "task"
+        ]
+      },
+      "ApiErrorResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "code": {
+                "type": "number"
+              },
+              "stack": {
+                "type": "string"
+              },
+              "cause": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message",
+              "type",
+              "code"
+            ]
+          }
+        },
+        "required": [
+          "success",
+          "error"
+        ]
       }
     },
     "parameters": {}
@@ -269,16 +321,16 @@
         "tags": [
           "Tasks"
         ],
-        "summary": "Get a single Task by slug",
+        "summary": "Get a single Task by id",
         "operationId": "get_TaskFetch",
         "parameters": [
           {
             "schema": {
               "type": "string",
-              "description": "Task slug"
+              "description": "Task id"
             },
             "required": true,
-            "name": "taskSlug",
+            "name": "id",
             "in": "path"
           }
         ],
@@ -288,52 +340,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "result": {
-                      "type": "object",
-                      "properties": {
-                        "task": {
-                          "type": "object",
-                          "properties": {
-                            "name": {
-                              "type": "string",
-                              "example": "lorem"
-                            },
-                            "slug": {
-                              "type": "string"
-                            },
-                            "description": {
-                              "type": "string"
-                            },
-                            "completed": {
-                              "type": "boolean"
-                            },
-                            "due_date": {
-                              "type": "string",
-                              "format": "date-time"
-                            }
-                          },
-                          "required": [
-                            "name",
-                            "slug",
-                            "completed",
-                            "due_date"
-                          ]
-                        }
-                      },
-                      "required": [
-                        "task"
-                      ]
-                    }
-                  },
-                  "required": [
-                    "success",
-                    "result"
-                  ]
+                  "$ref": "#/components/schemas/TaskResponse"
                 }
               }
             }
@@ -343,19 +350,17 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "error": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
                 }
               }
             }
