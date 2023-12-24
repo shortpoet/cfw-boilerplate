@@ -2,8 +2,8 @@
   <ul>
     <li>
       <Link href="/orig/about" :title="'about'">
-      <div v-if="!user" i-carbon-dicom-overlay />
-      <img v-else :src="user?.image || 'TODO ALT'" class="w-8 h-8 rounded-full" />
+        <div v-if="!user" i-carbon-dicom-overlay />
+        <img v-else :src="user?.image || 'TODO ALT'" class="w-8 h-8 rounded-full" />
       </Link>
     </li>
     <li>{{ user?.username }}</li>
@@ -12,29 +12,38 @@
     <Login>
       <template #login-github="loginProps">
         <li>
-          <button class="c-yellow btn m-3 text-sm py-2 px-4 rounded-full" id="login-button" :disabled="!!user"
-            @click="loginProps.onLogin">Log in</button>
+          <button
+            class="c-yellow btn-main m-3 text-sm py-2 px-4 rounded-full"
+            id="login-button"
+            :disabled="!!user"
+            @click="loginProps.onLogin"
+          >
+            Log in
+          </button>
         </li>
       </template>
       <template #logout="logoutProps">
         <li>
           <button
-            class="c-yellow btn m-3 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-            id="logout-button" :disabled="!user" @click="logoutProps.onLogout">Log out</button>
+            class="c-yellow btn-main m-3 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+            id="logout-button"
+            :disabled="!user"
+            @click="logoutProps.onLogout"
+          >
+            Log out
+          </button>
         </li>
       </template>
     </Login>
-
   </ul>
 </template>
 
 <script setup lang="ts">
-import { User } from '#/types';
+import { User } from '#/types'
 defineProps<{
-  iconClass: string;
-  user?: User;
-}>();
-
+  iconClass: string
+  user?: User
+}>()
 </script>
 
 <style scoped>
@@ -93,7 +102,6 @@ defineProps<{
 .dropup-menu-leave-to {
   opacity: 0;
 }
-
 
 /* drop up */
 .drop-u-menu {

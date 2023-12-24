@@ -12,6 +12,7 @@ import { InlineConfig } from 'vitest'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import Icons from 'unplugin-icons/vite'
 import IconsResolver from 'unplugin-icons/resolver'
+import WebfontDownload from 'vite-plugin-webfont-dl'
 
 import { getConfig } from './config'
 
@@ -138,7 +139,9 @@ export default ({ mode }: { mode: string }) => {
             })
           )
         }
-      })
+      }),
+      // https://github.com/feat-agency/vite-plugin-webfont-dl
+      WebfontDownload()
     ],
     server: {
       port: parseInt(env.VITE_PORT || '3000'),

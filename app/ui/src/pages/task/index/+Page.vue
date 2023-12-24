@@ -10,6 +10,7 @@
       :refetch="refetch"
     >
     </ListViewer>
+    <n-pagination v-model:page="currentPage" :page-count="totalPages" />
   </div>
 </template>
 
@@ -24,7 +25,7 @@
 import { useQuery } from '@tanstack/vue-query'
 import { TaskListResponse } from '../../../models/TaskListResponse'
 import { TasksService } from '../../../services/TasksService'
-import ListViewer, { ListItemsLink, ListItemLink } from '#/ui/src/components/base/ListViewer.vue'
+import ListViewer, { ListItemLink } from '#/ui/src/components/base/ListViewer.vue'
 import { ApiError } from '#/ui/src'
 
 const { page, limit } = defineProps({
@@ -38,6 +39,9 @@ const { page, limit } = defineProps({
   }
 })
 
+let totalPages = ref(0)
+let currentPage = ref(0)
+
 const query = useQuery<TaskListResponse, ApiError>({
   queryKey: ['result', page, limit],
   // queryFn: () => getTaskList(page),
@@ -47,15 +51,15 @@ const query = useQuery<TaskListResponse, ApiError>({
 })
 // @ts-ignore
 const { isPending, isError, isFetching, data, error, refetch, suspense } = query
-let items: Ref<ListItemsLink<ListItemLink>> = ref([]) as unknown as Ref<ListItemsLink<ListItemLink>>
+let items: Ref<ListItemLink[]> = ref([])
 // await suspense()
 // onServerPrefetch(suspense)
 if (data.value) {
-  const length = data.value?.tasks.length
+  totalPages.value = data.value?.tasks.length
   const pageSize = 10
   const noLimit = limit === 0
-  const pages = Math.ceil(length / (noLimit ? pageSize : limit))
-  items.value.items = Array.from({ length: pages }, (_, i) => {
+  const pages = Math.ceil(totalPages.value / (noLimit ? pageSize : limit))
+  items.value = Array.from({ length: pages }, (_, i) => {
     return {
       id: i + 1,
       href: `/task/${i + 1}`,

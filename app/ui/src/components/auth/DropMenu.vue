@@ -1,7 +1,7 @@
 <template>
   <div class="dropdown inline-block">
-    <Link class="icon-btn mx-2 dropdown-trigger" @click="toggleDropdown" title="Profile">
-    <div class="icon" :class="iconClass"></div>
+    <Link class="icon-btn-main mx-2 dropdown-trigger" @click="toggleDropdown" title="Profile">
+      <div class="icon" :class="iconClass"></div>
     </Link>
     <transition name="dropdown">
       <div class="dropdown-menu" v-if="isActive" ref="dd-menu" @click="closeDropdown">
@@ -13,57 +13,55 @@
     </transition>
   </div>
   <div class="dropup inline-block">
-
-    <Link class="icon-btn mx-2 dropdown-trigger" @click="toggleDropup" title="Profile">
-    <div class="icon" :class="iconClass"></div>
-    <transition name="dropup">
-      <Suspense>
-        <div class="dropup-menu" v-if="isDropupActive" ref="du-menu" @click="closeDropup">
-          <ul>
-            <li>
-              <Profile :icon-class="'i-carbon-user-filled'" :user="user" />
-            </li>
-          </ul>
-        </div>
-      </Suspense>
-    </transition>
-
+    <Link class="icon-btn-main mx-2 dropdown-trigger" @click="toggleDropup" title="Profile">
+      <div class="icon" :class="iconClass"></div>
+      <transition name="dropup">
+        <Suspense>
+          <div class="dropup-menu" v-if="isDropupActive" ref="du-menu" @click="closeDropup">
+            <ul>
+              <li>
+                <Profile :icon-class="'i-carbon-user-filled'" :user="user" />
+              </li>
+            </ul>
+          </div>
+        </Suspense>
+      </transition>
     </Link>
   </div>
 </template>
 
 <script setup lang="ts">
-const isActive = ref(false);
-const isDropupActive = ref(false);
+const isActive = ref(false)
+const isDropupActive = ref(false)
 
 const toggleDropdown = () => {
-  isActive.value = !isActive.value;
-};
+  isActive.value = !isActive.value
+}
 
 const toggleDropup = () => {
-  isDropupActive.value = !isDropupActive.value;
-};
+  isDropupActive.value = !isDropupActive.value
+}
 
 const closeDropdown = () => {
-  isActive.value = false;
-};
+  isActive.value = false
+}
 
 const closeDropup = () => {
-  isDropupActive.value = false;
-};
+  isDropupActive.value = false
+}
 
 defineProps({
   iconClass: {
     type: String,
     required: false,
-    default: 'i-carbon-user-filled',
+    default: 'i-carbon-user-filled'
   },
   user: {
     type: Object,
     required: false,
-    default: null,
+    default: null
   }
-});
+})
 </script>
 
 <style scoped>
@@ -122,7 +120,6 @@ defineProps({
 .dropup-menu-leave-to {
   opacity: 0;
 }
-
 
 /* drop up */
 .drop-u-menu {

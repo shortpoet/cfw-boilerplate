@@ -1,13 +1,13 @@
 <script setup lang="ts">
 // import { navigate } from 'vike/client/router'
-import { useI18n } from '../composables';
+import { useI18n } from '../composables'
 
 const { t } = useI18n()
 
 const nav = () => ({
   // back: () => navigate('/'),
-  back: () => window.history.back(),
-});
+  back: () => window.history.back()
+})
 </script>
 
 <template>
@@ -17,7 +17,7 @@ const nav = () => ({
     </div>
     <RouterView />
     <div>
-      <button btn text-sm m="3 t8" @click="nav().back()">
+      <button btn-main text-sm m="3 t8" @click="nav().back()">
         {{ t('button.back') }}
       </button>
     </div>

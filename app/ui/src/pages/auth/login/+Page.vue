@@ -2,11 +2,9 @@
   <div class="page-container" flex-col items-center flex>
     <h1>Auth</h1>
     <Link :href="`/auth`" :title="'back'">
-    <i class="i-carbon-page-first" inline-block /><span>back</span>
+      <i class="i-carbon-page-first" inline-block /><span>back</span>
     </Link>
-    <div>
-      <i class="i-carbon-user-activity" inline-block /><span>Session</span>
-    </div>
+    <div><i class="i-carbon-user-activity" inline-block /><span>Session</span></div>
 
     <div v-if="!session" i-carbon-not-available />
     <div v-else>
@@ -15,41 +13,57 @@
 
     <Login :session="session">
       <template #login="loginProps">
-        <button class="btn m-3 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-          id="login-button" :disabled="loginProps.isLoggedIn" @click="loginProps.onLogin">
+        <button
+          class="btn-main m-3 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+          id="login-button"
+          :disabled="loginProps.isLoggedIn"
+          @click="loginProps.onLogin"
+        >
           Log in
         </button>
       </template>
       <template #login-github="loginProps">
-        <button class="btn m-3 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-          id="login-button-github" :disabled="loginProps.isLoggedIn" @click="loginProps.onLogin">
+        <button
+          class="btn-main m-3 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+          id="login-button-github"
+          :disabled="loginProps.isLoggedIn"
+          @click="loginProps.onLogin"
+        >
           <i class="i-carbon-logo-github" inline-block /> Log in Github
         </button>
       </template>
       <template #login-popup="loginPopupProps">
-        <button class="btn m-3 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-          id="login-button" :disabled="loginPopupProps.isLoggedIn" @click="loginPopupProps.onLoginPopup">
+        <button
+          class="btn-main m-3 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+          id="login-button"
+          :disabled="loginPopupProps.isLoggedIn"
+          @click="loginPopupProps.onLoginPopup"
+        >
           Log in Popup
         </button>
       </template>
       <template #logout="logoutProps">
-        <button class="btn m-3 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-          id="logout-button" :disabled="logoutProps.authError" @click="logoutProps.onLogout">Log
-          out</button>
+        <button
+          class="btn-main m-3 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+          id="logout-button"
+          :disabled="logoutProps.authError"
+          @click="logoutProps.onLogout"
+        >
+          Log out
+        </button>
       </template>
     </Login>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Session } from '#/types';
+import { Session } from '#/types'
 const props = defineProps<{
-  session?: Session;
-}>();
-let session = ref(props.session);
-if (typeof window !== "undefined" && !session.value) {
-  console.log(`[ui] [auth] [login} [+Page] [setup] :: no props session, try to load from cookie`);
+  session?: Session
+}>()
+let session = ref(props.session)
+if (typeof window !== 'undefined' && !session.value) {
+  console.log(`[ui] [auth] [login} [+Page] [setup] :: no props session, try to load from cookie`)
   session.value = await useSession(getCookie(LUCIAAUTH_COOKIES_SESSION_TOKEN))
 }
-
 </script>

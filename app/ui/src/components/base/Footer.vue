@@ -19,24 +19,24 @@ const toggleLangsTitle = ref('Toggle Langs')
 
 <template>
   <nav text-xl mt-6 class="footer-nav">
-    <Link :title="homeTitle" class="icon-btn mx-2" href="/">
+    <Link :title="homeTitle" class="icon-btn-main mx-2" href="/">
       <div i-carbon-campsite />
     </Link>
 
-    <Link class="icon-btn mx-2" :title="toggleDarkTitle" @click="toggleDark()">
+    <Link class="icon-btn-main mx-2" :title="toggleDarkTitle" @click="toggleDark()">
       <div i="carbon-sun dark:carbon-moon" />
     </Link>
 
-    <Link :title="toggleLangsTitle" class="icon-btn mx-2" @click="toggleLocales()">
+    <Link :title="toggleLangsTitle" class="icon-btn-main mx-2" @click="toggleLocales()">
       <div i-carbon-language />
     </Link>
 
-    <Link class="icon-btn mx-2" :href="`${urlPathname}`" :title="'about'">
+    <Link class="icon-btn-main mx-2" :href="`${urlPathname}`" :title="'about'">
       <div i-carbon-dicom-overlay />
     </Link>
 
     <Link
-      class="icon-btn mx-2"
+      class="icon-btn-main mx-2"
       rel="noreferrer"
       href="https://github.com/shortpoet"
       target="_blank"
