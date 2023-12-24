@@ -1,17 +1,16 @@
 <template>
   <div>
     <FlashMessage />
-    <!-- <ListViewer
+    <ListViewer
       :isPending="isPending"
       :isError="isError"
       :isFetching="isFetching"
-      :items="items"
+      :items="dataItems"
       :error="error"
       :refetch="refetch"
-    >
-    </ListViewer> -->
-    <Pagination :items="items" @changePage="onChangePage" />
-    <!-- <Pagination v-model:page="currentPage" :page-count="totalPages" /> -->
+    />
+    <Pagination :items="pageItems" @changePage="onChangePage" />
+    <!-- <Pagination v-model:page="currentPage" :page-count="totalItems" /> -->
   </div>
 </template>
 
@@ -21,6 +20,7 @@ import { TaskListResponse } from '../../../models/TaskListResponse'
 import { TasksService } from '../../../services/TasksService'
 import { ApiError } from '#/ui/src'
 import { ListItemLink } from '#/ui/src/components/api/ListViewer.vue'
+import { Paginate } from '#/ui/src/components/pagination/paginate'
 
 const { page, limit } = defineProps({
   page: {
@@ -33,8 +33,12 @@ const { page, limit } = defineProps({
   }
 })
 
-let totalPages = ref(0)
-let currentPage = ref(0)
+let totalItems = ref(0)
+let currentPage = ref()
+const pageSize = 10
+// const noLimit = limit === 0
+const startIndex = ref(0)
+const endIndex = ref(pageSize)
 
 const query = useQuery<TaskListResponse, ApiError>({
   queryKey: ['result', page, limit],
@@ -45,26 +49,38 @@ const query = useQuery<TaskListResponse, ApiError>({
 })
 // @ts-ignore
 const { isPending, isError, isFetching, data, error, refetch, suspense } = query
-let items: Ref<ListItemLink[]> = ref([])
+let pageItems: Ref<ListItemLink[]> = ref([])
+// let dataItems: Ref<ListItemLink[]> = ref([])
 // await suspense()
 // onServerPrefetch(suspense)
 if (data.value) {
-  totalPages.value = data.value?.tasks.length
-  const pageSize = 10
-  const noLimit = limit === 0
-  const pages = Math.ceil(totalPages.value / (noLimit ? pageSize : limit))
-  items.value = Array.from({ length: pages }, (_, i) => {
-    return {
-      id: i + 1,
-      href: `/task/${i + 1}`,
-      name: `Page ${i + 1}`
-    }
-  })
+  totalItems.value = data.value?.tasks.length
+  // const pages = Math.ceil(totalItems.value / (noLimit ? pageSize : limit))
+  pageItems.value = Array.from({ length: totalItems.value }, (_, i) => ({
+    id: i + 1,
+    href: `/task/${i + 1}`,
+    name: `Page ${i + 1}`
+  }))
 }
-const onChangePage = (page: number) => {
-  currentPage.value = page
-  console.log(`[ui] [Task] [onChangePage] [page] :: ${page}`)
-  console.log(`[ui] [Task] [onChangePage] [currentPage] :: ${currentPage.value}`)
+const dataItems = computed(() => {
+  return data.value?.tasks
+    .map((task, i) => {
+      return {
+        id: i,
+        href: `/task/${i}`,
+        name: task.name
+      }
+    })
+    .slice(startIndex.value, endIndex.value)
+})
+const onChangePage = (pager: Paginate) => {
+  currentPage.value = pager.currentPage
+  startIndex.value = pager.startIndex
+  endIndex.value = pager.endIndex
+  // console.log(`[ui] [Task] [onChangePage] [page] ::`)
+  // console.log(pager)
+  // console.log(`[ui] [Task] [onChangePage] [currentPage] ::`)
+  // console.log(currentPage.value)
   // query.refetch()
 }
 </script>

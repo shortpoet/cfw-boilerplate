@@ -37,7 +37,7 @@
 </template>
 
 <script setup lang="ts" generic="T">
-import paginate from './paginate'
+import paginate, { Paginate } from './paginate'
 
 const defaultStyles = {
   ul: {
@@ -61,7 +61,7 @@ const defaultStyles = {
 const { items, initialPage, pageSize, maxPages, labels, styles, disableDefaultStyles } =
   defineProps({
     items: {
-      type: Array,
+      type: Array as PropType<T[]>,
       required: true
     },
     initialPage: {
@@ -95,10 +95,12 @@ const { items, initialPage, pageSize, maxPages, labels, styles, disableDefaultSt
   })
 
 const emit = defineEmits<{
-  (event: 'changePage', value: string): void
+  (event: 'changePage', value: Paginate): void
+  // (event: 'changePage', value: T[]): void
 }>()
 
 const pager = ref(paginate(items.length, initialPage, pageSize, maxPages))
+// console.log('pager', pager.value)
 const ulStyles = ref({})
 const liStyles = ref({})
 const aStyles = ref({})
@@ -120,17 +122,14 @@ const initialize = () => {
 }
 
 const setPage = (page: number) => {
-  const pagerData = paginate(items.length, page, pageSize, maxPages)
-
-  const pageOfItems = items.slice(pagerData.startIndex, pagerData.endIndex + 1).toString()
-
-  pager.value = pagerData
-  emit('changePage', pageOfItems)
+  pager.value = paginate(items.length, page, pageSize, maxPages)
+  emit('changePage', pager.value)
 }
 
 watch(
   () => items,
-  () => setPage(initialPage)
+  () => setPage(initialPage),
+  { immediate: false }
 )
 
 initialize()

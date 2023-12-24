@@ -22,6 +22,7 @@ declare module 'vue' {
     JsonTree: typeof import('./components/api/JsonTree.vue')['default']
     Link: typeof import('./components/nav/Link.vue')['default']
     ListViewer: typeof import('./components/api/ListViewer.vue')['default']
+    ListViewerNames: typeof import('./components/api/ListViewerNames.vue')['default']
     Login: typeof import('./components/auth/Login.vue')['default']
     MainNav: typeof import('./components/nav/MainNav.vue')['default']
     PageList: typeof import('./components/pagination/PageList.vue')['default']

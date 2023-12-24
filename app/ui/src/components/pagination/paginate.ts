@@ -60,3 +60,5 @@ function paginate(
 }
 
 export default paginate
+
+export type Paginate = ReturnType<typeof paginate>
