@@ -3,6 +3,13 @@ import { NodeModulesPolyfillPlugin } from '@esbuild-plugins/node-modules-polyfil
 import { polyfillNode } from 'esbuild-plugin-polyfill-node';
 import brode from '@geut/esbuild-plugin-brode';
 import fs from 'node:fs';
+import { join } from 'node:path';
+
+const __filename = (await import('node:url')).fileURLToPath(import.meta.url);
+const __dirname = (await import('node:path')).dirname(__filename);
+const __appDir = join(__dirname, '../../..');
+
+const localPkgJson = JSON.parse(fs.readFileSync(`${__appDir}/api/package.json`, 'utf-8'));
 
 async function buildWorker({ entry, out, debug, external } = {}) {
   const plugins = [
@@ -45,7 +52,11 @@ async function buildWorker({ entry, out, debug, external } = {}) {
 build(getArgs());
 
 export async function build({ entry, out, debug, metaOut }) {
-  const external = [
+  const external = Object.keys({
+    // ...(localPkgJson.dependencies || {}),
+    ...(localPkgJson.devDependencies || {}),
+    ...(localPkgJson.peerDependencies || {})
+  }).concat([
     // "@vueuse/core",
     // "vue-demi",
     // "node:fs",
@@ -56,7 +67,7 @@ export async function build({ entry, out, debug, metaOut }) {
     // 'node:url',
     'node:crypto',
     '__STATIC_CONTENT_MANIFEST',
-  ];
+  ])
 
   console.log('[build-worker] Building worker...');
   // const args = getArgs();
@@ -70,6 +81,7 @@ export async function build({ entry, out, debug, metaOut }) {
   try {
     const metaJson = await buildWorker(config);
     const inputs = metaJson['metafile'].outputs['../api/build/worker.mjs'].inputs
+
     const sorted = Object.entries(inputs).map(([k, v]) => {
       return {
         file: k,
@@ -81,10 +93,13 @@ export async function build({ entry, out, debug, metaOut }) {
     const sortedFileName = 'sorted.json'
     const base = metaOut.split('/').slice(0, -1).join('/')
     const sortedFile = `${base}/${sortedFileName}`
+
     console.log('[build-worker] Worker built successfully.');
     fs.writeFileSync(metaOut, JSON.stringify(metaJson, null, 2));
+
     console.log(`[build-worker] Metafile written to ${metaOut}.`);
     fs.writeFileSync(sortedFile, JSON.stringify(sorted, null, 2));
+
   } catch (err) {
     console.error('[build-worker] Failed to build worker.', err);
   }
