@@ -2,19 +2,40 @@ import { faker } from '@faker-js/faker'
 import { TaskComponentType } from '../task-oa'
 import { capitalize } from 'lodash-es'
 
+const base: TaskComponentType[] = [
+  {
+    id: '1',
+    name: 'Clean my room',
+    slug: 'clean-room',
+    description: undefined,
+    completed: false,
+    due_date: '2025-01-05'
+  },
+  {
+    id: '2',
+    name: 'Build something awesome with Cloudflare Workers',
+    slug: 'cloudflare-workers',
+    description: 'Lorem Ipsum',
+    completed: true,
+    due_date: '2022-12-24'
+  }
+]
+
 export const taskFaker = (count: number): TaskComponentType[] => {
-  let id = 2
-  const tasks = Array.from({ length: count }, () => {
-    const name = `${capitalize(faker.word.verb())} ${faker.commerce.productName()}`
-    return {
-      id: `${id++}`,
-      name,
-      slug: faker.commerce.product(),
-      description: `${name} ${faker.word.verb()} ${faker.commerce.productAdjective()} ${faker.commerce.productMaterial()}}`,
-      completed: faker.datatype.boolean(),
-      due_date: faker.date.future().toISOString()
-    }
-  })
+  let id = 3
+  const tasks = base.concat(
+    Array.from({ length: count }, () => {
+      const name = `${capitalize(faker.word.verb())} ${faker.commerce.productName()}`
+      return {
+        id: `${id++}`,
+        name,
+        slug: faker.commerce.product(),
+        description: `${name} ${faker.word.verb()} ${faker.commerce.productAdjective()} ${faker.commerce.productMaterial()}`,
+        completed: faker.datatype.boolean(),
+        due_date: faker.date.future().toISOString()
+      }
+    })
+  )
 
   return tasks
 }

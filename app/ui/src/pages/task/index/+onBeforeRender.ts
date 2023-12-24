@@ -27,7 +27,8 @@ const onBeforeRender: OnBeforeRenderAsync = async (
     queryKey: ['result', page, limit],
     // queryFn: () => getTaskList(page),
     queryFn: ({ queryKey }) =>
-      TasksService.getTaskList({ page: queryKey[1] as number, limit: queryKey[2] as number })
+      TasksService.getTaskList({ page: queryKey[1] as number, limit: queryKey[2] as number }),
+    staleTime: 1000 * 60 * 5 // 5 minutes
   })
   vueQueryState = dehydrate(queryClient)
   try {

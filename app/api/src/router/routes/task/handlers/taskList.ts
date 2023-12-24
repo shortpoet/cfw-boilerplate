@@ -4,25 +4,7 @@ import { GetTaskListSchema } from '../task-oa'
 import { taskFaker } from './task-faker'
 import { TaskComponentType } from '../task-oa'
 
-export const allTasks: TaskComponentType[] = [
-  {
-    id: '1',
-    name: 'Clean my room',
-    slug: 'clean-room',
-    description: undefined,
-    completed: false,
-    due_date: '2025-01-05'
-  },
-  {
-    id: '2',
-    name: 'Build something awesome with Cloudflare Workers',
-    slug: 'cloudflare-workers',
-    description: 'Lorem Ipsum',
-    completed: true,
-    due_date: '2022-12-24'
-  },
-  ...taskFaker(134)
-]
+export const ALL_TASKS: TaskComponentType[] = taskFaker(134)
 
 export class TaskList extends OpenAPIRoute {
   static schema = GetTaskListSchema
@@ -57,13 +39,13 @@ export class TaskList extends OpenAPIRoute {
     if (limit === 0) {
       // If limit is set to 0, retrieve all data without limit
       startIndex = 0
-      endIndex = allTasks.length
+      endIndex = ALL_TASKS.length
     }
 
     // Implement pagination logic using cursor and indexKey
     if (cursor && indexKey) {
       // Find the index of the cursor value in the dataset
-      const index = allTasks.findIndex(
+      const index = ALL_TASKS.findIndex(
         (task) => task[indexKey as keyof TaskComponentType] === cursor
       )
       if (index !== -1) {
@@ -73,7 +55,7 @@ export class TaskList extends OpenAPIRoute {
     }
 
     // Slice the dataset based on the calculated start and end indexes
-    const paginatedTasks = allTasks.slice(startIndex, endIndex)
+    const paginatedTasks = ALL_TASKS.slice(startIndex, endIndex)
     // Return paginated tasks along with other metadata
     const out = {
       success: true,

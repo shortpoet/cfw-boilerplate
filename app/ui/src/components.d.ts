@@ -11,6 +11,7 @@ declare module 'vue' {
     AdminLayout: typeof import('./layouts/AdminLayout.vue')['default']
     ApiViewer: typeof import('./components/api/ApiViewer.vue')['default']
     ApiViewerFetch: typeof import('./components/api/ApiViewerFetch.vue')['default']
+    ApiViewerQuery: typeof import('./components/api/ApiViewerQuery.vue')['default']
     AuthLayout: typeof import('./layouts/AuthLayout.vue')['default']
     BlackLayout: typeof import('./layouts/BlackLayout.vue')['default']
     BlueLayout: typeof import('./layouts/BlueLayout.vue')['default']

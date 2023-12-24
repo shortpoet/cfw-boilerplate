@@ -2,15 +2,14 @@
   <div>
     <FlashMessage />
     <h1 bg-teal-700 rounded>Task List</h1>
-    <ListViewer
-      :isPending="isPending"
-      :isError="isError"
-      :isFetching="isFetching"
-      :items="listItems"
-      :error="error"
-      :refetch="refetch"
-    />
-    <Pagination :items="dataItems" @changePage="onChangePage" />
+    <ListViewer :isPending="isPending" :isError="isError" :isFetching="isFetching" :items="listItems" :error="error"
+      :refetch="refetch" />
+    <div v-if="isPending">Loading...</div>
+    <div v-else-if="isError">Error: {{ error }}</div>
+    <div v-else-if="isFetching">Fetching...</div>
+    <div v-else>
+      <Pagination :items="dataItems" @changePage="onChangePage" />
+    </div>
     <!-- <Pagination v-model:page="currentPage" :page-count="totalItems" /> -->
   </div>
 </template>

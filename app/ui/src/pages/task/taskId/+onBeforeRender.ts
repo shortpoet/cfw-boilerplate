@@ -4,7 +4,6 @@ export { onBeforeRender }
 import type { OnBeforeRenderAsync } from 'vike/types'
 import { QueryClient, dehydrate } from '@tanstack/vue-query'
 import { UserRole } from '#/types'
-// import { getTaskList } from '../taskList';
 
 const onBeforeRender: OnBeforeRenderAsync = async (
   pageContext
@@ -17,13 +16,12 @@ const onBeforeRender: OnBeforeRenderAsync = async (
   })
   const { routeParams } = pageContext
 
-  const page = parseInt(routeParams.taskPage) || 8
+  const taskId = routeParams.taskId
 
   console.log(`[ui] [task] [index] [onBeforeRender] prequery:`)
   await queryClient.prefetchQuery({
-    queryKey: ['result', page],
-    // queryFn: () => getTaskList(page),
-    queryFn: ({ queryKey }) => TasksService.getTaskList({ page: queryKey[1] as number })
+    queryKey: ['result', taskId],
+    queryFn: ({ queryKey }) => TasksService.getTaskFetch({ taskId: queryKey[1] })
   })
   const vueQueryState = dehydrate(queryClient)
 
@@ -32,7 +30,7 @@ const onBeforeRender: OnBeforeRenderAsync = async (
       pageProps: {
         isAdmin: user?.roles.includes(UserRole.Admin) || false,
         vueQueryState,
-        page
+        taskId
       },
       title: 'API Data'
     }

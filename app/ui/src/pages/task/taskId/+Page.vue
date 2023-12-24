@@ -1,7 +1,8 @@
 <template>
   <div class="page-container">
     <FlashMessage />
-    <ApiViewerFetch :title="title" :data="data" :loading="isPending" :error="error" />
+    <ApiViewerQuery :title="title" :data="data" :isPending="isPending" :isError="isError" :isFetching="isFetching"
+      :error="error" :refetch="refetch" />
   </div>
 </template>
 
@@ -14,23 +15,21 @@
 
 <script setup lang="ts">
 import { useQuery } from '@tanstack/vue-query'
-import { TaskListResponse } from '../../../models/TaskListResponse'
-import { TasksService } from '../../../services/TasksService'
+import { TaskResponse, TasksService } from '../../..'
 
 const { taskId } = defineProps({
   taskId: {
-    type: Number,
+    type: String,
     required: true
   }
 })
 
-const query = useQuery<TaskListResponse>({
+const title = computed(() => `Task ${taskId}`)
+
+const query = useQuery<TaskResponse>({
   queryKey: ['result', taskId],
-  // queryFn: () => getTaskList(page),
-  queryFn: ({ queryKey }) => TasksService.getTaskFetch(queryKey[1] as number),
+  queryFn: ({ queryKey }) => TasksService.getTaskFetch({ taskId: queryKey[1] as string }),
 })
 // @ts-ignore
 const { isPending, isError, isFetching, data, error, refetch, suspense } = query
-// await suspense()
-onServerPrefetch(suspense)
 </script>

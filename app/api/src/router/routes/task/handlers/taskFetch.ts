@@ -1,7 +1,7 @@
 import { OpenAPIRoute, OpenAPIRouteSchema, Path } from '@cloudflare/itty-router-openapi'
 import { Task } from './types'
 import { GetTaskSchema } from '../task-oa'
-import { allTasks } from './taskList'
+import { ALL_TASKS } from './taskList'
 import { badResponse, notFoundResponse, serverErrorResponse } from '#/api/src/middleware'
 
 export class TaskFetch extends OpenAPIRoute {
@@ -18,7 +18,7 @@ export class TaskFetch extends OpenAPIRoute {
     const { taskId: id } = data.params
     let task
     try {
-      task = allTasks.find((task) => task.id === id)
+      task = ALL_TASKS.find((task) => task.id === id)
       if (!task) return notFoundResponse('Task not found', undefined, res)
       return {
         success: true,

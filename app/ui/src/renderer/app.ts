@@ -9,6 +9,7 @@ import 'uno.css'
 import '../styles/main.css'
 import { UiState } from '#/types'
 import { PageShell } from '../layouts'
+import { initOpenAPI } from './openapi'
 
 export { createApp, isClient, defaultWindow, getInitialStateUi }
 const isClient = typeof window !== 'undefined'
@@ -88,6 +89,7 @@ function createApp(Page: Page, pageProps: PageProps | undefined, pageContext: Pa
   installPinia(app, isClient, getInitialStateUi())
   app.use(VueQueryPlugin)
   provideFlashMessage(app)
+  initOpenAPI()
 
   // We use `app.changePage()` to do Client Routing, see `_default.page.client.js`
   objectAssign(app, {
