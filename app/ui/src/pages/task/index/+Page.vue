@@ -5,11 +5,11 @@
       :isPending="isPending"
       :isError="isError"
       :isFetching="isFetching"
-      :items="dataItems"
+      :items="listItems"
       :error="error"
       :refetch="refetch"
     />
-    <Pagination :items="pageItems" @changePage="onChangePage" />
+    <Pagination :items="dataItems" @changePage="onChangePage" />
     <!-- <Pagination v-model:page="currentPage" :page-count="totalItems" /> -->
   </div>
 </template>
@@ -33,7 +33,9 @@ const { page, limit } = defineProps({
   }
 })
 
-let totalItems = ref(0)
+// let totalItems = ref(0)
+// const pages = Math.ceil(totalItems.value / (noLimit ? pageSize : limit))
+
 let currentPage = ref()
 const pageSize = 10
 // const noLimit = limit === 0
@@ -49,38 +51,21 @@ const query = useQuery<TaskListResponse, ApiError>({
 })
 // @ts-ignore
 const { isPending, isError, isFetching, data, error, refetch, suspense } = query
-let pageItems: Ref<ListItemLink[]> = ref([])
-// let dataItems: Ref<ListItemLink[]> = ref([])
-// await suspense()
-// onServerPrefetch(suspense)
-if (data.value) {
-  totalItems.value = data.value?.tasks.length
-  // const pages = Math.ceil(totalItems.value / (noLimit ? pageSize : limit))
-  pageItems.value = Array.from({ length: totalItems.value }, (_, i) => ({
-    id: i + 1,
-    href: `/task/${i + 1}`,
-    name: `Page ${i + 1}`
-  }))
-}
-const dataItems = computed(() => {
-  return data.value?.tasks
-    .map((task, i) => {
+
+const dataItems: ComputedRef<ListItemLink[] | undefined> = computed(
+  () =>
+    data.value?.tasks.map((task, i) => {
       return {
         id: i,
         href: `/task/${i}`,
         name: task.name
       }
     })
-    .slice(startIndex.value, endIndex.value)
-})
+)
+const listItems = computed(() => dataItems.value?.slice(startIndex.value, endIndex.value))
 const onChangePage = (pager: Paginate) => {
   currentPage.value = pager.currentPage
   startIndex.value = pager.startIndex
   endIndex.value = pager.endIndex
-  // console.log(`[ui] [Task] [onChangePage] [page] ::`)
-  // console.log(pager)
-  // console.log(`[ui] [Task] [onChangePage] [currentPage] ::`)
-  // console.log(currentPage.value)
-  // query.refetch()
 }
 </script>
