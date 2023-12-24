@@ -2,7 +2,7 @@
   <div class="page-container">
     <FlashMessage />
     <ApiViewerQuery :title="title" :data="data" :isPending="isPending" :isError="isError" :isFetching="isFetching"
-      :error="error" :refetch="refetch" />
+      :error="error" :refetch="refetch" :suspense="suspense" />
   </div>
 </template>
 
@@ -32,4 +32,5 @@ const query = useQuery<TaskResponse>({
 })
 // @ts-ignore
 const { isPending, isError, isFetching, data, error, refetch, suspense } = query
+
 </script>

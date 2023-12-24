@@ -40,7 +40,7 @@ import { ApiError } from '../../..'
 const pageContext = usePageContext()
 const { urlPathname } = pageContext
 const previousPage = computed(() => urlPathname.replace(/\/[^/]+$/, ''))
-const { title, data, isPending, isError, isFetching, error, refetch } = defineProps({
+const { title, data, isPending, isError, isFetching, error, refetch, suspense } = defineProps({
   title: {
     type: String,
     required: false
@@ -68,7 +68,16 @@ const { title, data, isPending, isError, isFetching, error, refetch } = definePr
   refetch: {
     type: Function,
     required: true
+  },
+  suspense: {
+    type: Function,
+    required: true
   }
 })
+// this hides the loading sequence and doesn' seem to pass the message to the error boundary but flash displays blank
+// await suspense()
+if (error && isError && !isPending) {
+  throw 'This will trigger the upstream error boundary.'
+}
 
 </script>
