@@ -63,11 +63,59 @@ const useFetch = async <T>(
   const error = ref<FetchError | undefined>()
   const data = ref<T>({} as T)
 
+  const token = ref(options.token || options.session?.accessToken)
+  const sessionToken = ref(options.sessionToken)
+
+  const headers = {
+    'accept-encoding': 'gzip, deflate',
+    'accept-language': 'en-US,en;q=0.9',
+    connection: 'keep-alive',
+    'content-type': 'application/json',
+    // cookie: `next-auth.session-token=${sessionToken.value}; next-auth.csrf-token=${csrfToken.value}; next-auth.callback-url=${callbackUrl.value};`,
+    // cookie: `${[LUCIAAUTH_COOKIES_SESSION_TOKEN]}=${sessionToken.value};`,
+    host: `${urlBaseApp}`,
+    'sec-fetch-dest': 'empty',
+    'sec-fetch-mode': 'cors',
+    origin: `${urlBaseApp}`,
+    Authorization: `Bearer ${token.value}`,
+    [X_CORRELATION_ID]: correlationId
+    // "X-Ping": "pong",
+  }
+
+  const init =
+    process.env.NODE_ENV === 'development'
+      ? {
+          ...USE_FETCH_REQ_INIT,
+          ...options,
+          headers,
+          method: options.body ? 'POST' : 'GET'
+        }
+      : {}
+
   try {
-    const response = await fetch(url)
+    if (FETCH_DEBUG) {
+      let logObj = escapeNestedKeys({ ...init }, ['token', 'body', 'Authorization'])
+      console.info(`[ui] [useFetch] fetching data with init: -> ${JSON.stringify(logObj, null, 2)}`)
+    }
+
+    const response = await fetch(url, init)
+
+    const ct = response.headers.get('Content-Type')
+    const jsonTypes = [
+      'application/json',
+      'application/x-www-form-urlencoded',
+      'application/json; charset=utf-8'
+    ]
+
+    let out
+    ct && jsonTypes.includes(ct)
+      ? (out = await response.json())
+      : (out = { text: await response.text() })
+
     logger.info(`[ui] [useFetch] response:}`)
-    logger.info(response)
-    data.value = await response.json()
+    logger.debug(response)
+
+    data.value = out
   } catch (err: any) {
     logger.error(`[ui] [useFetch] error: ${err.message}`)
     console.log(err)

@@ -1,9 +1,9 @@
 // https://vike.dev/onBeforeRender
-export { onBeforeRender };
+export { onBeforeRender }
 
-import type { OnBeforeRenderAsync, PageContextBuiltInServer } from 'vike/types';
-import { render, redirect } from 'vike/abort';
-import { UserRole } from '#/types';
+import type { OnBeforeRenderAsync, PageContextBuiltInServer } from 'vike/types'
+import { render, redirect } from 'vike/abort'
+import { UserRole } from '#/types'
 
 const onBeforeRender: OnBeforeRenderAsync = async (
   pageContext
@@ -13,21 +13,24 @@ const onBeforeRender: OnBeforeRenderAsync = async (
     csrfToken,
     sessionToken: _sessionToken,
     callbackUrl,
-    session: pageSession,
-  } = pageContext;
-  const sessionToken = _sessionToken || pageSession?.sessionId;
-  const session = await useSession(sessionToken);
-  console.log(`[ui] [auth] [login] [onBeforeRender] urlPathname: ${urlPathname}`);
-  console.log(session);
+    session: pageSession
+  } = pageContext
+  const sessionToken = _sessionToken || pageSession?.sessionId
+  // fetch not loading on cloudflare
+  // const session = await useSession(sessionToken);
+  const session = pageSession
+
+  console.log(`[ui] [auth] [login] [onBeforeRender] urlPathname: ${urlPathname}`)
+  console.log(session)
 
   return {
     pageContext: {
       pageProps: {
         title: 'Login / Logout',
         isAdmin: session?.user?.roles.includes(UserRole.Admin) || false,
-        session: session,
+        session: session
       },
-      title: 'API Data',
-    },
-  };
-};
+      title: 'API Data'
+    }
+  }
+}

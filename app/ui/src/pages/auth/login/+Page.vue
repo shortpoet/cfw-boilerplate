@@ -61,6 +61,10 @@ import { Session } from '#/types'
 const props = defineProps<{
   session?: Session
 }>()
+
+// const pageContext = usePageContext();
+// const pageSession = ref(pageContext.session);
+
 let session = ref(props.session)
 if (typeof window !== 'undefined' && !session.value) {
   console.log(`[ui] [auth] [login} [+Page] [setup] :: no props session, try to load from cookie`)
