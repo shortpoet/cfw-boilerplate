@@ -8,7 +8,7 @@ import fs from 'fs'
 import { D1Database } from '@cloudflare/workers-types'
 import { Kysely, ParseJSONResultsPlugin } from 'kysely'
 import { D1Dialect } from 'kysely-d1'
-import { KyselyAdapter } from './adapter'
+// import { KyselyAdapter } from './adapter'
 import { Database as Schema } from './db'
 
 export { deriveDatabaseAdapter, getKysely, getD1, getSqlite }
@@ -26,13 +26,13 @@ const getD1 = async (env?: Env) => {
     )
   }
   d1Db = env.CFW_BOILERPLATE_DB as D1Database
-  console.log(`[db] getD1 -> db: ${d1}`)
-  const r = await d1Db.batch([
-    d1Db.prepare('PRAGMA table_list'),
-    d1Db.prepare('PRAGMA table_info(user_session)')
-  ])
-  console.log(`[db] getDatabaseFromEnv -> res:`)
-  console.log(r[0].results)
+  // console.log(`[db] getD1 -> d1 with adapter functions: ${d1}`)
+  // const r = await d1Db.batch([
+  //   d1Db.prepare('PRAGMA table_list'),
+  //   d1Db.prepare('PRAGMA table_info(user_session)')
+  // ])
+  // console.log(`[db] getDatabaseFromEnv -> res:`)
+  // console.log(r[0].results)
   return d1Db
 }
 
