@@ -1,25 +1,25 @@
 // lucia.ts
-import { deriveDatabaseAdapter } from '#/api/db/d1-kysely-lucia';
-import { lucia, Middleware } from 'lucia';
-import 'lucia/polyfill/node';
-import { web } from 'lucia/middleware';
+import { deriveDatabaseAdapter } from '#/api/db/d1-kysely-lucia'
+import { lucia, Middleware } from 'lucia'
+import 'lucia/polyfill/node'
+import { web } from 'lucia/middleware'
 
 // import { google } from '@lucia-auth/oauth/providers';
-import { github } from '@lucia-auth/oauth/providers';
+import { github } from '@lucia-auth/oauth/providers'
 
 const envAliasMap = {
   production: 'PROD',
-  development: 'DEV',
-} as const;
+  development: 'DEV'
+} as const
 
 // const envAlias = envAliasMap[config.env.NODE_ENV];
 export const createAuth = async (env: Env) => {
   // console.log(`[api] [middleware] [auth] [lucia] [createAuth] -> env: ${env.NODE_ENV}`);
   // console.log(`[api] [middleware] [auth] [lucia] [createAuth] -> host: ${env.HOST}`);
   // console.log(`[api] [middleware] [auth] [lucia] [createAuth] -> port: ${env.VITE_PORT_API}`);
-  const adapter = await deriveDatabaseAdapter(env);
+  const adapter = await deriveDatabaseAdapter(env)
   if (!adapter) {
-    throw new Error('could not derive database adapter');
+    throw new Error('could not derive database adapter')
   }
   // console.log(`[api] [middleware] [auth] [lucia] -> adapter: ${adapter}`);
   const auth = lucia({
@@ -34,22 +34,23 @@ export const createAuth = async (env: Env) => {
         email: data.email,
         id: data.id,
         organization_id: data.organization_id,
-        roles: [],
-      };
-    },
-  });
+        roles: []
+      }
+    }
+  })
   const githubAuth = github(auth, {
     clientId: env.GITHUB_CLIENT_ID,
     clientSecret: env.GITHUB_CLIENT_SECRET,
     redirectUri:
       env.NODE_ENV === 'development' || env.NODE_ENV === 'staging'
         ? `http://${env.HOST}:${env.VITE_PORT_API}/api/auth/login/github/callback`
-        : `https://${env.HOST}/api/auth/login/github/callback`,
-  });
-  return { auth, githubAuth };
-};
+        : `https://${env.HOST}/api/auth/login/github/callback`
+    // : `https://${env.HOST}/api/auth/login/github/callback`,
+  })
+  return { auth, githubAuth }
+}
 
-export type Auth = ReturnType<typeof createAuth>;
+export type Auth = ReturnType<typeof createAuth>
 
 // export const createGoogleAuth = (auth: Auth, env: Env) => {
 //   return google(auth, {

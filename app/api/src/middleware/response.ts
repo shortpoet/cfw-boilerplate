@@ -95,7 +95,7 @@ export const notFoundResponse = (msg?: string, err?: Error | unknown, res?: Resp
   return new Response(body, init)
 }
 
-export const badResponse = (msg = ResText.BAD_REQUEST, err?: Error | unknown, res?: Response) => {
+export const badResponse = (msg?: string, err?: Error | unknown, res?: Response) => {
   const newErr = err instanceof Error ? err : new Error(`${msg}` || ResText.NOT_FOUND)
   const init = {
     ...res,
