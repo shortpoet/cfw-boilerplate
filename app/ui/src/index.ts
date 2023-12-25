@@ -11,6 +11,8 @@ export type { ApiErrorResponse } from './models/ApiErrorResponse';
 export type { Task } from './models/Task';
 export type { TaskListResponse } from './models/TaskListResponse';
 export type { TaskResponse } from './models/TaskResponse';
+export { User } from './models/User';
 
 export { DefaultService } from './services/DefaultService';
 export { TasksService } from './services/TasksService';
+export { UserService } from './services/UserService';

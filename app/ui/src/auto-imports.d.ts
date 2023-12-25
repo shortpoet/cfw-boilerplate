@@ -35,6 +35,7 @@ declare global {
   const TasksService: typeof import('./services/TasksService')['TasksService']
   const USE_FETCH_REQ_INIT: typeof import('./composables/fetch')['USE_FETCH_REQ_INIT']
   const UseFetchResult: typeof import('./composables/fetch')['UseFetchResult']
+  const UserService: typeof import('./services/UserService')['UserService']
   const VUE_QUERY_STATE: typeof import('./modules/vue-query')['VUE_QUERY_STATE']
   const X_CORRELATION_ID: typeof import('./composables/logger')['X_CORRELATION_ID']
   const base64: typeof import('./core/request')['base64']
@@ -144,6 +145,7 @@ declare global {
   const useSlots: typeof import('vue')['useSlots']
   const useSsrLogger: typeof import('./composables/logger')['useSsrLogger']
   const useUiStore: typeof import('./stores/ui')['useUiStore']
+  const userType: typeof import('./models/User')['userType']
   const watch: typeof import('vue')['watch']
   const watchEffect: typeof import('vue')['watchEffect']
   const watchPostEffect: typeof import('vue')['watchPostEffect']
@@ -185,6 +187,7 @@ declare module 'vue' {
     readonly TasksService: UnwrapRef<typeof import('./services/TasksService')['TasksService']>
     readonly USE_FETCH_REQ_INIT: UnwrapRef<typeof import('./composables/fetch')['USE_FETCH_REQ_INIT']>
     readonly UseFetchResult: UnwrapRef<typeof import('./composables/fetch')['UseFetchResult']>
+    readonly UserService: UnwrapRef<typeof import('./services/UserService')['UserService']>
     readonly VUE_QUERY_STATE: UnwrapRef<typeof import('./modules/vue-query')['VUE_QUERY_STATE']>
     readonly X_CORRELATION_ID: UnwrapRef<typeof import('./composables/logger')['X_CORRELATION_ID']>
     readonly base64: UnwrapRef<typeof import('./core/request')['base64']>
@@ -286,6 +289,7 @@ declare module 'vue' {
     readonly useSlots: UnwrapRef<typeof import('vue')['useSlots']>
     readonly useSsrLogger: UnwrapRef<typeof import('./composables/logger')['useSsrLogger']>
     readonly useUiStore: UnwrapRef<typeof import('./stores/ui')['useUiStore']>
+    readonly userType: UnwrapRef<typeof import('./models/User')['userType']>
     readonly watch: UnwrapRef<typeof import('vue')['watch']>
     readonly watchEffect: UnwrapRef<typeof import('vue')['watchEffect']>
     readonly watchPostEffect: UnwrapRef<typeof import('vue')['watchPostEffect']>
@@ -320,6 +324,7 @@ declare module '@vue/runtime-core' {
     readonly TasksService: UnwrapRef<typeof import('./services/TasksService')['TasksService']>
     readonly USE_FETCH_REQ_INIT: UnwrapRef<typeof import('./composables/fetch')['USE_FETCH_REQ_INIT']>
     readonly UseFetchResult: UnwrapRef<typeof import('./composables/fetch')['UseFetchResult']>
+    readonly UserService: UnwrapRef<typeof import('./services/UserService')['UserService']>
     readonly VUE_QUERY_STATE: UnwrapRef<typeof import('./modules/vue-query')['VUE_QUERY_STATE']>
     readonly X_CORRELATION_ID: UnwrapRef<typeof import('./composables/logger')['X_CORRELATION_ID']>
     readonly base64: UnwrapRef<typeof import('./core/request')['base64']>
@@ -421,6 +426,7 @@ declare module '@vue/runtime-core' {
     readonly useSlots: UnwrapRef<typeof import('vue')['useSlots']>
     readonly useSsrLogger: UnwrapRef<typeof import('./composables/logger')['useSsrLogger']>
     readonly useUiStore: UnwrapRef<typeof import('./stores/ui')['useUiStore']>
+    readonly userType: UnwrapRef<typeof import('./models/User')['userType']>
     readonly watch: UnwrapRef<typeof import('vue')['watch']>
     readonly watchEffect: UnwrapRef<typeof import('vue')['watchEffect']>
     readonly watchPostEffect: UnwrapRef<typeof import('vue')['watchPostEffect']>

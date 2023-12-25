@@ -56,17 +56,6 @@ export class DefaultService {
    * @returns any Object with user data.
    * @throws ApiError
    */
-  public static getFind(): CancelablePromise<any> {
-    return __request(OpenAPI, {
-      method: 'GET',
-      url: '/api/db-v1/find',
-    });
-  }
-
-  /**
-   * @returns any Object with user data.
-   * @throws ApiError
-   */
   public static getDebug(): CancelablePromise<any> {
     return __request(OpenAPI, {
       method: 'GET',
