@@ -63,41 +63,11 @@ const useFetch = async <T>(
   const error = ref<FetchError | undefined>()
   const data = ref<T>({} as T)
 
-  dataLoading.value = true
-
   try {
     const response = await fetch(url)
     logger.info(`[ui] [useFetch] response:}`)
     logger.info(response)
-    if (!response.ok) {
-      let error = await response.text()
-      try {
-        error = JSON.parse(error)
-      } catch (error) {}
-      throw new Error(
-        JSON.stringify({
-          name: 'FetchError',
-          message: `Failed to fetch data from ${url}.`,
-          status: response.status,
-          statusText: response.statusText,
-          error
-        })
-      )
-    }
-
-    let out
-    const ct = response.headers.get('Content-Type')
-
-    const jsonTypes = [
-      'application/json',
-      'application/x-www-form-urlencoded',
-      'application/json; charset=utf-8'
-    ]
-
-    ct && jsonTypes.includes(ct)
-      ? (out = await response.json())
-      : (out = { text: await response.text() })
-    data.value = out
+    data.value = await response.json()
   } catch (err: any) {
     logger.error(`[ui] [useFetch] error: ${err.message}`)
     console.log(err)

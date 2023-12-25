@@ -38,7 +38,7 @@ const onBeforeRender: OnBeforeRenderAsync = async (
     }
   } as RequestConfig
 
-  const { dataLoading, error, data } = await useFetch(PATH_MAPPING[urlPathname].route, opts)
+  const { dataLoading, error, data } = await useFetch(PATH_MAPPING[urlPathname].route)
 
   const queryClient = new QueryClient()
 

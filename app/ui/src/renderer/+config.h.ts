@@ -1,9 +1,5 @@
-import type { Config } from 'vike/types';
-import {
-  onHydrationEnd,
-  onPageTransitionStart,
-  onPageTransitionEnd,
-} from './onPageTransitionHooks';
+import type { Config } from 'vike/types'
+import { onHydrationEnd, onPageTransitionStart, onPageTransitionEnd } from './onPageTransitionHooks'
 
 const passToClient = [
   'pageProps',
@@ -17,8 +13,8 @@ const passToClient = [
   'isAdmin',
   'cf',
   'sessionToken',
-  'pkceCodeVerifier',
-];
+  'pkceCodeVerifier'
+]
 
 // https://vike.dev/config
 export default {
@@ -32,15 +28,15 @@ export default {
   meta: {
     // Create new config 'title'
     title: {
-      env: { server: true, client: true },
+      env: { server: true, client: true }
     },
     // server false to prevent 522 on cloudflare
     // or use workers.dev url for api
     onBeforeRender: {
-      env: { server: true, client: true },
-    },
+      env: { server: false, client: true }
+    }
     // logger: {
     //   env: { server: true, client: true },
     // },
-  },
-} satisfies Config;
+  }
+} satisfies Config
