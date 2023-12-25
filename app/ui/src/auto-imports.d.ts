@@ -272,7 +272,6 @@ declare module 'vue' {
     readonly useCssModule: UnwrapRef<typeof import('vue')['useCssModule']>
     readonly useCssVars: UnwrapRef<typeof import('vue')['useCssVars']>
     readonly useFetch: UnwrapRef<typeof import('./composables/fetch')['useFetch']>
-    readonly useFetchCopy: UnwrapRef<typeof import('./composables/fetch copy')['useFetchCopy']>
     readonly useFlashMessage: UnwrapRef<typeof import('./modules/flash-message')['useFlashMessage']>
     readonly useGuard: UnwrapRef<typeof import('./composables/guard')['useGuard']>
     readonly useHead: UnwrapRef<typeof import('@vueuse/head')['useHead']>
@@ -408,7 +407,6 @@ declare module '@vue/runtime-core' {
     readonly useCssModule: UnwrapRef<typeof import('vue')['useCssModule']>
     readonly useCssVars: UnwrapRef<typeof import('vue')['useCssVars']>
     readonly useFetch: UnwrapRef<typeof import('./composables/fetch')['useFetch']>
-    readonly useFetchCopy: UnwrapRef<typeof import('./composables/fetch copy')['useFetchCopy']>
     readonly useFlashMessage: UnwrapRef<typeof import('./modules/flash-message')['useFlashMessage']>
     readonly useGuard: UnwrapRef<typeof import('./composables/guard')['useGuard']>
     readonly useHead: UnwrapRef<typeof import('@vueuse/head')['useHead']>

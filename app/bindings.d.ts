@@ -280,6 +280,12 @@ export declare namespace Lucia {
   type Auth = import('./api/src/middleware/auth/lucia').Auth
   type DatabaseUserAttributes = {
     username: string
+    email: string
+    password: string
+    name: string
+    // role: UserRole
   }
-  type DatabaseSessionAttributes = {}
+  type DatabaseSessionAttributes = {
+    token: string
+  }
 }
