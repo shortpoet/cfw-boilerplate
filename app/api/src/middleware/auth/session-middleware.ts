@@ -1,37 +1,37 @@
-import { z } from 'zod';
-import { createAuth } from './lucia';
+import { z } from 'zod'
+import { createAuth } from './lucia'
 
-import { unauthorizedResponse } from '../response';
-import { getCookieAuthToken, logger, logObjs } from '#/utils';
-import { UserRole } from '#/types';
-import { getSession } from '../../controllers';
-const FILE_LOG_LEVEL = 'debug';
+import { unauthorizedResponse } from '../response'
+import { getCookieAuthToken, logger, logObjs } from '#/utils'
+import { UserRole } from '#/types'
+import { getSession } from '../../router/routes/auth/handlers'
+const FILE_LOG_LEVEL = 'debug'
 
 export const withSession =
   ({ required = true } = {}) =>
   async (req: Request, res: Response, env: Env, ctx: ExecutionContext) => {
-    const log = logger(FILE_LOG_LEVEL, env);
+    const log = logger(FILE_LOG_LEVEL, env)
     // log(`[api] [middleware] [auth] [withSession] -> ${req.method} -> ${req.url}`);
-    if (required) log(`[api] [middleware] [auth] [withSession]  -> required -> ${required} `);
+    if (required) log(`[api] [middleware] [auth] [withSession]  -> required -> ${required} `)
 
     const userSchema = z.object({
-      userId: z.string(),
-    });
+      userId: z.string()
+    })
     try {
-      const session = await getSession(req, env);
-      req.logger.info(`[api] [middleware] [auth] [withSession] -> session ->`);
-      req.logger.info(session);
+      const session = await getSession(req, env)
+      req.logger.info(`[api] [middleware] [auth] [withSession] -> session ->`)
+      req.logger.info(session)
       if (!session) {
-        return;
+        return
       }
-      const result = userSchema.safeParse(session.user);
+      const result = userSchema.safeParse(session.user)
       if (!result.success) {
-        throw new Error(result.error.toString());
+        throw new Error(result.error.toString())
       }
-      res.session = session;
-      const user = result.data;
-      req.logger.info(`[api] [middleware] [auth] [withSession] -> user ->`);
-      req.logger.info(user);
+      res.session = session
+      const user = result.data
+      req.logger.info(`[api] [middleware] [auth] [withSession] -> user ->`)
+      req.logger.info(user)
       // const db = await getDatabaseFromEnv(env);
       // if (!db || !session?.sessionToken) return;
       // const dbSession = await q.getSession(session.sessionToken, db);
@@ -41,27 +41,27 @@ export const withSession =
       // }
       // return res;
     } catch (error) {
-      console.log(`[api] [middleware] [auth] [withSession] -> error ->`);
-      console.log(error);
+      console.log(`[api] [middleware] [auth] [withSession] -> error ->`)
+      console.log(error)
     }
-  };
+  }
 
 export const withGuard =
   ({ roles = [UserRole.Admin] }: { roles?: UserRole[] } = {}) =>
   async (req: Request, res: Response, env: Env, ctx: ExecutionContext) => {
-    roles = [...roles, UserRole.Admin];
-    const log = logger(FILE_LOG_LEVEL, env);
-    log(`[worker] [middleware] [auth] [withAuth] -> ${req.method} -> ${req.url}`);
+    roles = [...roles, UserRole.Admin]
+    const log = logger(FILE_LOG_LEVEL, env)
+    log(`[worker] [middleware] [auth] [withAuth] -> ${req.method} -> ${req.url}`)
     // log(`[worker] [middleware] [auth] [withAuth] -> REQ.session ->`);
     // console.log(req.session);
     // log(`[worker] [middleware] [auth] [withAuth] -> RES.session ->`);
     // console.log(res.session);
-    let sanitizedToken: string | null = null;
-    const session = res.session;
+    let sanitizedToken: string | null = null
+    const session = res.session
     // const session = await getSessionItty(req, res, env);
 
-    const user = session?.user;
-    const userRoles = user?.roles;
+    const user = session?.user
+    const userRoles = user?.roles
     // log(`[worker] [middleware] [auth] [withAuth]-> session -> ${session}`);
     // log(`[worker] [middleware] [auth] [withAuth]-> user -> ${user}`);
     // log(`[worker] [middleware] [auth] [withAuth]-> role -> ${role}`);
@@ -74,7 +74,7 @@ export const withGuard =
           2
         ),
         res
-      );
+      )
     }
     if (roles.length && userRoles && !userRoles.some((role) => roles.includes(role))) {
       // log(
@@ -89,6 +89,6 @@ export const withGuard =
         ),
         res,
         403
-      );
+      )
     }
-  };
+  }

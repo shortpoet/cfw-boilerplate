@@ -15,7 +15,8 @@ import {
   jsonData,
   withPino,
   withQueryParams,
-  withListOptions
+  withListOptions,
+  withDb
   // withUser,
 } from '../middleware'
 
@@ -24,6 +25,7 @@ import { health_router } from '#/api/src/router'
 import { task_router } from '#/api/src/router'
 import { auth_router } from '#/api/src/router'
 import withCookies from '../middleware/cookie'
+import { LUCIA_AUTH_COOKIES_SESSION_TOKEN } from '#/types'
 // import { createCors } from '../middleware/createCors';
 
 const FILE_LOG_LEVEL = 'debug'
@@ -72,7 +74,7 @@ router.registry.registerComponent('securitySchemes', 'bearerAuth', {
 router.registry.registerComponent('securitySchemes', 'cookieAuth', {
   type: 'apiKey',
   in: 'cookie',
-  name: 
+  name: LUCIA_AUTH_COOKIES_SESSION_TOKEN
 })
 
 const protectedRoutes = {
@@ -86,7 +88,7 @@ const todos = Array.from({ length: 8 }, (_, i) => i + 1).map((id) => ({
 // GET collection index
 router
   .all('*', preflight)
-  .all('*', withPino({ level: FILE_LOG_LEVEL }), withCfHeaders())
+  .all('*', withPino({ level: FILE_LOG_LEVEL }), withDb(), withCfHeaders())
   .all('*', withQueryParams(), withListOptions(), withCookies(), withSession())
   .all('/auth/*', auth_router)
   .all('/task/*', task_router)

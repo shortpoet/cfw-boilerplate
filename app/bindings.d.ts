@@ -28,7 +28,7 @@ import type {
   UserType,
   UiState
 } from './types'
-import { Database } from './api/db'
+import { Database, EnvDatabase } from './api/db'
 
 type Mutable<T> = {
   -readonly [K in keyof T]-?: T[K]
@@ -119,16 +119,17 @@ declare global {
     readonly method: string
     readonly url: string
     readonly headers: Headers
+    logger: LoggerType
+    db?: EnvDatabase
     params?: Record<string, string>
     query?: Record<string, string>
-    logger: LoggerType
     universalCookies?: Cookies
     isAuthenticated?: boolean
     cf?: CFRequest['cf']
     cf_summary?: Partial<CFRequest['cf']>
     listOptions?: ListOptions
     user?: User | null
-    session?: Omit<Database['Session'], 'id'>
+    session?: Omit<Database['UserSession'], 'id'>
     auth?: ReqAuth | null
     credsAuth?: CredsAuth | null
   }

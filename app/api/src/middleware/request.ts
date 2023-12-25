@@ -1,10 +1,15 @@
 import { badResponse } from './response'
 import { ListOptions } from '#/types'
+import { getD1, getSqlite } from '#/api/db'
 
 const FILE_LOG_LEVEL = 'debug'
 
 const fromEntries = (ent: [string, string][]) =>
   ent.reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {})
+
+export const withDb = () => async (req: Request, env: Env) => {
+  req.db = env.NODE_ENV === 'development' ? await getSqlite(env) : await getD1(env)
+}
 
 export const withQueryParams = () => async (req: Request, env: Env) => {
   const url = new URL(req.url)
@@ -73,6 +78,7 @@ export const withCfSummary =
         }
       : {}
   }
+
 export const withCfHeaders =
   ({ level = 'basic' } = {}) =>
   async (req: Request, res: Response, env: Env) => {

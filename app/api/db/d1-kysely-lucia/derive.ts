@@ -1,39 +1,72 @@
-import { Kysely, ParseJSONResultsPlugin } from 'kysely'
-import { D1Dialect } from 'kysely-d1'
-import { binding } from 'cf-bindings-proxy'
 import { d1 } from '@lucia-auth/adapter-sqlite'
 import { libsql } from '@lucia-auth/adapter-sqlite'
 // import sqlite from 'better-sqlite3';
 import { betterSqlite3 } from '@lucia-auth/adapter-sqlite'
 import type { Database } from 'better-sqlite3'
 import type { Client } from '@libsql/client'
-import path from 'node:path'
-
 import fs from 'fs'
 import { D1Database } from '@cloudflare/workers-types'
+import { Kysely, ParseJSONResultsPlugin } from 'kysely'
+import { D1Dialect } from 'kysely-d1'
+import { KyselyAdapter } from './adapter'
+import { Database as Schema } from './db'
 
-export { getDatabaseFromEnv, deriveDatabaseAdapter }
+export { deriveDatabaseAdapter, getKysely, getD1, getSqlite }
 
-const getDatabaseFromEnv = async (env: Env) => {
-  if (env.NODE_ENV === 'development') {
-    // unreliable i think. it is server when running `dev`
-    // const thisDirectory = path.resolve('.');
-    // console.log(`[db] getDatabaseFromEnv -> thisDirectory: ${thisDirectory}`);
-    return (await import('better-sqlite3'))
-      .default('local.sqlite')
-      .exec(fs.readFileSync(`${env.__wranglerDir}/migrations/0000_init-db.sql`, 'utf8'))
-  } else {
-    const db = env.CFW_BOILERPLATE_DB
-    // console.log(`[db] getDatabaseFromEnv -> db: ${db}`);
-    // const r = await db.batch([
-    //   db.prepare('PRAGMA table_list'),
-    //   db.prepare('PRAGMA table_info(user_session)'),
-    // ]);
-    // console.log(`[db] getDatabaseFromEnv -> res:`);
-    // console.log(r[0].results);
-    // console.log(r.result);
-    return db
+let d1Db: D1Database
+let sqliteDb: Database
+
+const getD1 = async (env?: Env) => {
+  if (d1Db) {
+    return d1Db
   }
+  if (!env) {
+    throw new Error(
+      `[db] [getDatabaseFromEnv] wrong usage -> env is undefined - instantiate db first`
+    )
+  }
+  d1Db = env.CFW_BOILERPLATE_DB as D1Database
+  console.log(`[db] getD1 -> db: ${d1}`)
+  const r = await d1Db.batch([
+    d1Db.prepare('PRAGMA table_list'),
+    d1Db.prepare('PRAGMA table_info(user_session)')
+  ])
+  console.log(`[db] getDatabaseFromEnv -> res:`)
+  console.log(r[0].results)
+  return d1Db
+}
+
+const getSqlite = async (env?: Env) => {
+  if (sqliteDb) {
+    return sqliteDb
+  }
+  if (!env) {
+    throw new Error(
+      `[db] [getDatabaseFromEnv] wrong usage -> env is undefined - instantiate db first`
+    )
+  }
+  console.log(`[db] getDatabaseFromEnv -> env: ${env.NODE_ENV}`)
+  sqliteDb = (await import('better-sqlite3'))
+    .default('local.sqlite')
+    .exec(fs.readFileSync(`${env.__wranglerDir}/migrations/0000_init-db.sql`, 'utf8')) as Database
+  return sqliteDb
+}
+
+const getKysely = async () => {
+  const d1 = await getD1()
+  const kys = new Kysely<Schema>({
+    dialect: new D1Dialect({ database: d1 }),
+    // plugins: [new CamelCasePlugin()],
+    plugins: [new ParseJSONResultsPlugin()]
+    //log(event) {
+    //  if (event.level === "query") {
+    //    console.log(event.query.sql);
+    //    console.log(event.query.parameters);
+    //  }
+    //},s
+  })
+  return kys
+  // return KyselyAdapter(kys)
 }
 
 const getAdapter = (db: D1Database) =>
@@ -58,12 +91,11 @@ const getSql3Adapter = (db: Database) =>
   })
 
 const deriveDatabaseAdapter = async (env: Env) => {
-  console.log(`[db] deriveDatabaseAdapter -> env: ${env.NODE_ENV}`)
-  const db = await getDatabaseFromEnv(env)
-  console.log(`[db] deriveDatabaseAdapter -> db: SUCCESS`)
   if (env.NODE_ENV === 'development') {
+    const db = await getSqlite(env)
     return getSql3Adapter(db)
   } else {
+    const db = await getD1(env)
     return getAdapter(db)
   }
 }
