@@ -1,12 +1,12 @@
 <template>
   <div class="page-container">
     <FlashMessage />
-    <!-- <ApiViewerFetch
+    <ApiViewerFetch
       :title="title"
       :data="apiData"
       :loading="apiDataLoading"
       :error="apiDataError"
-    /> -->
+    />
     <ApiViewerFetch
       :title="`Query: ${title}`"
       :data="queryData"

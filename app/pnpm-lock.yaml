@@ -131,6 +131,9 @@ importers:
       lucia:
         specifier: ^2.7.4
         version: 2.7.4
+      node-fetch:
+        specifier: ^3.3.2
+        version: 3.3.2
       universal-cookie:
         specifier: 4.0.4
         version: 4.0.4
@@ -323,6 +326,9 @@ importers:
       compression:
         specifier: ^1.7.4
         version: 1.7.4
+      node-fetch:
+        specifier: ^3.3.2
+        version: 3.3.2
       nprogress:
         specifier: ^0.2.0
         version: 0.2.0

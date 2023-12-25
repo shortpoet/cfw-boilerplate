@@ -28,6 +28,7 @@
     "@vueuse/core": "^10.6.1",
     "@vueuse/head": "^2.0.0",
     "compression": "^1.7.4",
+    "node-fetch": "^3.3.2",
     "nprogress": "^0.2.0",
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.0"

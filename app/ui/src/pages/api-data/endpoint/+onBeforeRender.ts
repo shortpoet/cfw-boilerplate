@@ -15,27 +15,15 @@ const onBeforeRender: OnBeforeRenderAsync = async (
   const { urlPathname, csrfToken, sessionToken, callbackUrl } = pageContext
   console.log(`[ui] [api-data] [endpoint] [onBeforeRender] urlPathname: ${urlPathname}`)
   // const sessionToken = getCookie(LUCIAAUTH_COOKIES_SESSION_TOKEN);
-
   // overrides renderer/_default.page.server.ts
   const protectedRoutes = [
     ''
     // '/api-data/debug',
   ]
-
   let redirectTo = undefined
   if (protectedRoutes.includes(urlPathname) && !user) {
-    // console.log(`[ui] [api-data] [onBeforeRender] !user && protectedRoutes.includes(urlPathname)`);
     redirectTo = user ? undefined : '/auth/login'
     throw render('/auth/login')
-  }
-  // console.log(
-  //   `[ui] [api-data] [onBeforeRender] redirectTo ${JSON.stringify({ redirectTo }, null, 2)}`
-  // );
-
-  let { dataLoading, error, data } = {
-    dataLoading: ref(false),
-    error: ref(),
-    data: ref()
   }
   const opts = {
     ...PATH_MAPPING[urlPathname].options,
@@ -49,9 +37,9 @@ const onBeforeRender: OnBeforeRenderAsync = async (
       // 'authjs.session-token': sessionToken,
     }
   } as RequestConfig
-  // console.log(`[ui] [api-data] [onBeforeRender] opts`);
 
-  // ;({ dataLoading, error, data } = await useFetch(PATH_MAPPING[urlPathname].route, opts))
+  const { dataLoading, error, data } = await useFetch(PATH_MAPPING[urlPathname].route, opts)
+
   const queryClient = new QueryClient()
 
   const { urlBaseApi } = useBaseUrl()

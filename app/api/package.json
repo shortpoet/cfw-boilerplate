@@ -41,6 +41,7 @@
     "kysely": "^0.26.3",
     "kysely-d1": "^0.3.0",
     "lucia": "^2.7.4",
+    "node-fetch": "^3.3.2",
     "universal-cookie": "4.0.4",
     "vike": "^0.4.147"
   },
