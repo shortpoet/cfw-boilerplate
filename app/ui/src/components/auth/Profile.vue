@@ -2,8 +2,8 @@
   <ul>
     <li>
       <Link href="/orig/about" :title="'about'">
-        <div v-if="!user" i-carbon-dicom-overlay />
-        <img v-else :src="user?.image || 'TODO ALT'" class="w-8 h-8 rounded-full" />
+      <div v-if="!user" i-carbon-dicom-overlay />
+      <img v-else :src="user?.avatar_url || 'TODO ALT'" class="w-8 h-8 rounded-full" />
       </Link>
     </li>
     <li>{{ user?.username }}</li>
@@ -12,12 +12,8 @@
     <Login>
       <template #login-github="loginProps">
         <li>
-          <button
-            class="c-yellow btn-main m-3 text-sm py-2 px-4 rounded-full"
-            id="login-button"
-            :disabled="!!user"
-            @click="loginProps.onLogin"
-          >
+          <button class="c-yellow btn-main m-3 text-sm py-2 px-4 rounded-full" id="login-button" :disabled="!!user"
+            @click="loginProps.onLogin">
             Log in
           </button>
         </li>
@@ -26,10 +22,7 @@
         <li>
           <button
             class="c-yellow btn-main m-3 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-            id="logout-button"
-            :disabled="!user"
-            @click="logoutProps.onLogout"
-          >
+            id="logout-button" :disabled="!user" @click="logoutProps.onLogout">
             Log out
           </button>
         </li>

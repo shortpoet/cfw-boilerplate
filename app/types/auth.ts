@@ -1,74 +1,76 @@
-export { UserType, UserRole, User, Session, AuthInstance, LoginOptions };
+export { UserType, UserRole, User, Session, AuthInstance, LoginOptions }
 
-type ISODateString = string;
+import { Database } from '##/db/d1-kysely-lucia'
 
-type User = UserUnion;
-type UserUnion = BaseUser;
+type ISODateString = string
 
-type Session = SessionUnion;
-type SessionUnion = BaseSession;
+type User = UserUnion
+type UserUnion = BaseUser & Database['User']
+
+type Session = SessionUnion
+type SessionUnion = BaseSession
 
 enum UserType {
   _ = 'not_set',
   Email = 'email',
   GitHub = 'github',
-  Credentials = 'credentials',
+  Credentials = 'credentials'
 }
 
 enum UserRole {
   _ = 'not_set',
   Guest = 'guest',
   Admin = 'admin',
-  User = 'user',
+  User = 'user'
 }
 
 type BaseSession = {
-  sessionId: string;
-  user: User;
-  activePerdiodExpiresAt: ISODateString;
-  idlePerdiodExpiresAt: ISODateString;
-  state: string;
-  fresh: boolean;
-};
+  sessionId: string
+  user: User
+  activePerdiodExpiresAt: ISODateString
+  idlePerdiodExpiresAt: ISODateString
+  state: string
+  fresh: boolean
+}
 
 type BaseUser = {
-  id: string;
-  userId: string;
-  roles: UserRole[];
-  userType: UserType;
-  image?: string | null;
-  username?: string | null;
-  email?: string | null;
-};
+  id: string
+  roles: UserRole[]
+  userType: UserType
+  username: string | null
+  email?: string | null
+  avatar_url?: string | null
+  name?: string | null
+}
 
 interface AuthInstance {
-  authLoading: Ref<boolean>;
-  authError: Ref<any>;
-  isLoggedIn: Ref<boolean>;
-  user?: Ref<User | undefined>;
-  authState?: Ref<string>;
-  nonce?: Ref<string>;
-  session?: Ref<Session | undefined>;
-  idToken?: Ref<string>;
-  accessToken?: Ref<string>;
-  loginRedirectPath?: Ref<string>;
+  authLoading: Ref<boolean>
+  authError: Ref<any>
+  isLoggedIn: Ref<boolean>
+  user?: Ref<User | undefined>
+  authState?: Ref<string>
+  nonce?: Ref<string>
+  session?: Ref<Session | undefined>
+  idToken?: Ref<string>
+  accessToken?: Ref<string>
+  loginRedirectPath?: Ref<string>
   // popupOpen: Ref<boolean>;
 
-  onLoad: () => Promise<void>;
-  login(options: LoginOptions): Promise<void>;
-  logout(options?: any): Promise<void>;
-  setSession: (_session?: Session | string) => Promise<Session | undefined>;
-  setSessionAuthStore: (session: Session | undefined) => void;
-  setSessionToken: (token: string) => void;
-  setLoggedIn: (loggedIn: boolean) => void;
-  setCurrentUser: (user: User | undefined) => void;
-  setAccessToken?: (token: string) => void;
-  setNonce?: (nonce: string) => void;
-  setAuthState?: (state: string) => void;
-  setLoginRedirectPath?: (path: string) => void;
-  setIdToken?: (token: string) => void;
+  onLoad: () => Promise<void>
+  login(options: LoginOptions): Promise<void>
+  logout(options?: any): Promise<void>
+  setSession: (_session?: Session | string) => Promise<Session | undefined>
+  setSessionAuthStore: (session: Session | undefined) => void
+  setSessionToken: (token: string) => void
+  setLoggedIn: (loggedIn: boolean) => void
+  setCurrentUser: (user: User | undefined) => void
+  setAccessToken?: (token: string) => void
+  setNonce?: (nonce: string) => void
+  setAuthState?: (state: string) => void
+  setLoginRedirectPath?: (path: string) => void
+  setIdToken?: (token: string) => void
 }
 
 type LoginOptions = {
-  provider: string;
-};
+  provider: string
+}

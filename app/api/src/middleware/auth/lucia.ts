@@ -27,46 +27,32 @@ export const createAuth = async (env: Env) => {
     middleware: web(),
     adapter,
     getUserAttributes: (data) => {
+      console.log(
+        `[api] [middleware] [auth] [lucia] [getUserAttributes] -> data: ${JSON.stringify(data)}`
+      )
       return {
-        githubUsername: data.username,
-        name: data.name,
-        picture: data.picture,
+        userId: data.id,
+        username: data.username,
         email: data.email,
-        id: data.id,
-        organization_id: data.organization_id,
+        name: data.name,
+        avatar_url: data.avatar_url,
         roles: []
       }
     }
   })
+
   const githubAuth = github(auth, {
     clientId: env.GITHUB_CLIENT_ID,
     clientSecret: env.GITHUB_CLIENT_SECRET,
     redirectUri:
       env.NODE_ENV === 'development' || env.NODE_ENV === 'staging'
         ? `http://${env.HOST}:${env.VITE_PORT_API}/api/auth/login/github/callback`
-        : `https://${env.HOST}/api/auth/login/github/callback`
+        : `https://${env.HOST}/api/auth/login/github/callback`,
     // : `https://${env.HOST}/api/auth/login/github/callback`,
+    scope: ['user:email, read:user']
   })
+
   return { auth, githubAuth }
 }
 
 export type Auth = ReturnType<typeof createAuth>
-
-// export const createGoogleAuth = (auth: Auth, env: Env) => {
-//   return google(auth, {
-//     redirectUri: `${env.HOST_URL}api/auth/google/callback`,
-//     clientId: env.GOOGLE_CLIENT_ID,
-//     clientSecret: env.GOOGLE_CLIENT_SECRET,
-//   });
-// }
-
-// export const createGithubAuth = async (auth: Auth, env: Env) => {
-//   return github(auth, {
-//     clientId: env.GITHUB_CLIENT_ID,
-//     clientSecret: env.GITHUB_CLIENT_SECRET,
-//     redirectUri:
-//       env.NODE_ENV === 'development' || env.NODE_ENV === 'staging'
-//         ? `http://${env.HOST}:${env.VITE_PORT_API}/api/auth/login/github/callback`
-//         : `https://${env.HOST}/api/auth/login/github/callback`,
-//   });
-// };

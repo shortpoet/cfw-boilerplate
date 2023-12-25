@@ -9,7 +9,7 @@ import {
   serverErrorResponse,
   getBaseUrl
 } from '../../middleware'
-import { LUCIA_AUTH_COOKIES_SESSION_TOKEN } from '#/types'
+import { LUCIA_AUTH_COOKIES_SESSION_TOKEN, UserRole } from '#/types'
 
 export const loginGithub = async (req: Request, res: Response, env: Env, ctx: ExecutionContext) => {
   const { auth, githubAuth } = await createAuth(env)
@@ -59,13 +59,38 @@ export const loginGithubCallback = async (
     return badResponse('Bad Request', undefined, res)
   }
   try {
-    const { getExistingUser, githubUser, createUser } = await githubAuth.validateCallback(code)
+    const { getExistingUser, githubUser, createUser, githubTokens } =
+      await githubAuth.validateCallback(code)
+    const emailRequest = await fetch('https://api.github.com/user/emails', {
+      headers: {
+        Authorization: `token ${githubTokens.accessToken}`,
+        Accept: 'application/vnd.github.v3+json',
+        'User-Agent': 'Lucia',
+        'Content-Type': 'application/json',
+        'Accept-Encoding': 'gzip, deflate'
+      }
+    })
+    if (!emailRequest.ok) {
+      console.log(`[api] [auth] [login] [github] -> emailRequest not ok`)
+      console.log(emailRequest)
+      throw new Error('Unable to fetch email')
+    }
+    const emails: { email: string; verified: boolean; primary: boolean }[] =
+      await emailRequest.json()
+    const verifiedEmail = emails.find((email: any) => email.verified)
+    const primaryEmail = emails.find((email: any) => email.primary)
+    const primaryVerifiedEmail = emails.find((email: any) => email.primary && email.verified)
+    const isVerified = primaryVerifiedEmail || verifiedEmail || primaryEmail
     const getUser = async () => {
       const existingUser = await getExistingUser()
       if (existingUser) return existingUser
       const user = await createUser({
         attributes: {
-          username: githubUser.login
+          username: githubUser.login,
+          email: isVerified ? isVerified.email : undefined,
+          name: githubUser.name,
+          avatar_url: githubUser.avatar_url
+          // roles: [UserRole.User]
         }
       })
       return user

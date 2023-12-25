@@ -11,21 +11,21 @@ export interface Database {
   User: {
     id: GeneratedAlways<string>
     username: string
-    email: string
-    password: string
-    name: string
+    email?: string
+    name?: string
+    password?: string
   } & Lucia.DatabaseUserAttributes
-  // UserRole: {
-  //   id: GeneratedAlways<string>
-  //   role: UserRole
-  // }
-  // UserRoleAssignment: {
-  //   id: GeneratedAlways<string>
-  //   user_id: UserId
-  //   roleId: RoleId
-  //   created_at: Date
-  //   updated_at: Date
-  // }
+  UserRole: {
+    id: GeneratedAlways<string>
+    role: UserRole
+  }
+  UserRoleAssignment: {
+    id: GeneratedAlways<string>
+    user_id: UserId
+    role_id: RoleId
+    created_at: Date
+    updated_at: Date
+  }
   UserKey: {
     id: GeneratedAlways<string>
     user_id: UserId
