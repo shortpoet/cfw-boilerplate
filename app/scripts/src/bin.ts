@@ -1,11 +1,11 @@
-import sade from 'sade';
-import * as kv from './commands/kv';
-import * as vars from './commands/vars';
-import * as git from './commands/git';
-import * as db from './commands/db';
-import * as secret from './commands/secret';
-import build from './commands/build';
-import go from './commands/go';
+import sade from 'sade'
+import * as kv from './commands/kv'
+import * as vars from './commands/vars'
+import * as git from './commands/git'
+import * as db from './commands/db'
+import * as secret from './commands/secret'
+import build from './commands/build'
+import go from './commands/go'
 
 const cli = sade('wrangle')
   .version('0.0.2')
@@ -22,6 +22,7 @@ const cli = sade('wrangle')
   // .option('-m, --migration', 'The migration to apply')
   // .option('-b, --bindingName', 'The binding name')
   .option('-f, --file', 'The secret file || sql file')
+  .option('-o, --fileOnly', 'Only write to secret file', false)
   .option('-s, --sql', 'The sql to execute')
   .option('-t, --targetEnv', 'The environment to set')
 
@@ -52,6 +53,7 @@ const cli = sade('wrangle')
     \t\t  optional target env - from env is always -e`
   )
   .option('-f, --file', 'The secret file')
+  .option('-o, --fileOnly', 'Only write to secret file', false)
   .option('-t, --targetEnv', 'The environment to set')
   .action(secret.set)
 
@@ -96,14 +98,15 @@ const cli = sade('wrangle')
   .describe('Go live')
   .option('-C, --cwd', 'The relative working directory', '.')
   .option('-e, --env', 'The environment to list', 'dev')
-  .action(go);
+  .action(go)
 
 cli.parse(process.argv, {
   boolean: [
     'debug',
+    'fileOnly',
     // 'single',
     //  'quiet',
-    'goLive',
+    'goLive'
   ],
   string: [
     'env',
@@ -116,6 +119,6 @@ cli.parse(process.argv, {
     // 'migration',
     // 'bindingName',
     'file',
-    'sql',
-  ],
-});
+    'sql'
+  ]
+})
