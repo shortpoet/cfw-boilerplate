@@ -2,7 +2,11 @@
 CREATE TABLE IF NOT EXISTS [user] 
 (
   [id] VARCHAR(15) NOT NULL PRIMARY KEY,
-  [username] VARCHAR(31) NOT NULL
+  [username] VARCHAR(31) NOT NULL,
+  [email]    TEXT NOT NULL UNIQUE,
+  [password] TEXT NOT NULL,
+  [name]     TEXT NOT NULL,
+
 );
 
 CREATE TABLE IF NOT EXISTS [user_key] 
@@ -20,6 +24,8 @@ CREATE TABLE IF NOT EXISTS [user_session]
   [user_id]        VARCHAR(15) NOT NULL,
   [active_expires] BIGINT NOT NULL,
   [idle_expires]   BIGINT NOT NULL,
+  [token]          VARCHAR(255) NOT NULL,
+  
 
   FOREIGN KEY (user_id) REFERENCES user(id)
 );
