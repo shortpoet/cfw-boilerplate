@@ -1,11 +1,15 @@
 import { UserRole } from '#/types'
-import { Generated, GeneratedAlways } from 'kysely'
+import { Generated, GeneratedAlways, Insertable, Selectable, Updateable } from 'kysely'
 import { Lucia } from '#/bindings'
 
 type AccountId = string
 type UserId = string
 type RoleId = string
 type SessionId = string
+
+export type SelectUser = Selectable<Database['User']>
+export type UpdateUser = Updateable<Database['User']>
+export type InsertUser = Insertable<Database['User']>
 
 export interface Database {
   User: {

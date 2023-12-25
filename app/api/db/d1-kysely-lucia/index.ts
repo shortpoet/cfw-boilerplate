@@ -1,4 +1,4 @@
-export * from './db'
+export * from './schema'
 export * from './derive'
 import * as q from './queries'
 

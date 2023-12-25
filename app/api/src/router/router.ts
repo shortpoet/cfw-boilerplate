@@ -20,7 +20,6 @@ import {
   // withUser,
 } from '../middleware'
 
-import { auth_dbv1_router } from '#/api/src/router'
 import { health_router } from '#/api/src/router'
 import { task_router } from '#/api/src/router'
 import { auth_router } from '#/api/src/router'
@@ -92,7 +91,6 @@ router
   .all('*', withQueryParams(), withListOptions(), withCookies(), withSession())
   .all('/auth/*', auth_router)
   .all('/task/*', task_router)
-  .all('/db-v1/*', auth_dbv1_router)
   .all('/health/*', health_router)
   .get('/json-data', (req: IRequest, res: Response, env: Env, ctx: ExecutionContext) => {
     console.log(`[api] /json-data -> ${req.method} -> ${req.url} -> req`)

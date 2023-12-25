@@ -8,8 +8,7 @@ import fs from 'fs'
 import { D1Database } from '@cloudflare/workers-types'
 import { Kysely, ParseJSONResultsPlugin } from 'kysely'
 import { D1Dialect } from 'kysely-d1'
-// import { KyselyAdapter } from './adapter'
-import { Database as Schema } from './db'
+import { Database as Schema } from './schema'
 
 export { deriveDatabaseAdapter, getKysely, getD1, getSqlite }
 
@@ -54,7 +53,7 @@ const getSqlite = async (env?: Env) => {
 
 const getKysely = async () => {
   const d1 = await getD1()
-  const kys = new Kysely<Schema>({
+  return new Kysely<Schema>({
     dialect: new D1Dialect({ database: d1 }),
     // plugins: [new CamelCasePlugin()],
     plugins: [new ParseJSONResultsPlugin()]
@@ -65,8 +64,6 @@ const getKysely = async () => {
     //  }
     //},s
   })
-  return kys
-  // return KyselyAdapter(kys)
 }
 
 const getAdapter = (db: D1Database) =>

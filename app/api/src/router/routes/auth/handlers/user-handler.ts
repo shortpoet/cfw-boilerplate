@@ -1,7 +1,7 @@
 import { q } from '#/api/db'
 import { notFoundResponse, jsonOkResponse, badResponse } from '#/api/src/middleware'
 
-export const getUsersFind = async (
+export const getAllUsers = async (
   req: Request,
   response: Response,
   env: Env,
