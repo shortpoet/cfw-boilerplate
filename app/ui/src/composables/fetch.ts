@@ -35,7 +35,7 @@ interface FetchError extends Error {
 }
 
 interface UseFetchResult<T> {
-  fetchApi: () => Promise<void>
+  // fetchApi: () => Promise<void>
   data: Ref<UnwrapRef<T>>
   dataLoading: Ref<boolean>
   error: Ref<FetchError | undefined>
@@ -203,5 +203,6 @@ const useFetch = async <T>(
 
   await fetchApi()
 
-  return { fetchApi, data, dataLoading, error }
+  return { data, dataLoading, error }
+  // return { fetchApi, data, dataLoading, error }
 }
