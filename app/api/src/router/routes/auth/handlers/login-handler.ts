@@ -8,7 +8,7 @@ import {
   badResponse,
   serverErrorResponse,
   getBaseUrl
-} from '../../middleware'
+} from '../../../../middleware'
 import { LUCIA_AUTH_COOKIES_SESSION_TOKEN, UserRole } from '#/types'
 
 export const loginGithub = async (req: Request, res: Response, env: Env, ctx: ExecutionContext) => {

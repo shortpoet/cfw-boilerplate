@@ -58,7 +58,21 @@ const router = OpenAPIRouter<IRequest, CF>({
   },
   base: '/api',
   docs_url: '/docs',
-  openapi_url: '/openapi.json'
+  openapi_url: '/openapi.json',
+  redoc_url: '/redoc',
+  openapiVersion: '3.1'
+})
+
+router.registry.registerComponent('securitySchemes', 'bearerAuth', {
+  type: 'http',
+  scheme: 'bearer',
+  bearerFormat: 'JWT'
+})
+
+router.registry.registerComponent('securitySchemes', 'cookieAuth', {
+  type: 'apiKey',
+  in: 'cookie',
+  name: 
 })
 
 const protectedRoutes = {

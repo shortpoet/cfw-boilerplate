@@ -7,21 +7,11 @@ import { web } from 'lucia/middleware'
 // import { google } from '@lucia-auth/oauth/providers';
 import { github } from '@lucia-auth/oauth/providers'
 
-const envAliasMap = {
-  production: 'PROD',
-  development: 'DEV'
-} as const
-
-// const envAlias = envAliasMap[config.env.NODE_ENV];
 export const createAuth = async (env: Env) => {
-  // console.log(`[api] [middleware] [auth] [lucia] [createAuth] -> env: ${env.NODE_ENV}`);
-  // console.log(`[api] [middleware] [auth] [lucia] [createAuth] -> host: ${env.HOST}`);
-  // console.log(`[api] [middleware] [auth] [lucia] [createAuth] -> port: ${env.VITE_PORT_API}`);
   const adapter = await deriveDatabaseAdapter(env)
   if (!adapter) {
     throw new Error('could not derive database adapter')
   }
-  // console.log(`[api] [middleware] [auth] [lucia] -> adapter: ${adapter}`);
   const auth = lucia({
     env: env.NODE_ENV === 'production' ? 'PROD' : 'DEV',
     middleware: web(),
@@ -38,6 +28,9 @@ export const createAuth = async (env: Env) => {
         avatar_url: data.avatar_url,
         roles: []
       }
+    },
+    sessionCookie: {
+      name: 
     }
   })
 
