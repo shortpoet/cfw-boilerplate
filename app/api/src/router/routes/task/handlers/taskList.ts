@@ -1,8 +1,8 @@
 import { Task } from './types'
 import { OpenAPIRoute, OpenAPIRouteSchema, Query } from '@cloudflare/itty-router-openapi'
-import { GetTaskListSchema } from '../task-oa'
 import { taskGenerator } from './task-generator'
-import { TaskComponentType } from '../task-oa'
+import { TaskComponentType } from '../task-component'
+import { GetTaskListSchema } from '../task-schema'
 
 export const ALL_TASKS: TaskComponentType[] = taskGenerator(134)
 

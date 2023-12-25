@@ -5,7 +5,7 @@ import { Database } from '##/db/d1-kysely-lucia'
 type ISODateString = string
 
 type User = UserUnion
-type UserUnion = BaseUser & Database['User']
+type UserUnion = BaseUser | Database['User']
 
 type Session = SessionUnion
 type SessionUnion = BaseSession

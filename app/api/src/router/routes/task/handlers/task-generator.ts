@@ -11,7 +11,7 @@ import {
   randBoolean,
   randSoonDate
 } from '@ngneat/falso'
-import { TaskComponentType } from '../task-oa'
+import { TaskComponentType } from '../task-component'
 import { capitalize } from 'lodash-es'
 
 const base: TaskComponentType[] = [

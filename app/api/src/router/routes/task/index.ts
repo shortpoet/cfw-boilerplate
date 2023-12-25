@@ -1,2 +1,2 @@
 export { default as task_router } from './task-router'
-export * from './task-oa'
+export * from './task-component'

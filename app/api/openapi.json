@@ -5,7 +5,85 @@
     "version": "1.0"
   },
   "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      },
+      "cookieAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "auth_session"
+      }
+    },
     "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 12,
+            "maxLength": 12,
+            "description": "User ID"
+          },
+          "username": {
+            "type": "string",
+            "description": "User's username"
+          },
+          "email": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "User email"
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "User's name"
+          },
+          "password": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "User password"
+          },
+          "userType": {
+            "type": "string",
+            "enum": [
+              "not_set",
+              "credentials",
+              "github",
+              "email"
+            ]
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "admin",
+                "user",
+                "guest",
+                "not_set"
+              ]
+            }
+          }
+        },
+        "required": [
+          "id",
+          "username",
+          "email",
+          "name",
+          "password",
+          "userType",
+          "roles"
+        ]
+      },
       "Task": {
         "type": "object",
         "properties": {
@@ -145,6 +223,30 @@
         "responses": {
           "200": {
             "description": "Object with user data."
+          }
+        }
+      }
+    },
+    "/api/auth/user/all": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Gets a list of all users.",
+        "operationId": "get_GetUsers",
+        "responses": {
+          "200": {
+            "description": "List of all users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -439,16 +541,6 @@
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/api/db-v1/find": {
-      "get": {
-        "operationId": "get__find",
-        "responses": {
-          "200": {
-            "description": "Object with user data."
           }
         }
       }
