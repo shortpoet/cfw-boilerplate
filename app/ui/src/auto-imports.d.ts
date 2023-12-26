@@ -146,6 +146,7 @@ declare global {
   const useSlots: typeof import('vue')['useSlots']
   const useSsrLogger: typeof import('./composables/logger')['useSsrLogger']
   const useUiStore: typeof import('./stores/ui')['useUiStore']
+  const useValidation: typeof import('./composables/validation')['useValidation']
   const userType: typeof import('./models/User')['userType']
   const watch: typeof import('vue')['watch']
   const watchEffect: typeof import('vue')['watchEffect']
@@ -291,6 +292,7 @@ declare module 'vue' {
     readonly useSlots: UnwrapRef<typeof import('vue')['useSlots']>
     readonly useSsrLogger: UnwrapRef<typeof import('./composables/logger')['useSsrLogger']>
     readonly useUiStore: UnwrapRef<typeof import('./stores/ui')['useUiStore']>
+    readonly useValidation: UnwrapRef<typeof import('./composables/validation')['useValidation']>
     readonly userType: UnwrapRef<typeof import('./models/User')['userType']>
     readonly watch: UnwrapRef<typeof import('vue')['watch']>
     readonly watchEffect: UnwrapRef<typeof import('vue')['watchEffect']>
@@ -429,6 +431,7 @@ declare module '@vue/runtime-core' {
     readonly useSlots: UnwrapRef<typeof import('vue')['useSlots']>
     readonly useSsrLogger: UnwrapRef<typeof import('./composables/logger')['useSsrLogger']>
     readonly useUiStore: UnwrapRef<typeof import('./stores/ui')['useUiStore']>
+    readonly useValidation: UnwrapRef<typeof import('./composables/validation')['useValidation']>
     readonly userType: UnwrapRef<typeof import('./models/User')['userType']>
     readonly watch: UnwrapRef<typeof import('vue')['watch']>
     readonly watchEffect: UnwrapRef<typeof import('vue')['watchEffect']>

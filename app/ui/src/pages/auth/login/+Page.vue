@@ -66,33 +66,44 @@
 
 <script setup lang="ts">
 import { Session } from '#/types'
+import type { FormInput } from '#/ui/src/components/input/FormGeneric.vue'
+
 const props = defineProps<{
   session?: Session
 }>()
 const providers = ref(['github', 'password'])
 // const pageContext = usePageContext();
 // const pageSession = ref(pageContext.session);
-const getForm = (provider: string) => [
-  {
-    type: 'text',
-    value: '',
-    placeholder: 'Username',
-    key: 'username'
-  },
-  {
-    type: 'email',
-    value: '',
-    placeholder: 'Email',
-    key: 'email'
-  },
-  {
-    type: 'password',
-    value: '',
-    placeholder: 'Password',
-    key: 'password'
-  },
-  { type: 'hidden', value: provider, placeholder: '', key: 'provider' }
-]
+const getForm = (provider: string): FormInput[] =>
+  [
+    { type: 'hidden', value: provider, placeholder: 'provider', key: 'provider', required: false }
+  ].concat(
+    provider === 'password'
+      ? [
+          {
+            type: 'text',
+            value: '',
+            placeholder: 'Username',
+            key: 'username',
+            required: true
+          },
+          {
+            type: 'email',
+            value: '',
+            placeholder: 'Email',
+            key: 'email',
+            required: true
+          },
+          {
+            type: 'password',
+            value: '',
+            placeholder: 'Password',
+            key: 'password',
+            required: true
+          }
+        ]
+      : []
+  )
 
 let session = ref(props.session)
 if (typeof window !== 'undefined' && !session.value) {

@@ -87,8 +87,8 @@ const todos = Array.from({ length: 8 }, (_, i) => i + 1).map((id) => ({
 // GET collection index
 router
   .all('*', preflight)
-  .all('*', withPino({ level: FILE_LOG_LEVEL }), withDb(), withCfHeaders())
-  .all('*', withQueryParams(), withListOptions(), withCookies(), withSession())
+  .all('*', withPino({ level: FILE_LOG_LEVEL }), withDb(), withCookies())
+  // .all('*', withCfHeaders(), withQueryParams(), withListOptions(), withSession())
   .all('/auth/*', auth_router)
   .all('/task/*', task_router)
   .all('/health/*', health_router)

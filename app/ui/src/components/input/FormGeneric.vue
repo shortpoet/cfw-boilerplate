@@ -2,11 +2,14 @@
   <div>
     <form @submit.prevent="onSubmit" flex flex-col>
       <input
-        :class="hidden ? 'hidden' : 'generic-input'"
+        class="generic-input"
         v-for="input in inputs"
         :type="input.type"
         v-model="input.value"
         :placeholder="input.placeholder"
+        :key="input.key"
+        :required="input.required"
+        v-validate="`required|${input.type}`"
       />
       <slot name="submit-button">
         <button class="btn-main" type="submit">Submit</button>
@@ -57,7 +60,10 @@ export type FormInput = {
   type: string
   value: string
   placeholder: string
+  required: boolean
 }
+
+const { vValidate, errors } = useValidation()
 
 const emit = defineEmits<{
   (event: 'submit', value: { [key: string]: string }): void
@@ -101,7 +107,14 @@ const onSubmit = (event: Event) => {
   )
 }
 
-// if (validate.isError) {
-//   throw 'This will trigger the upstream error boundary.'
-// }
+console.log(`[FormGeneric] errors ${JSON.stringify(errors.value)}`)
+watch(
+  () => errors.value,
+  (value) => {
+    if (Object.entries(value).some(([key, value]) => value !== '')) {
+      console.log(`[FormGeneric] errors ${JSON.stringify(value)}`)
+      throw new Error(`[FormGeneric] errors ${JSON.stringify(errors.value)}`)
+    }
+  }
+)
 </script>

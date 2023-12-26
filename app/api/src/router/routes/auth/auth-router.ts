@@ -7,7 +7,7 @@ import user_router from './rt-user'
 import { logout } from './handlers'
 
 type CF = [env: Env, ctx: ExecutionContext]
-const router = OpenAPIRouter<IRequest, CF>({ base: '/api/auth/' })
+const router = OpenAPIRouter<IRequest, CF>({ base: '/api/auth' })
 
 router.all('/login/*', login_router)
 

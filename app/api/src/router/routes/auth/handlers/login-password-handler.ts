@@ -13,7 +13,7 @@ import {
 import { LUCIA_AUTH_COOKIES_SESSION_TOKEN, UserRole } from '#/types'
 import { OpenAPIRoute } from '@cloudflare/itty-router-openapi'
 import { AuthRegisterSchema } from '../auth-schema'
-import { AuthLoginBody } from '../auth-component'
+import { AuthLoginBody, AuthLoginBodyType } from '../auth-component'
 import { z } from 'zod'
 
 export const loginPassword = async (
@@ -39,23 +39,17 @@ export class RegisterPasswordUser extends OpenAPIRoute {
     res: Response,
     env: Env,
     ctx: ExecutionContext,
-    data: Record<string, any>
+    data: { body: AuthLoginBodyType }
   ) {
     try {
       req.logger.info(`[api] [auth] [login] [password]`)
-
-      const formData = await req.formData()
-      let username = formData.get('username')
-      let password = formData.get('password')
-      let email = formData.get('email')
-      // const username = z.string().parse(formData.get('username'))
-      const data = { username, password, email }
-      console.log(`[api] [auth] [login] [password] -> data: ${JSON.stringify(data, null, 2)}`)
-      const loginBody = AuthLoginBody.parse(data)
+      console.log(`[api] [auth] [login] [password] -> data: ${JSON.stringify(data.body, null, 2)}`)
+      const loginBody = AuthLoginBody.parse(data.body)
       if (!loginBody) {
         return badResponse('Invalid login body', new Error(loginBody), res)
       }
-      ;({ username, password, email } = loginBody)
+      const { username, password, email } = loginBody
+
       const { auth } = await createAuth(env)
 
       const user = await auth.createUser({
@@ -65,7 +59,8 @@ export class RegisterPasswordUser extends OpenAPIRoute {
           password // hashed by Lucia
         },
         attributes: {
-          username
+          username,
+          email
         }
       })
       const session = await auth.createSession({
