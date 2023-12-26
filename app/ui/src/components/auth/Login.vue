@@ -39,11 +39,12 @@
 </template>
 
 <script setup lang="ts">
-import { User, Session } from '#/types'
+import { User, Session, LoginOptions } from '#/types'
 
 defineProps<{
   session?: Session
   usePopup?: boolean
+  providers?: string[]
 }>()
 let onLogin = ref((event: any) => {
   console.log(`[ui] [login.component] womp login ${event}`)
@@ -54,23 +55,13 @@ let onLogout = ref((event: any) => {
 let onLoginPopup = ref((event: any) => {
   console.log(`[ui] [login.component] login popup ${event}`)
 })
-const slots = useSlots()
-// @ts-ignore
-const loginSlot = slots.login
+
 let user = ref<User>()
 let storeSession = ref<Session>()
-
-console.log(`[ui] [login.component] storeSession.value ${storeSession.value}`)
 
 let authLoading = ref(false)
 let authError = ref(null)
 let isLoggedIn = ref(false)
-
-const providers = ref(['github'])
-
-// console.log("[ui] [login.component] setup");
-// console.log(`[ui] [login.component] providers`);
-// console.log(providers.value);
 
 const pageContext = usePageContext()
 const pageSession = ref(pageContext.session)
@@ -86,32 +77,19 @@ if (typeof window !== 'undefined') {
     "[ui] [login.component] typeof window !== 'undefined' -> can now load things that would break SSR"
   )
   const auth = useLuciaAuth()
-  const { login, logout, authLoading } = auth
+  const { login, logout } = auth
   ;({ authError, isLoggedIn } = auth)
   user = auth.user || user
   const authStore = useAuthStore()
 
-  console.log(`[ui] [login.component] storeSession.value ${storeSession.value}`)
   storeSession.value = authStore.session || storeSession.value
-  console.log(`[ui] [login.component] storeSession.value ${storeSession.value}`)
 
-  console.log(`[ui] [login.component] authLoading.value ${authLoading.value}`)
-  onLogin.value = async (event: any) => {
+  onLogin.value = async (event: LoginOptions) => {
     console.log('[ui] [login.component] onLogin')
-    console.log(`[ui] [login.component] event ${event}`)
     console.log(event)
-    console.log(event.target)
-    console.log(event.target.id)
-    // cookie options must be in both set and remove
-    // cookies.set(COOKIES_USER_TOKEN, true, cookieOptions)
-    const provider = event.target.id.split('-')[2]
-    // const all = Cookies.get()
-    // console.log(`[ui] [login.component] all cookies`);
-    // console.log(all);
-    // console.log(`[ui] [login.component] cookie ${cookie}`);
-    // console.log(`[ui] [login.component] provider ${provider}`);
+
     try {
-      await login({ provider })
+      await login(event)
     } catch (error) {
       console.log(`[ui] [login.component] error`)
       console.log(error)

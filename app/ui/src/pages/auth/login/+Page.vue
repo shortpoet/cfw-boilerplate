@@ -11,26 +11,34 @@
       <JsonTree :data="session" />
     </div>
 
-    <Login :session="session">
-      <template #login="loginProps">
-        <button
-          class="btn-main m-3 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-          id="login-button"
-          :disabled="loginProps.isLoggedIn"
-          @click="loginProps.onLogin"
-        >
-          Log in
-        </button>
-      </template>
+    <Login :session="session" :providers="providers">
       <template #login-github="loginProps">
-        <button
-          class="btn-main m-3 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-          id="login-button-github"
-          :disabled="loginProps.isLoggedIn"
-          @click="loginProps.onLogin"
-        >
-          <i class="i-carbon-logo-github" inline-block /> Log in Github
-        </button>
+        <FormGeneric :inputs="getForm('github')" @submit="loginProps.onLogin" :hidden="true">
+          <template #submit-button>
+            <button
+              type="submit"
+              class="btn-main m-3 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+              id="login-button-github"
+              :disabled="loginProps.isLoggedIn"
+            >
+              <i class="i-carbon-logo-github" inline-block /> Log in Github
+            </button>
+          </template>
+        </FormGeneric>
+      </template>
+      <template #login-password="loginProps">
+        <FormGeneric :inputs="getForm('password')" @submit="loginProps.onLogin">
+          <template #submit-button>
+            <button
+              type="submit"
+              class="btn-main m-2 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+              id="login-button-password"
+              :disabled="loginProps.isLoggedIn"
+            >
+              <i class="i-carbon-login" inline-block /> Log in Password
+            </button>
+          </template>
+        </FormGeneric>
       </template>
       <template #login-popup="loginPopupProps">
         <button
@@ -61,9 +69,30 @@ import { Session } from '#/types'
 const props = defineProps<{
   session?: Session
 }>()
-
+const providers = ref(['github', 'password'])
 // const pageContext = usePageContext();
 // const pageSession = ref(pageContext.session);
+const getForm = (provider: string) => [
+  {
+    type: 'text',
+    value: '',
+    placeholder: 'Username',
+    key: 'username'
+  },
+  {
+    type: 'email',
+    value: '',
+    placeholder: 'Email',
+    key: 'email'
+  },
+  {
+    type: 'password',
+    value: '',
+    placeholder: 'Password',
+    key: 'password'
+  },
+  { type: 'hidden', value: provider, placeholder: '', key: 'provider' }
+]
 
 let session = ref(props.session)
 if (typeof window !== 'undefined' && !session.value) {

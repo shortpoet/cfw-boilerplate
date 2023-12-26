@@ -8,11 +8,13 @@ export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
 export type { ApiErrorResponse } from './models/ApiErrorResponse';
+export type { Session } from './models/Session';
 export type { Task } from './models/Task';
 export type { TaskListResponse } from './models/TaskListResponse';
 export type { TaskResponse } from './models/TaskResponse';
 export { User } from './models/User';
 
+export { AuthService } from './services/AuthService';
 export { DefaultService } from './services/DefaultService';
 export { TasksService } from './services/TasksService';
 export { UserService } from './services/UserService';

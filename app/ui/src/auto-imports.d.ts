@@ -16,6 +16,7 @@ declare global {
   const AUTHJS_COOKIES_USER_TOKEN: typeof import('./composables/auth-authjs')['AUTHJS_COOKIES_USER_TOKEN']
   const AUTHJS_SESSION_TOKEN_EXPIRY: typeof import('./composables/auth-authjs')['AUTHJS_SESSION_TOKEN_EXPIRY']
   const ApiError: typeof import('./core/ApiError')['ApiError']
+  const AuthService: typeof import('./services/AuthService')['AuthService']
   const COOKIES_SESSION_TOKEN: (typeof import('./composables/auth-authjs'))['COOKIES_SESSION_TOKEN']
   const COOKIES_USER_TOKEN: (typeof import('./composables/auth-authjs'))['COOKIES_USER_TOKEN']
   const CancelError: typeof import('./core/CancelablePromise')['CancelError']
@@ -173,6 +174,7 @@ declare module 'vue' {
     readonly AUTHJS_COOKIES_USER_TOKEN: UnwrapRef<typeof import('./composables/auth-authjs')['AUTHJS_COOKIES_USER_TOKEN']>
     readonly AUTHJS_SESSION_TOKEN_EXPIRY: UnwrapRef<typeof import('./composables/auth-authjs')['AUTHJS_SESSION_TOKEN_EXPIRY']>
     readonly ApiError: UnwrapRef<typeof import('./core/ApiError')['ApiError']>
+    readonly AuthService: UnwrapRef<typeof import('./services/AuthService')['AuthService']>
     readonly CancelError: UnwrapRef<typeof import('./core/CancelablePromise')['CancelError']>
     readonly CancelablePromise: UnwrapRef<typeof import('./core/CancelablePromise')['CancelablePromise']>
     readonly DefaultService: UnwrapRef<typeof import('./services/DefaultService')['DefaultService']>
@@ -310,6 +312,7 @@ declare module '@vue/runtime-core' {
     readonly AUTHJS_COOKIES_USER_TOKEN: UnwrapRef<typeof import('./composables/auth-authjs')['AUTHJS_COOKIES_USER_TOKEN']>
     readonly AUTHJS_SESSION_TOKEN_EXPIRY: UnwrapRef<typeof import('./composables/auth-authjs')['AUTHJS_SESSION_TOKEN_EXPIRY']>
     readonly ApiError: UnwrapRef<typeof import('./core/ApiError')['ApiError']>
+    readonly AuthService: UnwrapRef<typeof import('./services/AuthService')['AuthService']>
     readonly CancelError: UnwrapRef<typeof import('./core/CancelablePromise')['CancelError']>
     readonly CancelablePromise: UnwrapRef<typeof import('./core/CancelablePromise')['CancelablePromise']>
     readonly DefaultService: UnwrapRef<typeof import('./services/DefaultService')['DefaultService']>

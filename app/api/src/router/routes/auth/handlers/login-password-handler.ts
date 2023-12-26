@@ -49,8 +49,9 @@ export class RegisterPasswordUser extends OpenAPIRoute {
       let password = formData.get('password')
       let email = formData.get('email')
       // const username = z.string().parse(formData.get('username'))
-
-      const loginBody = AuthLoginBody.parse({ username, password, email })
+      const data = { username, password, email }
+      console.log(`[api] [auth] [login] [password] -> data: ${JSON.stringify(data, null, 2)}`)
+      const loginBody = AuthLoginBody.parse(data)
       if (!loginBody) {
         return badResponse('Invalid login body', new Error(loginBody), res)
       }

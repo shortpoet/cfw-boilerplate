@@ -136,11 +136,20 @@ const useLuciaAuth = () => {
       }/login/${opts.provider}`
     )
     console.log(`[ui] [useAuth] login url: ${url.href}`)
-    const { data, error, dataLoading } = await useFetch<{ url: string }>(url.href, {
-      // headers: {
-      //   cookie: `${LUCIAAUTH_COOKIES_SESSION_TOKEN}=${sessionToken.value}`,
-      // },
-    })
+    const isPassword = opts.provider === 'password'
+
+    const init = {
+      method: isPassword ? 'POST' : 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+        // cookie: `${LUCIAAUTH_COOKIES_SESSION_TOKEN}=${sessionToken.value}`,
+      },
+      body: isPassword
+        ? JSON.stringify({ username: opts.username, password: opts.password, email: opts.email })
+        : undefined
+    }
+    console.log(`[ui] [useAuth] login init: ${JSON.stringify(init, null, 2)}`)
+    const { data, error, dataLoading } = await useFetch<{ url: string }>(url.href, init)
     const { logger, correlationId } = useSsrLogger()
 
     if (error.value) {
@@ -152,7 +161,8 @@ const useLuciaAuth = () => {
     }
     if (data.value) {
       logger.debug(`[ui] [useAuth] data: ${JSON.stringify(data.value, null, 2)}`)
-      window.location.replace(data.value.url)
+      console.log(`[ui] [useAuth] data: ${JSON.stringify(data.value, null, 2)}`)
+      // if (!isPassword) window.location.replace(data.value.url)
     }
   }
 

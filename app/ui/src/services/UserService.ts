@@ -19,6 +19,10 @@ export class UserService {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/api/auth/user/all',
+      errors: {
+        404: `Users not found`,
+        500: `Internal server error`,
+      },
     });
   }
 
