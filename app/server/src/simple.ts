@@ -31,7 +31,8 @@ if (!SECRET || !GITHUB_CLIENT_ID || !GITHUB_CLIENT_SECRET) {
 }
 
 const server = http.createServer(async (req, res) => {
-  let data = ''
+  // causes cors error
+  // let data = ''
   // req.on('data', (chunk) => {
   //   // Accumulate incoming data chunks
   //   data += chunk.toString()
@@ -59,11 +60,11 @@ const server = http.createServer(async (req, res) => {
     }) as unknown as Request
     const _res = new Response() as unknown as Response
     const env = config.env
-    // const data = req.read()
+    const data = req.read()
     console.log(`[server] [simple] -> data ->`)
     console.log(data)
 
-    const resp = await Api.handle({ req: _req, res: _res, env, ctx, data: JSON.parse(data) })
+    const resp = await Api.handle({ req: _req, res: _res, env, ctx, data })
       .then(json)
       .catch(error)
       .then(corsify)
