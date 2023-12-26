@@ -31,27 +31,6 @@
             "type": "string",
             "description": "User's username"
           },
-          "email": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "User email"
-          },
-          "name": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "User's name"
-          },
-          "password": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "User password"
-          },
           "userType": {
             "type": "string",
             "enum": [
@@ -72,14 +51,23 @@
                 "not_set"
               ]
             }
+          },
+          "email": {
+            "type": "string",
+            "description": "User email"
+          },
+          "name": {
+            "type": "string",
+            "description": "User's name"
+          },
+          "password": {
+            "type": "string",
+            "description": "User password"
           }
         },
         "required": [
           "id",
           "username",
-          "email",
-          "name",
-          "password",
           "userType",
           "roles"
         ]

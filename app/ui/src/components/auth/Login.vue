@@ -1,7 +1,5 @@
 <template>
-  <div v-if="authLoading">
-    authLoading...
-  </div>
+  <div v-if="authLoading">authLoading...</div>
   <div v-else-if="authError">
     <div>
       <slot name="logout" :onLogout="onLogout" :isLoggedIn="isLoggedIn" />
@@ -41,85 +39,95 @@
 </template>
 
 <script setup lang="ts">
-
-import { User, Session } from '#/types';
+import { User, Session } from '#/types'
 
 defineProps<{
-  session?: Session;
-  usePopup?: boolean;
-}>();
-let onLogin = ref((event: any) => { console.log(`[ui] [login.component] womp login ${event}`); });
-let onLogout = ref((event: any) => { console.log(`[ui] [login.component] logout ${event}`); });
-let onLoginPopup = ref((event: any) => { console.log(`[ui] [login.component] login popup ${event}`); });
+  session?: Session
+  usePopup?: boolean
+}>()
+let onLogin = ref((event: any) => {
+  console.log(`[ui] [login.component] womp login ${event}`)
+})
+let onLogout = ref((event: any) => {
+  console.log(`[ui] [login.component] logout ${event}`)
+})
+let onLoginPopup = ref((event: any) => {
+  console.log(`[ui] [login.component] login popup ${event}`)
+})
 const slots = useSlots()
 // @ts-ignore
-const loginSlot = slots.login;
-let user = ref<User>();
-let storeSession = ref<Session>();
+const loginSlot = slots.login
+let user = ref<User>()
+let storeSession = ref<Session>()
 
-let authLoading = ref(false);
-let authError = ref(null);
-let isLoggedIn = ref(false);
+console.log(`[ui] [login.component] storeSession.value ${storeSession.value}`)
 
-const providers = ref([
-  'github'
-])
+let authLoading = ref(false)
+let authError = ref(null)
+let isLoggedIn = ref(false)
+
+const providers = ref(['github'])
 
 // console.log("[ui] [login.component] setup");
 // console.log(`[ui] [login.component] providers`);
 // console.log(providers.value);
 
-const pageContext = usePageContext();
-const pageSession = ref(pageContext.session);
+const pageContext = usePageContext()
+const pageSession = ref(pageContext.session)
 
 if (import.meta.env.VITE_LOG_LEVEL === 'debug') {
-  console.log("[ui] [login.component] setup done");
-  console.log(`[ui] [login.component] login slot`);
+  console.log('[ui] [login.component] setup done')
+  console.log(`[ui] [login.component] login slot`)
   // console.log(loginSlot);
 }
 
-if (typeof window !== "undefined") {
-  console.log("[ui] [login.component] typeof window !== 'undefined' -> can now load things that would break SSR");
-  const auth = useLuciaAuth();
-  const { login, logout, authLoading } = auth;
-  ({ authError, isLoggedIn } = auth);
-  user = auth.user || user;
-  const authStore = useAuthStore();
-  storeSession.value = authStore.session || storeSession.value;
-  console.log(`[ui] [login.component] authLoading.value ${authLoading.value}`);
+if (typeof window !== 'undefined') {
+  console.log(
+    "[ui] [login.component] typeof window !== 'undefined' -> can now load things that would break SSR"
+  )
+  const auth = useLuciaAuth()
+  const { login, logout, authLoading } = auth
+  ;({ authError, isLoggedIn } = auth)
+  user = auth.user || user
+  const authStore = useAuthStore()
+
+  console.log(`[ui] [login.component] storeSession.value ${storeSession.value}`)
+  storeSession.value = authStore.session || storeSession.value
+  console.log(`[ui] [login.component] storeSession.value ${storeSession.value}`)
+
+  console.log(`[ui] [login.component] authLoading.value ${authLoading.value}`)
   onLogin.value = async (event: any) => {
-    console.log("[ui] [login.component] onLogin");
-    console.log(`[ui] [login.component] event ${event}`);
+    console.log('[ui] [login.component] onLogin')
+    console.log(`[ui] [login.component] event ${event}`)
     console.log(event)
     console.log(event.target)
     console.log(event.target.id)
     // cookie options must be in both set and remove
     // cookies.set(COOKIES_USER_TOKEN, true, cookieOptions)
-    const provider = event.target.id.split('-')[2];
+    const provider = event.target.id.split('-')[2]
     // const all = Cookies.get()
     // console.log(`[ui] [login.component] all cookies`);
     // console.log(all);
     // console.log(`[ui] [login.component] cookie ${cookie}`);
     // console.log(`[ui] [login.component] provider ${provider}`);
     try {
-      await login({ provider });
+      await login({ provider })
     } catch (error) {
-      console.log(`[ui] [login.component] error`);
-      console.log(error);
+      console.log(`[ui] [login.component] error`)
+      console.log(error)
     }
-  };
+  }
   onLoginPopup.value = async (event: any) => {
-    console.log("[ui] [login.component] onLoginPopup");
+    console.log('[ui] [login.component] onLoginPopup')
     // cookies.set(COOKIES_USER_TOKEN, true, cookieOptions)
     // await loginWithPopup();
-  };
+  }
   onLogout.value = async (event: any) => {
-    console.log("[ui] [login.component] onLogout");
+    console.log('[ui] [login.component] onLogout')
     // cookies.remove(COOKIES_USER_TOKEN, cookieOptions);
     // cookies.remove(COOKIES_SESSION_TOKEN, cookieOptions)
-    await logout();
-    authStore.setLoggedIn(false);
-  };
+    await logout()
+    authStore.setLoggedIn(false)
+  }
 }
-
 </script>

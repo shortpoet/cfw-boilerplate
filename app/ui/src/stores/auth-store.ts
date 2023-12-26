@@ -1,5 +1,5 @@
-import { acceptHMRUpdate, defineStore } from 'pinia';
-import { Session, User } from '#/types';
+import { acceptHMRUpdate, defineStore } from 'pinia'
+import { Session, User } from '#/types'
 
 export const useAuthStore = defineStore('auth', {
   persist: true,
@@ -12,48 +12,50 @@ export const useAuthStore = defineStore('auth', {
     isLoggedIn: false,
     currentUser: undefined as User | undefined,
     loginRedirectPath: '',
-    session: undefined as Session | undefined,
+    session: undefined as Session | undefined
   }),
   actions: {
     initRandomAuthState() {
-      const state = Math.random().toString(36).substring(2);
-      this.authState = state;
-      return state;
+      const state = Math.random().toString(36).substring(2)
+      this.authState = state
+      return state
     },
     initRandomNonce() {
       const nonce =
-        Math.random().toString(32).substring(2) + Math.random().toString(32).substring(2);
-      this.nonce = nonce;
-      return nonce;
+        Math.random().toString(32).substring(2) + Math.random().toString(32).substring(2)
+      this.nonce = nonce
+      return nonce
     },
     setIdToken(token: string) {
-      this.idToken = token;
+      this.idToken = token
     },
     setAccessToken(token: string) {
-      this.accessToken = token;
+      this.accessToken = token
     },
     setSessionToken(token: string) {
-      this.sessionToken = token;
+      this.sessionToken = token
     },
     setLoggedIn(loggedIn: boolean) {
-      this.isLoggedIn = loggedIn;
+      this.isLoggedIn = loggedIn
     },
     setCurrentUser(user: User | undefined) {
-      this.currentUser = user;
+      this.currentUser = user
     },
     setNonce(nonce: string) {
-      this.nonce = nonce;
+      this.nonce = nonce
     },
     setAuthState(state: string) {
-      this.authState = state;
+      this.authState = state
     },
     setLoginRedirectPath(path: string) {
-      this.loginRedirectPath = path;
+      this.loginRedirectPath = path
     },
     setSession(session: Session | undefined) {
-      this.session = session;
-    },
-  },
+      console.log('setting session')
+      console.log(session)
+      this.session = session
+    }
+  }
   // persist: [
   //   { key: "authState", storage: sessionStorage },
   //   { key: "nonce", storage: sessionStorage },
@@ -62,7 +64,7 @@ export const useAuthStore = defineStore('auth', {
   //   { key: "isLoggedIn", storage: sessionStorage },
   //   { key: "currentUser", storage: sessionStorage },
   // ],
-});
+})
 
 // export const useAuthStore = defineStore("auth", () => {
 //   console.log("creating auth store");
@@ -98,4 +100,4 @@ export const useAuthStore = defineStore('auth', {
 // https://github.com/vuejs/pinia/issues/690
 // https://www.reddit.com/r/vuejs/comments/snh25a/cryptic_error_with_pinia_vue_3_typescript/
 // https://stackoverflow.com/questions/70681667/cant-use-vue-router-and-pinia-inside-a-single-store
-if (import.meta.hot) import.meta.hot.accept(acceptHMRUpdate(useAuthStore, import.meta.hot));
+if (import.meta.hot) import.meta.hot.accept(acceptHMRUpdate(useAuthStore, import.meta.hot))

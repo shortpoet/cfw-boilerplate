@@ -1,11 +1,9 @@
 export { UserType, UserRole, User, Session, AuthInstance, LoginOptions }
 
-import { CFWDatabase } from '##/db/d1-kysely-lucia'
-
 type ISODateString = string
 
 type User = UserUnion
-type UserUnion = BaseUser & Omit<CFWDatabase['User'], 'id'>
+type UserUnion = BaseUser
 
 type Session = SessionUnion
 type SessionUnion = BaseSession
@@ -37,10 +35,10 @@ type BaseUser = {
   id: string
   roles: UserRole[]
   userType: UserType
-  username: string | null
-  email?: string | null
-  avatar_url?: string | null
-  name?: string | null
+  username: string
+  email?: string | undefined
+  avatar_url?: string | undefined
+  name?: string | undefined
 }
 
 interface AuthInstance {

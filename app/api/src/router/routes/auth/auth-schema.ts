@@ -1,6 +1,6 @@
 import { Path, Int } from '@cloudflare/itty-router-openapi'
 import { z } from 'zod'
-import { UserComponent } from './auth-component'
+import { UserComponent, AuthLoginBody, SessionComponent } from './auth-component'
 
 export const GetUserSchema = {
   tags: ['User'],
@@ -37,6 +37,41 @@ export const MeSchema = {
     '200': {
       description: 'Your own user profile',
       schema: UserComponent
+    }
+  }
+}
+
+export const LoginSchema = {
+  tags: ['Auth'],
+  summary: 'Fetch a user session',
+  responses: {
+    '200': {
+      description: 'Logged in User Session',
+      schema: SessionComponent
+    }
+  }
+}
+
+export const AuthRegisterSchema = {
+  tags: ['Auth'],
+  summary: 'Register a new user',
+  requestBody: AuthLoginBody,
+  responses: {
+    '200': {
+      description: 'User Object',
+      schema: SessionComponent
+    }
+  }
+}
+
+export const AuthLoginSchema = {
+  tags: ['Auth'],
+  summary: 'Log in via your email and password',
+  requestBody: AuthLoginBody,
+  responses: {
+    '200': {
+      description: 'User Object',
+      schema: SessionComponent
     }
   }
 }

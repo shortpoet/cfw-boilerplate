@@ -105,15 +105,16 @@ const useLuciaAuth = () => {
   }
 
   const setSession = async (_session?: Session | string): Promise<Session | undefined> => {
+    console.log(`[ui] [useAuth] [setSession] -> _session ->`)
+    console.log(_session)
     if (!_session) {
-      auth.setSessionToken('')
-      auth.setLoggedIn(false)
-      auth.setSessionAuthStore(undefined)
-      auth.setCurrentUser(undefined)
+      console.log(`[ui] [useAuth] [setSession] -> no session`)
+      authStore.$reset()
       return
     }
     let session
     if (typeof _session === 'string') {
+      console.log(`[ui] [useAuth] [setSession] -> _session is string getting session using token`)
       session = await useSession(_session)
     }
     if (!session) return
@@ -158,9 +159,14 @@ const useLuciaAuth = () => {
   const logout = async () => {
     const { urlBaseApi } = useBaseUrl()
     const url = new URL(`${urlBaseApi}/${process.env.AUTH_PATH}/logout`)
-    const { data, error, dataLoading } = await useFetch<{ url: string }>(url.href, {
-      sessionToken: auth.sessionToken?.value
-    })
+    const { data, error, dataLoading } = {
+      data: ref({}),
+      error: ref(undefined),
+      dataLoading: ref(false)
+    }
+    // const { data, error, dataLoading } = await useFetch<{ url: string }>(url.href, {
+    //   sessionToken: auth.sessionToken?.value
+    // })
     if (error.value) {
       console.error(`error: ${error.value}`)
     }
@@ -171,7 +177,7 @@ const useLuciaAuth = () => {
     if (data.value) {
       console.log(`data: ${JSON.stringify(data.value, null, 2)}`)
       auth.setSession()
-      window.location.replace('/')
+      // window.location.replace('/')
     }
   }
 
