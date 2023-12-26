@@ -3,8 +3,9 @@ export { FetchError, UseFetchResult, useFetch, USE_FETCH_REQ_INIT }
 import { Ref, UnwrapRef, ref } from 'vue'
 import { escapeNestedKeys } from '#/utils'
 import { RequestConfig } from '#/types'
+import { ApiErrorResponse } from '..'
 
-const FILE_DEBUG = false
+const FILE_DEBUG = true
 const FETCH_DEBUG = import.meta.env.VITE_LOG_LEVEL === 'debug' && FILE_DEBUG
 const IS_SSR = true
 // const IS_SSR = import.meta.env.SSR;
@@ -32,6 +33,7 @@ interface FetchError extends Error {
   error: any
   stack?: string
   cause?: any
+  code?: number
 }
 
 interface UseFetchResult<T> {
@@ -82,15 +84,12 @@ const useFetch = async <T>(
     // "X-Ping": "pong",
   }
 
-  const init =
-    process.env.NODE_ENV === 'development'
-      ? {
-          ...USE_FETCH_REQ_INIT,
-          ...options,
-          headers,
-          method: options.body ? 'POST' : 'GET'
-        }
-      : {}
+  const init = {
+    ...USE_FETCH_REQ_INIT,
+    ...options,
+    headers,
+    method: options.method ?? (options.body ? 'POST' : 'GET')
+  }
 
   try {
     if (FETCH_DEBUG) {
@@ -100,22 +99,38 @@ const useFetch = async <T>(
 
     const response = await fetch(url, init)
 
-    const ct = response.headers.get('Content-Type')
-    const jsonTypes = [
-      'application/json',
-      'application/x-www-form-urlencoded',
-      'application/json; charset=utf-8'
-    ]
+    if (!response.ok) {
+      logger.error(`[ui] [useFetch] response not ok: ${response.status}`)
+      logger.error(response)
+      const err: ApiErrorResponse = await response.json()
+      console.log(err)
+      error.value = {
+        name: err.error.type,
+        status: response.status,
+        statusText: response.statusText,
+        message: err.error.message,
+        cause: err.error.cause,
+        code: err.error.code,
+        error: err.error
+      }
+    } else {
+      const ct = response.headers.get('Content-Type')
+      const jsonTypes = [
+        'application/json',
+        'application/x-www-form-urlencoded',
+        'application/json; charset=utf-8'
+      ]
 
-    let out
-    ct && jsonTypes.includes(ct)
-      ? (out = await response.json())
-      : (out = { text: await response.text() })
+      let out
+      ct && jsonTypes.includes(ct)
+        ? (out = await response.json())
+        : (out = { text: await response.text() })
 
-    logger.info(`[ui] [useFetch] response:}`)
-    logger.debug(response)
+      logger.info(`[ui] [useFetch] response:}`)
+      logger.debug(response)
 
-    data.value = out
+      data.value = out
+    }
   } catch (err: any) {
     logger.error(`[ui] [useFetch] error: ${err.message}`)
     console.log(err)

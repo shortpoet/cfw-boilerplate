@@ -14,7 +14,7 @@ const user = ref<User>()
 const session = ref<Session | undefined>()
 const token = ref<string>()
 const authLoading = ref(true)
-const error = ref<any>()
+const authError = ref<any>()
 const isLoggedIn = ref(false)
 const audience = `https://ssr.shortpoet.com`
 const scope = 'openid profile email offline_access'
@@ -29,7 +29,7 @@ export const provideLuciaAuth = () => {
     user,
     authLoading,
     isLoggedIn,
-    authError: error,
+    authError,
     session,
 
     onLoad: async () => {},
@@ -154,7 +154,9 @@ const useLuciaAuth = () => {
 
     if (error.value) {
       logger.error(`[ui] [useAuth] error:`)
+      console.log(error.value)
       logger.error(error.value)
+      auth.authError.value = error.value
     }
     if (dataLoading.value) {
       logger.info(`[ui] [useAuth] dataLoading: ${dataLoading.value}`)
@@ -169,14 +171,14 @@ const useLuciaAuth = () => {
   const logout = async () => {
     const { urlBaseApi } = useBaseUrl()
     const url = new URL(`${urlBaseApi}/${process.env.AUTH_PATH}/logout`)
-    const { data, error, dataLoading } = {
-      data: ref({}),
-      error: ref(undefined),
-      dataLoading: ref(false)
-    }
-    // const { data, error, dataLoading } = await useFetch<{ url: string }>(url.href, {
-    //   sessionToken: auth.sessionToken?.value
-    // })
+    // const { data, error, dataLoading } = {
+    //   data: ref({}),
+    //   error: ref(undefined),
+    //   dataLoading: ref(false)
+    // }
+    const { data, error, dataLoading } = await useFetch<{ url: string }>(url.href, {
+      sessionToken: auth.sessionToken?.value
+    })
     if (error.value) {
       console.error(`error: ${error.value}`)
     }

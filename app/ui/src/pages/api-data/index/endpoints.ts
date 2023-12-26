@@ -26,9 +26,15 @@ type Endpoint = {
 }
 
 const formatPath = (path: string) => {
-  // return path.replace(/\{([^\}]+)\}/g, ':$1');
-  // console.log(`[ui] [api-data] [formatPath] path: ${path}`);
-  return path
+  console.log(`[ui] [api-data] [formatPath] path: ${path}`)
+  const parts = path.replace(/^\/api/g, '/api-data').split('/')
+  return parts.length > 3
+    ? `/${parts[1]}/${parts[2]}-${parts.slice(3).join('-')}`
+    : `/${parts[1]}/${parts[2]}`
+}
+const formatTitle = (title: string) => {
+  // return title.replace(/\{([^\}]+)\}/g, ':$1');
+  return title
     .replace(/\//g, ' ')
     .replace(/api/g, '')
     .trim()
@@ -73,12 +79,12 @@ const getEndpoints = async () => {
       .reverse()
     endpoints = e.map((path) => {
       return {
-        path,
+        path: formatPath(path),
         title:
-          openApi.paths[path].get?.summary || openApi.paths[path].post?.summary || formatPath(path)
+          openApi.paths[path].get?.summary || openApi.paths[path].post?.summary || formatTitle(path)
       }
     })
-    // console.log(endpoints);
+    console.log(endpoints)
   } catch (error) {}
   return endpoints
 }

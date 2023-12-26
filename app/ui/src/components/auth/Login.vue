@@ -1,14 +1,19 @@
 <template>
   <div v-if="authLoading">authLoading...</div>
-  <div v-else-if="authError">
-    <div>
-      <slot name="logout" :onLogout="onLogout" :isLoggedIn="isLoggedIn" />
-    </div>
-    <div>
-      {{ authError }}
-    </div>
-  </div>
   <div v-else>
+    <div v-if="authError">
+      <!-- <div>
+        <slot name="logout" :onLogout="onLogout" :isLoggedIn="isLoggedIn" />
+      </div> -->
+      <div text-red i-carbon-close @click="authError = false" />
+      <div>
+        {{ authError.name }}
+      </div>
+      <div>
+        {{ authError.message }}
+      </div>
+    </div>
+
     <div v-for="prov in providers" :key="prov">
       <slot :name="`login-${prov}`" :onLogin="onLogin" :isLoggedIn="isLoggedIn" />
     </div>
@@ -60,7 +65,7 @@ let user = ref<User>()
 let storeSession = ref<Session>()
 
 let authLoading = ref(false)
-let authError = ref(null)
+let authError = ref()
 let isLoggedIn = ref(false)
 
 const pageContext = usePageContext()
@@ -79,6 +84,7 @@ if (typeof window !== 'undefined') {
   const auth = useLuciaAuth()
   const { login, logout } = auth
   ;({ authError, isLoggedIn } = auth)
+  console.log(`[ui] [login.component] authError ${authError.value}`)
   user = auth.user || user
   const authStore = useAuthStore()
 
@@ -86,6 +92,7 @@ if (typeof window !== 'undefined') {
 
   onLogin.value = async (event: LoginOptions) => {
     console.log('[ui] [login.component] onLogin')
+
     console.log(event)
 
     try {

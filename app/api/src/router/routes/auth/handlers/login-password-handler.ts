@@ -72,6 +72,11 @@ export class RegisterPasswordUser extends OpenAPIRoute {
       return jsonOkResponse({ session }, res)
     } catch (error) {
       console.error(error)
+      if (error instanceof Error) {
+        if (error.message.includes('D1_ERROR')) {
+          return badResponse('User already exists', error, res)
+        }
+      }
       return serverErrorResponse('Error getting user', error, res)
     }
   }

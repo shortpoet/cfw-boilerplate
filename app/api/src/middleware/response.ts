@@ -86,34 +86,37 @@ const formatErr = (err: ApiErrorResponse) => JSON.stringify(err, null, 2)
 
 export const notFoundResponse = (msg?: string, err?: Error | unknown, res?: Response) => {
   const newErr = err instanceof Error ? err : new Error(`${msg}` || ResText.NOT_FOUND)
+  msg = msg ? `${ResText.NOT_FOUND} - ${msg}` : ResText.NOT_FOUND
   const init = {
     ...res,
     status: 404,
     statusText: newErr.message
   } as ResponseInit
-  const body = formatErr(createErr(ResText.NOT_FOUND, 404, newErr))
+  const body = formatErr(createErr(msg, 404, newErr))
   return new Response(body, init)
 }
 
 export const badResponse = (msg?: string, err?: Error | unknown, res?: Response) => {
   const newErr = err instanceof Error ? err : new Error(`${msg}` || ResText.NOT_FOUND)
+  msg = msg ? `${ResText.BAD_REQUEST} - ${msg}` : ResText.BAD_REQUEST
   const init = {
     ...res,
     status: 400,
     statusText: newErr.message
   } as ResponseInit
-  const body = formatErr(createErr(ResText.BAD_REQUEST, 400, newErr))
+  const body = formatErr(createErr(msg, 400, newErr))
   return new Response(body, init)
 }
 
 export const serverErrorResponse = (msg?: string, err?: Error | unknown, res?: Response) => {
   const newErr = err instanceof Error ? err : new Error(`${msg}` || ResText.NOT_FOUND)
+  msg = msg ? `${ResText.SERVER_ERROR} - ${msg}` : ResText.SERVER_ERROR
   const init = {
     ...res,
     status: 500,
     statusText: newErr.message
   } as ResponseInit
-  const body = formatErr(createErr(ResText.SERVER_ERROR, 500, newErr))
+  const body = formatErr(createErr(msg, 500, newErr))
   return new Response(body, init)
 }
 

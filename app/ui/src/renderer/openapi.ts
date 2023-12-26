@@ -13,7 +13,7 @@ export const initOpenAPI = ({
   OpenAPI.PASSWORD = password
   OpenAPI.HEADERS = {
     'Content-Type': 'application/json',
-    // 'Access-Control-Allow-Credentials': 'true',
+    'Access-Control-Allow-Credentials': 'true',
     Accept: 'application/json'
   }
   OpenAPI.WITH_CREDENTIALS = false
