@@ -1,9 +1,6 @@
 import { Int, Path, Query, DateTime, Str } from '@cloudflare/itty-router-openapi'
-import {
-  TaskListResponseComponent,
-  TaskResponseComponent,
-  ApiErrorResponseComponent
-} from './task-component'
+import { TaskListResponseComponent, TaskResponseComponent } from './task-component'
+import { ApiErrorResponseComponent } from '../common-oa'
 
 export const GetTaskListSchema = {
   tags: ['Tasks'],

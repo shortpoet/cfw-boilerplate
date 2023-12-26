@@ -9,7 +9,12 @@ import {
   serverErrorResponse,
   getBaseUrl
 } from '../../../../middleware'
-import { LUCIA_AUTH_COOKIES_SESSION_TOKEN, UserRole } from '#/types'
+import {
+  LUCIA_AUTH_COOKIES_OPTIONS,
+  LUCIA_AUTH_COOKIES_OPTIONS_SECURE,
+  LUCIA_AUTH_COOKIES_SESSION_TOKEN,
+  UserRole
+} from '#/types'
 
 export const loginGithub = async (req: Request, res: Response, env: Env, ctx: ExecutionContext) => {
   const { auth, githubAuth } = await createAuth(env)
@@ -21,13 +26,9 @@ export const loginGithub = async (req: Request, res: Response, env: Env, ctx: Ex
   }
   const [url, state] = await githubAuth.getAuthorizationUrl()
   console.log(`[api] [auth] [login] [github] -> url: ${url}`)
-  await res.cookie(req, res, env, LUCIA_AUTH_COOKIES_SESSION_TOKEN, state, {
-    httpOnly: false,
-    secure: false,
-    path: '/',
-    maxAge: 60 * 60,
-    sameSite: 'lax'
-  })
+  const cookieOptions =
+    env.NODE_ENV === 'production' ? LUCIA_AUTH_COOKIES_OPTIONS_SECURE : LUCIA_AUTH_COOKIES_OPTIONS
+  await res.cookie(req, res, env, LUCIA_AUTH_COOKIES_SESSION_TOKEN, state, cookieOptions)
   return jsonOkResponse({ url }, res)
 }
 
@@ -102,7 +103,7 @@ export const loginGithubCallback = async (
       attributes: {}
     })
     const sessionCookie = auth.createSessionCookie(session)
-    sessionCookie.attributes.httpOnly = false
+    // sessionCookie.attributes.httpOnly = false
     res.headers.set('Set-Cookie', sessionCookie.serialize())
 
     // return Response.redirect(dataPage, 302).headers.set('Set-Cookie', sessionCookie.serialize());

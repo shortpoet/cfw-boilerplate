@@ -16,9 +16,9 @@ export type UserComponentType = z.infer<typeof UserComponent>
 
 export const AuthLoginBody = z.object({
   //TODO: use Regex here
-  username: z.string({ required_error: 'username is required' }),
-  email: z.string({ required_error: 'email is required' }),
-  password: z.string({ required_error: 'password is required' })
+  username: z.string({ required_error: 'username is required' }).min(3).max(20),
+  email: z.string({ required_error: 'email is required' }).email(),
+  password: z.string({ required_error: 'password is required' }).min(8).max(64)
 })
 export type AuthLoginBodyType = z.infer<typeof AuthLoginBody>
 

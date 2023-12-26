@@ -6,7 +6,11 @@ import { web } from 'lucia/middleware'
 
 // import { google } from '@lucia-auth/oauth/providers';
 import { github } from '@lucia-auth/oauth/providers'
-import { LUCIA_AUTH_COOKIES_SESSION_TOKEN } from '#/types'
+import {
+  LUCIA_AUTH_COOKIES_OPTIONS,
+  LUCIA_AUTH_COOKIES_OPTIONS_SECURE,
+  LUCIA_AUTH_COOKIES_SESSION_TOKEN
+} from '#/types'
 
 export const createAuth = async (env: Env) => {
   const adapter = await deriveDatabaseAdapter(env)
@@ -31,7 +35,11 @@ export const createAuth = async (env: Env) => {
       }
     },
     sessionCookie: {
-      name: LUCIA_AUTH_COOKIES_SESSION_TOKEN
+      name: LUCIA_AUTH_COOKIES_SESSION_TOKEN,
+      attributes:
+        env.NODE_ENV === 'production'
+          ? LUCIA_AUTH_COOKIES_OPTIONS_SECURE
+          : LUCIA_AUTH_COOKIES_OPTIONS
     }
   })
 

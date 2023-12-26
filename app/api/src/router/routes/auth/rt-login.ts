@@ -1,6 +1,7 @@
 import { IRequest } from 'itty-router'
 import { OpenAPIRouter } from '@cloudflare/itty-router-openapi'
 import { loginGithub, loginGithubCallback } from './handlers'
+import { RegisterPasswordUser } from './handlers/login-password-handler'
 
 type CF = [env: Env, ctx: ExecutionContext]
 const router = OpenAPIRouter<IRequest, CF>({ base: '/api/auth/login' })
@@ -17,5 +18,7 @@ router.get(
     return await loginGithubCallback(req, res, env, ctx)
   }
 )
+
+router.post('/password', RegisterPasswordUser)
 
 export default router

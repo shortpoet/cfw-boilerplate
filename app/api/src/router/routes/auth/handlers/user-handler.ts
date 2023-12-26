@@ -1,5 +1,10 @@
 import { q } from '#/api/db'
-import { notFoundResponse, jsonOkResponse, badResponse } from '#/api/src/middleware'
+import {
+  notFoundResponse,
+  jsonOkResponse,
+  badResponse,
+  serverErrorResponse
+} from '#/api/src/middleware'
 import { OpenAPIRoute, OpenAPIRouteSchema } from '@cloudflare/itty-router-openapi'
 import { GetUsersSchema } from '../auth-schema'
 
@@ -16,12 +21,12 @@ export class GetUsers extends OpenAPIRoute {
     try {
       const result = await q.getAllUsers()
       if (!result) {
-        return notFoundResponse('User not found')
+        return notFoundResponse('No users found')
       }
       return jsonOkResponse(result, res)
     } catch (error) {
       console.error(error)
-      return badResponse('Error getting user', error, res)
+      return serverErrorResponse('Error getting users', error, res)
     }
   }
 }

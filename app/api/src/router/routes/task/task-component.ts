@@ -1,4 +1,3 @@
-import { Int, Path, Query, DateTime, Str } from '@cloudflare/itty-router-openapi'
 import { z } from 'zod'
 
 export const TaskComponent = z
@@ -30,17 +29,3 @@ export const TaskResponseComponent = z
   })
   .openapi('TaskResponse')
 export type TaskResponseComponentType = z.infer<typeof TaskResponseComponent>
-
-export const ApiErrorResponseComponent = z
-  .object({
-    success: z.boolean(),
-    error: z.object({
-      message: z.string(),
-      type: z.string(),
-      code: z.number(),
-      stack: z.string().optional(),
-      cause: z.string().optional()
-    })
-  })
-  .openapi('ApiErrorResponse')
-export type ApiErrorResponseComponentType = z.infer<typeof ApiErrorResponseComponent>

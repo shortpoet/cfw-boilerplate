@@ -1,6 +1,7 @@
 import { Path, Int } from '@cloudflare/itty-router-openapi'
 import { z } from 'zod'
 import { UserComponent, AuthLoginBody, SessionComponent } from './auth-component'
+import { ApiErrorResponseComponent } from '../common-oa'
 
 export const GetUserSchema = {
   tags: ['User'],
@@ -25,6 +26,14 @@ export const GetUsersSchema = {
     '200': {
       description: 'List of all users',
       schema: z.array(UserComponent)
+    },
+    '404': {
+      description: 'Users not found',
+      schema: ApiErrorResponseComponent
+    },
+    '500': {
+      description: 'Internal server error',
+      schema: ApiErrorResponseComponent
     }
   }
 }
