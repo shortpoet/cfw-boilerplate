@@ -12,20 +12,20 @@ export type User = {
    * User's username
    */
   username: string;
+  userType: User.userType;
+  roles: Array<'admin' | 'user' | 'guest' | 'not_set'>;
   /**
    * User email
    */
-  email: string | null;
+  email?: string;
   /**
    * User's name
    */
-  name: string | null;
+  name?: string;
   /**
    * User password
    */
-  password: string | null;
-  userType: User.userType;
-  roles: Array<'admin' | 'user' | 'guest' | 'not_set'>;
+  password?: string;
 };
 
 export namespace User {
