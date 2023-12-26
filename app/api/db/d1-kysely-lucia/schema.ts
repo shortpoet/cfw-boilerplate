@@ -7,11 +7,11 @@ type UserId = string
 type RoleId = string
 type SessionId = string
 
-export type SelectUser = Selectable<Database['User']>
-export type UpdateUser = Updateable<Database['User']>
-export type InsertUser = Insertable<Database['User']>
+export type SelectUser = Selectable<CFWDatabase['User']>
+export type UpdateUser = Updateable<CFWDatabase['User']>
+export type InsertUser = Insertable<CFWDatabase['User']>
 
-export interface Database {
+export interface CFWDatabase {
   User: {
     id: GeneratedAlways<string>
     username: string

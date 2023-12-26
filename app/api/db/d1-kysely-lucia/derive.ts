@@ -2,18 +2,18 @@ import { d1 } from '@lucia-auth/adapter-sqlite'
 import { libsql } from '@lucia-auth/adapter-sqlite'
 // import sqlite from 'better-sqlite3';
 import { betterSqlite3 } from '@lucia-auth/adapter-sqlite'
-import type { Database } from 'better-sqlite3'
+import type { Database as B3SQL } from 'better-sqlite3'
 import type { Client } from '@libsql/client'
 import fs from 'fs'
 import { D1Database } from '@cloudflare/workers-types'
 import { Kysely, ParseJSONResultsPlugin } from 'kysely'
 import { D1Dialect } from 'kysely-d1'
-import { Database as Schema } from './schema'
+import { CFWDatabase } from './schema'
 
 export { deriveDatabaseAdapter, getKysely, getD1, getSqlite }
 
 let d1Db: D1Database
-let sqliteDb: Database
+let sqliteDb: B3SQL
 
 const getD1 = async (env?: Env) => {
   if (d1Db) {
@@ -47,13 +47,13 @@ const getSqlite = async (env?: Env) => {
   console.log(`[db] getDatabaseFromEnv -> env: ${env.NODE_ENV}`)
   sqliteDb = (await import('better-sqlite3'))
     .default('local.sqlite')
-    .exec(fs.readFileSync(`${env.__wranglerDir}/migrations/0000_init-db.sql`, 'utf8')) as Database
+    .exec(fs.readFileSync(`${env.__wranglerDir}/migrations/0000_init-db.sql`, 'utf8')) as B3SQL
   return sqliteDb
 }
 
 const getKysely = async () => {
   const d1 = await getD1()
-  return new Kysely<Schema>({
+  return new Kysely<CFWDatabase>({
     dialect: new D1Dialect({ database: d1 }),
     // plugins: [new CamelCasePlugin()],
     plugins: [new ParseJSONResultsPlugin()]
@@ -80,7 +80,7 @@ const getSqlAdapter = (db: Client) =>
     session: 'user_session'
   })
 
-const getSql3Adapter = (db: Database) =>
+const getSql3Adapter = (db: B3SQL) =>
   betterSqlite3(db, {
     user: 'user',
     key: 'user_key',

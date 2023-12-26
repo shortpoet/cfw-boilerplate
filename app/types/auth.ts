@@ -1,11 +1,11 @@
 export { UserType, UserRole, User, Session, AuthInstance, LoginOptions }
 
-import { Database } from '##/db/d1-kysely-lucia'
+import { CFWDatabase } from '##/db/d1-kysely-lucia'
 
 type ISODateString = string
 
 type User = UserUnion
-type UserUnion = BaseUser | Database['User']
+type UserUnion = BaseUser & Omit<CFWDatabase['User'], 'id'>
 
 type Session = SessionUnion
 type SessionUnion = BaseSession

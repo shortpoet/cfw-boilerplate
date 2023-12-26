@@ -10,6 +10,7 @@ import { AssetManifestType } from '@cloudflare/kv-asset-handler/dist/types'
 import { Logger as LoggerType } from 'pino'
 import { StoreState } from 'pinia'
 import Cookies, { CookieChangeOptions, CookieSetOptions } from 'universal-cookie'
+import type { Database as B3SQL } from 'better-sqlite3'
 
 export { Component }
 export { PageProps }
@@ -28,7 +29,7 @@ import type {
   UserType,
   UiState
 } from './types'
-import { Database, EnvDatabase } from './api/db'
+import { CFWDatabase } from './api/db'
 
 type Mutable<T> = {
   -readonly [K in keyof T]-?: T[K]
@@ -120,7 +121,7 @@ declare global {
     readonly url: string
     readonly headers: Headers
     logger: LoggerType
-    db?: EnvDatabase
+    db?: D1Database | B3SQL
     params?: Record<string, string>
     query?: Record<string, string>
     universalCookies?: Cookies
@@ -129,7 +130,7 @@ declare global {
     cf_summary?: Partial<CFRequest['cf']>
     listOptions?: ListOptions
     user?: User | null
-    session?: Omit<Database['UserSession'], 'id'>
+    session?: Omit<CFWDatabase['UserSession'], 'id'>
     auth?: ReqAuth | null
     credsAuth?: CredsAuth | null
   }
