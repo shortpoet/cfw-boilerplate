@@ -1,6 +1,10 @@
 <template>
   <div>
-    <form @submit.prevent="onSubmit" flex flex-col>
+    <div flex flex-row>
+      <div :class="formContainerClass" @click="toggleForm" />
+      <span class="form-title">Show {{ title }}</span>
+    </div>
+    <form @submit.prevent="onSubmit" flex flex-col :class="formDisplayClass">
       <input
         class="generic-input"
         v-for="input in inputs"
@@ -19,6 +23,25 @@
 </template>
 
 <style scoped>
+.form-icon {
+  cursor: pointer;
+  /* margin: auto; */
+  margin-bottom: 10px;
+  width: 2.5em;
+  height: 2.5em;
+  display: 'inline-block';
+  /* border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  text-align: center;
+  line-height: 20px; */
+}
+
+.form-title {
+  font-size: 16px;
+  font-weight: bold;
+  padding: 0.5em;
+}
 .hidden {
   display: none;
 }
@@ -63,6 +86,23 @@ export type FormInput = {
   required: boolean
 }
 
+const showForm = ref(false)
+
+const toggleForm = () => {
+  showForm.value = !showForm.value
+}
+
+const formContainerClass = computed(() => ({
+  'i-carbon-caret-down form-icon': !showForm.value,
+  'i-carbon-caret-up form-icon': showForm.value
+}))
+
+const formDisplayClass = computed(() => {
+  return {
+    hidden: !showForm.value
+  }
+})
+
 const { vValidate, errors } = useValidation()
 
 const emit = defineEmits<{
@@ -76,6 +116,13 @@ const props = defineProps({
       return [] as FormInput[]
     }
   },
+  title: {
+    required: false,
+    default() {
+      return 'Form'
+    }
+  },
+
   hidden: {
     required: false,
     default() {

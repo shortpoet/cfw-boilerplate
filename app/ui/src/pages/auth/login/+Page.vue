@@ -13,7 +13,12 @@
 
     <Login :session="session" :providers="providers">
       <template #login-github="loginProps">
-        <FormGeneric :inputs="getForm('github')" @submit="loginProps.onLogin" :hidden="true">
+        <FormGeneric
+          :inputs="getForm('github')"
+          @submit="loginProps.onLogin"
+          :hidden="true"
+          :title="'Login Github'"
+        >
           <template #submit-button>
             <button
               type="submit"
@@ -27,7 +32,11 @@
         </FormGeneric>
       </template>
       <template #login-password="loginProps">
-        <FormGeneric :inputs="getForm('password')" @submit="loginProps.onLogin">
+        <FormGeneric
+          :inputs="getForm('password')"
+          @submit="loginProps.onLogin"
+          :title="'Login Password'"
+        >
           <template #submit-button>
             <button
               type="submit"

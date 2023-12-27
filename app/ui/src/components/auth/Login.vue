@@ -17,9 +17,9 @@
     <div v-for="prov in providers" :key="prov">
       <slot :name="`login-${prov}`" :onLogin="onLogin" :isLoggedIn="isLoggedIn" />
     </div>
-    <div>
+    <!-- <div>
       <slot name="login-popup" :onLoginPopup="onLoginPopup" :isLoggedIn="isLoggedIn" />
-    </div>
+    </div> -->
     <div>
       <slot name="logout" :onLogout="onLogout" :isLoggedIn="isLoggedIn" />
     </div>
