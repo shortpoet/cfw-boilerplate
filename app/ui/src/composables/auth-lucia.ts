@@ -1,4 +1,11 @@
-import { LuciaAuthInstance, User, Session, LoginOptions } from '#/types'
+import {
+  LuciaAuthInstance,
+  User,
+  Session,
+  LoginOptions,
+  LoginResponse,
+  LoginResponseSchema
+} from '#/types'
 import { storeToRefs } from 'pinia'
 
 export {
@@ -148,7 +155,8 @@ const useLuciaAuth = () => {
     }
     console.log(`[ui] [useAuth] login init: ${JSON.stringify(init, null, 2)}`)
     // return
-    const { data, error, dataLoading } = await useFetch<{ url: string }>(url.href, init)
+
+    const { data, error, dataLoading } = await useFetch<LoginResponse>(url.href, init)
     const { logger, correlationId } = useSsrLogger()
 
     if (error.value) {
@@ -161,9 +169,27 @@ const useLuciaAuth = () => {
       logger.info(`[ui] [useAuth] dataLoading: ${dataLoading.value}`)
     }
     if (data.value) {
+      const success = LoginResponseSchema.safeParse(data.value)
+      if (!success.success) {
+        logger.error(`[ui] [useAuth] success.error: ${JSON.stringify(success.error, null, 2)}`)
+        console.log(`[ui] [useAuth] success.error: ${JSON.stringify(success.error, null, 2)}`)
+        return
+      }
       logger.debug(`[ui] [useAuth] data: ${JSON.stringify(data.value, null, 2)}`)
       console.log(`[ui] [useAuth] data: ${JSON.stringify(data.value, null, 2)}`)
-      // if (!isPassword) window.location.replace(data.value.url)
+
+      const url = 'url' in data.value && data.value.url ? data.value.url : '/'
+      const session =
+        'session' in data.value && data.value.session ? data.value.session : data.value.session
+
+      if (isPassword && session) {
+        auth.setSession(session)
+      } else if (url) {
+        window.location.replace(url)
+      } else {
+        logger.error(`[ui] [useAuth] no session or url`)
+        console.log(`[ui] [useAuth] no session or url`)
+      }
     }
   }
 
@@ -188,7 +214,7 @@ const useLuciaAuth = () => {
     if (data.value) {
       console.log(`data: ${JSON.stringify(data.value, null, 2)}`)
       auth.setSession()
-      // window.location.replace('/')
+      window.location.replace('/login')
     }
   }
 

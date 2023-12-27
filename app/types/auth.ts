@@ -1,6 +1,14 @@
-export { UserType, UserRole, User, Session, AuthInstance, LoginOptions }
-
-type ISODateString = string
+export {
+  UserType,
+  UserRole,
+  User,
+  Session,
+  AuthInstance,
+  LoginOptions,
+  LoginResponse,
+  LoginResponseSchema
+}
+import { z } from 'zod'
 
 type User = UserUnion
 type UserUnion = BaseUser
@@ -15,6 +23,8 @@ enum UserType {
   Credentials = 'credentials'
 }
 
+const UserTypeSchema = z.enum(['not_set', 'email', 'github', 'credentials'])
+
 enum UserRole {
   _ = 'not_set',
   Guest = 'guest',
@@ -22,24 +32,61 @@ enum UserRole {
   User = 'user'
 }
 
-type BaseSession = {
-  sessionId: string
-  user: User
-  activePerdiodExpiresAt: ISODateString
-  idlePerdiodExpiresAt: ISODateString
-  state: string
-  fresh: boolean
+const UserRoleSchema = z.enum(['not_set', 'guest', 'admin', 'user'])
+
+const BaseUserSchema = z.object({
+  id: z.string(),
+  roles: z.array(UserRoleSchema),
+  userType: UserTypeSchema,
+  username: z.string(),
+  email: z.string().optional(),
+  avatar_url: z.string().optional(),
+  name: z.string().optional()
+})
+type BaseUser = z.infer<typeof BaseUserSchema>
+
+const BaseSessionSchema = z.object({
+  sessionId: z.string(),
+  user: BaseUserSchema,
+  activePerdiodExpiresAt: z.string(),
+  idlePerdiodExpiresAt: z.string(),
+  state: z.string(),
+  fresh: z.boolean()
+})
+type BaseSession = z.infer<typeof BaseSessionSchema>
+
+interface LoginOptions extends Record<string, any> {
+  provider: string
+  register?: boolean
+  username?: string
+  password?: string
+  email?: string
 }
 
-type BaseUser = {
-  id: string
-  roles: UserRole[]
-  userType: UserType
-  username: string
-  email?: string | undefined
-  avatar_url?: string | undefined
-  name?: string | undefined
-}
+const RegisterResponseSchema = z.object({
+  session: BaseSessionSchema,
+  url: z.undefined()
+})
+type RegisterResponse = z.infer<typeof RegisterResponseSchema>
+
+const LoginPasswordResponseSchema = z.object({
+  session: BaseSessionSchema,
+  url: z.undefined()
+})
+type LoginPasswordResponse = z.infer<typeof LoginPasswordResponseSchema>
+
+const LoginProviderResponseSchema = z.object({
+  url: z.string(),
+  session: z.undefined()
+})
+type LoginProviderResponse = z.infer<typeof LoginProviderResponseSchema>
+
+const LoginResponseSchema = z.union([
+  RegisterResponseSchema,
+  LoginPasswordResponseSchema,
+  LoginProviderResponseSchema
+])
+type LoginResponse = z.infer<typeof LoginResponseSchema>
 
 interface AuthInstance {
   authLoading: Ref<boolean>
@@ -68,13 +115,3 @@ interface AuthInstance {
   setLoginRedirectPath?: (path: string) => void
   setIdToken?: (token: string) => void
 }
-
-interface LoginOptions extends Record<string, any> {
-  provider: string
-  register?: boolean
-  username?: string
-  password?: string
-  email?: string
-}
-
-type Login = {}
