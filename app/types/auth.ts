@@ -69,10 +69,12 @@ interface AuthInstance {
   setIdToken?: (token: string) => void
 }
 
-type LoginOptions = {
+interface LoginOptions extends Record<string, any> {
   provider: string
   register?: boolean
   username?: string
   password?: string
   email?: string
 }
+
+type Login = {}

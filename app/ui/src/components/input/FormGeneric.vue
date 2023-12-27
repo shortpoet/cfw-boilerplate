@@ -77,13 +77,18 @@
   /* Change the border color on hover */
 }
 </style>
-<script setup lang="ts" generic="T extends FormInput">
-export type FormInput = {
+<script setup lang="ts" generic="U, T extends Record<FormInput<U>['key'], FormInput<U>['value']>">
+export type FormInput<U> = {
   key: string
   type: string
-  value: string
+  value: any
   placeholder: string
   required: boolean
+}
+export type FormEmitValue<U, T extends Record<FormInput<U>['key'], FormInput<U>['value']>> = {
+  form: { [K in keyof U]: U[K] }
+  //form: { [key: string]: string }
+  event: Event
 }
 
 const showForm = ref(false)
@@ -106,14 +111,14 @@ const formDisplayClass = computed(() => {
 const { vValidate, errors } = useValidation()
 
 const emit = defineEmits<{
-  (event: 'submit', value: { [key: string]: string }): void
+  (event: 'submit', value: FormEmitValue<U, T>): void
 }>()
 
 const props = defineProps({
   inputs: {
     required: true,
     default() {
-      return [] as FormInput[]
+      return [] as FormInput<U>[]
     }
   },
   title: {
@@ -129,11 +134,11 @@ const props = defineProps({
       return false
     }
   },
-  onSubmit: {
+  onSubmitCallback: {
     required: false,
     default() {
       return (payload: Event) => {
-        console.log(`[FormGeneric] onSubmit ${payload}`)
+        console.log(`[FormGeneric] onSubmitCallback ${payload}`)
       }
     }
   }
@@ -143,34 +148,21 @@ const inputs = ref(props.inputs)
 const onSubmit = (event: Event) => {
   // console.log(`[FormGeneric] onSubmit event`)
   // console.log(event)
-  // console.log(`[FormGeneric] onSubmit inputs`)
-  // console.log(inputs.value)
-  const submitterId = event instanceof SubmitEvent && event.submitter?.id
-  const isRegister = submitterId && submitterId.includes('register')
-  inputs.value = inputs.value.map((input) => {
-    if (input.key === 'register') {
-      input.value = isRegister ? 'true' : 'false'
-    }
-    return input
+  const inputValues = inputs.value.reduce((acc, input) => {
+    acc[input.key as keyof U] = input.value
+    return acc
+  }, {} as U)
+  emit('submit', {
+    form: inputValues,
+    event
   })
-  emit(
-    'submit',
-    inputs.value.reduce(
-      (acc, input) => {
-        acc[input.key] = input.value
-        return acc
-      },
-      {} as { [key: string]: string }
-    )
-  )
 }
 
-console.log(`[FormGeneric] errors ${JSON.stringify(errors.value)}`)
 watch(
   () => errors.value,
   (value) => {
     if (Object.entries(value).some(([key, value]) => value !== '')) {
-      console.log(`[FormGeneric] errors ${JSON.stringify(value)}`)
+      // console.log(`[FormGeneric] errors ${JSON.stringify(value)}`)
       throw new Error(`[FormGeneric] errors ${JSON.stringify(errors.value)}`)
     }
   }

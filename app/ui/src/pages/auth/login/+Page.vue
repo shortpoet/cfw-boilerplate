@@ -84,8 +84,8 @@
 </template>
 
 <script setup lang="ts">
-import { Session } from '#/types'
-import type { FormInput } from '#/ui/src/components/input/FormGeneric.vue'
+import { LoginOptions, Session } from '#/types'
+import type { FormEmitValue, FormInput } from '#/ui/src/components/input/FormGeneric.vue'
 
 const props = defineProps<{
   session?: Session
@@ -93,13 +93,6 @@ const props = defineProps<{
 const providers = ref(['github', 'password'])
 // const pageContext = usePageContext();
 // const pageSession = ref(pageContext.session);
-const runCallback = (callback: any) => {
-  return (...args: any) => {
-    // console.log(`[ui] [auth] [login} [+Page] [setup] :: runCallback args`)
-    // console.log(args)
-    callback(...args)
-  }
-}
 const passwordInputs = computed(() => [
   {
     type: 'text',
@@ -130,10 +123,25 @@ const passwordInputs = computed(() => [
     required: true
   }
 ])
-const getForm = (provider: string): FormInput[] => {
+const getForm = (provider: string): FormInput<LoginOptions>[] => {
   return [
     { type: 'hidden', value: provider, placeholder: 'provider', key: 'provider', required: false }
   ].concat(provider === 'password' ? passwordInputs.value : [])
+}
+export type LoginFormEvent = FormEmitValue<LoginOptions, ReturnType<typeof getForm>[0]>
+const runCallback = (callback: any) => {
+  // console.log(`[ui] [auth] [login} [+Page] [setup] :: runCallback`)
+  return (...args: LoginFormEvent[]) => {
+    // console.log(`[ui] [auth] [login} [+Page] [setup] :: runCallback args`)
+    // console.log(args)
+    const [{ form, event }] = args
+    const submitterId = event instanceof SubmitEvent && event.submitter?.id
+    const isRegister = submitterId && submitterId.includes('register') ? true : false
+    form.register = isRegister
+    console.log(`[ui] [auth] [login} [+Page] [setup] onSubmit emitting inputs`)
+    console.log(form)
+    callback(...args)
+  }
 }
 
 let session = ref(props.session)

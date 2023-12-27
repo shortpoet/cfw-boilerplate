@@ -44,7 +44,8 @@
 </template>
 
 <script setup lang="ts">
-import { User, Session, LoginOptions } from '#/types'
+import { User, Session } from '#/types'
+import { LoginFormEvent } from '../../pages/auth/login/+Page.vue'
 
 defineProps<{
   session?: Session
@@ -84,7 +85,7 @@ if (typeof window !== 'undefined') {
   const auth = useLuciaAuth()
   const { login, logout } = auth
   ;({ authError, isLoggedIn } = auth)
-  console.log(`[ui] [login.component] authError ${authError.value}`)
+  // console.log(`[ui] [login.component] authError ${authError.value}`)
   user = auth.user || user
   const authStore = useAuthStore()
 
@@ -95,13 +96,13 @@ if (typeof window !== 'undefined') {
 
   storeSession.value = authStore.session || storeSession.value
 
-  onLogin.value = async (event: LoginOptions) => {
-    console.log('[ui] [login.component] onLogin')
+  onLogin.value = async (event: LoginFormEvent) => {
+    // console.log('[ui] [login.component] onLogin')
 
-    console.log(event)
+    // console.log(event)
 
     try {
-      await login(event)
+      await login(event.form)
     } catch (error) {
       console.log(`[ui] [login.component] error`)
       console.log(error)
