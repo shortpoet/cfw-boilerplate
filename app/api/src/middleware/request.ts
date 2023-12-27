@@ -7,11 +7,24 @@ const FILE_LOG_LEVEL = 'debug'
 const fromEntries = (ent: [string, string][]) =>
   ent.reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {})
 
-export const withDb = () => async (req: Request, env: Env) => {
-  req.db = env.NODE_ENV === 'development' ? await getSqlite(env) : await getD1(env)
+export const withDb = () => async (req: Request, _: Response, env: Env) => {
+  req.logger.info(`[api] [middlware] [withDb] ->`)
+  console.log(`[api] [middlware] [withDb] ->`)
+  let db
+  if (env.NODE_ENV === 'development') {
+    console.log(`[api] [middlware] [withDb] -> env.NODE_ENV: ${env.NODE_ENV}`)
+    db = await getSqlite(env)
+  } else {
+    console.log(`[api] [middlware] [withDb] -> env.NODE_ENV: ${env.NODE_ENV}`)
+    db = await getD1(env)
+  }
+  // const db = env.NODE_ENV === 'development' ? await getSqlite(env) : await getD1(env)
+  console.log(`[api] [middlware] [withDb] -> db: ${db}`)
+  req.db = db
 }
 
-export const withQueryParams = () => async (req: Request, env: Env) => {
+export const withQueryParams = () => async (req: Request) => {
+  console.log(`[api] [middlware] [withQueryParams] ->`)
   const url = new URL(req.url)
   req.query = Object.fromEntries(url.searchParams)
   // req.query = fromEntries([...url.searchParams.entries()]);
@@ -20,6 +33,7 @@ export const withQueryParams = () => async (req: Request, env: Env) => {
 }
 
 export const withListOptions = () => async (req: Request) => {
+  console.log(`[api] [middlware] [withListOptions] ->`)
   req.logger.info(`[api] [middlware] [withListOptions] ->`)
   const { query } = req
   req.logger.info(query)
@@ -82,6 +96,7 @@ export const withCfSummary =
 export const withCfHeaders =
   ({ level = 'basic' } = {}) =>
   async (req: Request, res: Response, env: Env) => {
+    console.log(`[api] [middlware] [withCfHeaders] ->`)
     const { cf } = req
     if (cf) {
       const { colo, clientTcpRtt } = cf

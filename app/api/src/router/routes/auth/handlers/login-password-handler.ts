@@ -14,7 +14,7 @@ import { LUCIA_AUTH_COOKIES_SESSION_TOKEN, UserRole } from '#/types'
 import { OpenAPIRoute } from '@cloudflare/itty-router-openapi'
 import { AuthRegisterSchema } from '../auth-schema'
 import { AuthLoginBody, AuthLoginBodyType } from '../auth-component'
-import { z } from 'zod'
+import { ZodError, z } from 'zod'
 
 export const loginPassword = async (
   req: Request,
@@ -41,13 +41,19 @@ export class RegisterPasswordUser extends OpenAPIRoute {
     ctx: ExecutionContext,
     data: { body: AuthLoginBodyType }
   ) {
+    req.logger.info(`[api] [auth] [login] [password]`)
+    console.log(`[api] [auth] [login] [password] -> data: ${JSON.stringify(data, null, 2)}`)
+    console.log(`[api] [auth] [login] [password] -> body: ${JSON.stringify(data.body, null, 2)}`)
     try {
-      req.logger.info(`[api] [auth] [login] [password]`)
-      console.log(`[api] [auth] [login] [password] -> data: ${JSON.stringify(data.body, null, 2)}`)
-      const loginBody = AuthLoginBody.parse(data.body)
+      const loginBody =
+        env.NODE_ENV === 'development' ? AuthLoginBody.parse(data) : AuthLoginBody.parse(data.body)
+      console.log(
+        `[api] [auth] [login] [password] -> loginBody: ${JSON.stringify(loginBody, null, 2)}`
+      )
       if (!loginBody) {
-        return badResponse('Invalid login body', new Error(loginBody), res)
+        return badResponse('Invalid login body', new Error(JSON.stringify(loginBody)), res)
       }
+      // const { username, password, email } = data.body
       const { username, password, email } = loginBody
 
       const { auth } = await createAuth(env)
@@ -76,6 +82,9 @@ export class RegisterPasswordUser extends OpenAPIRoute {
         if (error.message.includes('D1_ERROR')) {
           return badResponse('User already exists', error, res)
         }
+      }
+      if (error instanceof ZodError) {
+        return new Response(JSON.stringify(error), { status: 400 })
       }
       return serverErrorResponse('Error getting user', error, res)
     }

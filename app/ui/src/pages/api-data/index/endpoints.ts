@@ -1,4 +1,6 @@
-export { getEndpoints, Endpoint, PATH_MAPPING }
+export { getEndpoints, Endpoint }
+
+import fs from 'node:fs'
 
 import { RequestConfig } from '#/types'
 
@@ -62,18 +64,12 @@ const getEndpoints = async () => {
     }
   })
   if (process.env.NODE_ENV !== 'development') return endpoints
-  let { dataLoading, error, data } = {
-    dataLoading: ref(false),
-    error: ref(),
-    data: ref<DiscoveryEndpoint>()
-  }
   const opts = {} as RequestConfig
 
   try {
-    ;({ dataLoading, error, data } = await useFetch<DiscoveryEndpoint>('api/openapi.json', opts))
-    const { text } = data.value || { text: '{}' }
+    const openApi = (await import('#/api/openapi.json')).default as unknown as OpenApi
     // console.log(`[ui] [api-data] [onBeforePrerenderStart] endpoints`);
-    const openApi = JSON.parse(text) as OpenApi
+
     const e = Object.keys(openApi.paths)
       .filter((path) => !path.match(/[\*\{]/))
       .reverse()
@@ -81,7 +77,10 @@ const getEndpoints = async () => {
       return {
         path: formatPath(path),
         title:
-          openApi.paths[path].get?.summary || openApi.paths[path].post?.summary || formatTitle(path)
+          openApi.paths[path].get?.summary ||
+          openApi.paths[path].post?.summary ||
+          formatTitle(path),
+        route: path.replace(/^\//, '')
       }
     })
     console.log(endpoints)

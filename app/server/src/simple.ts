@@ -31,13 +31,6 @@ if (!SECRET || !GITHUB_CLIENT_ID || !GITHUB_CLIENT_SECRET) {
 }
 
 const server = http.createServer(async (req, res) => {
-  // causes cors error
-  // let data = ''
-  // req.on('data', (chunk) => {
-  //   // Accumulate incoming data chunks
-  //   data += chunk.toString()
-  // })
-
   res.on('error', (err) => {
     console.error(err)
     res.statusCode = 500
@@ -54,20 +47,56 @@ const server = http.createServer(async (req, res) => {
     console.log(`[server] [simple] -> apiReq -> ${config.env.__appDir}`)
     console.log(`[server] [simple] -> apiReq -> ${config.env.__wranglerDir}`)
     console.log(`[server] [simple] -> mappedHeaders -> ${JSON.stringify(mappedHeaders, null, 2)}`)
-    const _req = new Request(new URL(req.url, 'http://' + req.headers.host), {
-      method: req.method,
-      headers: mappedHeaders
-    }) as unknown as Request
-    const _res = new Response() as unknown as Response
-    const env = config.env
-    const data = req.read()
+
+    const dataStr = await new Promise((resolve, reject) => {
+      let requestData = ''
+      req.on('data', (chunk) => {
+        console.log(`[server] [simple] -> req.on('data') -> chunk.toString()`)
+        console.log(chunk.toString())
+        requestData += chunk.toString()
+      })
+
+      req.on('end', () => {
+        resolve(requestData)
+      })
+
+      req.on('error', (error) => {
+        reject(error)
+      })
+    })
+
+    let data
+    if (dataStr && typeof dataStr === 'string') {
+      try {
+        data = JSON.parse(dataStr)
+        // data = { data: JSON.parse(dataStr) }
+      } catch (error) {
+        console.error(error)
+        data = dataStr
+        // data = { data: dataStr }
+      }
+    }
     console.log(`[server] [simple] -> data ->`)
     console.log(data)
 
-    const resp = await Api.handle({ req: _req, res: _res, env, ctx, data })
-      .then(json)
-      .catch(error)
-      .then(corsify)
+    const _req = new Request(new URL(req.url, 'http://' + req.headers.host), {
+      method: req.method,
+      headers: mappedHeaders,
+      body: JSON.stringify(data) ?? undefined
+    }) as unknown as Request
+    const _res = new Response() as unknown as Response
+    const env = config.env
+
+    const resp = await Api.handle({
+      req: _req,
+      res: _res,
+      env,
+      ctx,
+      data
+    })
+    // .then(json)
+    // .catch(error)
+    // .then(corsify)
 
     if (!resp) {
       res.statusCode = 404
@@ -101,6 +130,9 @@ server.on('error', (e: NodeJS.ErrnoException) => {
 
 server.listen(PORT, HOST, () => {
   logger.info(`Server running at http://${HOST}:${PORT}/`)
+  logger.info(`[server] [simple] [nodeEnv] -> ${nodeEnv}`)
+  logger.info(`[server] [simple] [isSsr] -> ${isSsr}`)
+  logger.info(`[server] [simple] [envLogLevel] -> ${envLogLevel}`)
   const openapi_schema = router.schema
   const schemaPath = `${__appDir}/api/openapi.json`
   fs.writeFileSync(schemaPath, JSON.stringify(openapi_schema, null, 2))

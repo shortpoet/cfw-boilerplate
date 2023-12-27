@@ -90,7 +90,7 @@ export const notFoundResponse = (msg?: string, err?: Error | unknown, res?: Resp
   const init = {
     ...res,
     status: 404,
-    statusText: newErr.message
+    statusText: newErr.message || ResText.NOT_FOUND
   } as ResponseInit
   const body = formatErr(createErr(msg, 404, newErr))
   return new Response(body, init)
@@ -102,9 +102,13 @@ export const badResponse = (msg?: string, err?: Error | unknown, res?: Response)
   const init = {
     ...res,
     status: 400,
-    statusText: newErr.message
+    statusText: newErr.message || ResText.BAD_REQUEST
   } as ResponseInit
+  // console.log(`[api] [badResponse] -> init: ${JSON.stringify(init, null, 2)}`)
+  // console.log(`[api] [badResponse] -> newerr: ${JSON.stringify(newErr, null, 2)}`)
+  // console.log(newErr)
   const body = formatErr(createErr(msg, 400, newErr))
+  // console.log(`[api] [badResponse] -> body: ${JSON.stringify(body, null, 2)}`)
   return new Response(body, init)
 }
 
@@ -114,7 +118,7 @@ export const serverErrorResponse = (msg?: string, err?: Error | unknown, res?: R
   const init = {
     ...res,
     status: 500,
-    statusText: newErr.message
+    statusText: newErr.message || ResText.SERVER_ERROR
   } as ResponseInit
   const body = formatErr(createErr(msg, 500, newErr))
   return new Response(body, init)

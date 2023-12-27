@@ -223,19 +223,9 @@
     "parameters": {}
   },
   "paths": {
-    "/api/auth/login/github": {
-      "get": {
-        "operationId": "get__github",
-        "responses": {
-          "200": {
-            "description": "Object with user data."
-          }
-        }
-      }
-    },
-    "/api/auth/login/github/callback": {
-      "get": {
-        "operationId": "get__github_callback",
+    "/api/auth/login": {
+      "toJSON": {
+        "operationId": "toJSON_",
         "responses": {
           "200": {
             "description": "Object with user data."
@@ -290,6 +280,26 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/auth/login/github": {
+      "get": {
+        "operationId": "get__github",
+        "responses": {
+          "200": {
+            "description": "Object with user data."
+          }
+        }
+      }
+    },
+    "/api/auth/login/github/callback": {
+      "get": {
+        "operationId": "get__github_callback",
+        "responses": {
+          "200": {
+            "description": "Object with user data."
           }
         }
       }
@@ -714,6 +724,144 @@
         "responses": {
           "200": {
             "description": "Object with user data."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "misc"
+        ],
+        "description": "Hello world",
+        "summary": "Test data in and out",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "hello": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Object with hello world data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "hello": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No content - successful operation"
+          }
+        }
+      }
+    },
+    "/api/hola-clase": {
+      "post": {
+        "tags": [
+          "Misc"
+        ],
+        "description": "Hello world",
+        "summary": "Test data in and out",
+        "operationId": "post_HelloPost",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "content": {
+                    "type": "object",
+                    "properties": {
+                      "application/json": {
+                        "type": "object",
+                        "properties": {
+                          "schema": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "object"
+                              },
+                              "properties": {
+                                "type": "object",
+                                "properties": {
+                                  "hello": {
+                                    "type": "object",
+                                    "properties": {
+                                      "type": {
+                                        "type": "string",
+                                        "example": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "type"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "hello"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "properties"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "schema"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "application/json"
+                    ]
+                  }
+                },
+                "required": [
+                  "content"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Object with hello world data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No content - successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
           }
         }
       }

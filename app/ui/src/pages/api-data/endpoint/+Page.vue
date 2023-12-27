@@ -56,16 +56,23 @@ const props = defineProps({
 })
 const pageContext = usePageContext()
 const { urlPathname } = pageContext
-import { PATH_MAPPING } from '../index/endpoints'
+import { getEndpoints } from '../index/endpoints'
 
+// const opts = {
+//   ...PATH_MAPPING[urlPathname].options,
+//   headers: {
+//     ...PATH_MAPPING[urlPathname].options.headers
+//   }
+// }
 const opts = {
-  ...PATH_MAPPING[urlPathname].options,
   headers: {
-    ...PATH_MAPPING[urlPathname].options.headers
+    'Content-Type': 'application/json'
   }
 }
 const { urlBaseApi } = useBaseUrl()
-const url = `${urlBaseApi}/${PATH_MAPPING[urlPathname].route}`
+const path = (await getEndpoints()).find((ep) => ep.path === urlPathname)?.route!
+
+const url = `${urlBaseApi}/${path}`
 
 const query = useQuery({
   queryKey: ['todos'],

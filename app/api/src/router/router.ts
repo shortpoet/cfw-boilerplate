@@ -3,16 +3,11 @@ import { ExecutionContext } from '@cloudflare/workers-types'
 import { ServerResponse } from 'http'
 import { OpenAPIRouter } from '@cloudflare/itty-router-openapi'
 
-import sampleData from '##/db/data.json'
-// const sampleData = {
-//   hello: 'world',
-// };
 import {
   // auth as authMiddleware,
   withSession,
   withCfHeaders,
   withCfSummary,
-  jsonData,
   withPino,
   withQueryParams,
   withListOptions,
@@ -20,13 +15,11 @@ import {
   // withUser,
 } from '../middleware'
 
-import { health_router } from '#/api/src/router'
-import { task_router } from '#/api/src/router'
-import { auth_router } from '#/api/src/router'
+import { health_router, task_router, auth_router, misc_router } from '#/api/src/router'
 import withCookies from '../middleware/cookie'
 import { LUCIA_AUTH_COOKIES_SESSION_TOKEN } from '#/types'
 // import { createCors } from '../middleware/createCors';
-
+task_router
 const FILE_LOG_LEVEL = 'debug'
 
 const { preflight, corsify } = createCors({
@@ -61,7 +54,8 @@ const router = OpenAPIRouter<IRequest, CF>({
   docs_url: '/docs',
   openapi_url: '/openapi.json',
   redoc_url: '/redoc',
-  openapiVersion: '3.1'
+  openapiVersion: '3.1',
+  raiseUnknownParameters: false
 })
 
 router.registry.registerComponent('securitySchemes', 'bearerAuth', {
@@ -79,44 +73,16 @@ router.registry.registerComponent('securitySchemes', 'cookieAuth', {
 const protectedRoutes = {
   '/api/health/debug': { route: '/api/health/debug', isAdmin: true }
 }
-const todos = Array.from({ length: 8 }, (_, i) => i + 1).map((id) => ({
-  id,
-  title: `Todo #${id}`
-}))
 
 // GET collection index
 router
   .all('*', preflight)
   .all('*', withPino({ level: FILE_LOG_LEVEL }), withDb(), withCookies())
-  // .all('*', withCfHeaders(), withQueryParams(), withListOptions(), withSession())
+  .all('*', withCfSummary(), withCfHeaders(), withQueryParams(), withListOptions(), withSession())
   .all('/auth/*', auth_router)
   .all('/task/*', task_router)
   .all('/health/*', health_router)
-  .get('/json-data', (req: IRequest, res: Response, env: Env, ctx: ExecutionContext) => {
-    console.log(`[api] /json-data -> ${req.method} -> ${req.url} -> req`)
-    console.log(sampleData)
-    return jsonData(req, res, env, sampleData)
-  })
-  .get(
-    '/hello',
-    // withCfSummary(),
-    // withUser(),
-    (req: IRequest, res: Response, env: Env, ctx: ExecutionContext) => {
-      res.cookie(req, res, env, 'hello', 'world', {
-        httpOnly: false,
-        secure: env.NODE_ENV === 'production',
-        sameSite: 'lax'
-      })
-      res.headers.set('x-hello', 'world')
-      // added path `/api` to cookie in firefox
-      // also 'session' to max-age
-      res.headers.set('Set-Cookie', 'hello=world; SameSite=Lax')
-      return jsonData(req, res, env, { hello: 'world' })
-    }
-  )
-  .get('/todos', (req: IRequest, res: Response, env: Env, ctx: ExecutionContext) => {
-    return jsonData(req, res, env, todos)
-  })
+  .all('*', misc_router)
   // .all("*", error_handler)
   .all('*', () => error(404, 'Oops... Are you sure about that? FAaFO'))
 
@@ -136,8 +102,11 @@ const Api = {
   }) => {
     let out
     if (data) {
+      console.log(`[api] [router] -> has data`)
+      console.log(data)
       out = router.handle(req, res, env, ctx, data).catch(error).then(corsify)
     } else {
+      console.log(`[api] [router] -> no data`)
       out = router.handle(req, res, env, ctx).catch(error).then(corsify)
     }
     return out

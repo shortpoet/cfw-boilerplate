@@ -27,7 +27,7 @@ const USE_FETCH_REQ_INIT: RequestConfig = {
 
 interface FetchError extends Error {
   name: string
-  message: string
+  message: any
   status: number
   statusText: string
   error: any
@@ -104,15 +104,23 @@ const useFetch = async <T>(
       logger.error(response)
       const err: ApiErrorResponse = await response.json()
       console.log(err)
-      error.value = {
-        name: err.error.type,
-        status: response.status,
-        statusText: response.statusText,
-        message: err.error.message,
-        cause: err.error.cause,
-        code: err.error.code,
-        error: err.error
-      }
+      error.value = err.error
+        ? {
+            name: err.error.type,
+            status: response.status,
+            statusText: response.statusText,
+            message: err.error.message || err.error,
+            cause: err.error.cause,
+            code: err.error.code,
+            error: err.error
+          }
+        : {
+            name: 'FetchError',
+            status: response.status,
+            statusText: response.statusText,
+            message: JSON.parse(JSON.stringify(err, null, 2)),
+            error: err
+          }
     } else {
       const ct = response.headers.get('Content-Type')
       const jsonTypes = [

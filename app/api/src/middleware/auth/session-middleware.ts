@@ -22,6 +22,7 @@ export const withSession =
       req.logger.info(`[api] [middleware] [auth] [withSession] -> session ->`)
       req.logger.info(session)
       if (!session) {
+        console.log(`[api] [middleware] [auth] [withSession] -> !session ->`)
         return
       }
       const result = userSchema.safeParse(session.user)

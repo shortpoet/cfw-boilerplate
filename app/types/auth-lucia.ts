@@ -10,7 +10,7 @@ export const LUCIA_AUTH_COOKIES_OPTIONS = {
   secure: false,
   path: '/',
   maxAge: 60 * 60,
-  sameSite: 'lax'
+  sameSite: undefined
 } as const
 export const LUCIA_AUTH_COOKIES_OPTIONS_SECURE = {
   httpOnly: false,

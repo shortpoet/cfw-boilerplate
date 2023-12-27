@@ -37,6 +37,7 @@ const getD1 = async (env?: Env) => {
 
 const getSqlite = async (env?: Env) => {
   if (sqliteDb) {
+    console.log(`[db] getDatabaseFromEnv -> sqliteDb: cached`)
     return sqliteDb
   }
   if (!env) {
@@ -44,10 +45,19 @@ const getSqlite = async (env?: Env) => {
       `[db] [getDatabaseFromEnv] wrong usage -> env is undefined - instantiate db first`
     )
   }
-  console.log(`[db] getDatabaseFromEnv -> env: ${env.NODE_ENV}`)
-  sqliteDb = (await import('better-sqlite3'))
-    .default('local.sqlite')
-    .exec(fs.readFileSync(`${env.__wranglerDir}/migrations/0000_init-db.sql`, 'utf8')) as B3SQL
+  console.log(`[db] getDatabaseFromEnv -> fresh DB env: ${env.NODE_ENV}`)
+  try {
+    sqliteDb = (await import('better-sqlite3'))
+      .default('local.sqlite')
+      .exec(fs.readFileSync(`${env.__wranglerDir}/migrations/0000_init-db.sql`, 'utf8'))
+      .exec(fs.readFileSync(`${env.__wranglerDir}/migrations/0001_init-roles.sql`, 'utf8'))
+      .exec(
+        fs.readFileSync(`${env.__wranglerDir}/migrations/0002_add-guest-role.sql`, 'utf8')
+      ) as B3SQL
+  } catch (error) {
+    console.error(`[db] getDatabaseFromEnv -> error:`)
+    console.error(error)
+  }
   return sqliteDb
 }
 
@@ -89,7 +99,9 @@ const getSql3Adapter = (db: B3SQL) =>
 
 const deriveDatabaseAdapter = async (env: Env) => {
   if (env.NODE_ENV === 'development') {
+    console.log(`[db] [deriveDatabaseAdapter] env.NODE_ENV: ${env.NODE_ENV}`)
     const db = await getSqlite(env)
+    console.log(`[db] [deriveDatabaseAdapter] db: ${db}`)
     return getSql3Adapter(db)
   } else {
     const db = await getD1(env)

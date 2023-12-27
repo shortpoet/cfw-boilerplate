@@ -6,7 +6,7 @@ import { render, redirect } from 'vike/abort'
 import { QueryClient, dehydrate } from '@tanstack/vue-query'
 
 import { UserRole, RequestConfig } from '#/types'
-import { PATH_MAPPING } from '../index/endpoints'
+import { getEndpoints } from '../index/endpoints'
 
 const onBeforeRender: OnBeforeRenderAsync = async (
   pageContext
@@ -26,24 +26,26 @@ const onBeforeRender: OnBeforeRenderAsync = async (
     throw render('/auth/login')
   }
   const opts = {
-    ...PATH_MAPPING[urlPathname].options,
+    // ...PATH_MAPPING[urlPathname].options,
     csrfToken,
     sessionToken,
     callbackUrl,
     headers: {
-      ...PATH_MAPPING[urlPathname].options.headers,
+      // ...PATH_MAPPING[urlPathname].options.headers,
       'X-CSRF-Token': csrfToken
       // 'authjs.csrf-token': csrfToken,
       // 'authjs.session-token': sessionToken,
     }
   } as RequestConfig
 
-  const { dataLoading, error, data } = await useFetch(PATH_MAPPING[urlPathname].route)
+  // const path = PATH_MAPPING[urlPathname].route
+  const path = (await getEndpoints()).find((ep) => ep.path === urlPathname)?.route!
+  const { dataLoading, error, data } = await useFetch(path)
 
   const queryClient = new QueryClient()
 
   const { urlBaseApi } = useBaseUrl()
-  const url = `${urlBaseApi}/${PATH_MAPPING[urlPathname].route}`
+  const url = `${urlBaseApi}/${path}`
 
   await queryClient.prefetchQuery({
     queryKey: ['todos'],
