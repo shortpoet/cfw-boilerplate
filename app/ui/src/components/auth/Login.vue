@@ -72,15 +72,15 @@ const pageContext = usePageContext()
 const pageSession = ref(pageContext.session)
 
 if (import.meta.env.VITE_LOG_LEVEL === 'debug') {
-  console.log('[ui] [login.component] setup done')
-  console.log(`[ui] [login.component] login slot`)
+  // console.log('[ui] [login.component] setup done')
+  // console.log(`[ui] [login.component] login slot`)
   // console.log(loginSlot);
 }
 
 if (typeof window !== 'undefined') {
-  console.log(
-    "[ui] [login.component] typeof window !== 'undefined' -> can now load things that would break SSR"
-  )
+  // console.log(
+  //   "[ui] [login.component] typeof window !== 'undefined' -> can now load things that would break SSR"
+  // )
   const auth = useLuciaAuth()
   const { login, logout } = auth
   ;({ authError, isLoggedIn } = auth)
@@ -88,10 +88,10 @@ if (typeof window !== 'undefined') {
   user = auth.user || user
   const authStore = useAuthStore()
 
-  console.log(`[ui] [login.component] authStore.session`)
-  console.log(authStore.session)
-  console.log(`[ui] [login.component] storeSession.`)
-  console.log(storeSession.value)
+  // console.log(`[ui] [login.component] authStore.session`)
+  // console.log(authStore.session)
+  // console.log(`[ui] [login.component] storeSession.`)
+  // console.log(storeSession.value)
 
   storeSession.value = authStore.session || storeSession.value
 

@@ -34,7 +34,7 @@
       <template #login-password="loginProps">
         <FormGeneric
           :inputs="getForm('password')"
-          @submit="loginProps.onLogin"
+          :onSubmit="runCallback(loginProps.onLogin)"
           :title="'Login Password'"
         >
           <template #submit-button>
@@ -93,43 +93,48 @@ const props = defineProps<{
 const providers = ref(['github', 'password'])
 // const pageContext = usePageContext();
 // const pageSession = ref(pageContext.session);
-const getForm = (provider: string): FormInput[] =>
-  [
+const runCallback = (callback: any) => {
+  return (...args: any) => {
+    // console.log(`[ui] [auth] [login} [+Page] [setup] :: runCallback args`)
+    // console.log(args)
+    callback(...args)
+  }
+}
+const passwordInputs = computed(() => [
+  {
+    type: 'text',
+    value: '',
+    placeholder: 'Username',
+    key: 'username',
+    required: true
+  },
+  {
+    type: 'email',
+    value: '',
+    placeholder: 'Email',
+    key: 'email',
+    required: false
+  },
+  {
+    type: 'password',
+    value: '',
+    placeholder: 'Password',
+    key: 'password',
+    required: true
+  },
+  {
+    type: 'hidden',
+    value: 'false',
+    placeholder: 'register',
+    key: 'register',
+    required: true
+  }
+])
+const getForm = (provider: string): FormInput[] => {
+  return [
     { type: 'hidden', value: provider, placeholder: 'provider', key: 'provider', required: false }
-  ].concat(
-    provider === 'password'
-      ? [
-          {
-            type: 'text',
-            value: '',
-            placeholder: 'Username',
-            key: 'username',
-            required: true
-          },
-          {
-            type: 'email',
-            value: '',
-            placeholder: 'Email',
-            key: 'email',
-            required: true
-          },
-          {
-            type: 'password',
-            value: '',
-            placeholder: 'Password',
-            key: 'password',
-            required: true
-          },
-          {
-            type: 'hidden',
-            value: 'false',
-            placeholder: 'register',
-            key: 'register',
-            required: true
-          }
-        ]
-      : []
-  )
+  ].concat(provider === 'password' ? passwordInputs.value : [])
+}
 
 let session = ref(props.session)
 if (typeof window !== 'undefined' && !session.value) {

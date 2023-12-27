@@ -5,7 +5,7 @@ import { escapeNestedKeys } from '#/utils'
 import { RequestConfig } from '#/types'
 import { ApiErrorResponse } from '..'
 
-const FILE_DEBUG = true
+const FILE_DEBUG = false
 const FETCH_DEBUG = import.meta.env.VITE_LOG_LEVEL === 'debug' && FILE_DEBUG
 const IS_SSR = true
 // const IS_SSR = import.meta.env.SSR;

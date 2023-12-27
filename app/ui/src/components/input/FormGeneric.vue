@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div flex flex-row>
-      <div :class="formContainerClass" @click="toggleForm" />
+    <div flex flex-row @click="toggleForm">
+      <div :class="formContainerClass" />
       <span class="form-title">Show {{ title }}</span>
     </div>
     <form @submit.prevent="onSubmit" flex flex-col :class="formDisplayClass">
@@ -141,7 +141,18 @@ const props = defineProps({
 
 const inputs = ref(props.inputs)
 const onSubmit = (event: Event) => {
-  console.log(`[FormGeneric] onSubmit ${event}`)
+  // console.log(`[FormGeneric] onSubmit event`)
+  // console.log(event)
+  // console.log(`[FormGeneric] onSubmit inputs`)
+  // console.log(inputs.value)
+  const submitterId = event instanceof SubmitEvent && event.submitter?.id
+  const isRegister = submitterId && submitterId.includes('register')
+  inputs.value = inputs.value.map((input) => {
+    if (input.key === 'register') {
+      input.value = isRegister ? 'true' : 'false'
+    }
+    return input
+  })
   emit(
     'submit',
     inputs.value.reduce(
