@@ -1,6 +1,12 @@
 import { Path, Int } from '@cloudflare/itty-router-openapi'
 import { z } from 'zod'
-import { UserComponent, AuthLoginBody, SessionComponent, AuthRegisterBody } from './auth-component'
+import {
+  UserComponent,
+  SessionComponent,
+  AuthLoginUsernameBodyComponent,
+  AuthLoginEmailBodyComponent,
+  AuthRegisterBodyComponent
+} from './auth-component'
 import { ApiErrorResponseComponent } from '../common-oa'
 
 export const GetUserSchema = {
@@ -64,7 +70,7 @@ export const LoginSchema = {
 export const AuthRegisterSchema = {
   tags: ['Auth'],
   summary: 'Register a new user via email and password',
-  requestBody: AuthRegisterBody,
+  requestBody: AuthRegisterBodyComponent,
   responses: {
     '200': {
       description: 'User Object',
@@ -76,7 +82,7 @@ export const AuthRegisterSchema = {
 export const AuthLoginSchema = {
   tags: ['Auth'],
   summary: 'Log in via your email and password',
-  requestBody: AuthLoginBody,
+  requestBody: z.union([AuthLoginEmailBodyComponent, AuthLoginUsernameBodyComponent]),
   responses: {
     '200': {
       description: 'User Object',

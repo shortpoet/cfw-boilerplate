@@ -147,7 +147,7 @@ const useLuciaAuth = () => {
         : undefined
     }
     console.log(`[ui] [useAuth] login init: ${JSON.stringify(init, null, 2)}`)
-    return
+    // return
     const { data, error, dataLoading } = await useFetch<{ url: string }>(url.href, init)
     const { logger, correlationId } = useSsrLogger()
 

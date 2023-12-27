@@ -152,12 +152,12 @@ const passwordInputs = computed(() => [
   }
 ])
 const getForm = (provider: string): FormInput<LoginOptions>[] => {
-  console.log(`[ui] [auth] [login} [+Page] [setup] :: getForm`)
+  // console.log(`[ui] [auth] [login} [+Page] [setup] :: getForm`)
   const form = [
     { type: 'hidden', value: provider, placeholder: 'provider', key: 'provider', required: false }
   ].concat(provider === 'password' ? passwordInputs.value : [])
-  console.log(`[ui] [auth] [login} [+Page] [setup] :: getForm form`)
-  console.log(form.find((input) => input.key === 'email'))
+  // console.log(`[ui] [auth] [login} [+Page] [setup] :: getForm form`)
+  // console.log(form.find((input) => input.key === 'email'))
   return form
 }
 export type LoginFormEvent = FormEmitValue<LoginOptions>

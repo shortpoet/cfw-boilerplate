@@ -14,37 +14,34 @@ export const UserComponent = (
 ).openapi('User')
 export type UserComponentType = z.infer<typeof UserComponent>
 
-export const AuthRegisterBody = z.object({
+export const AuthRegisterBodyComponent = z.object({
   //TODO: use Regex here
   username: z.string({ required_error: 'username is required' }).min(3).max(20),
   email: z.string({ required_error: 'email is required' }).email(),
   password: z.string({ required_error: 'password is required' }).min(8).max(64)
 })
-export type AuthRegisterBodyType = z.infer<typeof AuthRegisterBody>
+export type AuthRegisterBodyType = z.infer<typeof AuthRegisterBodyComponent>
 
-export const AuthLoginBody = z
+export const AuthLoginEmailBodyComponent = z
   .object({
-    //TODO: use Regex here
-    username: z
-      .string({ required_error: 'username or email is required' })
-      .min(3)
-      .max(20)
-      .optional(),
-    email: z.string({ required_error: 'email or username is required' }).email().optional(),
+    email: z.string({ required_error: 'email is required' }).email(),
     password: z.string({ required_error: 'password is required' }).min(8).max(64)
   })
-  .and(
-    z.union(
-      [
-        z.object({ username: z.string(), email: z.undefined() }),
-        z.object({ username: z.undefined(), email: z.string() }),
-        z.object({ username: z.string(), email: z.string() })
-      ],
-      { errorMap: (issue, ctx) => ({ message: 'Either username or email is required' }) }
-    )
-  )
-// .refine((schema) => schema.username || schema.email, "Either 'username' or 'email' is required")
-export type AuthLoginBodyType = z.infer<typeof AuthLoginBody>
+  .openapi('AuthLoginEmailBody')
+export type AuthLoginEmailBodyType = z.infer<typeof AuthLoginEmailBodyComponent>
+
+export const AuthLoginUsernameBodyComponent = z
+  .object({
+    username: z.string({ required_error: 'username is required' }).min(3).max(20),
+    password: z.string({ required_error: 'password is required' }).min(8).max(64)
+  })
+  .openapi('AuthLoginUsernameBody')
+export type AuthLoginUsernameBodyType = z.infer<typeof AuthLoginUsernameBodyComponent>
+
+export const AuthLoginBodyComponent = z
+  .union([AuthLoginEmailBodyComponent, AuthLoginUsernameBodyComponent])
+  .openapi('AuthLoginBody')
+export type AuthLoginBodyType = z.infer<typeof AuthLoginBodyComponent>
 
 export const SessionComponent = (
   z.object({

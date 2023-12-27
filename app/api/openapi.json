@@ -110,6 +110,43 @@
           "fresh"
         ]
       },
+      "AuthLoginEmailBody": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 64
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "AuthLoginUsernameBody": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 20
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 64
+          }
+        },
+        "required": [
+          "username",
+          "password"
+        ]
+      },
       "ApiErrorResponse": {
         "type": "object",
         "properties": {
@@ -223,9 +260,46 @@
     "parameters": {}
   },
   "paths": {
-    "/api/auth/login": {
-      "toJSON": {
-        "operationId": "toJSON_",
+    "/api/auth/login/password": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Log in via your email and password",
+        "operationId": "post_LoginPasswordUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/AuthLoginEmailBody"
+                  },
+                  {
+                    "$ref": "#/components/schemas/AuthLoginUsernameBody"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User Object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/login/github": {
+      "get": {
+        "operationId": "get__github",
         "responses": {
           "200": {
             "description": "Object with user data."
@@ -233,12 +307,22 @@
         }
       }
     },
-    "/api/auth/login/password": {
+    "/api/auth/login/github/callback": {
+      "get": {
+        "operationId": "get__github_callback",
+        "responses": {
+          "200": {
+            "description": "Object with user data."
+          }
+        }
+      }
+    },
+    "/api/auth/register/password": {
       "post": {
         "tags": [
           "Auth"
         ],
-        "summary": "Register a new user",
+        "summary": "Register a new user via email and password",
         "operationId": "post_RegisterPasswordUser",
         "requestBody": {
           "content": {
@@ -280,26 +364,6 @@
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/api/auth/login/github": {
-      "get": {
-        "operationId": "get__github",
-        "responses": {
-          "200": {
-            "description": "Object with user data."
-          }
-        }
-      }
-    },
-    "/api/auth/login/github/callback": {
-      "get": {
-        "operationId": "get__github_callback",
-        "responses": {
-          "200": {
-            "description": "Object with user data."
           }
         }
       }

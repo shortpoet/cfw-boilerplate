@@ -13,8 +13,13 @@ import {
 import { LUCIA_AUTH_COOKIES_SESSION_TOKEN, UserRole } from '#/types'
 import { OpenAPIRoute } from '@cloudflare/itty-router-openapi'
 import { AuthLoginSchema, AuthRegisterSchema } from '../auth-schema'
-import { AuthLoginBody, AuthLoginBodyType, AuthRegisterBody } from '../auth-component'
 import { ZodError, z } from 'zod'
+import {
+  AuthLoginBodyComponent,
+  AuthLoginBodyType,
+  AuthRegisterBodyComponent,
+  AuthRegisterBodyType
+} from '../auth-component'
 
 export const loginPassword = async (
   req: Request,
@@ -39,7 +44,7 @@ export class RegisterPasswordUser extends OpenAPIRoute {
     res: Response,
     env: Env,
     ctx: ExecutionContext,
-    data: { body: AuthLoginBodyType }
+    data: { body: AuthRegisterBodyType }
   ) {
     req.logger.info(`[api] [auth] [login] [password]`)
     console.log(`[api] [auth] [login] [password] -> data: ${JSON.stringify(data, null, 2)}`)
@@ -47,8 +52,8 @@ export class RegisterPasswordUser extends OpenAPIRoute {
     try {
       const loginBody =
         env.NODE_ENV === 'development'
-          ? AuthRegisterBody.parse(data)
-          : AuthRegisterBody.parse(data.body)
+          ? AuthRegisterBodyComponent.parse(data)
+          : AuthRegisterBodyComponent.parse(data.body)
       console.log(
         `[api] [auth] [login] [password] -> loginBody: ${JSON.stringify(loginBody, null, 2)}`
       )
@@ -112,8 +117,8 @@ export class LoginPasswordUser extends OpenAPIRoute {
     try {
       const loginBody =
         env.NODE_ENV === 'development'
-          ? AuthLoginBody.safeParse(data)
-          : AuthLoginBody.safeParse(data.body)
+          ? AuthLoginBodyComponent.safeParse(data)
+          : AuthLoginBodyComponent.safeParse(data.body)
       console.log(
         `[api] [auth] [login] [password] -> loginBody: ${JSON.stringify(loginBody, null, 2)}`
       )
@@ -127,8 +132,10 @@ export class LoginPasswordUser extends OpenAPIRoute {
       const { password } = loginBody.data
 
       const { auth } = await createAuth(env)
-      const emailOrUsername = loginBody.data.email ?? loginBody.data.username
-      const usernameOrEmail = loginBody.data.username ?? loginBody.data.email
+      const emailOrUsername =
+        'email' in loginBody.data ? loginBody.data?.email : loginBody.data?.username
+      const usernameOrEmail =
+        'username' in loginBody.data ? loginBody.data?.username : loginBody.data?.email
       const key = usernameOrEmail
         ? await auth.useKey('username', usernameOrEmail.toLowerCase(), password)
         : await auth.useKey('email', emailOrUsername.toLowerCase(), password)

@@ -5,9 +5,9 @@
       <!-- <div>
         <slot name="logout" :onLogout="onLogout" :isLoggedIn="isLoggedIn" />
       </div> -->
-      <div text-red i-carbon-close @click="authError = false" />
-      <div>
-        {{ authError.name }}
+      <div flex flex-row @click="authError = false">
+        <div m-2 text-2xl text-red i-carbon-close />
+        <div class="text-red">{{ authError.name }}</div>
       </div>
       <div>
         <JsonTree :data="authError.message" />

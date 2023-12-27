@@ -167,12 +167,4 @@ watch(
     }
   }
 )
-watch(
-  () => props.inputs,
-  (value) => {
-    inputs.value = value
-    console.log(`[FormGeneric] inputs change`)
-    console.log(inputs.value.find((input) => input.key === 'email'))
-  }
-)
 </script>
