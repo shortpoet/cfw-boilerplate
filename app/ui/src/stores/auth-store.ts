@@ -54,6 +54,16 @@ export const useAuthStore = defineStore('auth', {
       console.log('setting session')
       console.log(session)
       this.session = session
+    },
+    clearState() {
+      console.log('clearing auth store state')
+      console.log(this)
+      this.$reset()
+      this.session = undefined
+      console.log(this)
+      console.log(localStorage.getItem('__persisted__auth'))
+      localStorage.removeItem('__persisted__auth')
+      console.log(localStorage.getItem('__persisted__auth'))
     }
   }
   // persist: [

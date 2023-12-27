@@ -88,6 +88,11 @@ if (typeof window !== 'undefined') {
   user = auth.user || user
   const authStore = useAuthStore()
 
+  console.log(`[ui] [login.component] authStore.session`)
+  console.log(authStore.session)
+  console.log(`[ui] [login.component] storeSession.`)
+  console.log(storeSession.value)
+
   storeSession.value = authStore.session || storeSession.value
 
   onLogin.value = async (event: LoginOptions) => {

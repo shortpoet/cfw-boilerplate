@@ -1,5 +1,11 @@
 import { LUCIA_AUTH_COOKIES_SESSION_TOKEN } from '#/types'
-import { badResponse, createAuth, getBaseUrl, jsonOkResponse } from '../../../../middleware'
+import {
+  badResponse,
+  createAuth,
+  getBaseUrl,
+  jsonOkResponse,
+  okResponse
+} from '../../../../middleware'
 import { redirectResponse } from '../../../../middleware/redirect'
 
 export const logout = async (req: Request, res: Response, env: Env, ctx: ExecutionContext) => {
@@ -12,9 +18,10 @@ export const logout = async (req: Request, res: Response, env: Env, ctx: Executi
   // console.log(session);
   if (!session) {
     console.log(`\n[api] [auth] [logout] -> NO !session\n`)
-    return new Response('Unauthorized', {
-      status: 401
-    })
+    return okResponse(undefined, res)
+    // return new Response('Unauthorized', {
+    //   status: 401
+    // })
   }
   console.log(`\n[api] [auth] [logout] -> RETURN session\n`)
   // return jsonOkResponse({ session }, res);

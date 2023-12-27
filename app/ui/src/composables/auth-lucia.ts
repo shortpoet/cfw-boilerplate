@@ -108,8 +108,8 @@ const useLuciaAuth = () => {
     console.log(`[ui] [useAuth] [setSession] -> _session ->`)
     console.log(_session)
     if (!_session) {
-      console.log(`[ui] [useAuth] [setSession] -> no session`)
-      authStore.$reset()
+      console.log(`[ui] [useAuth] [setSession] -> no session setting authStore to default`)
+      authStore.clearState()
       return
     }
     let session

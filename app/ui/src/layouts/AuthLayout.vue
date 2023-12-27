@@ -73,6 +73,10 @@ onMounted(async () => {
   const authStore = useAuthStore()
   const auth = useLuciaAuth()
   const { onLoad } = auth
+  console.log('[ui] [AuthLayout] [onMounted] session -> ', session.value)
+  console.log('[ui] [AuthLayout] [onMounted] authStore.session -> ', authStore.session)
+  authStore.clearState()
+  console.log('[ui] [AuthLayout] [onMounted] authStore.session -> ', authStore.session)
 
   if (session.value) {
     console.log('[ui] [AuthLayout] [onMounted] session -> ', session.value)
