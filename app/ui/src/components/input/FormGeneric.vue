@@ -146,8 +146,8 @@ const props = defineProps({
 
 const inputs = ref(props.inputs)
 const onSubmit = (event: Event) => {
-  // console.log(`[FormGeneric] onSubmit event`)
-  // console.log(event)
+  console.log(`[FormGeneric] onSubmit event`)
+  console.log(event)
   const inputValues = inputs.value.reduce((acc, input) => {
     acc[input.key as keyof T] = input.value
     return acc
@@ -165,6 +165,14 @@ watch(
       // console.log(`[FormGeneric] errors ${JSON.stringify(value)}`)
       throw new Error(`[FormGeneric] errors ${JSON.stringify(errors.value)}`)
     }
+  }
+)
+watch(
+  () => props.inputs,
+  (value) => {
+    inputs.value = value
+    console.log(`[FormGeneric] inputs change`)
+    console.log(inputs.value.find((input) => input.key === 'email'))
   }
 )
 </script>

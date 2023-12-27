@@ -38,23 +38,49 @@
           :title="'Login Password'"
         >
           <template #submit-button>
-            <div flex flex-row>
-              <button
-                type="submit"
-                class="btn-main m-2 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-                id="login-button-password"
-                :disabled="loginProps.isLoggedIn"
-              >
-                <i class="i-carbon-login" inline-block /> Log in
-              </button>
-              <button
-                type="submit"
-                class="btn-main m-2 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-                id="register-button-password"
-                :disabled="loginProps.isLoggedIn"
-              >
-                <i class="i-carbon-login" inline-block /> Register
-              </button>
+            <div flex flex-col>
+              <div flex flex-row justify-around>
+                <div>
+                  <input
+                    class="m-2"
+                    type="radio"
+                    id="login-radio"
+                    name="login-radio"
+                    value="login"
+                    v-model="loginType"
+                  />
+                  <label for="login-radio">Login</label>
+                </div>
+                <div>
+                  <input
+                    class="m-2"
+                    type="radio"
+                    id="register-radio"
+                    name="login-radio"
+                    value="register"
+                    v-model="loginType"
+                  />
+                  <label for="register-radio">Register</label>
+                </div>
+              </div>
+              <div flex flex-row>
+                <button
+                  type="submit"
+                  class="btn-main m-2 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+                  id="login-button-password"
+                  :disabled="loginProps.isLoggedIn"
+                >
+                  <i class="i-carbon-login" inline-block /> Log in
+                </button>
+                <button
+                  type="submit"
+                  class="btn-main m-2 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+                  id="register-button-password"
+                  :disabled="loginProps.isLoggedIn"
+                >
+                  <i class="i-carbon-login" inline-block /> Register
+                </button>
+              </div>
             </div>
           </template>
         </FormGeneric>
@@ -93,6 +119,8 @@ const props = defineProps<{
 const providers = ref(['github', 'password'])
 // const pageContext = usePageContext();
 // const pageSession = ref(pageContext.session);
+const loginType = ref('login')
+
 const passwordInputs = computed(() => [
   {
     type: 'text',
@@ -106,7 +134,7 @@ const passwordInputs = computed(() => [
     value: '',
     placeholder: 'Email',
     key: 'email',
-    required: false
+    required: loginType.value === 'register'
   },
   {
     type: 'password',
@@ -124,9 +152,13 @@ const passwordInputs = computed(() => [
   }
 ])
 const getForm = (provider: string): FormInput<LoginOptions>[] => {
-  return [
+  console.log(`[ui] [auth] [login} [+Page] [setup] :: getForm`)
+  const form = [
     { type: 'hidden', value: provider, placeholder: 'provider', key: 'provider', required: false }
   ].concat(provider === 'password' ? passwordInputs.value : [])
+  console.log(`[ui] [auth] [login} [+Page] [setup] :: getForm form`)
+  console.log(form.find((input) => input.key === 'email'))
+  return form
 }
 export type LoginFormEvent = FormEmitValue<LoginOptions>
 const runCallback = (callback: any) => {
