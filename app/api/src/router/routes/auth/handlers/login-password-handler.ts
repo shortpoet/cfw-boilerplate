@@ -12,8 +12,8 @@ import {
 } from '#/api/src/middleware'
 import { LUCIA_AUTH_COOKIES_SESSION_TOKEN, UserRole } from '#/types'
 import { OpenAPIRoute } from '@cloudflare/itty-router-openapi'
-import { AuthRegisterSchema } from '../auth-schema'
-import { AuthLoginBody, AuthLoginBodyType } from '../auth-component'
+import { AuthLoginSchema, AuthRegisterSchema } from '../auth-schema'
+import { AuthLoginBody, AuthLoginBodyType, AuthRegisterBody } from '../auth-component'
 import { ZodError, z } from 'zod'
 
 export const loginPassword = async (
@@ -46,7 +46,9 @@ export class RegisterPasswordUser extends OpenAPIRoute {
     console.log(`[api] [auth] [login] [password] -> body: ${JSON.stringify(data.body, null, 2)}`)
     try {
       const loginBody =
-        env.NODE_ENV === 'development' ? AuthLoginBody.parse(data) : AuthLoginBody.parse(data.body)
+        env.NODE_ENV === 'development'
+          ? AuthRegisterBody.parse(data)
+          : AuthRegisterBody.parse(data.body)
       console.log(
         `[api] [auth] [login] [password] -> loginBody: ${JSON.stringify(loginBody, null, 2)}`
       )
@@ -61,12 +63,15 @@ export class RegisterPasswordUser extends OpenAPIRoute {
       const user = await auth.createUser({
         key: {
           providerId: 'username', // auth method
-          providerUserId: username.toLowerCase(), // unique id when using "username" auth method
+          providerUserId: username, // unique id when using "username" auth method
+          // providerUserId: username.toLowerCase(), // unique id when using "username" auth method
           password // hashed by Lucia
         },
         attributes: {
           username,
-          email
+          username_lower: username.toLowerCase(),
+          email: email.toLowerCase(),
+          email_verified: false
         }
       })
       const session = await auth.createSession({
@@ -86,7 +91,65 @@ export class RegisterPasswordUser extends OpenAPIRoute {
       if (error instanceof ZodError) {
         return new Response(JSON.stringify(error), { status: 400 })
       }
-      return serverErrorResponse('Error getting user', error, res)
+      return serverErrorResponse('Error registering', error, res)
+    }
+  }
+}
+
+export class LoginPasswordUser extends OpenAPIRoute {
+  static schema = AuthLoginSchema
+
+  async handle(
+    req: Request,
+    res: Response,
+    env: Env,
+    ctx: ExecutionContext,
+    data: { body: AuthLoginBodyType }
+  ) {
+    req.logger.info(`[api] [auth] [login] [password]`)
+    console.log(`[api] [auth] [login] [password] -> data: ${JSON.stringify(data, null, 2)}`)
+    console.log(`[api] [auth] [login] [password] -> body: ${JSON.stringify(data.body, null, 2)}`)
+    try {
+      const loginBody =
+        env.NODE_ENV === 'development'
+          ? AuthLoginBody.safeParse(data)
+          : AuthLoginBody.safeParse(data.body)
+      console.log(
+        `[api] [auth] [login] [password] -> loginBody: ${JSON.stringify(loginBody, null, 2)}`
+      )
+      if (!loginBody) {
+        return badResponse('Invalid login body', new Error(JSON.stringify(loginBody)), res)
+      }
+      // const { username, password, email } = data.body
+      if (!loginBody.success) {
+        return badResponse('Invalid login body', new Error(JSON.stringify(loginBody)), res)
+      }
+      const { password } = loginBody.data
+
+      const { auth } = await createAuth(env)
+      const emailOrUsername = loginBody.data.email ?? loginBody.data.username
+      const usernameOrEmail = loginBody.data.username ?? loginBody.data.email
+      const key = usernameOrEmail
+        ? await auth.useKey('username', usernameOrEmail.toLowerCase(), password)
+        : await auth.useKey('email', emailOrUsername.toLowerCase(), password)
+
+      const session = await auth.createSession({
+        userId: key.userId,
+        attributes: {}
+      })
+
+      const sessionCookie = auth.createSessionCookie(session)
+      res.headers.set('Set-Cookie', sessionCookie.serialize())
+      return jsonOkResponse({ session }, res)
+    } catch (error) {
+      console.error(error)
+      if (error instanceof Error) {
+        return badResponse('Unknown Error', error, res)
+      }
+      if (error instanceof ZodError) {
+        return new Response(JSON.stringify(error), { status: 400 })
+      }
+      return serverErrorResponse('Error logging in', error, res)
     }
   }
 }

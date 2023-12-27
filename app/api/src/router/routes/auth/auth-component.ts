@@ -14,12 +14,36 @@ export const UserComponent = (
 ).openapi('User')
 export type UserComponentType = z.infer<typeof UserComponent>
 
-export const AuthLoginBody = z.object({
+export const AuthRegisterBody = z.object({
   //TODO: use Regex here
   username: z.string({ required_error: 'username is required' }).min(3).max(20),
   email: z.string({ required_error: 'email is required' }).email(),
   password: z.string({ required_error: 'password is required' }).min(8).max(64)
 })
+export type AuthRegisterBodyType = z.infer<typeof AuthRegisterBody>
+
+export const AuthLoginBody = z
+  .object({
+    //TODO: use Regex here
+    username: z
+      .string({ required_error: 'username or email is required' })
+      .min(3)
+      .max(20)
+      .optional(),
+    email: z.string({ required_error: 'email or username is required' }).email().optional(),
+    password: z.string({ required_error: 'password is required' }).min(8).max(64)
+  })
+  .and(
+    z.union(
+      [
+        z.object({ username: z.string(), email: z.undefined() }),
+        z.object({ username: z.undefined(), email: z.string() }),
+        z.object({ username: z.string(), email: z.string() })
+      ],
+      { errorMap: (issue, ctx) => ({ message: 'Either username or email is required' }) }
+    )
+  )
+// .refine((schema) => schema.username || schema.email, "Either 'username' or 'email' is required")
 export type AuthLoginBodyType = z.infer<typeof AuthLoginBody>
 
 export const SessionComponent = (

@@ -38,14 +38,24 @@
           :title="'Login Password'"
         >
           <template #submit-button>
-            <button
-              type="submit"
-              class="btn-main m-2 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-              id="login-button-password"
-              :disabled="loginProps.isLoggedIn"
-            >
-              <i class="i-carbon-login" inline-block /> Log in Password
-            </button>
+            <div flex flex-row>
+              <button
+                type="submit"
+                class="btn-main m-2 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+                id="login-button-password"
+                :disabled="loginProps.isLoggedIn"
+              >
+                <i class="i-carbon-login" inline-block /> Log in
+              </button>
+              <button
+                type="submit"
+                class="btn-main m-2 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+                id="register-button-password"
+                :disabled="loginProps.isLoggedIn"
+              >
+                <i class="i-carbon-login" inline-block /> Register
+              </button>
+            </div>
           </template>
         </FormGeneric>
       </template>
@@ -108,6 +118,13 @@ const getForm = (provider: string): FormInput[] =>
             value: '',
             placeholder: 'Password',
             key: 'password',
+            required: true
+          },
+          {
+            type: 'hidden',
+            value: 'false',
+            placeholder: 'register',
+            key: 'register',
             required: true
           }
         ]

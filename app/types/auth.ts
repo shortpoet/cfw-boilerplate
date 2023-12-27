@@ -71,6 +71,7 @@ interface AuthInstance {
 
 type LoginOptions = {
   provider: string
+  register?: boolean
   username?: string
   password?: string
   email?: string

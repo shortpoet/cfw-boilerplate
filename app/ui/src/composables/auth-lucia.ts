@@ -130,11 +130,9 @@ const useLuciaAuth = () => {
   const login = async (opts: LoginOptions) => {
     if (auth.isLoggedIn.value) window.location.replace('/')
     const { urlBaseApi, urlBaseApp } = useBaseUrl()
-    const url = new URL(
-      `${process.env.NODE_ENV === 'production' ? urlBaseApp : urlBaseApi}/${
-        process.env.AUTH_PATH
-      }/login/${opts.provider}`
-    )
+    const base = `${process.env.NODE_ENV === 'production' ? urlBaseApp : urlBaseApi}`
+    const path = !opts.register ? 'login' : 'register'
+    const url = new URL(`${base}/${process.env.AUTH_PATH}/${path}/${opts.provider}`)
     console.log(`[ui] [useAuth] login url: ${url.href}`)
     const isPassword = opts.provider === 'password'
 
@@ -149,6 +147,7 @@ const useLuciaAuth = () => {
         : undefined
     }
     console.log(`[ui] [useAuth] login init: ${JSON.stringify(init, null, 2)}`)
+    return
     const { data, error, dataLoading } = await useFetch<{ url: string }>(url.href, init)
     const { logger, correlationId } = useSsrLogger()
 
