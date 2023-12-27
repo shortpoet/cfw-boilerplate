@@ -128,7 +128,7 @@ const getForm = (provider: string): FormInput<LoginOptions>[] => {
     { type: 'hidden', value: provider, placeholder: 'provider', key: 'provider', required: false }
   ].concat(provider === 'password' ? passwordInputs.value : [])
 }
-export type LoginFormEvent = FormEmitValue<LoginOptions, ReturnType<typeof getForm>[0]>
+export type LoginFormEvent = FormEmitValue<LoginOptions>
 const runCallback = (callback: any) => {
   // console.log(`[ui] [auth] [login} [+Page] [setup] :: runCallback`)
   return (...args: LoginFormEvent[]) => {
@@ -138,8 +138,8 @@ const runCallback = (callback: any) => {
     const submitterId = event instanceof SubmitEvent && event.submitter?.id
     const isRegister = submitterId && submitterId.includes('register') ? true : false
     form.register = isRegister
-    console.log(`[ui] [auth] [login} [+Page] [setup] onSubmit emitting inputs`)
-    console.log(form)
+    // console.log(`[ui] [auth] [login} [+Page] [setup] onSubmit emitting inputs`)
+    // console.log(form)
     callback(...args)
   }
 }

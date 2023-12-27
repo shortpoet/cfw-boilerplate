@@ -77,16 +77,16 @@
   /* Change the border color on hover */
 }
 </style>
-<script setup lang="ts" generic="U, T extends Record<FormInput<U>['key'], FormInput<U>['value']>">
-export type FormInput<U> = {
+<script setup lang="ts" generic="T">
+export type FormInput<T> = {
   key: string
   type: string
   value: any
   placeholder: string
   required: boolean
 }
-export type FormEmitValue<U, T extends Record<FormInput<U>['key'], FormInput<U>['value']>> = {
-  form: { [K in keyof U]: U[K] }
+export type FormEmitValue<T> = {
+  form: { [K in keyof T]: T[K] }
   //form: { [key: string]: string }
   event: Event
 }
@@ -111,14 +111,14 @@ const formDisplayClass = computed(() => {
 const { vValidate, errors } = useValidation()
 
 const emit = defineEmits<{
-  (event: 'submit', value: FormEmitValue<U, T>): void
+  (event: 'submit', value: FormEmitValue<T>): void
 }>()
 
 const props = defineProps({
   inputs: {
     required: true,
     default() {
-      return [] as FormInput<U>[]
+      return [] as FormInput<T>[]
     }
   },
   title: {
@@ -149,9 +149,9 @@ const onSubmit = (event: Event) => {
   // console.log(`[FormGeneric] onSubmit event`)
   // console.log(event)
   const inputValues = inputs.value.reduce((acc, input) => {
-    acc[input.key as keyof U] = input.value
+    acc[input.key as keyof T] = input.value
     return acc
-  }, {} as U)
+  }, {} as T)
   emit('submit', {
     form: inputValues,
     event

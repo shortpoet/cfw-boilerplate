@@ -98,9 +98,7 @@ if (typeof window !== 'undefined') {
 
   onLogin.value = async (event: LoginFormEvent) => {
     // console.log('[ui] [login.component] onLogin')
-
     // console.log(event)
-
     try {
       await login(event.form)
     } catch (error) {
