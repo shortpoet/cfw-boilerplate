@@ -2,6 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { AuthLoginEmailBody } from '../models/AuthLoginEmailBody';
+import type { AuthLoginUsernameBody } from '../models/AuthLoginUsernameBody';
 import type { Session } from '../models/Session';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -11,7 +13,25 @@ import { request as __request } from '../core/request';
 export class AuthService {
 
   /**
-   * Register a new user
+   * Log in via your email and password
+   * @returns Session User Object
+   * @throws ApiError
+   */
+  public static postLoginPasswordUser({
+    requestBody,
+  }: {
+    requestBody?: (AuthLoginEmailBody | AuthLoginUsernameBody),
+  }): CancelablePromise<Session> {
+    return __request(OpenAPI, {
+      method: 'POST',
+      url: '/api/auth/login/password',
+      body: requestBody,
+      mediaType: 'application/json',
+    });
+  }
+
+  /**
+   * Register a new user via email and password
    * @returns Session User Object
    * @throws ApiError
    */
@@ -26,7 +46,7 @@ export class AuthService {
   }): CancelablePromise<Session> {
     return __request(OpenAPI, {
       method: 'POST',
-      url: '/api/auth/login/password',
+      url: '/api/auth/register/password',
       body: requestBody,
       mediaType: 'application/json',
     });

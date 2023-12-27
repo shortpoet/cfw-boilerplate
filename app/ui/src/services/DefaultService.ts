@@ -48,7 +48,7 @@ export class DefaultService {
   public static getLogout(): CancelablePromise<any> {
     return __request(OpenAPI, {
       method: 'GET',
-      url: '/api/auth//logout',
+      url: '/api/auth/logout',
     });
   }
 
