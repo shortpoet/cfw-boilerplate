@@ -30,6 +30,7 @@ declare global {
   const LUCIAAUTH_SESSION_TOKEN_EXPIRY: typeof import('./composables/auth-lucia')['LUCIAAUTH_SESSION_TOKEN_EXPIRY']
   const Locale: typeof import('./composables/locales')['Locale']
   const LoggerSymbol: typeof import('./modules/logger')['LoggerSymbol']
+  const MiscService: typeof import('./services/MiscService')['MiscService']
   const OpenAPI: typeof import('./core/OpenAPI')['OpenAPI']
   const RequestConfig: typeof import('./composables/fetch')['RequestConfig']
   const SESSION_TOKEN_EXPIRY: (typeof import('./composables/auth-authjs'))['SESSION_TOKEN_EXPIRY']
@@ -186,6 +187,7 @@ declare module 'vue' {
     readonly LUCIAAUTH_SESSION_TOKEN_EXPIRY: UnwrapRef<typeof import('./composables/auth-lucia')['LUCIAAUTH_SESSION_TOKEN_EXPIRY']>
     readonly Locale: UnwrapRef<typeof import('./composables/locales')['Locale']>
     readonly LoggerSymbol: UnwrapRef<typeof import('./modules/logger')['LoggerSymbol']>
+    readonly MiscService: UnwrapRef<typeof import('./services/MiscService')['MiscService']>
     readonly OpenAPI: UnwrapRef<typeof import('./core/OpenAPI')['OpenAPI']>
     readonly TasksService: UnwrapRef<typeof import('./services/TasksService')['TasksService']>
     readonly USE_FETCH_REQ_INIT: UnwrapRef<typeof import('./composables/fetch')['USE_FETCH_REQ_INIT']>
@@ -325,6 +327,7 @@ declare module '@vue/runtime-core' {
     readonly LUCIAAUTH_SESSION_TOKEN_EXPIRY: UnwrapRef<typeof import('./composables/auth-lucia')['LUCIAAUTH_SESSION_TOKEN_EXPIRY']>
     readonly Locale: UnwrapRef<typeof import('./composables/locales')['Locale']>
     readonly LoggerSymbol: UnwrapRef<typeof import('./modules/logger')['LoggerSymbol']>
+    readonly MiscService: UnwrapRef<typeof import('./services/MiscService')['MiscService']>
     readonly OpenAPI: UnwrapRef<typeof import('./core/OpenAPI')['OpenAPI']>
     readonly TasksService: UnwrapRef<typeof import('./services/TasksService')['TasksService']>
     readonly USE_FETCH_REQ_INIT: UnwrapRef<typeof import('./composables/fetch')['USE_FETCH_REQ_INIT']>

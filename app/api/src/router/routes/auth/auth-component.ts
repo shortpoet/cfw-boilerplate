@@ -14,12 +14,14 @@ export const UserComponent = (
 ).openapi('User')
 export type UserComponentType = z.infer<typeof UserComponent>
 
-export const AuthRegisterBodyComponent = z.object({
-  //TODO: use Regex here
-  username: z.string({ required_error: 'username is required' }).min(3).max(20),
-  email: z.string({ required_error: 'email is required' }).email(),
-  password: z.string({ required_error: 'password is required' }).min(8).max(64)
-})
+export const AuthRegisterBodyComponent = z
+  .object({
+    //TODO: use Regex here
+    username: z.string({ required_error: 'username is required' }).min(3).max(20),
+    email: z.string({ required_error: 'email is required' }).email(),
+    password: z.string({ required_error: 'password is required' }).min(8).max(64)
+  })
+  .openapi('AuthRegisterBody')
 export type AuthRegisterBodyType = z.infer<typeof AuthRegisterBodyComponent>
 
 export const AuthLoginEmailBodyComponent = z

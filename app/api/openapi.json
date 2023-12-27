@@ -147,6 +147,30 @@
           "password"
         ]
       },
+      "AuthRegisterBody": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 20
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 64
+          }
+        },
+        "required": [
+          "username",
+          "email",
+          "password"
+        ]
+      },
       "ApiErrorResponse": {
         "type": "object",
         "properties": {
@@ -328,28 +352,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "username": {
-                    "type": "string",
-                    "minLength": 3,
-                    "maxLength": 20
-                  },
-                  "email": {
-                    "type": "string",
-                    "format": "email"
-                  },
-                  "password": {
-                    "type": "string",
-                    "minLength": 8,
-                    "maxLength": 64
-                  }
-                },
-                "required": [
-                  "username",
-                  "email",
-                  "password"
-                ]
+                "$ref": "#/components/schemas/AuthRegisterBody"
               }
             }
           }
