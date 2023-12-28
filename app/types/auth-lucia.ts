@@ -37,7 +37,7 @@ interface LuciaAuthInstance extends AuthInstance {
   onLoad: () => Promise<void>
   login(options: LoginOptions): Promise<void>
   logout(options?: any): Promise<void>
-  setSession: (_session?: Session | string) => Promise<Session | undefined>
+  setSession: (_session?: Partial<Session> | string) => Promise<Session | undefined>
   setSessionAuthStore: (session: Session | undefined) => void
   setSessionToken: (token: string) => void
   setLoggedIn: (loggedIn: boolean) => void

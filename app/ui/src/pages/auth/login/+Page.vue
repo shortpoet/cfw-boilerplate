@@ -110,7 +110,7 @@
 </template>
 
 <script setup lang="ts">
-import { LoginOptions, Session } from '#/types'
+import { LoginOptions, Session, LoginOptionsTypes, LoginOptionsTypesEnum } from '#/types'
 import type { FormEmitValue, FormInput } from '#/ui/src/components/input/FormGeneric.vue'
 
 const props = defineProps<{
@@ -119,22 +119,26 @@ const props = defineProps<{
 const providers = ref(['github', 'password'])
 // const pageContext = usePageContext();
 // const pageSession = ref(pageContext.session);
-const loginType = ref('login')
+const loginType = ref<LoginOptionsTypes>(LoginOptionsTypesEnum.Enum.username)
 
-const passwordInputs = computed(() => [
+const passwordInputs: ComputedRef<FormInput<LoginOptions>[]> = computed(() => [
   {
     type: 'text',
     value: '',
     placeholder: 'Username',
     key: 'username',
-    required: true
+    required:
+      loginType.value === LoginOptionsTypesEnum.Enum.register ||
+      loginType.value === LoginOptionsTypesEnum.Enum.username
   },
   {
     type: 'email',
     value: '',
     placeholder: 'Email',
     key: 'email',
-    required: loginType.value === 'register'
+    required:
+      loginType.value === LoginOptionsTypesEnum.Enum.register ||
+      loginType.value === LoginOptionsTypesEnum.Enum.email
   },
   {
     type: 'password',
@@ -145,10 +149,17 @@ const passwordInputs = computed(() => [
   },
   {
     type: 'hidden',
-    value: 'false',
-    placeholder: 'register',
-    key: 'register',
+    value: loginType.value,
+    placeholder: 'type',
+    key: 'type',
     required: true
+  },
+  {
+    type: 'hidden',
+    value: undefined,
+    placeholder: 'provider',
+    key: 'provider',
+    required: false
   }
 ])
 const getForm = (provider: string): FormInput<LoginOptions>[] => {
@@ -169,9 +180,11 @@ const runCallback = (callback: any) => {
     const [{ form, event }] = args
     const submitterId = event instanceof SubmitEvent && event.submitter?.id
     const isRegister = submitterId && submitterId.includes('register') ? true : false
-    form.register = isRegister
-    // console.log(`[ui] [auth] [login} [+Page] [setup] onSubmit emitting inputs`)
-    // console.log(form)
+    const hasEmail = form.email && form.email.length > 0
+    const hasUsername = form.username && form.username.length > 0
+    form.type = isRegister ? 'register' : hasEmail ? 'email' : hasUsername ? 'username' : 'oauth'
+    console.log(`[ui] [auth] [login} [+Page] [setup] onSubmit emitting inputs`)
+    console.log(form)
     callback(...args)
   }
 }

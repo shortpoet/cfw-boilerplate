@@ -21,7 +21,7 @@
       "User": {
         "type": "object",
         "properties": {
-          "id": {
+          "userId": {
             "type": "string",
             "minLength": 12,
             "maxLength": 12,
@@ -66,7 +66,7 @@
           }
         },
         "required": [
-          "id",
+          "userId",
           "username",
           "userType",
           "roles"

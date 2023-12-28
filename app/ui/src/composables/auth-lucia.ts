@@ -113,7 +113,7 @@ const useLuciaAuth = () => {
     // const correlationId = getCookie(X_CORRELATION_ID);
   }
 
-  const setSession = async (_session?: Session | string): Promise<Session | undefined> => {
+  const setSession = async (_session?: Partial<Session> | string): Promise<Session | undefined> => {
     console.log(`[ui] [useAuth] [setSession] -> _session ->`)
     console.log(_session)
     if (!_session) {
@@ -135,7 +135,7 @@ const useLuciaAuth = () => {
     auth.setSessionAuthStore(session)
     return session
   }
-  const l = async (opts: LoginOptions) => {
+  const login = async (opts: LoginOptions) => {
     const { logger, correlationId } = useSsrLogger()
     let { data, error, dataLoading } = {
       data: ref(),
@@ -154,26 +154,31 @@ const useLuciaAuth = () => {
       ),
       dataLoading: ref(false)
     }
-
+    const isLogin = opts.type === 'email' || opts.type === 'username'
     const success = LoginOptionsSchema.safeParse(opts)
     if (!success.success) {
       console.error(`[ui] [useAuth] [login] -> invalid login options`)
       console.error(success.error)
       return
     }
-    if (opts.register === true && opts.email) {
+    if (opts.type === 'register' && opts.email) {
       ;({ data, error, dataLoading } = await useService<Session>(
         AuthService.postRegisterPasswordUser({
           requestBody: { username: opts.username, password: opts.password, email: opts.email }
         })
       ))
     }
-    if (opts.password && opts.email) {
+    if (isLogin) {
       ;({ data, error, dataLoading } = await useService<Session>(
-        AuthService.postLoginPasswordUser({})
+        AuthService.postLoginPasswordUser({
+          requestBody:
+            opts.type === 'email'
+              ? { password: opts.password, email: opts.email }
+              : { username: opts.username, password: opts.password }
+        })
       ))
     }
-    if (opts.provider === 'github') {
+    if (opts.type === 'oauth') {
       // ;({ data, error, dataLoading } = await useService<Session>(
       //   AuthService.postLoginPasswordUser({
       //     requestBody: { username: opts.username, password: opts.password, email: opts.email }
@@ -193,12 +198,12 @@ const useLuciaAuth = () => {
       return
     }
     if (data.value) {
-      const success = LoginResponseSchema.safeParse(data.value)
-      if (!success.success) {
-        logger.error(`[ui] [useAuth] success.error: ${JSON.stringify(success.error, null, 2)}`)
-        console.log(`[ui] [useAuth] success.error: ${JSON.stringify(success.error, null, 2)}`)
-        return
-      }
+      // const success = LoginResponseSchema.safeParse(data.value)
+      // if (!success.success) {
+      //   logger.error(`[ui] [useAuth] success.error: ${JSON.stringify(success.error, null, 2)}`)
+      //   console.log(`[ui] [useAuth] success.error: ${JSON.stringify(success.error, null, 2)}`)
+      //   return
+      // }
       logger.debug(`[ui] [useAuth] data: ${JSON.stringify(data.value, null, 2)}`)
       console.log(`[ui] [useAuth] data: ${JSON.stringify(data.value, null, 2)}`)
 
@@ -206,33 +211,33 @@ const useLuciaAuth = () => {
       const session =
         'session' in data.value && data.value.session ? data.value.session : data.value.session
 
-      // if (isPassword && session) {
-      //   auth.setSession(session)
-      // } else if (url) {
-      //   window.location.replace(url)
-      // } else {
-      //   logger.error(`[ui] [useAuth] no session or url`)
-      //   console.log(`[ui] [useAuth] no session or url`)
-      // }
+      if (isLogin && session) {
+        auth.setSession(session)
+      } else if (url) {
+        window.location.replace(url)
+      } else {
+        logger.error(`[ui] [useAuth] no session or url`)
+        console.log(`[ui] [useAuth] no session or url`)
+      }
     }
   }
 
-  const login = async (opts: LoginOptions) => {
+  const login2 = async (opts: LoginOptions) => {
     if (auth.isLoggedIn.value) window.location.replace('/')
     const { urlBaseApi, urlBaseApp } = useBaseUrl()
     const base = `${process.env.NODE_ENV === 'production' ? urlBaseApp : urlBaseApi}`
-    const path = !opts.register ? 'login' : 'register'
+    const path = opts.type
     const url = new URL(`${base}/${process.env.AUTH_PATH}/${path}/${opts.provider}`)
     console.log(`[ui] [useAuth] login url: ${url.href}`)
-    const isPassword = opts.provider === 'password'
+    const isLogin = opts.type === 'email' || opts.type === 'username'
 
     const init = {
-      method: isPassword ? 'POST' : 'GET',
+      method: isLogin ? 'POST' : 'GET',
       headers: {
         'Content-Type': 'application/json'
         // cookie: `${LUCIAAUTH_COOKIES_SESSION_TOKEN}=${sessionToken.value}`,
       },
-      body: isPassword
+      body: isLogin
         ? JSON.stringify({ username: opts.username, password: opts.password, email: opts.email })
         : undefined
     }
@@ -265,7 +270,7 @@ const useLuciaAuth = () => {
       const session =
         'session' in data.value && data.value.session ? data.value.session : data.value.session
 
-      if (isPassword && session) {
+      if (isLogin && session) {
         auth.setSession(session)
       } else if (url) {
         window.location.replace(url)

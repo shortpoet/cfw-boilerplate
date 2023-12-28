@@ -36,7 +36,7 @@ enum UserRole {
 const UserRoleSchema = z.enum(['not_set', 'guest', 'admin', 'user'])
 
 const BaseUserSchema = z.object({
-  id: z.string(),
+  userId: z.string(),
   roles: z.array(UserRoleSchema),
   userType: UserTypeSchema,
   username: z.string(),
@@ -64,26 +64,67 @@ type BaseSession = z.infer<typeof BaseSessionSchema>
 //   email?: string
 // }
 
-const LoginOptionsCommonSchema = z.object({
-  provider: z.string()
-  // username: z.undefined(),
-  // password: z.undefined(),
-  // email: z.undefined()
+export const LoginOptionsTypesEnum = z.enum(['email', 'username', 'password', 'register', 'oauth'])
+export type LoginOptionsTypes = z.infer<typeof LoginOptionsTypesEnum>
+const OauthProviders = z.enum(['github', 'google', 'twitter', 'facebook', 'linkedin'])
+
+const LoginOptionsOauthSchema = z.object({
+  type: z.literal(LoginOptionsTypesEnum.Enum.oauth),
+  provider: OauthProviders,
+  username: z.undefined(),
+  password: z.undefined(),
+  email: z.undefined()
 })
 
 const LoginOptionsRegisterSchema = z.object({
-  register: z.boolean(),
+  type: z.literal(LoginOptionsTypesEnum.Enum.register),
+  provider: z.undefined(),
   username: z.string(),
   password: z.string(),
   email: z.string()
 })
 
-const LoginOptionsLoginSchema = z.object({
-  register: z.undefined(),
-  username: z.string(),
+const LoginOptionsUsernameSchema = z.object({
+  type: z.literal(LoginOptionsTypesEnum.Enum.username),
+  provider: z.undefined(),
   password: z.string(),
+  username: z.string(),
   email: z.string().optional()
 })
+
+const LoginOptionsEmailSchema = z.object({
+  type: z.literal(LoginOptionsTypesEnum.Enum.email),
+  provider: z.undefined(),
+  password: z.string(),
+  username: z.string().optional(),
+  email: z.string()
+})
+
+const LoginOptionsSchema = z.discriminatedUnion('type', [
+  LoginOptionsOauthSchema,
+  LoginOptionsRegisterSchema,
+  LoginOptionsUsernameSchema,
+  LoginOptionsEmailSchema
+])
+
+// const LoginOptionsLoginSchema = z
+//   .object({
+//     type: z.literal(LoginOptionsTypesEnum.Enum.login),
+//     provider: z.undefined(),
+//     password: z.string(),
+//     username: z.string().optional(),
+//     email: z.string().optional()
+//   })
+//   .and(
+//     z.union(
+//       [
+//         z.object({ username: z.string(), email: z.undefined() }),
+//         z.object({ username: z.undefined(), email: z.string() }),
+//         z.object({ username: z.string(), email: z.string() })
+//       ],
+//       { errorMap: (issue, ctx) => ({ message: 'Either username or email is required' }) }
+//     )
+//   )
 
 // const LoginOptionsSchema = z.union([
 //   LoginOptionsRegisterSchema,
@@ -91,20 +132,20 @@ const LoginOptionsLoginSchema = z.object({
 //   LoginOptionsCommonSchema
 // ])
 
-const LoginOptionsSchema = z.intersection(
-  LoginOptionsCommonSchema,
-  z.union([LoginOptionsRegisterSchema, LoginOptionsLoginSchema])
-)
+// const LoginOptionsSchema = z.intersection(
+//   LoginOptionsCommonSchema,
+//   z.union([LoginOptionsRegisterSchema, LoginOptionsLoginSchema])
+// )
 type LoginOptions = z.infer<typeof LoginOptionsSchema>
 
 const RegisterResponseSchema = z.object({
-  session: BaseSessionSchema,
+  session: BaseSessionSchema.partial(),
   url: z.undefined()
 })
 type RegisterResponse = z.infer<typeof RegisterResponseSchema>
 
 const LoginPasswordResponseSchema = z.object({
-  session: BaseSessionSchema,
+  session: BaseSessionSchema.partial(),
   url: z.undefined()
 })
 type LoginPasswordResponse = z.infer<typeof LoginPasswordResponseSchema>
