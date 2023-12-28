@@ -21,6 +21,9 @@ import {
   AuthRegisterBodyType
 } from '../auth-component'
 
+import { castBoolToInt } from '#/api/db/d1-kysely-lucia/cast'
+import { LuciaError } from 'lucia'
+
 export class RegisterPasswordUser extends OpenAPIRoute {
   static schema = AuthRegisterSchema
 
@@ -59,14 +62,20 @@ export class RegisterPasswordUser extends OpenAPIRoute {
         },
         attributes: {
           username,
-          username_lower: username.toLowerCase(),
+          // username_lower: username.toLowerCase(),
           email: email.toLowerCase(),
-          email_verified: false
+          email_verified: castBoolToInt(false),
+          role_flags: 1,
+          avatar_url: 'https://www.gravatar.com/avatar/?d=retro&s=35'
         }
       })
       const session = await auth.createSession({
         userId: user.userId,
-        attributes: {}
+        attributes: {
+          user: {
+            ...user
+          }
+        }
       })
       const sessionCookie = auth.createSessionCookie(session)
       res.headers.set('Set-Cookie', sessionCookie.serialize())
@@ -135,11 +144,16 @@ export class LoginPasswordUser extends OpenAPIRoute {
       return jsonOkResponse({ session }, res)
     } catch (error) {
       console.error(error)
-      if (error instanceof Error) {
-        return badResponse('Unknown Error', error, res)
-      }
       if (error instanceof ZodError) {
         return new Response(JSON.stringify(error), { status: 400 })
+      }
+      if (error instanceof LuciaError) {
+        if (error.message.includes('AUTH_INVALID_KEY_ID'))
+          // user not registered - but avoid in message for security - TODO improve
+          return badResponse('Invalid login body', error, res)
+      }
+      if (error instanceof Error) {
+        return badResponse('Unknown Error', error, res)
       }
       return serverErrorResponse('Error logging in', error, res)
     }

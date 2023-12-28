@@ -7,7 +7,9 @@ export const UserComponent = (
     username: z.string({ description: "User's username" }),
     userType: z.enum([UserType._, UserType.Credentials, UserType.GitHub, UserType.Email]),
     roles: z.array(z.enum([UserRole.Admin, UserRole.User, UserRole.Guest, UserRole._])),
+    email_verified: z.boolean({ description: 'Is user email verified' }),
     email: z.string({ description: 'User email' }).optional(),
+    avatar_url: z.string({ description: 'User avatar URL' }).optional(),
     name: z.string({ description: "User's name" }).optional(),
     password: z.string({ description: 'User password' }).optional()
   }) satisfies z.ZodType<User>

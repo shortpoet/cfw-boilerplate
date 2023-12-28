@@ -277,15 +277,18 @@ declare module '__STATIC_CONTENT_MANIFEST' {
   export default content
 }
 
+type EmailVerified = 0 | 1
+
 /// <reference types="lucia" />
 export declare namespace Lucia {
   type Auth = import('./api/src/middleware/auth/lucia').Auth
   type DatabaseUserAttributes = {
     username: string
     email: string
+    email_verified: EmailVerified
     password: string
     name: string
-    // role: UserRole
+    role_flags: number
   }
   type DatabaseSessionAttributes = {
     token: string

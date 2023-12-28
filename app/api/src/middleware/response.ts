@@ -97,12 +97,16 @@ export const notFoundResponse = (msg?: string, err?: Error | unknown, res?: Resp
 }
 
 export const badResponse = (msg?: string, err?: Error | unknown, res?: Response) => {
+  console.log(`[api] [badResponse] -> msg: ${msg}`)
   const newErr = err instanceof Error ? err : new Error(`${msg}` || ResText.NOT_FOUND)
   msg = msg ? `${ResText.BAD_REQUEST} - ${msg}` : ResText.BAD_REQUEST
+  console.log(`[api] [badResponse] -> msg: ${msg}`)
+  const statusText = newErr.message || ResText.BAD_REQUEST
+  console.log(`[api] [badResponse] -> statusText: ${statusText}`)
   const init = {
     ...res,
     status: 400,
-    statusText: newErr.message || ResText.BAD_REQUEST
+    statusText
   } as ResponseInit
   // console.log(`[api] [badResponse] -> init: ${JSON.stringify(init, null, 2)}`)
   // console.log(`[api] [badResponse] -> newerr: ${JSON.stringify(newErr, null, 2)}`)

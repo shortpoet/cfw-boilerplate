@@ -49,11 +49,7 @@ const getSqlite = async (env?: Env) => {
   try {
     sqliteDb = (await import('better-sqlite3'))
       .default('local.sqlite')
-      .exec(fs.readFileSync(`${env.__wranglerDir}/migrations/0000_init-db.sql`, 'utf8'))
-      .exec(fs.readFileSync(`${env.__wranglerDir}/migrations/0001_init-roles.sql`, 'utf8'))
-      .exec(
-        fs.readFileSync(`${env.__wranglerDir}/migrations/0002_add-guest-role.sql`, 'utf8')
-      ) as B3SQL
+      .exec(fs.readFileSync(`${env.__wranglerDir}/migrations/0000_init-db.sql`, 'utf8')) as B3SQL
   } catch (error) {
     console.error(`[db] getDatabaseFromEnv -> error:`)
     console.error(error)

@@ -40,6 +40,7 @@ const BaseUserSchema = z.object({
   roles: z.array(UserRoleSchema),
   userType: UserTypeSchema,
   username: z.string(),
+  email_verified: z.boolean(),
   email: z.string().optional(),
   avatar_url: z.string().optional(),
   name: z.string().optional()

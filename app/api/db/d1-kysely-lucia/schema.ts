@@ -15,21 +15,11 @@ export interface CFWDatabase {
   User: {
     id: GeneratedAlways<string>
     username: string
+    role_flags: number
     email?: string
     name?: string
     password?: string
   } & Lucia.DatabaseUserAttributes
-  UserRole: {
-    id: GeneratedAlways<string>
-    role: UserRole
-  }
-  UserRoleAssignment: {
-    id: GeneratedAlways<string>
-    user_id: UserId
-    role_id: RoleId
-    created_at: Date
-    updated_at: Date
-  }
   UserKey: {
     id: GeneratedAlways<string>
     user_id: UserId

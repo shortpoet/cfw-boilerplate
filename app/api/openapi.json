@@ -52,9 +52,17 @@
               ]
             }
           },
+          "email_verified": {
+            "type": "boolean",
+            "description": "Is user email verified"
+          },
           "email": {
             "type": "string",
             "description": "User email"
+          },
+          "avatar_url": {
+            "type": "string",
+            "description": "User avatar URL"
           },
           "name": {
             "type": "string",
@@ -69,7 +77,8 @@
           "userId",
           "username",
           "userType",
-          "roles"
+          "roles",
+          "email_verified"
         ]
       },
       "Session": {
@@ -321,7 +330,7 @@
         },
         "responses": {
           "200": {
-            "description": "User Object",
+            "description": "Logged in User Session",
             "content": {
               "application/json": {
                 "schema": {
@@ -444,7 +453,7 @@
         },
         "responses": {
           "200": {
-            "description": "User Object",
+            "description": "Logged in User Session",
             "content": {
               "application/json": {
                 "schema": {

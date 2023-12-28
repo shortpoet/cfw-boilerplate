@@ -4,7 +4,9 @@ CREATE TABLE IF NOT EXISTS [user]
 (
   [id] VARCHAR(15) NOT NULL PRIMARY KEY,
   [username] VARCHAR(31) NOT NULL,
-  [email]    TEXT UNIQUE,
+  [role_flags] INTEGER NOT NULL DEFAULT 0,
+  [email]    TEXT UNIQUE NOT NULL,
+  [email_verified] INTEGER NOT NULL DEFAULT 0,
   [name]     TEXT,
   [avatar_url] TEXT,
   [password] TEXT
@@ -31,24 +33,6 @@ CREATE TABLE IF NOT EXISTS [user_session]
   FOREIGN KEY (user_id) REFERENCES user(id)
 );
 
-CREATE TABLE IF NOT EXISTS [user_role]
-(
-  [id] INTEGER PRIMARY KEY,
-  [role] TEXT CHECK(role IN ('admin', 'user')) NOT NULL DEFAULT 'user'
-);
-
-CREATE TABLE IF NOT EXISTS [user_role_assignment]
-(
-  [id] INTEGER PRIMARY KEY,
-  [user_id] INTEGER NOT NULL REFERENCES [user] (id) ON DELETE CASCADE,
-  [role_id] INTEGER NOT NULL REFERENCES [user_role] (id) ON DELETE CASCADE,
-  [created_at] TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  [updated_at] TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-  FOREIGN KEY (user_id) REFERENCES [user](id) ON DELETE CASCADE,
-  FOREIGN KEY (role_id) REFERENCES [user_role](id) ON DELETE CASCADE
-);
-
 CREATE UNIQUE INDEX IF NOT EXISTS user_id
   ON user(id);
 
@@ -60,6 +44,3 @@ CREATE UNIQUE INDEX IF NOT EXISTS user_key_id
 
 CREATE UNIQUE INDEX IF NOT EXISTS user_session_id
   ON user_session(id);
-
-CREATE UNIQUE INDEX IF NOT EXISTS role
-  ON user_role(role);
