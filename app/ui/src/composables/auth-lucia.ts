@@ -297,7 +297,7 @@ const useLuciaAuth = () => {
     if (data.value) {
       console.log(`data: ${JSON.stringify(data.value, null, 2)}`)
       auth.setSession()
-      window.location.replace('/login')
+      window.location.replace('/auth/login')
     }
   }
 

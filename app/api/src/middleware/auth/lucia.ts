@@ -31,7 +31,7 @@ export const createAuth = async (env: Env) => {
         email: data.email,
         name: data.name,
         avatar_url: data.avatar_url,
-        roles: []
+        roles: data.roles
       }
     },
     sessionCookie: {

@@ -21,21 +21,6 @@ import {
   AuthRegisterBodyType
 } from '../auth-component'
 
-export const loginPassword = async (
-  req: Request,
-  res: Response,
-  env: Env,
-  ctx: ExecutionContext
-) => {
-  const { auth, githubAuth } = await createAuth(env)
-  const authRequest = auth.handleRequest(req)
-  const session = await authRequest.validate()
-  const reqUrl = new URL(req.url).href
-  if (session) {
-    return redirectResponse(reqUrl, 302, res.headers)
-  }
-}
-
 export class RegisterPasswordUser extends OpenAPIRoute {
   static schema = AuthRegisterSchema
 
