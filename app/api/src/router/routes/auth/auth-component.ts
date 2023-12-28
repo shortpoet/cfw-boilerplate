@@ -20,8 +20,8 @@ export const SessionComponent = (
   z.object({
     sessionId: z.string({ description: 'Session ID' }).length(12),
     user: UserComponent,
-    activePerdiodExpiresAt: z.string({ description: 'Session expiry date' }),
-    idlePerdiodExpiresAt: z.string({ description: 'Session expiry date' }),
+    activePeriodExpiresAt: z.string({ description: 'Session expiry date' }),
+    idlePeriodExpiresAt: z.string({ description: 'Session expiry date' }),
     state: z.string({ description: 'Session state' }),
     fresh: z.boolean({ description: 'Is session fresh' })
   }) satisfies z.ZodType<Session>

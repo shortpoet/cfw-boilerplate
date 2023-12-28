@@ -96,11 +96,11 @@
           "user": {
             "$ref": "#/components/schemas/User"
           },
-          "activePerdiodExpiresAt": {
+          "activePeriodExpiresAt": {
             "type": "string",
             "description": "Session expiry date"
           },
-          "idlePerdiodExpiresAt": {
+          "idlePeriodExpiresAt": {
             "type": "string",
             "description": "Session expiry date"
           },
@@ -116,8 +116,8 @@
         "required": [
           "sessionId",
           "user",
-          "activePerdiodExpiresAt",
-          "idlePerdiodExpiresAt",
+          "activePeriodExpiresAt",
+          "idlePeriodExpiresAt",
           "state",
           "fresh"
         ]

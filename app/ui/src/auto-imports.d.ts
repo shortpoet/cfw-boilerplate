@@ -144,6 +144,7 @@ declare global {
   const usePageTitle: typeof import('./composables/pageTitle')['usePageTitle']
   const useSeoMeta: typeof import('@vueuse/head')['useSeoMeta']
   const useService: typeof import('./composables/service')['useService']
+  const useServiceQuery: typeof import('./composables/service')['useServiceQuery']
   const useSession: typeof import('./composables/session')['useSession']
   const useSlots: typeof import('vue')['useSlots']
   const useSsrLogger: typeof import('./composables/logger')['useSsrLogger']
@@ -292,12 +293,12 @@ declare module 'vue' {
     readonly usePageTitle: UnwrapRef<typeof import('./composables/pageTitle')['usePageTitle']>
     readonly useSeoMeta: UnwrapRef<typeof import('@vueuse/head')['useSeoMeta']>
     readonly useService: UnwrapRef<typeof import('./composables/service')['useService']>
+    readonly useServiceQuery: UnwrapRef<typeof import('./composables/service')['useServiceQuery']>
     readonly useSession: UnwrapRef<typeof import('./composables/session')['useSession']>
     readonly useSlots: UnwrapRef<typeof import('vue')['useSlots']>
     readonly useSsrLogger: UnwrapRef<typeof import('./composables/logger')['useSsrLogger']>
     readonly useUiStore: UnwrapRef<typeof import('./stores/ui')['useUiStore']>
     readonly useValidation: UnwrapRef<typeof import('./composables/validation')['useValidation']>
-    readonly userType: UnwrapRef<typeof import('./models/User')['userType']>
     readonly watch: UnwrapRef<typeof import('vue')['watch']>
     readonly watchEffect: UnwrapRef<typeof import('vue')['watchEffect']>
     readonly watchPostEffect: UnwrapRef<typeof import('vue')['watchPostEffect']>
@@ -433,12 +434,12 @@ declare module '@vue/runtime-core' {
     readonly usePageTitle: UnwrapRef<typeof import('./composables/pageTitle')['usePageTitle']>
     readonly useSeoMeta: UnwrapRef<typeof import('@vueuse/head')['useSeoMeta']>
     readonly useService: UnwrapRef<typeof import('./composables/service')['useService']>
+    readonly useServiceQuery: UnwrapRef<typeof import('./composables/service')['useServiceQuery']>
     readonly useSession: UnwrapRef<typeof import('./composables/session')['useSession']>
     readonly useSlots: UnwrapRef<typeof import('vue')['useSlots']>
     readonly useSsrLogger: UnwrapRef<typeof import('./composables/logger')['useSsrLogger']>
     readonly useUiStore: UnwrapRef<typeof import('./stores/ui')['useUiStore']>
     readonly useValidation: UnwrapRef<typeof import('./composables/validation')['useValidation']>
-    readonly userType: UnwrapRef<typeof import('./models/User')['userType']>
     readonly watch: UnwrapRef<typeof import('vue')['watch']>
     readonly watchEffect: UnwrapRef<typeof import('vue')['watchEffect']>
     readonly watchPostEffect: UnwrapRef<typeof import('vue')['watchPostEffect']>

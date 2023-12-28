@@ -5,8 +5,9 @@ export {
   Session,
   AuthInstance,
   LoginOptions,
-  LoginResponse,
-  LoginResponseSchema,
+  LoginProviderResponse,
+  BaseSessionSchema,
+  LoginProviderResponseSchema,
   LoginOptionsSchema,
   UserRoleSchema,
   UserTypeSchema
@@ -52,8 +53,8 @@ type BaseUser = z.infer<typeof BaseUserSchema>
 const BaseSessionSchema = z.object({
   sessionId: z.string(),
   user: BaseUserSchema,
-  activePerdiodExpiresAt: z.string(),
-  idlePerdiodExpiresAt: z.string(),
+  activePeriodExpiresAt: z.string(),
+  idlePeriodExpiresAt: z.string(),
   state: z.string(),
   fresh: z.boolean()
 })
@@ -141,30 +142,9 @@ const LoginOptionsSchema = z.discriminatedUnion('type', [
 // )
 type LoginOptions = z.infer<typeof LoginOptionsSchema>
 
-const RegisterResponseSchema = z.object({
-  session: BaseSessionSchema,
-  url: z.undefined()
-})
-type RegisterResponse = z.infer<typeof RegisterResponseSchema>
+const LoginProviderResponseSchema = z.string().url()
 
-const LoginPasswordResponseSchema = z.object({
-  session: BaseSessionSchema,
-  url: z.undefined()
-})
-type LoginPasswordResponse = z.infer<typeof LoginPasswordResponseSchema>
-
-const LoginProviderResponseSchema = z.object({
-  url: z.string(),
-  session: z.undefined()
-})
 type LoginProviderResponse = z.infer<typeof LoginProviderResponseSchema>
-
-const LoginResponseSchema = z.union([
-  RegisterResponseSchema,
-  LoginPasswordResponseSchema,
-  LoginProviderResponseSchema
-])
-type LoginResponse = z.infer<typeof LoginResponseSchema>
 
 interface AuthInstance {
   authLoading: Ref<boolean>

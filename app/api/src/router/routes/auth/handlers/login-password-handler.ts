@@ -73,15 +73,11 @@ export class RegisterPasswordUser extends OpenAPIRoute {
       })
       const session = await auth.createSession({
         userId: user.userId,
-        attributes: {
-          user: {
-            ...user
-          }
-        }
+        attributes: {}
       })
       const sessionCookie = auth.createSessionCookie(session)
       res.headers.set('Set-Cookie', sessionCookie.serialize())
-      return jsonOkResponse({ session }, res)
+      return jsonOkResponse(session, res)
     } catch (error) {
       console.error(error)
       if (error instanceof Error) {
@@ -140,10 +136,11 @@ export class LoginPasswordUser extends OpenAPIRoute {
         userId: key.userId,
         attributes: {}
       })
+      console.log(`[api] [auth] [login] [password] -> session: ${JSON.stringify(session, null, 2)}`)
 
       const sessionCookie = auth.createSessionCookie(session)
       res.headers.set('Set-Cookie', sessionCookie.serialize())
-      return jsonOkResponse({ session }, res)
+      return jsonOkResponse(session, res)
     } catch (error) {
       console.error(error)
       if (error instanceof ZodError) {

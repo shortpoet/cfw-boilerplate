@@ -1,5 +1,5 @@
 // lucia.ts
-import { lucia, Middleware, SessionSchema } from 'lucia'
+import { lucia, LuciaError, Middleware, SessionSchema } from 'lucia'
 import 'lucia/polyfill/node'
 import { web } from 'lucia/middleware'
 // import { google } from '@lucia-auth/oauth/providers';
@@ -17,6 +17,7 @@ import {
 } from '#/types'
 import { roleFlagsToArray, userTypeFlagsToArray } from '#/utils'
 import { castIntToBool } from '#/api/db/d1-kysely-authjs/cast'
+import { ErrorMessage } from 'lucia/dist/auth/error'
 
 export const createAuth = async (env: Env) => {
   const adapter = await deriveDatabaseAdapter(env)
@@ -48,11 +49,20 @@ export const createAuth = async (env: Env) => {
           databaseSession
         )}`
       )
-      const dbUser = Object.assign({}, await q.getUserById(databaseSession.user_id))
-      const roles: UserRole[] = roleFlagsToArray(databaseSession.user.role_flags)
+      const dbUser = await adapter(LuciaError).getUser(databaseSession.user_id)
+      // const dbUser = Object.assign({}, await q.getUserById(databaseSession.user_id))
+      const roles: UserRole[] = roleFlagsToArray(dbUser.role_flags)
       delete (dbUser as { role_flags?: unknown }).role_flags
-      const userTypes: UserType[] = userTypeFlagsToArray(dbUser.user_type_flags)[0]
-      const user: User = { ...dbUser, roles, userId: dbUser.id }
+      const userTypes: UserType[] = userTypeFlagsToArray(dbUser.user_type_flags)
+      delete (dbUser as { user_type_flags?: unknown }).user_type_flags
+      const user: User = {
+        ...dbUser,
+        roles,
+        userId: dbUser.id,
+        userTypes,
+        email_verified: castIntToBool(dbUser.email_verified)
+      }
+      console.log(`[api] [middleware] [auth] [lucia] [getSessionAttributes] -> user: ${user}`)
       return {
         sessionId: databaseSession.id,
         user,
