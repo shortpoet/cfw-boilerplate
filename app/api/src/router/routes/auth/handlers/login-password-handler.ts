@@ -10,10 +10,10 @@ import {
   getBaseUrl,
   notFoundResponse
 } from '#/api/src/middleware'
-import { LUCIA_AUTH_COOKIES_SESSION_TOKEN, UserRole } from '#/types'
+import { LUCIA_AUTH_COOKIES_SESSION_TOKEN, UserRole, UserType } from '#/types'
 import { OpenAPIRoute } from '@cloudflare/itty-router-openapi'
 import { AuthLoginSchema, AuthRegisterSchema } from '../auth-schema'
-import { ZodError, z } from 'zod'
+import { ZodError, array, z } from 'zod'
 import {
   AuthLoginBodyComponent,
   AuthLoginBodyType,
@@ -23,6 +23,7 @@ import {
 
 import { castBoolToInt } from '#/api/db/d1-kysely-lucia/cast'
 import { LuciaError } from 'lucia'
+import { arrayToRoleFlags, arrayToUserTypeFlags } from '#/utils'
 
 export class RegisterPasswordUser extends OpenAPIRoute {
   static schema = AuthRegisterSchema
@@ -65,7 +66,8 @@ export class RegisterPasswordUser extends OpenAPIRoute {
           // username_lower: username.toLowerCase(),
           email: email.toLowerCase(),
           email_verified: castBoolToInt(false),
-          role_flags: 1,
+          role_flags: arrayToRoleFlags([UserRole.User]),
+          user_type_flags: arrayToUserTypeFlags([UserType.Credentials]),
           avatar_url: 'https://www.gravatar.com/avatar/?d=retro&s=35'
         }
       })

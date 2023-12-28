@@ -12,3 +12,13 @@ export async function getAllUsers(offset?: number, limit?: number): Promise<Sele
   }
   return await q.execute()
 }
+
+export async function getUserById(id: string): Promise<SelectUser | null> {
+  let db = await getKysely()
+  const result =
+    (await db.selectFrom('User').selectAll().where('id', '=', id).executeTakeFirst()) ?? null
+
+  if (!result) return null
+  // unfortunately removes typing
+  return result
+}

@@ -5,16 +5,17 @@ import { web } from 'lucia/middleware'
 // import { google } from '@lucia-auth/oauth/providers';
 import { github } from '@lucia-auth/oauth/providers'
 
-import { deriveDatabaseAdapter } from '#/api/db/d1-kysely-lucia'
+import { deriveDatabaseAdapter, q } from '#/api/db/d1-kysely-lucia'
 
 import {
   LUCIA_AUTH_COOKIES_OPTIONS,
   LUCIA_AUTH_COOKIES_OPTIONS_SECURE,
   LUCIA_AUTH_COOKIES_SESSION_TOKEN,
   User,
-  UserRole
+  UserRole,
+  UserType
 } from '#/types'
-import { roleFlagsToArray } from '#/utils'
+import { roleFlagsToArray, userTypeFlagsToArray } from '#/utils'
 import { castIntToBool } from '#/api/db/d1-kysely-authjs/cast'
 
 export const createAuth = async (env: Env) => {
@@ -37,18 +38,21 @@ export const createAuth = async (env: Env) => {
         email_verified: castIntToBool(data.email_verified),
         name: data.name,
         avatar_url: data.avatar_url,
-        roles: data.roles
+        roles: roleFlagsToArray(data.role_flags),
+        userType: userTypeFlagsToArray(data.user_type_flags)
       }
     },
-    getSessionAttributes: (databaseSession: SessionSchema) => {
+    getSessionAttributes: async (databaseSession: SessionSchema) => {
       console.log(
         `[api] [middleware] [auth] [lucia] [getSessionAttributes] -> databaseSession: ${JSON.stringify(
           databaseSession
         )}`
       )
+      const dbUser = Object.assign({}, await q.getUserById(databaseSession.user_id))
       const roles: UserRole[] = roleFlagsToArray(databaseSession.user.role_flags)
-      delete databaseSession.user.role_flags
-      const user: User = { ...databaseSession.user, roles }
+      delete (dbUser as { role_flags?: unknown }).role_flags
+      const userTypes: UserType[] = userTypeFlagsToArray(dbUser.user_type_flags)[0]
+      const user: User = { ...dbUser, roles, userId: dbUser.id }
       return {
         sessionId: databaseSession.id,
         user,

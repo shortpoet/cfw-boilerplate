@@ -1,12 +1,12 @@
-import { Session, User, UserRole, UserType } from '#/types'
+import { Session, User, UserRole, UserRoleSchema, UserType, UserTypeSchema } from '#/types'
 import { z } from 'zod'
 
 export const UserComponent = (
   z.object({
     userId: z.string({ description: 'User ID' }).length(12),
     username: z.string({ description: "User's username" }),
-    userType: z.enum([UserType._, UserType.Credentials, UserType.GitHub, UserType.Email]),
-    roles: z.array(z.enum([UserRole.Admin, UserRole.User, UserRole.Guest, UserRole._])),
+    roles: z.array(UserRoleSchema),
+    userTypes: z.array(UserTypeSchema),
     email_verified: z.boolean({ description: 'Is user email verified' }),
     email: z.string({ description: 'User email' }).optional(),
     avatar_url: z.string({ description: 'User avatar URL' }).optional(),

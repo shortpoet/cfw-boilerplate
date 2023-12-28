@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS [user]
   [id] VARCHAR(15) NOT NULL PRIMARY KEY,
   [username] VARCHAR(31) NOT NULL,
   [role_flags] INTEGER NOT NULL DEFAULT 0,
+  [user_type_flags] INTEGER NOT NULL DEFAULT 0,
   [email]    TEXT UNIQUE NOT NULL,
   [email_verified] INTEGER NOT NULL DEFAULT 0,
   [name]     TEXT,

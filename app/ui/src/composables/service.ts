@@ -19,7 +19,12 @@ export const useService = async <T>(
     const res = await service
     data.value = res
   } catch (err) {
-    error.value = err
+    if (err instanceof ApiError) {
+      error.value = {
+        ...err,
+        body: JSON.parse(err.body)
+      }
+    }
   } finally {
     dataLoading.value = false
   }

@@ -10,7 +10,7 @@
         <div class="text-red">{{ authError.name }}</div>
       </div>
       <div>
-        <JsonTree :data="authError.message" />
+        <JsonTree :data="authError" />
       </div>
     </div>
 

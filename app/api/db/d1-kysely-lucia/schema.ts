@@ -16,6 +16,7 @@ export interface CFWDatabase {
     id: GeneratedAlways<string>
     username: string
     role_flags: number
+    user_type_flags: number
     email?: string
     name?: string
     password?: string

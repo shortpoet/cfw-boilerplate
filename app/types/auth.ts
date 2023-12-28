@@ -7,7 +7,9 @@ export {
   LoginOptions,
   LoginResponse,
   LoginResponseSchema,
-  LoginOptionsSchema
+  LoginOptionsSchema,
+  UserRoleSchema,
+  UserTypeSchema
 }
 import { z } from 'zod'
 
@@ -38,7 +40,7 @@ const UserRoleSchema = z.enum(['not_set', 'guest', 'admin', 'user'])
 const BaseUserSchema = z.object({
   userId: z.string(),
   roles: z.array(UserRoleSchema),
-  userType: UserTypeSchema,
+  userTypes: z.array(UserTypeSchema),
   username: z.string(),
   email_verified: z.boolean(),
   email: z.string().optional(),

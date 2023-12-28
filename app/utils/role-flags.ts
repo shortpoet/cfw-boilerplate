@@ -1,4 +1,4 @@
-import { UserRole } from '#/types'
+import { UserRole, UserType } from '#/types'
 
 type RoleFlags = {
   [key in UserRole]: number
@@ -42,6 +42,54 @@ export const arrayToRoleFlags = (roles: UserRole[]): number => {
   for (const role of roles) {
     if (role in roleFlags) {
       combinedFlags |= roleFlags[role]
+    }
+  }
+
+  return combinedFlags
+}
+
+type UserTypeFlags = {
+  [key in UserType]: number
+}
+
+/**
+ * An object containing the bitwise values for user types.
+ */
+export const userTypeFlags: UserTypeFlags = {
+  not_set: 0,
+  credentials: 1 << 0,
+  github: 1 << 1,
+  email: 1 << 2
+}
+
+/**
+ * Converts a user type flags integer to an array of user type names.
+ * @param userTypeFlagsInt - The user type flags integer to convert.
+ * @returns An array of user type names.
+ */
+export const userTypeFlagsToArray = (userTypeFlagsInt: number): UserType[] => {
+  const userTypes: UserType[] = []
+
+  for (const [userType, flag] of Object.entries(userTypeFlags)) {
+    if (typeof flag === 'number' && userTypeFlagsInt & flag) {
+      userTypes.push(userType as UserType)
+    }
+  }
+
+  return userTypes
+}
+
+/**
+ * Converts an array of user type names to a user type flags integer.
+ * @param userTypes - An array of user type names.
+ * @returns A user type flags integer.
+ */
+export const arrayToUserTypeFlags = (userTypes: UserType[]): number => {
+  let combinedFlags = 0
+
+  for (const userType of userTypes) {
+    if (userType in userTypeFlags) {
+      combinedFlags |= userTypeFlags[userType]
     }
   }
 
