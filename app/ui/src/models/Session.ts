@@ -14,11 +14,11 @@ export type Session = {
   /**
    * Session expiry date
    */
-  activePerdiodExpiresAt: string;
+  activePeriodExpiresAt: string;
   /**
    * Session expiry date
    */
-  idlePerdiodExpiresAt: string;
+  idlePeriodExpiresAt: string;
   /**
    * Session state
    */
