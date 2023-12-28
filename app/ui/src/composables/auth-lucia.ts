@@ -113,7 +113,7 @@ const useLuciaAuth = () => {
     // const correlationId = getCookie(X_CORRELATION_ID);
   }
 
-  const setSession = async (_session?: Partial<Session> | string): Promise<Session | undefined> => {
+  const setSession = async (_session?: Session | string): Promise<Session | undefined> => {
     console.log(`[ui] [useAuth] [setSession] -> _session ->`)
     console.log(_session)
     if (!_session) {
@@ -198,12 +198,12 @@ const useLuciaAuth = () => {
       return
     }
     if (data.value) {
-      // const success = LoginResponseSchema.safeParse(data.value)
-      // if (!success.success) {
-      //   logger.error(`[ui] [useAuth] success.error: ${JSON.stringify(success.error, null, 2)}`)
-      //   console.log(`[ui] [useAuth] success.error: ${JSON.stringify(success.error, null, 2)}`)
-      //   return
-      // }
+      const success = LoginResponseSchema.safeParse(data.value)
+      if (!success.success) {
+        logger.error(`[ui] [useAuth] success.error: ${JSON.stringify(success.error, null, 2)}`)
+        console.log(`[ui] [useAuth] success.error: ${JSON.stringify(success.error, null, 2)}`)
+        return
+      }
       logger.debug(`[ui] [useAuth] data: ${JSON.stringify(data.value, null, 2)}`)
       console.log(`[ui] [useAuth] data: ${JSON.stringify(data.value, null, 2)}`)
 

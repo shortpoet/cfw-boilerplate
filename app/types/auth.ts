@@ -139,13 +139,13 @@ const LoginOptionsSchema = z.discriminatedUnion('type', [
 type LoginOptions = z.infer<typeof LoginOptionsSchema>
 
 const RegisterResponseSchema = z.object({
-  session: BaseSessionSchema.partial(),
+  session: BaseSessionSchema,
   url: z.undefined()
 })
 type RegisterResponse = z.infer<typeof RegisterResponseSchema>
 
 const LoginPasswordResponseSchema = z.object({
-  session: BaseSessionSchema.partial(),
+  session: BaseSessionSchema,
   url: z.undefined()
 })
 type LoginPasswordResponse = z.infer<typeof LoginPasswordResponseSchema>
