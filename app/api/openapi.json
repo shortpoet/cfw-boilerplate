@@ -31,24 +31,27 @@
             "type": "string",
             "description": "User's username"
           },
-          "userType": {
-            "type": "string",
-            "enum": [
-              "not_set",
-              "credentials",
-              "github",
-              "email"
-            ]
-          },
           "roles": {
             "type": "array",
             "items": {
               "type": "string",
               "enum": [
-                "admin",
-                "user",
+                "not_set",
                 "guest",
-                "not_set"
+                "admin",
+                "user"
+              ]
+            }
+          },
+          "userTypes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "not_set",
+                "email",
+                "github",
+                "credentials"
               ]
             }
           },
@@ -76,8 +79,8 @@
         "required": [
           "userId",
           "username",
-          "userType",
           "roles",
+          "userTypes",
           "email_verified"
         ]
       },
