@@ -4,7 +4,8 @@ import {
   Session,
   LoginOptions,
   BaseSessionSchema,
-  LoginOptionsSchema
+  LoginOptionsSchema,
+  LoginProviderResponse
 } from '#/types'
 import { storeToRefs } from 'pinia'
 import { ApiError, AuthService } from '..'
@@ -144,18 +145,14 @@ const useLuciaAuth = () => {
       console.error(success.error)
       return
     }
-    if (opts.type === 'register' && opts.email) {
-      const {
-        data,
-        dataLoading: dl,
-        error: e
-      } = await useService<Session>(
+    if (opts.type === 'register') {
+      const { data, dataLoading, error } = await useService<Session>(
         AuthService.postRegisterPasswordUser({
           requestBody: { username: opts.username, password: opts.password, email: opts.email }
         })
       )
-      auth.authError.value = e.value
-      auth.authLoading = dl
+      auth.authError.value = error.value
+      auth.authLoading.value = dataLoading.value
       const success = BaseSessionSchema.safeParse(data.value)
       if (!success.success) {
         logger.error(`[ui] [useAuth] [login] -> success.error:`)
@@ -166,11 +163,7 @@ const useLuciaAuth = () => {
       auth.setSession(data.value)
     }
     if (isLogin) {
-      const {
-        data,
-        dataLoading,
-        error: e
-      } = await useService<Session>(
+      const { data, dataLoading, error } = await useService<Session>(
         AuthService.postLoginPasswordUser({
           requestBody:
             opts.type === 'email'
@@ -178,7 +171,7 @@ const useLuciaAuth = () => {
               : { username: opts.username, password: opts.password }
         })
       )
-      auth.authError.value = e.value
+      auth.authError.value = error.value
       auth.authLoading.value = dataLoading.value
       console.log(`[ui] [useAuth] [login] -> data:`)
       console.log(data.value)
@@ -186,99 +179,27 @@ const useLuciaAuth = () => {
       if (!success.success) {
         logger.error(`[ui] [useAuth] [login] -> success.error:`)
         logger.error(success.error)
-        console.log(data.value)
         auth.authError.value = success.error
         return
       }
       auth.setSession(data.value)
     }
     if (opts.type === 'oauth') {
-      // ;({ data, error, dataLoading } = await useService<Session>(
-      //   AuthService.postLoginPasswordUser({
-      //     requestBody: { username: opts.username, password: opts.password, email: opts.email }
-      //   })
-      // ))
-    }
-  }
-
-  const login2 = async (opts: LoginOptions) => {
-    if (auth.isLoggedIn.value) window.location.replace('/')
-    const { urlBaseApi, urlBaseApp } = useBaseUrl()
-    const base = `${process.env.NODE_ENV === 'production' ? urlBaseApp : urlBaseApi}`
-    const path = opts.type
-    const url = new URL(`${base}/${process.env.AUTH_PATH}/${path}/${opts.provider}`)
-    console.log(`[ui] [useAuth] login url: ${url.href}`)
-    const isLogin = opts.type === 'email' || opts.type === 'username'
-
-    const init = {
-      method: isLogin ? 'POST' : 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-        // cookie: `${LUCIAAUTH_COOKIES_SESSION_TOKEN}=${sessionToken.value}`,
-      },
-      body: isLogin
-        ? JSON.stringify({ username: opts.username, password: opts.password, email: opts.email })
-        : undefined
-    }
-    console.log(`[ui] [useAuth] login init: ${JSON.stringify(init, null, 2)}`)
-    // return
-
-    const { data, error, dataLoading } = await useFetch<Session>(url.href, init)
-    const { logger, correlationId } = useSsrLogger()
-
-    if (error.value) {
-      logger.error(`[ui] [useAuth] error:`)
-      console.log(error.value)
-      logger.error(error.value)
-      auth.authError.value = error.value
-    }
-    if (dataLoading.value) {
-      logger.info(`[ui] [useAuth] dataLoading: ${dataLoading.value}`)
-    }
-    if (data.value) {
-      const success = BaseSessionSchema.safeParse(data.value)
-      if (!success.success) {
-        logger.error(`[ui] [useAuth] success.error: ${JSON.stringify(success.error, null, 2)}`)
-        console.log(`[ui] [useAuth] success.error: ${JSON.stringify(success.error, null, 2)}`)
-        return
-      }
-      logger.debug(`[ui] [useAuth] data: ${JSON.stringify(data.value, null, 2)}`)
-      console.log(`[ui] [useAuth] data: ${JSON.stringify(data.value, null, 2)}`)
-
-      const url = 'url' in data.value && data.value.url ? data.value.url : '/'
-      const session = data.value
-
-      if (isLogin && session) {
-        auth.setSession(session)
-      } else if (url) {
-        // window.location.replace(url)s
-      } else {
-        logger.error(`[ui] [useAuth] no session or url`)
-        console.log(`[ui] [useAuth] no session or url`)
-      }
+      const { data, error, dataLoading } = await useService<LoginProviderResponse>(
+        AuthService.getLoginGithub()
+      )
     }
   }
 
   const logout = async () => {
     const { urlBaseApi } = useBaseUrl()
     const url = new URL(`${urlBaseApi}/${process.env.AUTH_PATH}/logout`)
-    // const { data, error, dataLoading } = {
-    //   data: ref({}),
-    //   error: ref(undefined),
-    //   dataLoading: ref(false)
-    // }
-    const { data, error, dataLoading } = await useFetch<{ url: string }>(url.href, {
+    const { data, error, dataLoading } = await useFetch<{}>(url.href, {
       sessionToken: auth.sessionToken?.value
     })
-    if (error.value) {
-      console.error(`error: ${error.value}`)
-    }
-
-    if (dataLoading.value) {
-      console.log(`dataLoading: ${dataLoading.value}`)
-    }
+    auth.authError.value = error.value
+    auth.authLoading.value = dataLoading.value
     if (data.value) {
-      console.log(`data: ${JSON.stringify(data.value, null, 2)}`)
       auth.setSession()
       window.location.replace('/auth/login')
     }

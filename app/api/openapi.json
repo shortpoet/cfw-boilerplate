@@ -160,16 +160,9 @@
         ]
       },
       "OauthLoginResponse": {
-        "type": "object",
-        "properties": {
-          "url": {
-            "type": "string",
-            "description": "OAuth login URL"
-          }
-        },
-        "required": [
-          "url"
-        ]
+        "type": "string",
+        "format": "uri",
+        "description": "OAuth login URL"
       },
       "ApiErrorResponse": {
         "type": "object",

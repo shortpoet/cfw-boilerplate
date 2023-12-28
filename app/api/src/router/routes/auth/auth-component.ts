@@ -60,8 +60,7 @@ export const AuthLoginBodyComponent = z
 export type AuthLoginBodyType = z.infer<typeof AuthLoginBodyComponent>
 
 export const OauthLoginResponseComponent = z
-  .object({
-    url: z.string({ description: 'OAuth login URL' })
-  })
+  .string({ description: 'OAuth login URL' })
+  .url()
   .openapi('OauthLoginResponse')
 export type OauthLoginResponseType = z.infer<typeof OauthLoginResponseComponent>

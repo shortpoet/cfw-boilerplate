@@ -34,7 +34,7 @@ export class LoginGithub extends OpenAPIRoute {
     const cookieOptions =
       env.NODE_ENV === 'production' ? LUCIA_AUTH_COOKIES_OPTIONS_SECURE : LUCIA_AUTH_COOKIES_OPTIONS
     await res.cookie(req, res, env, LUCIA_AUTH_COOKIES_SESSION_TOKEN, state, cookieOptions)
-    return jsonOkResponse({ url }, res)
+    return jsonOkResponse(url, res)
   }
 }
 
@@ -111,7 +111,7 @@ export class LoginGithubCallback extends OpenAPIRoute {
       res.headers.set('Set-Cookie', sessionCookie.serialize())
 
       // return Response.redirect(dataPage, 302).headers.set('Set-Cookie', sessionCookie.serialize());
-      return jsonOkResponse({ session }, res)
+      return jsonOkResponse(session, res)
     } catch (e) {
       if (e instanceof OAuthRequestError) {
         // invalid code
