@@ -12,8 +12,8 @@ export type User = {
    * User's username
    */
   username: string;
-  userType: User.userType;
-  roles: Array<'admin' | 'user' | 'guest' | 'not_set'>;
+  roles: Array<'not_set' | 'guest' | 'admin' | 'user'>;
+  userTypes: Array<'not_set' | 'email' | 'github' | 'credentials'>;
   /**
    * Is user email verified
    */
@@ -35,16 +35,4 @@ export type User = {
    */
   password?: string;
 };
-
-export namespace User {
-
-  export enum userType {
-    NOT_SET = 'not_set',
-    CREDENTIALS = 'credentials',
-    GITHUB = 'github',
-    EMAIL = 'email',
-  }
-
-
-}
 
