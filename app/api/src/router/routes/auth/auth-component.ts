@@ -14,6 +14,18 @@ export const UserComponent = (
 ).openapi('User')
 export type UserComponentType = z.infer<typeof UserComponent>
 
+export const SessionComponent = (
+  z.object({
+    sessionId: z.string({ description: 'Session ID' }).length(12),
+    user: UserComponent,
+    activePerdiodExpiresAt: z.string({ description: 'Session expiry date' }),
+    idlePerdiodExpiresAt: z.string({ description: 'Session expiry date' }),
+    state: z.string({ description: 'Session state' }),
+    fresh: z.boolean({ description: 'Is session fresh' })
+  }) satisfies z.ZodType<Session>
+).openapi('Session')
+export type SessionComponentType = z.infer<typeof SessionComponent>
+
 export const AuthRegisterBodyComponent = z
   .object({
     //TODO: use Regex here
@@ -45,14 +57,9 @@ export const AuthLoginBodyComponent = z
   .openapi('AuthLoginBody')
 export type AuthLoginBodyType = z.infer<typeof AuthLoginBodyComponent>
 
-export const SessionComponent = (
-  z.object({
-    sessionId: z.string({ description: 'Session ID' }).length(12),
-    user: UserComponent,
-    activePerdiodExpiresAt: z.string({ description: 'Session expiry date' }),
-    idlePerdiodExpiresAt: z.string({ description: 'Session expiry date' }),
-    state: z.string({ description: 'Session state' }),
-    fresh: z.boolean({ description: 'Is session fresh' })
-  }) satisfies z.ZodType<Session>
-).openapi('Session')
-export type SessionComponentType = z.infer<typeof SessionComponent>
+export const OauthLoginResponseComponent = z
+  .object({
+    url: z.string({ description: 'OAuth login URL' })
+  })
+  .openapi('OauthLoginResponse')
+export type OauthLoginResponseType = z.infer<typeof OauthLoginResponseComponent>

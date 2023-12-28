@@ -5,9 +5,18 @@ import {
   SessionComponent,
   AuthLoginUsernameBodyComponent,
   AuthLoginEmailBodyComponent,
-  AuthRegisterBodyComponent
+  AuthRegisterBodyComponent,
+  OauthLoginResponseComponent
 } from './auth-component'
 import { ApiErrorResponseComponent } from '../common-oa'
+
+enum ServerMessages {
+  UserNotFound = 'User not found',
+  UsersNotFound = 'Users not found',
+  BadResponse = 'Bad response',
+  InternalServerError = 'Internal Server Error',
+  NoContent = 'No content'
+}
 
 export const GetUserSchema = {
   tags: ['User'],
@@ -38,7 +47,7 @@ export const GetUsersSchema = {
       schema: ApiErrorResponseComponent
     },
     '500': {
-      description: 'Internal server error',
+      description: 'Internal Server Error',
       schema: ApiErrorResponseComponent
     }
   }
@@ -73,7 +82,7 @@ export const AuthRegisterSchema = {
   requestBody: AuthRegisterBodyComponent,
   responses: {
     '200': {
-      description: 'User Object',
+      description: 'Logged in User Session',
       schema: SessionComponent
     }
   }
@@ -85,8 +94,59 @@ export const AuthLoginSchema = {
   requestBody: z.union([AuthLoginEmailBodyComponent, AuthLoginUsernameBodyComponent]),
   responses: {
     '200': {
-      description: 'User Object',
+      description: 'Logged in User Session',
       schema: SessionComponent
+    }
+  }
+}
+
+export const AuthLogoutSchema = {
+  tags: ['Auth'],
+  summary: 'Log out',
+  responses: {
+    '204': {
+      description: 'No content'
+    }
+  }
+}
+
+export const AuthLoginOauthSchema = {
+  tags: ['Auth'],
+  summary: 'Log in via OAuth',
+  responses: {
+    '200': {
+      description: 'OAuth login URL',
+      schema: OauthLoginResponseComponent
+    },
+    '302': {
+      description: 'Redirect to Request URL'
+    }
+  }
+}
+
+export const AuthLoginOauthCallbackSchema = {
+  tags: ['Auth'],
+  summary: 'Log in via OAuth callback',
+  parameters: {
+    code: Path(z.string(), {
+      description: 'OAuth code'
+    }),
+    state: Path(z.string(), {
+      description: 'OAuth state'
+    })
+  },
+  responses: {
+    '200': {
+      description: 'Successful OAuth login - session',
+      schema: SessionComponent
+    },
+    '400': {
+      description: 'Bad Request',
+      schema: ApiErrorResponseComponent
+    },
+    '500': {
+      description: 'Internal Server Error',
+      schema: ApiErrorResponseComponent
     }
   }
 }

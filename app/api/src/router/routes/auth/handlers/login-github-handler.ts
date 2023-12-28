@@ -16,8 +16,11 @@ import {
   UserRole
 } from '#/types'
 import { OpenAPIRoute } from '@cloudflare/itty-router-openapi'
+import { AuthLoginOauthCallbackSchema, AuthLoginOauthSchema } from '../auth-schema'
 
 export class LoginGithub extends OpenAPIRoute {
+  static schema = AuthLoginOauthSchema
+
   async handle(req: Request, res: Response, env: Env, ctx: ExecutionContext) {
     const { auth, githubAuth } = await createAuth(env)
     const authRequest = auth.handleRequest(req)
@@ -36,6 +39,8 @@ export class LoginGithub extends OpenAPIRoute {
 }
 
 export class LoginGithubCallback extends OpenAPIRoute {
+  static schema = AuthLoginOauthCallbackSchema
+
   async handle(req: Request, res: Response, env: Env, ctx: ExecutionContext) {
     req.logger.info(`[api] [auth] [login] [github] [callback]`)
     const { auth, githubAuth } = await createAuth(env)
@@ -113,7 +118,7 @@ export class LoginGithubCallback extends OpenAPIRoute {
         return badResponse('Invalid code', undefined, res)
       }
       req.logger.error(`[api] [auth] [login] [github] -> error: ${e}`)
-      return serverErrorResponse('Server error', new Error(JSON.stringify(e)), res)
+      return serverErrorResponse('Internal Server Error', new Error(JSON.stringify(e)), res)
     }
   }
 }

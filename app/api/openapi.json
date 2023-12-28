@@ -147,28 +147,16 @@
           "password"
         ]
       },
-      "AuthRegisterBody": {
+      "OauthLoginResponse": {
         "type": "object",
         "properties": {
-          "username": {
+          "url": {
             "type": "string",
-            "minLength": 3,
-            "maxLength": 20
-          },
-          "email": {
-            "type": "string",
-            "format": "email"
-          },
-          "password": {
-            "type": "string",
-            "minLength": 8,
-            "maxLength": 64
+            "description": "OAuth login URL"
           }
         },
         "required": [
-          "username",
-          "email",
-          "password"
+          "url"
         ]
       },
       "ApiErrorResponse": {
@@ -206,6 +194,30 @@
         "required": [
           "success",
           "error"
+        ]
+      },
+      "AuthRegisterBody": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 20
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 64
+          }
+        },
+        "required": [
+          "username",
+          "email",
+          "password"
         ]
       },
       "Task": {
@@ -323,20 +335,93 @@
     },
     "/api/auth/login/github": {
       "get": {
-        "operationId": "get__github",
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Log in via OAuth",
+        "operationId": "get_LoginGithub",
         "responses": {
           "200": {
-            "description": "Object with user data."
+            "description": "OAuth login URL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OauthLoginResponse"
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "Redirect to Request URL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
           }
         }
       }
     },
     "/api/auth/login/github/callback": {
       "get": {
-        "operationId": "get__github_callback",
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Log in via OAuth callback",
+        "operationId": "get_LoginGithubCallback",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "description": "OAuth code"
+            },
+            "required": true,
+            "name": "code",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "OAuth state"
+            },
+            "required": true,
+            "name": "state",
+            "in": "path"
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Object with user data."
+            "description": "Successful OAuth login - session",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -413,7 +498,7 @@
             }
           },
           "500": {
-            "description": "Internal server error",
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
