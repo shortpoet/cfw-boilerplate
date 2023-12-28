@@ -89,7 +89,7 @@ function createApp(Page: Page, pageProps: PageProps | undefined, pageContext: Pa
   installPinia(app, isClient, getInitialStateUi())
   app.use(VueQueryPlugin)
   provideFlashMessage(app)
-  initOpenAPI()
+  initOpenAPI({ isDev: import.meta.env.DEV })
 
   // We use `app.changePage()` to do Client Routing, see `_default.page.client.js`
   objectAssign(app, {

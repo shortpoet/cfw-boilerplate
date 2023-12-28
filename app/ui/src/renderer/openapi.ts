@@ -2,11 +2,16 @@ import { OpenAPI } from '..'
 
 const { urlBaseApi } = useBaseUrl()
 
-export const initOpenAPI = ({
-  token,
-  username,
-  password
-}: { token?: string; username?: string; password?: string } = {}) => {
+export const initOpenAPI = (
+  {
+    isDev,
+    token,
+    username,
+    password
+  }: { isDev: boolean; token?: string; username?: string; password?: string } = {
+    isDev: false
+  }
+) => {
   OpenAPI.BASE = urlBaseApi
   OpenAPI.TOKEN = token
   OpenAPI.USERNAME = username
@@ -16,5 +21,7 @@ export const initOpenAPI = ({
     'Access-Control-Allow-Credentials': 'true',
     Accept: 'application/json'
   }
-  OpenAPI.WITH_CREDENTIALS = false
+  // cloudflare no likey
+  // local cookie likey
+  OpenAPI.WITH_CREDENTIALS = isDev
 }
