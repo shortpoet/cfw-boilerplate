@@ -142,6 +142,7 @@ export class LoginPasswordUser extends OpenAPIRoute {
       console.log(`[api] [auth] [login] [password] -> session: ${JSON.stringify(session, null, 2)}`)
 
       const sessionCookie = auth.createSessionCookie(session)
+      sessionCookie.attributes.httpOnly = undefined
       res.headers.set('Set-Cookie', sessionCookie.serialize())
       return jsonOkResponse(session, res)
     } catch (error) {

@@ -6,7 +6,7 @@ export { LuciaAuthInstance }
 export const LUCIA_AUTH_GITHUB_OAUTH_STATE = 'github_oauth_state'
 export const LUCIA_AUTH_COOKIES_SESSION_TOKEN = `auth_session`
 export const LUCIA_AUTH_COOKIES_OPTIONS = {
-  httpOnly: false,
+  httpOnly: undefined,
   secure: false,
   path: '/',
   maxAge: 60 * 60,
