@@ -10,6 +10,7 @@ export type { OpenAPIConfig } from './core/OpenAPI';
 export type { ApiErrorResponse } from './models/ApiErrorResponse';
 export type { AuthLoginEmailBody } from './models/AuthLoginEmailBody';
 export type { AuthLoginUsernameBody } from './models/AuthLoginUsernameBody';
+export type { AuthRegisterBody } from './models/AuthRegisterBody';
 export type { Session } from './models/Session';
 export type { Task } from './models/Task';
 export type { TaskListResponse } from './models/TaskListResponse';

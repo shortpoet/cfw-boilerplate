@@ -295,7 +295,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "anyOf": [
+                "oneOf": [
                   {
                     "$ref": "#/components/schemas/AuthLoginEmailBody"
                   },

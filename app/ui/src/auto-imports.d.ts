@@ -143,6 +143,7 @@ declare global {
   const usePageContext: typeof import('./composables/pageContext')['usePageContext']
   const usePageTitle: typeof import('./composables/pageTitle')['usePageTitle']
   const useSeoMeta: typeof import('@vueuse/head')['useSeoMeta']
+  const useService: typeof import('./composables/service')['useService']
   const useSession: typeof import('./composables/session')['useSession']
   const useSlots: typeof import('vue')['useSlots']
   const useSsrLogger: typeof import('./composables/logger')['useSsrLogger']
@@ -290,6 +291,7 @@ declare module 'vue' {
     readonly usePageContext: UnwrapRef<typeof import('./composables/pageContext')['usePageContext']>
     readonly usePageTitle: UnwrapRef<typeof import('./composables/pageTitle')['usePageTitle']>
     readonly useSeoMeta: UnwrapRef<typeof import('@vueuse/head')['useSeoMeta']>
+    readonly useService: UnwrapRef<typeof import('./composables/service')['useService']>
     readonly useSession: UnwrapRef<typeof import('./composables/session')['useSession']>
     readonly useSlots: UnwrapRef<typeof import('vue')['useSlots']>
     readonly useSsrLogger: UnwrapRef<typeof import('./composables/logger')['useSsrLogger']>
@@ -430,6 +432,7 @@ declare module '@vue/runtime-core' {
     readonly usePageContext: UnwrapRef<typeof import('./composables/pageContext')['usePageContext']>
     readonly usePageTitle: UnwrapRef<typeof import('./composables/pageTitle')['usePageTitle']>
     readonly useSeoMeta: UnwrapRef<typeof import('@vueuse/head')['useSeoMeta']>
+    readonly useService: UnwrapRef<typeof import('./composables/service')['useService']>
     readonly useSession: UnwrapRef<typeof import('./composables/session')['useSession']>
     readonly useSlots: UnwrapRef<typeof import('vue')['useSlots']>
     readonly useSsrLogger: UnwrapRef<typeof import('./composables/logger')['useSsrLogger']>

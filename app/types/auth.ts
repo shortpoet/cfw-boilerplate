@@ -6,7 +6,8 @@ export {
   AuthInstance,
   LoginOptions,
   LoginResponse,
-  LoginResponseSchema
+  LoginResponseSchema,
+  LoginOptionsSchema
 }
 import { z } from 'zod'
 
@@ -55,13 +56,46 @@ const BaseSessionSchema = z.object({
 })
 type BaseSession = z.infer<typeof BaseSessionSchema>
 
-interface LoginOptions extends Record<string, any> {
-  provider: string
-  register?: boolean
-  username?: string
-  password?: string
-  email?: string
-}
+// interface LoginOptions extends Record<string, any> {
+//   provider: string
+//   register?: boolean
+//   username?: string
+//   password?: string
+//   email?: string
+// }
+
+const LoginOptionsCommonSchema = z.object({
+  provider: z.string()
+  // username: z.undefined(),
+  // password: z.undefined(),
+  // email: z.undefined()
+})
+
+const LoginOptionsRegisterSchema = z.object({
+  register: z.boolean(),
+  username: z.string(),
+  password: z.string(),
+  email: z.string()
+})
+
+const LoginOptionsLoginSchema = z.object({
+  register: z.undefined(),
+  username: z.string(),
+  password: z.string(),
+  email: z.string().optional()
+})
+
+// const LoginOptionsSchema = z.union([
+//   LoginOptionsRegisterSchema,
+//   LoginOptionsLoginSchema,
+//   LoginOptionsCommonSchema
+// ])
+
+const LoginOptionsSchema = z.intersection(
+  LoginOptionsCommonSchema,
+  z.union([LoginOptionsRegisterSchema, LoginOptionsLoginSchema])
+)
+type LoginOptions = z.infer<typeof LoginOptionsSchema>
 
 const RegisterResponseSchema = z.object({
   session: BaseSessionSchema,
