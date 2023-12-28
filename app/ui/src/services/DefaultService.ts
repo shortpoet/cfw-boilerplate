@@ -12,28 +12,6 @@ export class DefaultService {
    * @returns any Object with user data.
    * @throws ApiError
    */
-  public static getGithub(): CancelablePromise<any> {
-    return __request(OpenAPI, {
-      method: 'GET',
-      url: '/api/auth/login/github',
-    });
-  }
-
-  /**
-   * @returns any Object with user data.
-   * @throws ApiError
-   */
-  public static getGithubCallback(): CancelablePromise<any> {
-    return __request(OpenAPI, {
-      method: 'GET',
-      url: '/api/auth/login/github/callback',
-    });
-  }
-
-  /**
-   * @returns any Object with user data.
-   * @throws ApiError
-   */
   public static get(): CancelablePromise<any> {
     return __request(OpenAPI, {
       method: 'GET',

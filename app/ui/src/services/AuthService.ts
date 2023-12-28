@@ -5,6 +5,7 @@
 import type { AuthLoginEmailBody } from '../models/AuthLoginEmailBody';
 import type { AuthLoginUsernameBody } from '../models/AuthLoginUsernameBody';
 import type { AuthRegisterBody } from '../models/AuthRegisterBody';
+import type { OauthLoginResponse } from '../models/OauthLoginResponse';
 import type { Session } from '../models/Session';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -15,7 +16,7 @@ export class AuthService {
 
   /**
    * Log in via your email and password
-   * @returns Session User Object
+   * @returns Session Logged in User Session
    * @throws ApiError
    */
   public static postLoginPasswordUser({
@@ -32,8 +33,49 @@ export class AuthService {
   }
 
   /**
+   * Log in via OAuth
+   * @returns OauthLoginResponse OAuth login URL
+   * @throws ApiError
+   */
+  public static getLoginGithub(): CancelablePromise<OauthLoginResponse> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/api/auth/login/github',
+      errors: {
+        302: `Redirect to Request URL`,
+      },
+    });
+  }
+
+  /**
+   * Log in via OAuth callback
+   * @returns Session Successful OAuth login - session
+   * @throws ApiError
+   */
+  public static getLoginGithubCallback({
+    code,
+    state,
+  }: {
+    code: string,
+    state: string,
+  }): CancelablePromise<Session> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/api/auth/login/github/callback',
+      path: {
+        'code': code,
+        'state': state,
+      },
+      errors: {
+        400: `Bad Request`,
+        500: `Internal Server Error`,
+      },
+    });
+  }
+
+  /**
    * Register a new user via email and password
-   * @returns Session User Object
+   * @returns Session Logged in User Session
    * @throws ApiError
    */
   public static postRegisterPasswordUser({

@@ -21,7 +21,7 @@ export class UserService {
       url: '/api/auth/user/all',
       errors: {
         404: `Users not found`,
-        500: `Internal server error`,
+        500: `Internal Server Error`,
       },
     });
   }

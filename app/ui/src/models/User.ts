@@ -15,9 +15,17 @@ export type User = {
   userType: User.userType;
   roles: Array<'admin' | 'user' | 'guest' | 'not_set'>;
   /**
+   * Is user email verified
+   */
+  email_verified: boolean;
+  /**
    * User email
    */
   email?: string;
+  /**
+   * User avatar URL
+   */
+  avatar_url?: string;
   /**
    * User's name
    */
