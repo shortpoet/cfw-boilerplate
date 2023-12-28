@@ -40,38 +40,41 @@ export const createAuth = async (env: Env) => {
         name: data.name,
         avatar_url: data.avatar_url,
         roles: roleFlagsToArray(data.role_flags),
-        userType: userTypeFlagsToArray(data.user_type_flags)
+        userTypes: userTypeFlagsToArray(data.user_type_flags)
       }
     },
-    getSessionAttributes: async (databaseSession: SessionSchema) => {
-      console.log(
-        `[api] [middleware] [auth] [lucia] [getSessionAttributes] -> databaseSession: ${JSON.stringify(
-          databaseSession
-        )}`
-      )
-      const dbUser = await adapter(LuciaError).getUser(databaseSession.user_id)
-      // const dbUser = Object.assign({}, await q.getUserById(databaseSession.user_id))
-      const roles: UserRole[] = roleFlagsToArray(dbUser.role_flags)
-      delete (dbUser as { role_flags?: unknown }).role_flags
-      const userTypes: UserType[] = userTypeFlagsToArray(dbUser.user_type_flags)
-      delete (dbUser as { user_type_flags?: unknown }).user_type_flags
-      const user: User = {
-        ...dbUser,
-        roles,
-        userId: dbUser.id,
-        userTypes,
-        email_verified: castIntToBool(dbUser.email_verified)
-      }
-      console.log(`[api] [middleware] [auth] [lucia] [getSessionAttributes] -> user: ${user}`)
-      return {
-        sessionId: databaseSession.id,
-        user,
-        activePerdiodExpiresAt: databaseSession.activePerdiodExpiresAt,
-        idlePerdiodExpiresAt: databaseSession.idlePerdiodExpiresAt,
-        state: databaseSession.state,
-        fresh: databaseSession.fresh
-      }
-    },
+    // getSessionAttributes: async (databaseSession: SessionSchema) => {
+    //   console.log(
+    //     `[api] [middleware] [auth] [lucia] [getSessionAttributes] -> databaseSession: ${JSON.stringify(
+    //       databaseSession
+    //     )}`
+    //   )
+    //   const dbUser = await adapter(LuciaError).getUser(databaseSession.user_id)
+    //   // const dbUser = Object.assign({}, await q.getUserById(databaseSession.user_id))
+    //   const roles: UserRole[] = roleFlagsToArray(dbUser.role_flags)
+    //   delete (dbUser as { role_flags?: unknown }).role_flags
+    //   const userTypes: UserType[] = userTypeFlagsToArray(dbUser.user_type_flags)
+    //   delete (dbUser as { user_type_flags?: unknown }).user_type_flags
+    //   console.log(`[api] [middleware] [auth] [lucia] [getSessionAttributes] -> dbUser:`)
+    //   console.log(dbUser)
+    //   const user: User = {
+    //     ...dbUser,
+    //     roles,
+    //     userId: dbUser.id,
+    //     userTypes: userTypes,
+    //     email_verified: castIntToBool(dbUser.email_verified)
+    //   }
+    //   console.log(`[api] [middleware] [auth] [lucia] [getSessionAttributes] -> user:`)
+    //   console.log(user)
+    //   return {
+    //     sessionId: databaseSession.id,
+    //     user,
+    //     activePerdiodExpiresAt: databaseSession.activePerdiodExpiresAt,
+    //     idlePerdiodExpiresAt: databaseSession.idlePerdiodExpiresAt,
+    //     state: databaseSession.state,
+    //     fresh: databaseSession.fresh
+    //   }
+    // },
     sessionCookie: {
       name: LUCIA_AUTH_COOKIES_SESSION_TOKEN,
       attributes:

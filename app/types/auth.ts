@@ -46,7 +46,7 @@ const BaseUserSchema = z.object({
   email_verified: z.boolean(),
   email: z.string().optional(),
   avatar_url: z.string().optional(),
-  name: z.string().optional()
+  name: z.string().nullish()
 })
 type BaseUser = z.infer<typeof BaseUserSchema>
 

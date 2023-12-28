@@ -154,7 +154,7 @@ const useLuciaAuth = () => {
           requestBody: { username: opts.username, password: opts.password, email: opts.email }
         })
       )
-      auth.authError = e
+      auth.authError.value = e.value
       auth.authLoading = dl
       const success = BaseSessionSchema.safeParse(data.value)
       if (!success.success) {
@@ -178,7 +178,7 @@ const useLuciaAuth = () => {
               : { username: opts.username, password: opts.password }
         })
       )
-      auth.authError.value = e
+      auth.authError.value = e.value
       auth.authLoading.value = dataLoading.value
       console.log(`[ui] [useAuth] [login] -> data:`)
       console.log(data.value)
