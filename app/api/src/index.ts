@@ -62,6 +62,8 @@ async function handleFetchEvent(
       resp = await Api.handle({ req, res, env, ctx, data })
       logger.info(`[api] [isAPiURL] index.handleFetchEvent -> api response`)
       logger.debug(res.body)
+      // TODO DUMPS
+      console.log(res.body)
       // logObjs([res.headers, res.body]);
       // console.log(await res.clone().json());
       break

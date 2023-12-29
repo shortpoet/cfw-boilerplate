@@ -19,7 +19,7 @@
       "name": "cfw-boilerplate",
       "vars": {
         "HOST": "cfw-dev.marshmallowmeat.com",
-        "API_HOST": "cfw-boilerplate.shortpoet.workers.dev",
+        "API_HOST": "cfw-dev.marshmallowmeat.com",
         "VITE_PORT": "3000",
         "VITE_PORT_API": "3000",
         "VITE_LOG_LEVEL": "debug",
