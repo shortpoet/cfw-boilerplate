@@ -25,6 +25,7 @@
 
 <script setup lang="ts">
 import { useQuery } from '@tanstack/vue-query'
+import { ROUTE_MAPPING } from '../../routeMapping'
 
 // // @ts-expect-error figure out why this works but is linted
 // import IconDataSuccess from '~icons/carbon/rocket'
@@ -56,7 +57,6 @@ const props = defineProps({
 })
 const pageContext = usePageContext()
 const { urlPathname } = pageContext
-import { getEndpoints } from '../index/endpoints'
 
 // const opts = {
 //   ...PATH_MAPPING[urlPathname].options,
@@ -70,9 +70,9 @@ const opts = {
   }
 }
 const { urlBaseApi } = useBaseUrl()
-const path = (await getEndpoints()).find((ep) => ep.path === urlPathname)?.route!
+const endpoint = ROUTE_MAPPING[urlPathname].endpoint
 
-const url = `${urlBaseApi}/${path}`
+const url = `${urlBaseApi}/${endpoint}`
 
 const query = useQuery({
   queryKey: ['todos'],
@@ -88,3 +88,4 @@ if (apiDataError) {
   throw 'This will trigger the upstream error boundary.'
 }
 </script>
+../../../../../utils/endpoints

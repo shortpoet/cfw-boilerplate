@@ -49,5 +49,6 @@
     "vue.d.ts",
     "../bindings.d.ts",
     "config.ts",
+    "../utils/endpoints.ts",
   ]
 }

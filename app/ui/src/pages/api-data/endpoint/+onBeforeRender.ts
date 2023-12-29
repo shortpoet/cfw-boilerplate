@@ -6,7 +6,7 @@ import { render, redirect } from 'vike/abort'
 import { QueryClient, dehydrate } from '@tanstack/vue-query'
 
 import { UserRole, RequestConfig } from '#/types'
-import { getEndpoints } from '../index/endpoints'
+import { ROUTE_MAPPING } from '../../routeMapping'
 
 const onBeforeRender: OnBeforeRenderAsync = async (
   pageContext
@@ -38,14 +38,19 @@ const onBeforeRender: OnBeforeRenderAsync = async (
     }
   } as RequestConfig
 
-  // const path = PATH_MAPPING[urlPathname].route
-  const path = (await getEndpoints()).find((ep) => ep.path === urlPathname)?.route!
-  const { dataLoading, error, data } = await useFetch(path)
+  console.log(`[ui] [api-data] [endpoint] [onBeforeRender] urlPathname`)
+  console.log(urlPathname)
+  console.log(`[ui] [api-data] [endpoint] [onBeforeRender] ROUTE_MAPPING[]`)
+  console.log(ROUTE_MAPPING)
+  const endpoint = ROUTE_MAPPING[urlPathname].endpoint
+  console.log(`[ui] [api-data] [endpoint] [onBeforeRender] endpoint`)
+  console.log(endpoint)
+  const { dataLoading, error, data } = await useFetch(endpoint)
 
   const queryClient = new QueryClient()
 
   const { urlBaseApi } = useBaseUrl()
-  const url = `${urlBaseApi}/${path}`
+  const url = `${urlBaseApi}/${endpoint}`
 
   await queryClient.prefetchQuery({
     queryKey: ['todos'],

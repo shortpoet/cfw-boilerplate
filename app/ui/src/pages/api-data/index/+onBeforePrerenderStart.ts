@@ -1,9 +1,8 @@
 // https://vike.dev/onBeforePrerenderStart
-export { onBeforePrerenderStart };
+export { onBeforePrerenderStart }
 
-import type { OnBeforePrerenderStartAsync } from 'vike/types';
-
-import { getEndpoints } from './endpoints';
+import type { OnBeforePrerenderStartAsync } from 'vike/types'
+import { ROUTE_MAPPING } from '../../routeMapping'
 
 const onBeforePrerenderStart: OnBeforePrerenderStartAsync =
   async (): ReturnType<OnBeforePrerenderStartAsync> => {
@@ -15,11 +14,11 @@ const onBeforePrerenderStart: OnBeforePrerenderStartAsync =
         // above in this file.
         pageContext: {
           pageProps: {
-            endpoints: await getEndpoints(),
+            endpoints: Object.values(ROUTE_MAPPING)
           },
-          title: 'API Data',
-        },
-      },
+          title: 'API Data'
+        }
+      }
       // ...endpoints.map((ep) => {
       //   const url = `/star-wars/${ep}`
       //   return {
@@ -36,8 +35,8 @@ const onBeforePrerenderStart: OnBeforePrerenderStartAsync =
       //     }
       //   }
       // })
-    ];
+    ]
     // console.log(`[ui] [api-data] [onBeforePrerenderStart] out`);
     // console.log(out);
-    return out;
-  };
+    return out
+  }

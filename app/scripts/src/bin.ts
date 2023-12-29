@@ -1,10 +1,11 @@
 import sade from 'sade'
-import * as kv from './commands/kv'
-import * as vars from './commands/vars'
+import build from './commands/build'
+import * as generate from './commands/generate'
 import * as git from './commands/git'
 import * as db from './commands/db'
+import * as kv from './commands/kv'
 import * as secret from './commands/secret'
-import build from './commands/build'
+import * as vars from './commands/vars'
 import go from './commands/go'
 
 const cli = sade('wrangle')
@@ -93,6 +94,12 @@ const cli = sade('wrangle')
   // .option('-i, --ignore', 'The list of Worker names to skip')
   // .option('-s, --single', 'The target is a single Worker')
   .action(build)
+
+  .command('generate')
+  .describe('Generate the Worker paths file.')
+  .option('-C, --cwd', 'The relative working directory', '.')
+  .option('-e, --env', 'The environment to list', 'dev')
+  .action(generate.generateRoutes)
 
   .command('go')
   .describe('Go live')

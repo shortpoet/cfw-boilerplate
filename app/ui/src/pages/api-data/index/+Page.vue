@@ -1,35 +1,35 @@
 <template>
   <div class="page-container" flex-col items-center flex wrap>
     <nav flex flex-row flex-wrap items-center justify-center :class="getClass">
-
       <div v-for="ep in endpoints" :key="ep.path" class="w-1/4 box-border" p-1>
         <Link btn-purple v-bind="attrsObj" :href="`${ep.path}`">{{ ep.title }}</Link>
       </div>
-
     </nav>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useAttrs } from 'vue';
+import { useAttrs } from 'vue'
+useAttrs()
+
 const attrsObj = {
   bg: 'blue-400 hover:blue-500 dark:blue-500 dark:hover:blue-600',
   // text: 'sm white', // this causes a bug that changes inner html
   font: 'mono light',
   p: 'y-2 x-4',
-  border: '2 rounded blue-200',
-};
+  border: '2 rounded blue-200'
+}
 
 defineProps({
   endpoints: {
     type: Array as () => { title: string; path: string }[],
-    required: true,
-  },
-});
+    required: true
+  }
+})
 
-console.log(`[ui] [api-data] [index +Page] [setup] ::`);
+console.log(`[ui] [api-data] [index +Page] [setup] ::`)
 
-const emit = defineEmits(['loaded']);
+// const emit = defineEmits(['loaded']);
 
 const getClass = computed(() => {
   return {
@@ -40,11 +40,8 @@ const getClass = computed(() => {
     // 'flex': '1 0 calc(25% - 10px)',
     // 'items-center': true,
     // 'justify-center': true,
-  };
-});
+  }
+})
 
-emit('loaded', true);
-
-useAttrs();
-
+// emit('loaded', true);
 </script>

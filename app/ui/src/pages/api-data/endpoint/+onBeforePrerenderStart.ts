@@ -1,12 +1,12 @@
-import { OnBeforePrerenderStartAsync } from 'vike/types';
-import { getEndpoints } from '../index/endpoints';
+import { OnBeforePrerenderStartAsync } from 'vike/types'
+import { ROUTE_MAPPING } from '../../routeMapping'
 
 // https://vike.dev/onBeforePrerenderStart
-export { onBeforePrerenderStart };
+export { onBeforePrerenderStart }
 
 const onBeforePrerenderStart: OnBeforePrerenderStartAsync =
   async (): ReturnType<OnBeforePrerenderStartAsync> => {
-    const endpoints = await getEndpoints();
+    const endpoints = Object.values(ROUTE_MAPPING)
     const out = [
       ...endpoints.map((ep) => {
         return {
@@ -16,12 +16,12 @@ const onBeforePrerenderStart: OnBeforePrerenderStartAsync =
           // `onBeforeRender()` hook and the Star Wars API will be called
           // only once (in this `prerender()` hook).
           pageContext: {
-            title: ep.title,
-          },
-        };
-      }),
-    ];
+            title: ep.title
+          }
+        }
+      })
+    ]
     // console.log(`[ui] [api-data] [onBeforePrerenderStart] out`);
     // console.log(out);
-    return out;
-  };
+    return out
+  }

@@ -5,7 +5,7 @@ import type { OnBeforeRenderAsync } from 'vike/types'
 import { QueryClient, dehydrate } from '@tanstack/vue-query'
 
 import { UserRole } from '#/types'
-import { Endpoint, getEndpoints } from './endpoints'
+import { ROUTE_MAPPING } from '../../routeMapping'
 
 const onBeforeRender: OnBeforeRenderAsync = async (
   pageContext
@@ -25,7 +25,7 @@ const onBeforeRender: OnBeforeRenderAsync = async (
   //   return acc;
   // }, [] as Endpoint[]);
 
-  const endpoints = await getEndpoints()
+  const endpoints = Object.values(ROUTE_MAPPING)
 
   const queryClient = new QueryClient()
   // await queryClient.prefetchQuery(['characters', characterId], () => getCharacter(characterId))
@@ -37,8 +37,8 @@ const onBeforeRender: OnBeforeRenderAsync = async (
     pageContext: {
       pageProps: {
         isAdmin: user?.roles.includes(UserRole.Admin) || false,
-        endpoints,
-        vueQueryState
+        endpoints
+        // vueQueryState
       },
       title: 'API Data'
     }
