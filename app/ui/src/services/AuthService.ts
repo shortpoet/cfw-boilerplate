@@ -62,7 +62,7 @@ export class AuthService {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/api/auth/login/github/callback',
-      path: {
+      query: {
         'code': code,
         'state': state,
       },

@@ -17,6 +17,7 @@ import {
 } from '#/types'
 import { OpenAPIRoute } from '@cloudflare/itty-router-openapi'
 import { AuthLoginOauthCallbackSchema, AuthLoginOauthSchema } from '../auth-schema'
+import { handleSsr } from '#/api/src/ssr'
 
 export class LoginGithub extends OpenAPIRoute {
   static schema = AuthLoginOauthSchema
@@ -47,7 +48,7 @@ export class LoginGithubCallback extends OpenAPIRoute {
     const authRequest = auth.handleRequest(req)
     const session = await authRequest.validate()
     const { baseUrlApp } = getBaseUrl(env)
-    const dataPage = `${baseUrlApp}/api-data`
+    const dataPage = new URL(`${baseUrlApp}/api-data`).href
     if (session) {
       return redirectResponse(dataPage, 302, res.headers)
     }
@@ -107,11 +108,36 @@ export class LoginGithubCallback extends OpenAPIRoute {
         attributes: {}
       })
       const sessionCookie = auth.createSessionCookie(session)
-      // sessionCookie.attributes.httpOnly = false
-      res.headers.set('Set-Cookie', sessionCookie.serialize())
+      // sessionCookie.attributes.httpOnly = true
+      // sessionCookie.attributes.sameSite = 'lax'
 
-      // return Response.redirect(dataPage, 302).headers.set('Set-Cookie', sessionCookie.serialize());
-      return jsonOkResponse(session, res)
+      res.headers.set('Set-Cookie', sessionCookie.serialize())
+      res.headers.set('Location', dataPage)
+
+      const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+      <meta http-equiv="refresh" content="0;URL='${dataPage}'"/>
+      </head>
+      <body><p>Redirecting to <a href="${dataPage}">${dataPage}</a>.</p></body>
+      </html>
+      `
+      const resp = new Response(html, {
+        headers: {
+          'content-type': 'text/html;charset=UTF-8'
+        },
+        status: 302
+      })
+      resp.headers.set('Set-Cookie', sessionCookie.serialize())
+      resp.headers.set('Location', dataPage)
+      return resp
+
+      // return jsonOkResponse(session, res)
+      // return Response.redirect(dataPage, 302)
+      // const newReq = new Request(dataPage)
+      // newReq.logger = req.logger
+      // return await handleSsr(newReq, res, env, ctx)
     } catch (e) {
       if (e instanceof OAuthRequestError) {
         // invalid code
