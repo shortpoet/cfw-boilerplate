@@ -5,6 +5,7 @@ export { LuciaAuthInstance }
 
 export const LUCIA_AUTH_GITHUB_OAUTH_STATE = 'github_oauth_state'
 export const LUCIA_AUTH_COOKIES_SESSION_TOKEN = `auth_session`
+
 export const LUCIA_AUTH_COOKIES_OPTIONS = {
   httpOnly: undefined,
   secure: false,
@@ -12,12 +13,14 @@ export const LUCIA_AUTH_COOKIES_OPTIONS = {
   maxAge: 60 * 60,
   sameSite: undefined
 } as const
+
 export const LUCIA_AUTH_COOKIES_OPTIONS_SECURE = {
-  httpOnly: false,
+  httpOnly: true,
   secure: true,
   path: '/',
   maxAge: 60 * 60,
-  sameSite: 'strict'
+  // do NOT ducking set this to strict or github oauth will fail
+  sameSite: 'lax'
 } as const
 
 interface LuciaAuthInstance extends AuthInstance {

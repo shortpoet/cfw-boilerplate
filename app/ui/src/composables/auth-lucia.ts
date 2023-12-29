@@ -6,7 +6,8 @@ import {
   BaseSessionSchema,
   LoginOptionsSchema,
   LoginProviderResponse,
-  LoginProviderResponseSchema
+  LoginRedirectResponseSchema,
+  LoginHTMLResponseSchema
 } from '#/types'
 import { storeToRefs } from 'pinia'
 import { ApiError, AuthService } from '..'
@@ -175,29 +176,30 @@ const useLuciaAuth = () => {
       auth.authError.value = error.value
       auth.authLoading.value = dataLoading.value
       console.log(`[ui] [useAuth] [login] -> data:`)
-      console.log(data.value)
-      const success = BaseSessionSchema.safeParse(data.value)
+      console.log(data)
+      const success = LoginRedirectResponseSchema.safeParse(data.value)
       if (!success.success) {
         logger.error(`[ui] [useAuth] [login] -> success.error:`)
         logger.error(success.error)
         auth.authError.value = success.error
         return
       }
-      auth.setSession(success.data)
+      // auth.setSession(success.data)
+      window.location.replace(success.data)
     }
     if (opts.type === 'oauth') {
       const { data, error, dataLoading } = await useService<LoginProviderResponse>(
         AuthService.getLoginGithub()
       )
-      const success = LoginProviderResponseSchema.safeParse(data.value)
+      auth.authError.value = error.value
+      auth.authLoading.value = dataLoading.value
+      const success = LoginRedirectResponseSchema.safeParse(data.value)
       if (!success.success) {
         logger.error(`[ui] [useAuth] [login] -> success.error:`)
         logger.error(success.error)
         auth.authError.value = success.error
         return
       }
-      auth.authError.value = error.value
-      auth.authLoading.value = dataLoading.value
       window.location.replace(success.data)
     }
   }

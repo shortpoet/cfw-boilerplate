@@ -52,8 +52,9 @@ export const withCookie = async (
   if (opts.path == null) {
     opts.path = '/'
   }
-
-  append(res, 'Set-Cookie', cookie.serialize(name, String(val), opts))
+  const cooked = cookie.serialize(name, String(val), opts)
+  console.log(`[api] [withCookie] [cooked] -> `, cooked)
+  append(res, 'Set-Cookie', cooked)
 }
 
 export const clearCookie = async (
@@ -72,6 +73,7 @@ export default function withCookies() {
   return function (req: Request, res: Response, env: Env) {
     console.log(`[api] [middleware] [withCookies] ->`)
     const cookieHeader = req.headers.get('cookie') || ''
+    console.log(`[api] [middleware] [withCookies] [cookieHeader] -> `, cookieHeader)
     req.universalCookies = new Cookies(cookieHeader || '')
     res.cookie = withCookie
     res.clearCookie = clearCookie
@@ -84,6 +86,8 @@ export default function withCookies() {
       if (change.value === undefined) {
         await res.clearCookie(req, res, env, change.name, { name: change.name, ...change.options })
       } else {
+        console.log(`[api] [middleware] [withCookies] [change] -> CHANGE CHANGE CHANGE`)
+        console.log(change)
         const expressOpt = (<any>Object).assign({}, change.options)
         if (expressOpt.maxAge && change.options && change.options.maxAge) {
           // the standard for maxAge is seconds but express uses milliseconds

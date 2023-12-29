@@ -1,6 +1,6 @@
-import { redirectResponse } from '#/api/src/middleware/redirect'
+import { redirectHtml, redirectResponse } from '#/api/src/middleware/redirect'
 import { OAuthRequestError } from '@lucia-auth/oauth'
-import { parseCookie } from 'lucia/utils'
+import { parseCookie, serializeCookie } from 'lucia/utils'
 import sig from 'cookie-signature-subtle'
 import {
   createAuth,
@@ -34,6 +34,9 @@ export class LoginGithub extends OpenAPIRoute {
     console.log(`[api] [auth] [login] [github] -> url: ${url}`)
     const cookieOptions =
       env.NODE_ENV === 'production' ? LUCIA_AUTH_COOKIES_OPTIONS_SECURE : LUCIA_AUTH_COOKIES_OPTIONS
+
+    // const stateCookie = serializeCookie(LUCIA_AUTH_COOKIES_SESSION_TOKEN, state, cookieOptions)
+    // res.headers.set('Set-Cookie', stateCookie)
     await res.cookie(req, res, env, LUCIA_AUTH_COOKIES_SESSION_TOKEN, state, cookieOptions)
     return jsonOkResponse(url, res)
   }
@@ -53,16 +56,16 @@ export class LoginGithubCallback extends OpenAPIRoute {
       return redirectResponse(dataPage, 302, res.headers)
     }
     const cookies = parseCookie(req.headers.get('cookie') ?? '')
+    const cook = cookies[LUCIA_AUTH_COOKIES_SESSION_TOKEN]
+    req.logger.debug(`[api] [auth] [login] [github] [callback] -> cook: ${cook}`)
     const secret = env.NEXTAUTH_SECRET
-    const storedState = cookies[LUCIA_AUTH_COOKIES_SESSION_TOKEN]
-      ? await sig.unsign(cookies[LUCIA_AUTH_COOKIES_SESSION_TOKEN].replace('s:', ''), secret)
-      : ''
+    const storedState = cook ? await sig.unsign(cook.replace('s:', ''), secret) : ''
     const state = req.query?.state
     const code = req.query?.code
     req.logger.debug(`[api] [auth] [login] [github] -> storedState: ${storedState}`)
     // validate state
     if (!storedState || !state || storedState !== state || typeof code !== 'string') {
-      return badResponse('Bad Request', undefined, res)
+      return badResponse('Bad Request - State Unvalidated', undefined, res)
     }
     try {
       const { getExistingUser, githubUser, createUser, githubTokens } =
@@ -96,7 +99,7 @@ export class LoginGithubCallback extends OpenAPIRoute {
             email: isVerified ? isVerified.email : undefined,
             name: githubUser.name,
             avatar_url: githubUser.avatar_url
-            // roles: [UserRole.User]
+            // user_type_flags: arrayToUserTypeFlags([UserType.Credentials]),
           }
         })
         return user
@@ -107,12 +110,8 @@ export class LoginGithubCallback extends OpenAPIRoute {
         userId: user.userId,
         attributes: {}
       })
-      const sessionCookie = auth.createSessionCookie(session)
-      // sessionCookie.attributes.httpOnly = true
-      // sessionCookie.attributes.sameSite = 'lax'
-
-      res.headers.set('Set-Cookie', sessionCookie.serialize())
-      res.headers.set('Location', dataPage)
+      const sessionCookie = auth.createSessionCookie(session).serialize()
+      console.log(`[api] [auth] [login] [github] -> cookie: ${sessionCookie}`)
 
       const html = `
       <!DOCTYPE html>
@@ -129,10 +128,14 @@ export class LoginGithubCallback extends OpenAPIRoute {
         },
         status: 302
       })
-      resp.headers.set('Set-Cookie', sessionCookie.serialize())
+      resp.headers.set('Set-Cookie', sessionCookie)
       resp.headers.set('Location', dataPage)
       return resp
 
+      // return redirectHtml(dataPage, cookie, 302)
+
+      // res.headers.set('Set-Cookie', cookie)
+      // res.headers.set('Location', dataPage)
       // return jsonOkResponse(session, res)
       // return Response.redirect(dataPage, 302)
       // const newReq = new Request(dataPage)

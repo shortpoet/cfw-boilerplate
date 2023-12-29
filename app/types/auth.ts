@@ -5,9 +5,7 @@ export {
   Session,
   AuthInstance,
   LoginOptions,
-  LoginProviderResponse,
   BaseSessionSchema,
-  LoginProviderResponseSchema,
   LoginOptionsSchema,
   UserRoleSchema,
   UserTypeSchema
@@ -73,6 +71,12 @@ export type LoginOptionsTypes = z.infer<typeof LoginOptionsTypesEnum>
 export const OauthProvidersEnum = z.enum(['github', 'google', 'twitter', 'facebook', 'linkedin'])
 export type OauthProviders = z.infer<typeof OauthProvidersEnum>
 
+export const LoginRedirectResponseSchema = z.string().url()
+export type LoginProviderResponse = z.infer<typeof LoginRedirectResponseSchema>
+
+export const LoginHTMLResponseSchema = z.string()
+export type LoginHTMLResponse = z.infer<typeof LoginHTMLResponseSchema>
+
 const LoginOptionsOauthSchema = z.object({
   type: z.literal(LoginOptionsTypesEnum.Enum.oauth),
   provider: OauthProvidersEnum,
@@ -111,6 +115,7 @@ const LoginOptionsSchema = z.discriminatedUnion('type', [
   LoginOptionsUsernameSchema,
   LoginOptionsEmailSchema
 ])
+type LoginOptions = z.infer<typeof LoginOptionsSchema>
 
 // const LoginOptionsLoginSchema = z
 //   .object({
@@ -141,11 +146,6 @@ const LoginOptionsSchema = z.discriminatedUnion('type', [
 //   LoginOptionsCommonSchema,
 //   z.union([LoginOptionsRegisterSchema, LoginOptionsLoginSchema])
 // )
-type LoginOptions = z.infer<typeof LoginOptionsSchema>
-
-const LoginProviderResponseSchema = z.string().url()
-
-type LoginProviderResponse = z.infer<typeof LoginProviderResponseSchema>
 
 interface AuthInstance {
   authLoading: Ref<boolean>

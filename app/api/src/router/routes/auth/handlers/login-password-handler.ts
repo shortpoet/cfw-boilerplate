@@ -1,4 +1,4 @@
-import { redirectResponse } from '#/api/src/middleware/redirect'
+import { redirectHtml, redirectResponse } from '#/api/src/middleware/redirect'
 import { OAuthRequestError } from '@lucia-auth/oauth'
 import { parseCookie } from 'lucia/utils'
 import sig from 'cookie-signature-subtle'
@@ -141,10 +141,15 @@ export class LoginPasswordUser extends OpenAPIRoute {
       })
       console.log(`[api] [auth] [login] [password] -> session: ${JSON.stringify(session, null, 2)}`)
 
-      const sessionCookie = auth.createSessionCookie(session)
-      sessionCookie.attributes.httpOnly = undefined
-      res.headers.set('Set-Cookie', sessionCookie.serialize())
-      return jsonOkResponse(session, res)
+      const sessionCookie = auth.createSessionCookie(session).serialize()
+      const { baseUrlApp } = getBaseUrl(env)
+      const dataPage = new URL(`${baseUrlApp}/api-data`).href
+
+      // return redirectHtml(dataPage, sessionCookie, 302)
+
+      res.headers.set('Set-Cookie', sessionCookie)
+      return jsonOkResponse(dataPage, res)
+      // return jsonOkResponse(session, res)
     } catch (error) {
       console.error(error)
       if (error instanceof ZodError) {

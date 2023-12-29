@@ -30,6 +30,7 @@ export const createAuth = async (env: Env) => {
     adapter,
     sessionCookie: {
       name: LUCIA_AUTH_COOKIES_SESSION_TOKEN,
+      expires: false, // to false since we (lucia web()) can’t update the session cookie when validating them
       attributes:
         env.NODE_ENV === 'production'
           ? LUCIA_AUTH_COOKIES_OPTIONS_SECURE
