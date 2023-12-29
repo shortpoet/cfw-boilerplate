@@ -17,7 +17,7 @@ export const LUCIA_AUTH_COOKIES_OPTIONS_SECURE = {
   secure: true,
   path: '/',
   maxAge: 60 * 60,
-  sameSite: 'none'
+  sameSite: 'strict'
 } as const
 
 interface LuciaAuthInstance extends AuthInstance {
