@@ -68,13 +68,14 @@ type BaseSession = z.infer<typeof BaseSessionSchema>
 //   email?: string
 // }
 
-export const LoginOptionsTypesEnum = z.enum(['email', 'username', 'password', 'register', 'oauth'])
+export const LoginOptionsTypesEnum = z.enum(['email', 'username', 'register', 'oauth'])
 export type LoginOptionsTypes = z.infer<typeof LoginOptionsTypesEnum>
-const OauthProviders = z.enum(['github', 'google', 'twitter', 'facebook', 'linkedin'])
+export const OauthProvidersEnum = z.enum(['github', 'google', 'twitter', 'facebook', 'linkedin'])
+export type OauthProviders = z.infer<typeof OauthProvidersEnum>
 
 const LoginOptionsOauthSchema = z.object({
   type: z.literal(LoginOptionsTypesEnum.Enum.oauth),
-  provider: OauthProviders,
+  provider: OauthProvidersEnum,
   username: z.undefined(),
   password: z.undefined(),
   email: z.undefined()

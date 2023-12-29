@@ -11,19 +11,20 @@
       <JsonTree :data="session" />
     </div>
 
-    <Login :session="session" :providers="providers">
-      <template #login-github="loginProps">
+    <Login :session="session" :loginTypes="loginTypes">
+      <!-- template name/id must match LoginOptionsTypesEnum.Enum -->
+      <template #login-oauth="loginProps">
         <FormGeneric
-          :inputs="getForm('github')"
-          @submit="loginProps.onLogin"
+          :inputs="getForm('oauth')"
+          :onSubmit="runCallback(loginProps.onLogin)"
           :hidden="true"
-          :title="'Login Github'"
+          :title="'Login Oauth'"
         >
           <template #submit-button>
             <button
               type="submit"
               class="btn-main m-3 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-              id="login-button-github"
+              id="login-button-oauth-github"
               :disabled="loginProps.isLoggedIn"
             >
               <i class="i-carbon-logo-github" inline-block /> Log in Github
@@ -31,11 +32,11 @@
           </template>
         </FormGeneric>
       </template>
-      <template #login-password="loginProps">
+      <template #login-register="loginProps">
         <FormGeneric
-          :inputs="getForm('password')"
+          :inputs="getForm('register')"
           :onSubmit="runCallback(loginProps.onLogin)"
-          :title="'Login Password'"
+          :title="'Login Register'"
         >
           <template #submit-button>
             <div flex flex-col>
@@ -47,7 +48,7 @@
                     id="login-radio"
                     name="login-radio"
                     value="login"
-                    v-model="loginType"
+                    v-model="loginFormType"
                   />
                   <label for="login-radio">Login</label>
                 </div>
@@ -58,7 +59,7 @@
                     id="register-radio"
                     name="login-radio"
                     value="register"
-                    v-model="loginType"
+                    v-model="loginFormType"
                   />
                   <label for="register-radio">Register</label>
                 </div>
@@ -110,16 +111,27 @@
 </template>
 
 <script setup lang="ts">
-import { LoginOptions, Session, LoginOptionsTypes, LoginOptionsTypesEnum } from '#/types'
+import {
+  LoginOptions,
+  Session,
+  LoginOptionsTypes,
+  LoginOptionsTypesEnum,
+  OauthProvidersEnum
+} from '#/types'
 import type { FormEmitValue, FormInput } from '#/ui/src/components/input/FormGeneric.vue'
 
 const props = defineProps<{
   session?: Session
 }>()
-const providers = ref(['github', 'password'])
+const loginTypes = ref<LoginOptionsTypes[]>([
+  // LoginOptionsTypesEnum.Enum.email,
+  // LoginOptionsTypesEnum.Enum.username,
+  LoginOptionsTypesEnum.Enum.register,
+  LoginOptionsTypesEnum.Enum.oauth
+])
 // const pageContext = usePageContext();
 // const pageSession = ref(pageContext.session);
-const loginType = ref<LoginOptionsTypes>(LoginOptionsTypesEnum.Enum.username)
+const loginFormType = ref<'register' | 'login'>(LoginOptionsTypesEnum.Enum.register)
 
 const passwordInputs: ComputedRef<FormInput<LoginOptions>[]> = computed(() => [
   {
@@ -127,18 +139,14 @@ const passwordInputs: ComputedRef<FormInput<LoginOptions>[]> = computed(() => [
     value: '',
     placeholder: 'Username',
     key: 'username',
-    required:
-      loginType.value === LoginOptionsTypesEnum.Enum.register ||
-      loginType.value === LoginOptionsTypesEnum.Enum.username
+    required: loginFormType.value === LoginOptionsTypesEnum.Enum.register
   },
   {
     type: 'email',
     value: '',
     placeholder: 'Email',
     key: 'email',
-    required:
-      loginType.value === LoginOptionsTypesEnum.Enum.register ||
-      loginType.value === LoginOptionsTypesEnum.Enum.email
+    required: loginFormType.value === LoginOptionsTypesEnum.Enum.register
   },
   {
     type: 'password',
@@ -149,7 +157,7 @@ const passwordInputs: ComputedRef<FormInput<LoginOptions>[]> = computed(() => [
   },
   {
     type: 'hidden',
-    value: loginType.value,
+    value: undefined,
     placeholder: 'type',
     key: 'type',
     required: true
@@ -162,24 +170,46 @@ const passwordInputs: ComputedRef<FormInput<LoginOptions>[]> = computed(() => [
     required: false
   }
 ])
-const getForm = (provider: string): FormInput<LoginOptions>[] => {
-  // console.log(`[ui] [auth] [login} [+Page] [setup] :: getForm`)
+const getForm = (type: LoginOptionsTypes): FormInput<LoginOptions>[] => {
+  const isLoginForm =
+    type === LoginOptionsTypesEnum.Enum.email ||
+    type === LoginOptionsTypesEnum.Enum.username ||
+    type === LoginOptionsTypesEnum.Enum.register
+  console.log(`[ui] [auth] [login} [+Page] [setup] :: getForm`)
+
   const form = [
-    { type: 'hidden', value: provider, placeholder: 'provider', key: 'provider', required: false }
-  ].concat(provider === 'password' ? passwordInputs.value : [])
-  // console.log(`[ui] [auth] [login} [+Page] [setup] :: getForm form`)
-  // console.log(form.find((input) => input.key === 'email'))
+    { type: 'hidden', value: type, placeholder: 'type', key: 'type', required: false }
+  ].concat(isLoginForm ? passwordInputs.value : [])
+
+  console.log(`[ui] [auth] [login} [+Page] [setup] :: getForm form`)
+  console.log(form.find((input) => input.key === 'type'))
+  console.log(form.find((input) => input.key === 'provider'))
   return form
 }
 export type LoginFormEvent = FormEmitValue<LoginOptions>
 const runCallback = (callback: any) => {
   // console.log(`[ui] [auth] [login} [+Page] [setup] :: runCallback`)
   return (...args: LoginFormEvent[]) => {
-    // console.log(`[ui] [auth] [login} [+Page] [setup] :: runCallback args`)
-    // console.log(args)
+    console.log(`[ui] [auth] [login} [+Page] [setup] :: runCallback args`)
+    console.log(args)
     const [{ form, event }] = args
+
     const submitterId = event instanceof SubmitEvent && event.submitter?.id
     const isRegister = submitterId && submitterId.includes('register') ? true : false
+
+    if (submitterId && submitterId.includes('oauth')) {
+      console.log(
+        `[ui] [auth] [login} [+Page] [setup] :: runCallback oauth submitterId ${submitterId}`
+      )
+      const provider = submitterId.replace('login-button-oauth-', '')
+      console.log(`[ui] [auth] [login} [+Page] [setup] :: runCallback provider ${provider}`)
+      const parsed = OauthProvidersEnum.safeParse(provider)
+      if (parsed.success) {
+        form.provider = parsed.data
+      }
+    }
+
+    // console.log(`[ui] [auth] [login} [+Page] [setup] :: runCallback submitterId ${submitterId}`)
     const hasEmail = form.email && form.email.length > 0
     const hasUsername = form.username && form.username.length > 0
     form.type = isRegister ? 'register' : hasEmail ? 'email' : hasUsername ? 'username' : 'oauth'

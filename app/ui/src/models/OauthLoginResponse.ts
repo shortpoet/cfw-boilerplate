@@ -3,10 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type OauthLoginResponse = {
-  /**
-   * OAuth login URL
-   */
-  url: string;
-};
-
+/**
+ * OAuth login URL
+ */
+export type OauthLoginResponse = string;

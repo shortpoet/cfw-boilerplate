@@ -385,7 +385,7 @@
             },
             "required": true,
             "name": "code",
-            "in": "path"
+            "in": "query"
           },
           {
             "schema": {
@@ -394,7 +394,7 @@
             },
             "required": true,
             "name": "state",
-            "in": "path"
+            "in": "query"
           }
         ],
         "responses": {

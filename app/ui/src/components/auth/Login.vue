@@ -14,8 +14,8 @@
       </div>
     </div>
 
-    <div v-for="prov in providers" :key="prov">
-      <slot :name="`login-${prov}`" :onLogin="onLogin" :isLoggedIn="isLoggedIn" />
+    <div v-for="lt in loginTypes" :key="lt">
+      <slot :name="`login-${lt}`" :onLogin="onLogin" :isLoggedIn="isLoggedIn" />
     </div>
     <!-- <div>
       <slot name="login-popup" :onLoginPopup="onLoginPopup" :isLoggedIn="isLoggedIn" />
@@ -44,13 +44,13 @@
 </template>
 
 <script setup lang="ts">
-import { User, Session } from '#/types'
+import { User, Session, LoginOptionsTypes } from '#/types'
 import { LoginFormEvent } from '../../pages/auth/login/+Page.vue'
 
 defineProps<{
   session?: Session
   usePopup?: boolean
-  providers?: string[]
+  loginTypes?: LoginOptionsTypes[]
 }>()
 let onLogin = ref((event: any) => {
   console.log(`[ui] [login.component] womp login ${event}`)

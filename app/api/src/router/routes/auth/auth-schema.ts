@@ -1,4 +1,4 @@
-import { Path, Int } from '@cloudflare/itty-router-openapi'
+import { Path, Int, Query } from '@cloudflare/itty-router-openapi'
 import { z } from 'zod'
 import {
   UserComponent,
@@ -128,10 +128,10 @@ export const AuthLoginOauthCallbackSchema = {
   tags: ['Auth'],
   summary: 'Log in via OAuth callback',
   parameters: {
-    code: Path(z.string(), {
+    code: Query(z.string(), {
       description: 'OAuth code'
     }),
-    state: Path(z.string(), {
+    state: Query(z.string(), {
       description: 'OAuth state'
     })
   },

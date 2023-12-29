@@ -5,7 +5,8 @@ import {
   LoginOptions,
   BaseSessionSchema,
   LoginOptionsSchema,
-  LoginProviderResponse
+  LoginProviderResponse,
+  LoginProviderResponseSchema
 } from '#/types'
 import { storeToRefs } from 'pinia'
 import { ApiError, AuthService } from '..'
@@ -160,7 +161,7 @@ const useLuciaAuth = () => {
         auth.authError.value = success.error
         return
       }
-      auth.setSession(data.value)
+      auth.setSession(success.data)
     }
     if (isLogin) {
       const { data, dataLoading, error } = await useService<Session>(
@@ -182,12 +183,22 @@ const useLuciaAuth = () => {
         auth.authError.value = success.error
         return
       }
-      auth.setSession(data.value)
+      auth.setSession(success.data)
     }
     if (opts.type === 'oauth') {
       const { data, error, dataLoading } = await useService<LoginProviderResponse>(
         AuthService.getLoginGithub()
       )
+      const success = LoginProviderResponseSchema.safeParse(data.value)
+      if (!success.success) {
+        logger.error(`[ui] [useAuth] [login] -> success.error:`)
+        logger.error(success.error)
+        auth.authError.value = success.error
+        return
+      }
+      auth.authError.value = error.value
+      auth.authLoading.value = dataLoading.value
+      window.location.replace(success.data)
     }
   }
 
