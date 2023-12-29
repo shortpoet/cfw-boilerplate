@@ -13,8 +13,10 @@ const onBeforeRender: OnBeforeRenderAsync = async (
   const user = pageContext.session?.user
   const { urlPathname, csrfToken, sessionToken, callbackUrl } = pageContext
   console.log(`[ui] [api-data] [index] [onBeforeRender] urlPathname: ${urlPathname}`)
+  console.log(`[ui] [api-data] [index] [onBeforeRender] pagecontext endpoints`)
+  console.log(pageContext.endpoints)
 
-  const endpoints = Object.values(ROUTE_MAPPING)
+  const endpoints = pageContext.endpoints || Object.values(ROUTE_MAPPING)
   // console.log(`[ui] [api-data] [index] [onBeforeRender] endpoints`)
   // console.log(endpoints)
 

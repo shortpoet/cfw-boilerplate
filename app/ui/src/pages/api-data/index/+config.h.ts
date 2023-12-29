@@ -2,7 +2,7 @@
 export default {
   meta: {
     Layout: {
-      env: { server: true, client: true },
-    },
-  },
-};
+      env: { server: true, client: true }
+    }
+  }
+}

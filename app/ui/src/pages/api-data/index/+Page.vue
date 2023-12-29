@@ -1,10 +1,13 @@
 <template>
   <div class="page-container" flex-col items-center flex wrap>
-    <nav flex flex-row flex-wrap items-center justify-center :class="getClass">
-      <div v-for="ep in endpoints" :key="ep.path" class="w-1/4 box-border" p-1>
-        <Link btn-purple v-bind="attrsObj" :href="`${ep.path}`">{{ ep.title }}</Link>
-      </div>
-    </nav>
+    <div v-if="endpoints">
+      <nav flex flex-row flex-wrap items-center justify-center :class="getClass">
+        <div v-for="ep in endpoints" :key="ep.path" class="w-1/4 box-border" p-1>
+          <Link btn-purple v-bind="attrsObj" :href="`${ep.path}`">{{ ep.title }}</Link>
+        </div>
+      </nav>
+    </div>
+    <div v-else>...loading</div>
   </div>
 </template>
 
@@ -21,12 +24,16 @@ const attrsObj = {
   border: '2 rounded blue-200'
 }
 
-defineProps({
+const { endpoints } = defineProps({
   endpoints: {
-    type: Array as () => Route[],
-    required: true
+    // type: Array as () => Route[],
+    required: false,
+    default: () => [] as Route[]
   }
 })
+
+console.log(`[ui] [api-data] [index] endpoints:`)
+console.log(endpoints)
 
 const getClass = computed(() => {
   return {

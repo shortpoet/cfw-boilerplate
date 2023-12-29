@@ -4,6 +4,7 @@ import { logger, tryLogHeaders, logObjs, getAuthCookies } from '#/utils'
 // import { getSessionItty } from './middleware';
 import { UserRole } from '#/types'
 import { getSession } from './router/routes/auth/handlers'
+import { ROUTE_MAPPING } from './routeMapping'
 
 export { handleSsr }
 
@@ -17,6 +18,10 @@ async function handleSsr(req: Request, res: Response, env: Env, ctx: ExecutionCo
   const { sessionToken, csrfToken, callbackUrl, pkceCodeVerifier } = getAuthCookies(cookieHeader)
   req.logger.debug(`[api] [ssr] handleSsr -> sessionToken -> ${sessionToken}`)
   const userAgent = req.headers.get('User-Agent') || ''
+  const endpoints = Object.values(ROUTE_MAPPING)
+  req.logger.debug(`[api] [ssr] handleSsr -> endpoints ->`)
+  req.logger.debug(endpoints)
+
   const pageContextInit = {
     urlOriginal: req.url,
     fetch: (...args: Parameters<typeof fetch>) => fetch(...args),
@@ -26,6 +31,7 @@ async function handleSsr(req: Request, res: Response, env: Env, ctx: ExecutionCo
     cf: req.cf,
     csrfToken,
     callbackUrl,
+    endpoints,
     // authRedirectUrl,
     sessionToken,
     pkceCodeVerifier

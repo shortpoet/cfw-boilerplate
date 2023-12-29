@@ -27,7 +27,8 @@ import type {
   Session,
   UserRole,
   UserType,
-  UiState
+  UiState,
+  Route
 } from './types'
 import { CFWDatabase } from './api/db'
 
@@ -257,6 +258,7 @@ declare global {
       pageProps?: PageProps
       session?: Session | null
       redirectTo?: string
+      endpoints?: Route[]
       // httpResponse: HttpResponse;
       csrfToken?: string
       callbackUrl: string

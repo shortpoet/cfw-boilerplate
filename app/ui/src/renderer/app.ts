@@ -25,14 +25,14 @@ const initialStateUi: StoreState<UiState> = {
 const getInitialStateUi = () => initialStateUi
 
 function createApp(Page: Page, pageProps: PageProps | undefined, pageContext: PageContext) {
-  const { session, csrfToken, callbackUrl, isAdmin, cf, sessionToken } = pageContext
+  const { session, csrfToken, callbackUrl, isAdmin, cf, sessionToken, endpoints } = pageContext
   const { logger, correlationId } = useSsrLogger()
   logger.info(`[ui] [app] [createApp] sessionToken: ${sessionToken}`)
   logger.info(`[ui] [app] [createApp] correlationId: ${correlationId}`)
   logger.info(`[ui] [app] [createApp] session:`)
   logger.info(session)
-  // console.log(`[ui] [app] [createApp] session:`);
-  // console.log(session);
+  logger.info(`[ui] [app] [createApp] endpoints:`)
+  logger.info(endpoints)
   let rootComponent: any
   // sxee comments below
   // let rootComponent: Component & { Page: Component; pageProps: PageProps };
@@ -41,11 +41,12 @@ function createApp(Page: Page, pageProps: PageProps | undefined, pageContext: Pa
       Page: markRaw(Page),
       pageProps: markRaw(pageContext.pageProps || {}),
       config: markRaw(pageContext.config),
+      cf,
+      endpoints,
       session,
       csrfToken,
       callbackUrl,
-      isAdmin,
-      cf
+      isAdmin
     }),
     created() {
       rootComponent = this
@@ -101,11 +102,12 @@ function createApp(Page: Page, pageProps: PageProps | undefined, pageContext: Pa
       // ... from rootComponent
       // without the below line the layout only changes on reload, and then persists weirdly to other navigated pages
       // rootComponent.Layout = markRaw(pageContext.exports.Layout || PageShell);
+      rootComponent.cf = pageContext.cf
+      rootComponent.endpoints = pageContext.endpoints
       rootComponent.session = pageContext.session
       rootComponent.csrfToken = pageContext.csrfToken
       rootComponent.callbackUrl = pageContext.callbackUrl
       rootComponent.isAdmin = pageContext.isAdmin
-      rootComponent.cf = pageContext.cf
     }
   })
 
