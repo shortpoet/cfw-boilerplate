@@ -30,13 +30,13 @@ export default {
     // Create new config 'title'
     title: {
       env: { server: true, client: true }
-    },
+    }
     // server false to prevent 522 on cloudflare
     // or use workers.dev url for api
     // server false causes hydration mismatch on endpoint <nav>
-    onBeforeRender: {
-      env: { server: false, client: true }
-    }
+    // onBeforeRender: {
+    //   env: { server: false, client: true }
+    // }
     // logger: {
     //   env: { server: true, client: true },
     // },

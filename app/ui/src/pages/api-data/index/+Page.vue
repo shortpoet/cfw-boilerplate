@@ -27,7 +27,7 @@ const attrsObj = {
 const { endpoints } = defineProps({
   endpoints: {
     // type: Array as () => Route[],
-    required: false,
+    required: true,
     default: () => [] as Route[]
   }
 })
