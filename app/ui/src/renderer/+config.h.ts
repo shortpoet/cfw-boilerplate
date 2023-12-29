@@ -13,7 +13,8 @@ const passToClient = [
   'isAdmin',
   'cf',
   'sessionToken',
-  'pkceCodeVerifier'
+  'pkceCodeVerifier',
+  'endpoints'
 ]
 
 // https://vike.dev/config
@@ -32,6 +33,7 @@ export default {
     },
     // server false to prevent 522 on cloudflare
     // or use workers.dev url for api
+    // server false causes hydration mismatch on endpoint <nav>
     onBeforeRender: {
       env: { server: false, client: true }
     }

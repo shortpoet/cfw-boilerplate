@@ -45,7 +45,13 @@ const onBeforeRender: OnBeforeRenderAsync = async (
   const endpoint = ROUTE_MAPPING[urlPathname].endpoint
   console.log(`[ui] [api-data] [endpoint] [onBeforeRender] endpoint`)
   console.log(endpoint)
+
   const { dataLoading, error, data } = await useFetch(endpoint)
+  // const { dataLoading, error, data } = {
+  //   dataLoading: ref(false),
+  //   error: ref(new Error('')) as Ref<typeof FetchError | undefined>,
+  //   data: ref({})
+  // }
 
   const queryClient = new QueryClient()
 

@@ -28,6 +28,16 @@ export const createAuth = async (env: Env) => {
     env: env.NODE_ENV === 'production' ? 'PROD' : 'DEV',
     middleware: web(),
     adapter,
+    sessionCookie: {
+      name: LUCIA_AUTH_COOKIES_SESSION_TOKEN,
+      attributes:
+        env.NODE_ENV === 'production'
+          ? LUCIA_AUTH_COOKIES_OPTIONS_SECURE
+          : LUCIA_AUTH_COOKIES_OPTIONS
+    },
+    csrfProtection: {
+      allowedSubDomains: '*'
+    },
     getUserAttributes: (data) => {
       console.log(
         `[api] [middleware] [auth] [lucia] [getUserAttributes] -> data: ${JSON.stringify(data)}`
@@ -42,7 +52,7 @@ export const createAuth = async (env: Env) => {
         roles: roleFlagsToArray(data.role_flags),
         userTypes: userTypeFlagsToArray(data.user_type_flags)
       }
-    },
+    }
     // getSessionAttributes: async (databaseSession: SessionSchema) => {
     //   console.log(
     //     `[api] [middleware] [auth] [lucia] [getSessionAttributes] -> databaseSession: ${JSON.stringify(
@@ -75,13 +85,6 @@ export const createAuth = async (env: Env) => {
     //     fresh: databaseSession.fresh
     //   }
     // },
-    sessionCookie: {
-      name: LUCIA_AUTH_COOKIES_SESSION_TOKEN,
-      attributes:
-        env.NODE_ENV === 'production'
-          ? LUCIA_AUTH_COOKIES_OPTIONS_SECURE
-          : LUCIA_AUTH_COOKIES_OPTIONS
-    }
   })
 
   const githubAuth = github(auth, {

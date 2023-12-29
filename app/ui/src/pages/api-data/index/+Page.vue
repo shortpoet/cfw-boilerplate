@@ -9,6 +9,7 @@
 </template>
 
 <script setup lang="ts">
+import { Route } from '#/types'
 import { useAttrs } from 'vue'
 useAttrs()
 
@@ -22,14 +23,10 @@ const attrsObj = {
 
 defineProps({
   endpoints: {
-    type: Array as () => { title: string; path: string }[],
+    type: Array as () => Route[],
     required: true
   }
 })
-
-console.log(`[ui] [api-data] [index +Page] [setup] ::`)
-
-// const emit = defineEmits(['loaded']);
 
 const getClass = computed(() => {
   return {
@@ -42,6 +39,4 @@ const getClass = computed(() => {
     // 'justify-center': true,
   }
 })
-
-// emit('loaded', true);
 </script>

@@ -1,29 +1,6 @@
 const FILE_LOG_LEVEL = 'debug'
-import { JsonData } from '../../../types'
-
-interface Headers {
-  [key: string]: string
-}
-enum ResText {
-  OK = 'OK',
-  CREATED = 'Created',
-  UNAUTHORIZED = 'Unauthorized',
-  NOT_FOUND = 'Resource Not Found',
-  BAD_REQUEST = 'Bad Request',
-  SERVER_ERROR = 'Server Error'
-}
-interface ApiError {
-  message: string
-  type: string
-  code: number
-  stack?: string
-  cause?: unknown
-}
-
-export interface ApiErrorResponse {
-  success: boolean
-  error: ApiError
-}
+import { JsonData, ResText } from '#/types'
+import { createErr, formatErr } from '#/utils'
 
 export const getBaseUrl = (env: Env) => {
   return {
@@ -70,19 +47,6 @@ export const initResponse = (res: Response | undefined) => {
   }
   return init
 }
-
-const createErr = (type: string, code: number, err: Error | unknown) => ({
-  success: false,
-  error: {
-    message: err instanceof Error ? err.message : `${err}`,
-    type: type,
-    code: code,
-    stack: err instanceof Error ? err.stack : undefined,
-    cause: err instanceof Error ? err.cause : undefined
-  }
-})
-
-const formatErr = (err: ApiErrorResponse) => JSON.stringify(err, null, 2)
 
 export const notFoundResponse = (msg?: string, err?: Error | unknown, res?: Response) => {
   const newErr = err instanceof Error ? err : new Error(`${msg}` || ResText.NOT_FOUND)

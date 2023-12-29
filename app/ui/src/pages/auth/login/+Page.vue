@@ -57,7 +57,7 @@
                     class="m-2"
                     type="radio"
                     id="register-radio"
-                    name="login-radio"
+                    name="register-radio"
                     value="register"
                     v-model="loginFormType"
                   />
@@ -131,7 +131,7 @@ const loginTypes = ref<LoginOptionsTypes[]>([
 ])
 // const pageContext = usePageContext();
 // const pageSession = ref(pageContext.session);
-const loginFormType = ref<'register' | 'login'>(LoginOptionsTypesEnum.Enum.register)
+const loginFormType = ref<'register' | 'login'>()
 
 const passwordInputs: ComputedRef<FormInput<LoginOptions>[]> = computed(() => [
   {
@@ -139,14 +139,14 @@ const passwordInputs: ComputedRef<FormInput<LoginOptions>[]> = computed(() => [
     value: '',
     placeholder: 'Username',
     key: 'username',
-    required: loginFormType.value === LoginOptionsTypesEnum.Enum.register
+    required: loginFormType.value === LoginOptionsTypesEnum.Enum.register ? true : false
   },
   {
     type: 'email',
     value: '',
     placeholder: 'Email',
     key: 'email',
-    required: loginFormType.value === LoginOptionsTypesEnum.Enum.register
+    required: loginFormType.value === LoginOptionsTypesEnum.Enum.register ? true : false
   },
   {
     type: 'password',
@@ -171,19 +171,23 @@ const passwordInputs: ComputedRef<FormInput<LoginOptions>[]> = computed(() => [
   }
 ])
 const getForm = (type: LoginOptionsTypes): FormInput<LoginOptions>[] => {
+  console.log(`[ui] [auth] [login} [+Page] [setup] :: getForm`)
+  console.log(`[ui] [auth] [login} [+Page] [setup] :: getForm type ${type}`)
+
   const isLoginForm =
     type === LoginOptionsTypesEnum.Enum.email ||
     type === LoginOptionsTypesEnum.Enum.username ||
     type === LoginOptionsTypesEnum.Enum.register
-  console.log(`[ui] [auth] [login} [+Page] [setup] :: getForm`)
+  console.log(`[ui] [auth] [login} [+Page] [setup] :: getForm isLoginForm ${isLoginForm}`)
 
   const form = [
     { type: 'hidden', value: type, placeholder: 'type', key: 'type', required: false }
   ].concat(isLoginForm ? passwordInputs.value : [])
 
-  console.log(`[ui] [auth] [login} [+Page] [setup] :: getForm form`)
-  console.log(form.find((input) => input.key === 'type'))
-  console.log(form.find((input) => input.key === 'provider'))
+  // console.log(`[ui] [auth] [login} [+Page] [setup] :: getForm form`)
+  console.log(form.find((input) => input.key === 'username'))
+  console.log(form.find((input) => input.key === 'email'))
+  // console.log(form.find((input) => input.key === 'provider'))
   return form
 }
 export type LoginFormEvent = FormEmitValue<LoginOptions>

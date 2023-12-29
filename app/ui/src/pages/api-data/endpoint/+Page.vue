@@ -84,8 +84,7 @@ const { isPending, isError, isFetching, data: queryData, error, refetch, suspens
 await suspense()
 
 const { apiDataError } = props
-if (apiDataError) {
-  throw 'This will trigger the upstream error boundary.'
-}
+// if (apiDataError) {
+//   throw 'This will trigger the upstream error boundary.'
+// }
 </script>
-../../../../../utils/endpoints

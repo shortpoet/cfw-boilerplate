@@ -1,7 +1,7 @@
 export { FetchError, UseFetchResult, useFetch, USE_FETCH_REQ_INIT }
 
 import { Ref, UnwrapRef, ref } from 'vue'
-import { escapeNestedKeys } from '#/utils'
+import { escapeNestedKeys, formatErr, createErr } from '#/utils'
 import { RequestConfig } from '#/types'
 import { ApiErrorResponse } from '..'
 
@@ -102,8 +102,13 @@ const useFetch = async <T>(
     if (!response.ok) {
       logger.error(`[ui] [useFetch] response not ok: ${response.status}`)
       logger.error(response)
-      const err: ApiErrorResponse = await response.json()
-      console.log(err)
+      let err: ApiErrorResponse
+      try {
+        err = await response.clone().json()
+      } catch (error) {
+        const msg = await response.clone().text()
+        err = createErr(msg, 400, new Error(msg))
+      }
       error.value = err.error
         ? {
             name: err.error.type,
