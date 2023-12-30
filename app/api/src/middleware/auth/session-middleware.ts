@@ -77,7 +77,7 @@ export const withGuard =
         res
       )
     }
-    if (roles.length && userRoles && !userRoles.some((role) => roles.includes(role))) {
+    if (roles.length && userRoles && !userRoles.some((role) => roles.includes(role as UserRole))) {
       // log(
       //   `[worker] [middleware] [auth] [withAuth] -> roles.length && !roles.includes(role) ->`
       // );

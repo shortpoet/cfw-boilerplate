@@ -147,6 +147,7 @@ declare global {
       value?: string,
       options?: CookieSetOptions
     ) => void
+    unCookie: (req: Request, res: Response, env: Env, name: string) => Promise<string>
     headersSent?: boolean
     clearCookie: (
       req: Request,

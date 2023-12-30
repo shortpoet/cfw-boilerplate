@@ -32,8 +32,8 @@ const { endpoints } = defineProps({
   }
 })
 
-console.log(`[ui] [api-data] [index] endpoints:`)
-console.log(endpoints)
+// console.log(`[ui] [api-data] [index] endpoints:`)
+// console.log(endpoints)
 
 const getClass = computed(() => {
   return {

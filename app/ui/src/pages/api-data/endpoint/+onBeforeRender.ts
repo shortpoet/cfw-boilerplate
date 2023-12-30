@@ -40,8 +40,8 @@ const onBeforeRender: OnBeforeRenderAsync = async (
 
   console.log(`[ui] [api-data] [endpoint] [onBeforeRender] urlPathname`)
   console.log(urlPathname)
-  console.log(`[ui] [api-data] [endpoint] [onBeforeRender] ROUTE_MAPPING[]`)
-  console.log(ROUTE_MAPPING)
+  // console.log(`[ui] [api-data] [endpoint] [onBeforeRender] ROUTE_MAPPING[]`)
+  // console.log(ROUTE_MAPPING)
   const endpoint = ROUTE_MAPPING[urlPathname].endpoint
   console.log(`[ui] [api-data] [endpoint] [onBeforeRender] endpoint`)
   console.log(endpoint)

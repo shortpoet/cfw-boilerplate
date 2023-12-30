@@ -1,5 +1,6 @@
 export * from './cache'
 export * from './cookie'
+export * from './crypto'
 // export * from './config';
 export * from './data'
 export * from './endpoints'

@@ -20,7 +20,7 @@ const onBeforeRender: OnBeforeRenderAsync = async (
   // const session = await useSession(sessionToken);
   const session = pageSession
 
-  console.log(`[ui] [auth] [login] [onBeforeRender] urlPathname: ${urlPathname}`)
+  console.log(`[ui] [auth] [login] [onBeforeRender] urlPathname and session: ${urlPathname}`)
   console.log(session)
 
   return {

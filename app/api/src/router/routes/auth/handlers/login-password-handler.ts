@@ -75,8 +75,9 @@ export class RegisterPasswordUser extends OpenAPIRoute {
         userId: user.userId,
         attributes: {}
       })
-      const sessionCookie = auth.createSessionCookie(session)
-      res.headers.set('Set-Cookie', sessionCookie.serialize())
+
+      const sessionCookie = auth.createSessionCookie(session).serialize()
+      await res.cookie(req, res, env, LUCIA_AUTH_COOKIES_SESSION_TOKEN, sessionCookie)
       return jsonOkResponse(session, res)
     } catch (error) {
       console.error(error)
@@ -147,7 +148,7 @@ export class LoginPasswordUser extends OpenAPIRoute {
 
       // return redirectHtml(dataPage, sessionCookie, 302)
 
-      res.headers.set('Set-Cookie', sessionCookie)
+      await res.cookie(req, res, env, LUCIA_AUTH_COOKIES_SESSION_TOKEN, sessionCookie)
       return jsonOkResponse(dataPage, res)
       // return jsonOkResponse(session, res)
     } catch (error) {

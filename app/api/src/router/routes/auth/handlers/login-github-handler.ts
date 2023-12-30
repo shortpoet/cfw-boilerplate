@@ -18,6 +18,7 @@ import {
 import { OpenAPIRoute } from '@cloudflare/itty-router-openapi'
 import { AuthLoginOauthCallbackSchema, AuthLoginOauthSchema } from '../auth-schema'
 import { handleSsr } from '#/api/src/ssr'
+import { unsignCookie } from '#/utils'
 
 export class LoginGithub extends OpenAPIRoute {
   static schema = AuthLoginOauthSchema
@@ -32,12 +33,7 @@ export class LoginGithub extends OpenAPIRoute {
     }
     const [url, state] = await githubAuth.getAuthorizationUrl()
     console.log(`[api] [auth] [login] [github] -> url: ${url}`)
-    const cookieOptions =
-      env.NODE_ENV === 'production' ? LUCIA_AUTH_COOKIES_OPTIONS_SECURE : LUCIA_AUTH_COOKIES_OPTIONS
-
-    // const stateCookie = serializeCookie(LUCIA_AUTH_COOKIES_SESSION_TOKEN, state, cookieOptions)
-    // res.headers.set('Set-Cookie', stateCookie)
-    await res.cookie(req, res, env, LUCIA_AUTH_COOKIES_SESSION_TOKEN, state, cookieOptions)
+    await res.cookie(req, res, env, LUCIA_AUTH_COOKIES_SESSION_TOKEN, state)
     return jsonOkResponse(url, res)
   }
 }
@@ -59,7 +55,7 @@ export class LoginGithubCallback extends OpenAPIRoute {
     const cook = cookies[LUCIA_AUTH_COOKIES_SESSION_TOKEN]
     req.logger.debug(`[api] [auth] [login] [github] [callback] -> cook: ${cook}`)
     const secret = env.NEXTAUTH_SECRET
-    const storedState = cook ? await sig.unsign(cook.replace('s:', ''), secret) : ''
+    const storedState = cook ? await unsignCookie(cook.replace('s:', ''), secret) : ''
     const state = req.query?.state
     const code = req.query?.code
     req.logger.debug(`[api] [auth] [login] [github] -> storedState: ${storedState}`)
