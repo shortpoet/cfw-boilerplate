@@ -10,11 +10,7 @@ import { deriveDatabaseAdapter, q } from '#/api/db/d1-kysely-lucia'
 import {
   LUCIA_AUTH_COOKIES_OPTIONS,
   LUCIA_AUTH_COOKIES_OPTIONS_SECURE,
-  LUCIA_AUTH_COOKIES_SESSION_TOKEN,
-  Session,
-  User,
-  UserRole,
-  UserType
+  LUCIA_AUTH_COOKIES_SESSION_TOKEN
 } from '#/types'
 import { roleFlagsToArray, userTypeFlagsToArray } from '#/utils'
 import { castIntToBool } from '#/api/db/d1-kysely-authjs/cast'
@@ -36,17 +32,6 @@ export const createAuth = async (env: Env) => {
         env.NODE_ENV === 'production'
           ? LUCIA_AUTH_COOKIES_OPTIONS_SECURE
           : LUCIA_AUTH_COOKIES_OPTIONS
-      // parseSignedCookie: async (cookie: string) => {
-      //   const parsedCookie = parseCookie((await unsignCookie(cookie, env.NEXTAUTH_SECRET)) || '')
-      //   // I really don't like requiring `if` statements inside options
-      //   if (parsedCookie === null) return null // log request - cookie possibly tampered with
-      //   if (new Date(parsedCookie.expires) < new Date()) return null // log request - cookie expired
-      //   return parsedCookie.sessionId
-      // },
-      // signCookie: (session: Session) => {
-      //   // return signCookie(session.sessionId, session.idlePeriodExpiresAt)
-      //   return signCookie(session.sessionId, env.NEXTAUTH_SECRET)
-      // }
     },
     csrfProtection: {
       allowedSubDomains: '*'

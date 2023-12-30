@@ -11,7 +11,8 @@ import {
   withPino,
   withQueryParams,
   withListOptions,
-  withDb
+  withDb,
+  withCrypto
   // withUser,
 } from '../middleware'
 
@@ -77,7 +78,7 @@ const protectedRoutes = {
 // GET collection index
 router
   .all('*', preflight)
-  .all('*', withPino({ level: FILE_LOG_LEVEL }), withDb(), withCookies())
+  .all('*', withPino({ level: FILE_LOG_LEVEL }), withCrypto(), withDb(), withCookies())
   .all('*', withCfSummary(), withCfHeaders(), withQueryParams(), withListOptions(), withSession())
   .all('/auth/*', auth_router)
   .all('/task/*', task_router)

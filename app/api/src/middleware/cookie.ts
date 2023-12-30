@@ -133,37 +133,50 @@ export default function withCookies() {
 
     cookieListener(req, res, env)
 
-    try {
-      // req = await cookieProxy(req, res, env)
-      // remapping cookie so it is unsigned for all subsequent use
-      if (cookieHeader) {
-        const pars = parseCookie(cookieHeader)
-        const cook = pars[LUCIA_AUTH_COOKIES_SESSION_TOKEN]
-        console.log(`[api] [middleware] [withCookies] [cook] -> `, cook)
-        const headers = new Headers()
-        headers.set('cookie', cook)
-        // const cookies = cookieHeader.split(';').map((cookie) => decodeURIComponent(cookie.trim()))
-        // cookies.forEach((cookie) => {
-        //   headers.append('cookie', cookie)
-        //   console.log(`[api] [middleware] [withCookies] [cookie] -> `, cookie)
-        // })
-        req = remapRequest(req, env, { headers })
-      }
+    // try {
+    //   // req = await cookieProxy(req, res, env)
+    //   // remapping cookie so it is unsigned for all subsequent use
+    //   if (cookieHeader) {
+    //     const pars = parseCookie(cookieHeader)
+    //     const cook = pars[LUCIA_AUTH_COOKIES_SESSION_TOKEN]
+    //     console.log(`[api] [middleware] [withCookies] [cook] -> `, cook)
+    //     const headers = new Headers()
+    //     headers.set('cookie', cook)
+    //     // const cookies = cookieHeader.split(';').map((cookie) => decodeURIComponent(cookie.trim()))
+    //     // cookies.forEach((cookie) => {
+    //     //   headers.append('cookie', cookie)
+    //     //   console.log(`[api] [middleware] [withCookies] [cookie] -> `, cookie)
+    //     // })
+    //     req = remapRequest(req, env, { headers })
+    //   }
 
-      // test proxy
-      const cookieTest = req.headers.get('cookie') || ''
-      console.log(`[api] [middleware] [withCookies] [cookieTest] -> `, cookieTest)
-      // const cookieTestAync = (await req.headers.get('cookie')) || ''
-      // console.log(`[api] [middleware] [withCookies] [cookieTestAync] -> `, cookieTestAync)
+    //   // test proxy
+    //   const cookieTest = req.headers.get('cookie') || ''
+    //   console.log(`[api] [middleware] [withCookies] [cookieTest] -> `, cookieTest)
+    //   // const cookieTestAync = (await req.headers.get('cookie')) || ''
+    //   // console.log(`[api] [middleware] [withCookies] [cookieTestAync] -> `, cookieTestAync)
 
-      cookieListener(req, res, env)
-    } catch (error) {
-      console.log(`[api] [middleware] [withCookies] [error] -> `, error)
-    } finally {
-      return
-    }
+    //   cookieListener(req, res, env)
+    // } catch (error) {
+    //   console.log(`[api] [middleware] [withCookies] [error] -> `, error)
+    // } finally {
+    //   return
+    // }
 
     /*
+
+      // parseSignedCookie: async (cookie: string) => {
+      //   const parsedCookie = parseCookie((await unsignCookie(cookie, env.NEXTAUTH_SECRET)) || '')
+      //   // I really don't like requiring `if` statements inside options
+      //   if (parsedCookie === null) return null // log request - cookie possibly tampered with
+      //   if (new Date(parsedCookie.expires) < new Date()) return null // log request - cookie expired
+      //   return parsedCookie.sessionId
+      // },
+      // signCookie: (session: Session) => {
+      //   // return signCookie(session.sessionId, session.idlePeriodExpiresAt)
+      //   return signCookie(session.sessionId, env.NEXTAUTH_SECRET)
+      // }
+
     // 2KGTIS22o9onlPbIgwNDUmnXpACFEmc8f3R4Ya5V5ROjprNbyqJzQPMuVcsgbyukswISIhkSAnDrm5j1vAlMbw%253D%253D
     // 2KGTIS22o9onlPbIgwNDUmnXpACFEmc8f3R4Ya5V5ROjprNbyqJzQPMuVcsgbyukswISIhkSAnDrm5j1vAlMbw%3D%3D
     // 2KGTIS22o9onlPbIgwNDUmnXpACFEmc8f3R4Ya5V5ROjprNbyqJzQPMuVcsgbyukswISIhkSAnDrm5j1vAlMbw%3D%3D

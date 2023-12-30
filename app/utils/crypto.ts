@@ -8,11 +8,6 @@ export {
   importKey,
   arrayBufferToBase64,
   base64ToArrayBuffer
-  // encrypt,
-  // decrypt,
-  // signCookie,
-  // verifyCookie,
-  // unsignCookie
 }
 
 import { generateRandomString } from 'lucia/utils'
@@ -88,7 +83,7 @@ async function generateKeyPair(isRsa = false, hashName = 'SHA-256') {
   try {
     const isRsa = false
     const algo = getAlgo(isRsa, hashName)
-    console.log(`[crypto] [generateKeyPair] [algo] -> `, algo)
+    // console.log(`[crypto] [generateKeyPair] [algo] -> `, algo)
     const usage: KeyUsage[] = isRsa ? ['sign', 'verify'] : ['sign', 'verify']
     const extractable = true
     const keyPair = await crypto.subtle.generateKey(algo, extractable, usage)
@@ -108,7 +103,7 @@ async function signData(privateKey: CryptoKey, data: string): Promise<ArrayBuffe
       // This tells TypeScript that privateKey.algorithm is RsaHashedKeyAlgorithm, which has the hash property
       algo.hash = (privateKey.algorithm as RsaHashedKeyAlgorithm).hash
     }
-    console.log(`[crypto] [signData] [algo] -> `, algo)
+    // console.log(`[crypto] [signData] [algo] -> `, algo)
     const signature = await crypto.subtle.sign(algo, privateKey, str2ab(data))
     return signature
   } catch (error) {
@@ -130,7 +125,7 @@ async function verifySignature(
       // This tells TypeScript that privateKey.algorithm is RsaHashedKeyAlgorithm, which has the hash property
       algo.hash = (publicKey.algorithm as RsaHashedKeyAlgorithm).hash
     }
-    console.log(`[crypto] [signData] [verifySignature] -> `, algo)
+    // console.log(`[crypto] [signData] [verifySignature] -> `, algo)
 
     const verified = await crypto.subtle.verify(algo, publicKey, signature, str2ab(data))
     return verified
@@ -198,19 +193,6 @@ async function importKey(
     usage
   )
   return cryptoKey
-}
-async function getSessionId(env: Env) {
-  const isRsa = false
-  const decodedKeyCheck = base64ToArrayBuffer(env.PRIVATE_KEY)
-
-  const importedPrivateKey = await importKey(env.PRIVATE_KEY, isRsa, 'private')
-  const rando = generateRandomString(40)
-  console.log(`[api] [auth] [login] [password] -> rando:`)
-  console.log(rando)
-  const sessionId = arrayBufferToBase64(await signData(importedPrivateKey, rando))
-  console.log(`[api] [auth] [login] [password] -> sessionId:`)
-  console.log(sessionId)
-  return sessionId
 }
 
 async function signAndVerifyDemo(value: string): Promise<string> {
@@ -284,7 +266,7 @@ const testMe = async () => {
   console.log(`^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^`)
 }
 
-;(() => testMe())()
+// ;(() => testMe())()
 
 /* 
 // Usage

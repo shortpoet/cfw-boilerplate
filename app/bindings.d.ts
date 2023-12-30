@@ -158,6 +158,7 @@ declare global {
       name: string,
       options?: CookieChangeOptions
     ) => void
+    cryptoSign: (data: string) => Promise<string>
     cf?: ResponseCfProperties
     webSocket?: WebSocket
     encodeBody?: 'automatic' | 'manual' | undefined
