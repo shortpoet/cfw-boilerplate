@@ -23,7 +23,24 @@ import {
 
 import { castBoolToInt } from '#/api/db/d1-kysely-lucia/cast'
 import { LuciaError } from 'lucia'
-import { arrayToRoleFlags, arrayToUserTypeFlags, signData } from '#/utils'
+import {
+  arrayBufferToBase64,
+  arrayToRoleFlags,
+  arrayToUserTypeFlags,
+  importKey,
+  signData
+} from '#/utils'
+
+async function getSessionId(env: Env) {
+  const isRsa = false
+  const importedPrivateKey = await importKey(env.PRIVATE_KEY, isRsa, 'private')
+  const sessionId = arrayBufferToBase64(
+    await signData(importedPrivateKey, generateRandomString(40))
+  )
+  console.log(`[api] [auth] [login] [password] -> sessionId:`)
+  console.log(sessionId)
+  return sessionId
+}
 
 export class RegisterPasswordUser extends OpenAPIRoute {
   static schema = AuthRegisterSchema
@@ -35,16 +52,16 @@ export class RegisterPasswordUser extends OpenAPIRoute {
     ctx: ExecutionContext,
     data: { body: AuthRegisterBodyType }
   ) {
-    req.logger.info(`[api] [auth] [login] [password]`)
-    console.log(`[api] [auth] [login] [password] -> data: ${JSON.stringify(data, null, 2)}`)
-    console.log(`[api] [auth] [login] [password] -> body: ${JSON.stringify(data.body, null, 2)}`)
+    req.logger.info(`[api] [auth] [register] [password]`)
+    console.log(`[api] [auth] [register] [password] -> data: ${JSON.stringify(data, null, 2)}`)
+    console.log(`[api] [auth] [register] [password] -> body: ${JSON.stringify(data.body, null, 2)}`)
     try {
       const loginBody =
         env.NODE_ENV === 'development'
           ? AuthRegisterBodyComponent.parse(data)
           : AuthRegisterBodyComponent.parse(data.body)
       console.log(
-        `[api] [auth] [login] [password] -> loginBody: ${JSON.stringify(loginBody, null, 2)}`
+        `[api] [auth] [register] [password] -> loginBody: ${JSON.stringify(loginBody, null, 2)}`
       )
       if (!loginBody) {
         return badResponse('Invalid login body', new Error(JSON.stringify(loginBody)), res)
@@ -71,13 +88,18 @@ export class RegisterPasswordUser extends OpenAPIRoute {
           avatar_url: 'https://www.gravatar.com/avatar/?d=retro&s=35'
         }
       })
+
       const session = await auth.createSession({
         userId: user.userId,
-        sessionId: signData(env.PRIVATE_KEY, generateRandomString(40)),
+        sessionId: await getSessionId(env),
         attributes: {}
       })
 
       const sessionCookie = auth.createSessionCookie(session).serialize()
+
+      console.log(`[api] [auth] [register] [password] -> sessionCookie:`)
+      console.log(sessionCookie)
+
       await res.cookie(req, res, env, LUCIA_AUTH_COOKIES_SESSION_TOKEN, sessionCookie)
       return jsonOkResponse(session, res)
     } catch (error) {
@@ -139,6 +161,7 @@ export class LoginPasswordUser extends OpenAPIRoute {
 
       const session = await auth.createSession({
         userId: key.userId,
+        sessionId: await getSessionId(env),
         attributes: {}
       })
       console.log(`[api] [auth] [login] [password] -> session: ${JSON.stringify(session, null, 2)}`)

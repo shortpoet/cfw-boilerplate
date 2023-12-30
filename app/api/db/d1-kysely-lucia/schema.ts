@@ -11,6 +11,8 @@ export type SelectUser = Selectable<CFWDatabase['User']>
 export type UpdateUser = Updateable<CFWDatabase['User']>
 export type InsertUser = Insertable<CFWDatabase['User']>
 
+export type SelectSession = Selectable<CFWDatabase['UserSession']>
+
 export interface CFWDatabase {
   User: {
     id: GeneratedAlways<string>

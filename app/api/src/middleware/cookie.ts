@@ -82,6 +82,7 @@ const unCookie = async (req: Request, res: Response, env: Env, name: string) => 
 
   return cook || ''
 }
+
 export const clearCookie = async (
   req: Request,
   res: Response,
@@ -119,11 +120,6 @@ function cookieListener(req: Request, res: Response, env: Env): void {
   })
 }
 
-async function resolveCookieSign(cookie: string, secret: string) {
-  await new Promise((resolve) => setImmediate(resolve))
-  // return unsignCookie(cookie, secret)
-}
-
 export default function withCookies() {
   return async function (req: Request, res: Response, env: Env) {
     console.log(`[api] [middleware] [withCookies] ->`)
@@ -137,27 +133,27 @@ export default function withCookies() {
 
     cookieListener(req, res, env)
 
-    try {
-      // req = await cookieProxy(req, res, env)
-      // remapping cookie so it is unsigned for all subsequent use
-      if (cookieHeader) {
-        const headers = new Headers(req.headers)
-        headers.set('cookie', await unCookie(req, res, env, LUCIA_AUTH_COOKIES_SESSION_TOKEN))
-        req = remapRequest(req, { headers })
-      }
+    // try {
+    //   // req = await cookieProxy(req, res, env)
+    //   // remapping cookie so it is unsigned for all subsequent use
+    //   if (cookieHeader) {
+    //     const headers = new Headers(req.headers)
+    //     headers.set('cookie', await unCookie(req, res, env, LUCIA_AUTH_COOKIES_SESSION_TOKEN))
+    //     req = remapRequest(req, { headers })
+    //   }
 
-      // test proxy
-      const cookieTest = req.headers.get('cookie') || ''
-      console.log(`[api] [middleware] [withCookies] [cookieTest] -> `, cookieTest)
-      const cookieTestAync = (await req.headers.get('cookie')) || ''
-      console.log(`[api] [middleware] [withCookies] [cookieTestAync] -> `, cookieTestAync)
+    //   // test proxy
+    //   const cookieTest = req.headers.get('cookie') || ''
+    //   console.log(`[api] [middleware] [withCookies] [cookieTest] -> `, cookieTest)
+    //   const cookieTestAync = (await req.headers.get('cookie')) || ''
+    //   console.log(`[api] [middleware] [withCookies] [cookieTestAync] -> `, cookieTestAync)
 
-      cookieListener(req, res, env)
-    } catch (error) {
-      console.log(`[api] [middleware] [withCookies] [error] -> `, error)
-    } finally {
-      return
-    }
+    //   cookieListener(req, res, env)
+    // } catch (error) {
+    //   console.log(`[api] [middleware] [withCookies] [error] -> `, error)
+    // } finally {
+    //   return
+    // }
   }
 }
 

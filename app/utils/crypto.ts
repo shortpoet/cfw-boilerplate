@@ -3,7 +3,10 @@ export {
   hashPassword,
   generateKeyPair,
   signData,
-  verifySignature
+  verifySignature,
+  exportKey,
+  importKey,
+  arrayBufferToBase64
   // encrypt,
   // decrypt,
   // signCookie,
@@ -27,35 +30,37 @@ async function generateSalt(): Promise<string> {
     .join('')
 }
 
-// async function generateKeyPair(
-//   hash: 'SHA-256' | 'SHA-384' | 'SHA-512' = 'SHA-256'
-// ): Promise<CryptoKeyPair> {
-//   return crypto.subtle.generateKey(
-//     {
-//       name: 'RSA-OAEP',
-//       modulusLength: 4096,
-//       publicExponent: new Uint8Array([1, 0, 1]),
-//       hash
-//     },
-//     true,
-//     ['encrypt', 'decrypt']
-//   )
-// }
+function arrayBufferToBase64(buffer: ArrayBuffer): string {
+  const byteArray = new Uint8Array(buffer)
+  let binaryString = ''
+  for (const byte of byteArray) {
+    binaryString += String.fromCharCode(byte)
+  }
+  return btoa(binaryString) // Use btoa for base64 encoding
+}
+
+function base64ToArrayBuffer(base64: string): ArrayBuffer {
+  const binaryString = atob(base64) // Use atob for base64 decoding
+  const byteArray = new Uint8Array(binaryString.length)
+  for (let i = 0; i < binaryString.length; i++) {
+    byteArray[i] = binaryString.charCodeAt(i)
+  }
+  return byteArray.buffer
+}
 
 // You need to use an algorithm that supports signing. Here's an example using ECDSA with P-256.
-const isRsa = false
-const getAlgo = (hash: 'SHA-256' | 'SHA-384' | 'SHA-512' = 'SHA-256') =>
+const getAlgo = (isRsa = false, hashName = 'SHA-256') =>
   isRsa
     ? {
-        name: 'RSA-OAEP',
-        modulusLength: 4096,
-        publicExponent: new Uint8Array([1, 0, 1]),
-        hash
+        name: 'RSASSA-PKCS1-v1_5',
+        modulusLength: 2048,
+        publicExponent: new Uint8Array([0x01, 0x00, 0x01]), // Equivalent to 65537
+        hash: { name: hashName }
       }
     : {
         name: 'ECDSA',
-        namedCurve: 'P-256',
-        hash
+        namedCurve: 'P-256', // This curve is associated with SHA-256
+        hash: { name: hashName } // Specify hash for signing/verifying
       }
 
 function ab2str(buf: ArrayBuffer): string {
@@ -76,11 +81,14 @@ function str2ab(str: string): ArrayBuffer {
   return buf
 }
 
-async function generateKeyPair(): Promise<CryptoKeyPair> {
+async function generateKeyPair(isRsa = false, hashName = 'SHA-256') {
   try {
-    const algo = getAlgo()
+    const isRsa = false
+    const algo = getAlgo(isRsa, hashName)
     console.log(`[crypto] [generateKeyPair] [algo] -> `, algo)
-    const keyPair = await crypto.subtle.generateKey(algo, true, ['sign', 'verify'])
+    const usage: KeyUsage[] = isRsa ? ['sign', 'verify'] : ['sign', 'verify']
+    const extractable = true
+    const keyPair = await crypto.subtle.generateKey(algo, extractable, usage)
     return keyPair
   } catch (error) {
     const msg = error instanceof Error ? error.message : 'Unknown error'
@@ -90,8 +98,14 @@ async function generateKeyPair(): Promise<CryptoKeyPair> {
 
 async function signData(privateKey: CryptoKey, data: string): Promise<ArrayBuffer> {
   try {
-    const algo = getAlgo()
-    console.log(`[crypto] [generateKeyPair] [algo] -> `, algo)
+    const isRsa = privateKey.algorithm.name === 'RSASSA-PKCS1-v1_5'
+    const algo = getAlgo(isRsa)
+    // Hashing is implied in the algorithm for ECDSA. For RSA, we need to provide it.
+    if (isRsa) {
+      // This tells TypeScript that privateKey.algorithm is RsaHashedKeyAlgorithm, which has the hash property
+      algo.hash = (privateKey.algorithm as RsaHashedKeyAlgorithm).hash
+    }
+    console.log(`[crypto] [signData] [algo] -> `, algo)
     const signature = await crypto.subtle.sign(algo, privateKey, str2ab(data))
     return signature
   } catch (error) {
@@ -106,7 +120,16 @@ async function verifySignature(
   data: string
 ): Promise<boolean> {
   try {
-    const verified = await crypto.subtle.verify(getAlgo(), publicKey, signature, str2ab(data))
+    const isRsa = publicKey.algorithm.name === 'RSASSA-PKCS1-v1_5'
+    const algo = getAlgo(isRsa)
+    // Hashing is implied in the algorithm for ECDSA. For RSA, we need to provide it.
+    if (isRsa) {
+      // This tells TypeScript that privateKey.algorithm is RsaHashedKeyAlgorithm, which has the hash property
+      algo.hash = (publicKey.algorithm as RsaHashedKeyAlgorithm).hash
+    }
+    console.log(`[crypto] [signData] [verifySignature] -> `, algo)
+
+    const verified = await crypto.subtle.verify(algo, publicKey, signature, str2ab(data))
     return verified
   } catch (error) {
     const msg = error instanceof Error ? error.message : 'Unknown error'
@@ -114,15 +137,97 @@ async function verifySignature(
   }
 }
 
+async function exportKey(
+  key: CryptoKey,
+  isRsa: boolean,
+  keyType: 'public' | 'private'
+): Promise<ArrayBuffer> {
+  if (!key.extractable) {
+    throw new Error('Key is not extractable')
+  }
+
+  // Determine the key format based on the key type
+  const format = keyType === 'public' ? 'spki' : 'pkcs8'
+
+  // Export the key
+  try {
+    const exportedKey = await crypto.subtle.exportKey(format, key)
+    return exportedKey
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : 'Unknown error'
+    throw new Error(`Key export failed: ${msg}`)
+  }
+}
+
+async function importKey(
+  base64Key: string,
+  isRsa: boolean,
+  keyType: 'public' | 'private',
+  hashName: 'SHA-256' | 'SHA-384' | 'SHA-512' = 'SHA-256'
+): Promise<CryptoKey> {
+  // Convert the Base64 string back to an ArrayBuffer
+  const keyBuffer = base64ToArrayBuffer(base64Key)
+  const isPrivateKey = keyType === 'private'
+
+  // Define the import algorithm based on the key type
+  const algo = isRsa
+    ? {
+        name: 'RSASSA-PKCS1-v1_5',
+        hash: { name: hashName }
+      }
+    : {
+        name: 'ECDSA',
+        namedCurve: 'P-256' // This curve is associated with SHA-256
+      }
+
+  // Define the format and the usage for the key being imported
+  const format = isPrivateKey ? 'pkcs8' : 'spki'
+  const usage: KeyUsage[] = isPrivateKey
+    ? ['sign'] // Private keys are typically used for signing
+    : ['verify'] // Public keys are typically used for verifying signatures
+
+  // Import the key
+  const cryptoKey = await crypto.subtle.importKey(
+    format,
+    keyBuffer,
+    algo,
+    true, // Set extractable to true if you expect to export the key again
+    usage
+  )
+  return cryptoKey
+}
+
 async function signAndVerifyDemo(value: string): Promise<string> {
   try {
     const keyPair = await generateKeyPair()
     const signature = await signData(keyPair.privateKey, value)
+    const signedData = arrayBufferToBase64(signature)
 
     const isValid = await verifySignature(keyPair.publicKey, signature, value)
 
-    if (isValid) {
-      console.log('Signature is valid!')
+    console.log(`[crypto] [signAndVerifyDemo] [isValid] -> `, isValid)
+
+    const exportedPublicKeyBuffer = await exportKey(keyPair.publicKey, false, 'public')
+    const exportedPrivateKeyBuffer = await exportKey(keyPair.privateKey, false, 'private')
+    const exportedPublicKey = arrayBufferToBase64(exportedPublicKeyBuffer)
+    const exportedPrivateKey = arrayBufferToBase64(exportedPrivateKeyBuffer)
+    console.log(`[crypto] [signAndVerifyDemo] [exportedPublicKey] -> `, exportedPublicKey)
+    console.log(`[crypto] [signAndVerifyDemo] [exportedPrivateKey] -> `, exportedPrivateKey)
+
+    const isRsa = keyPair.privateKey.algorithm.name === 'RSASSA-PKCS1-v1_5'
+    const importedPublicKey = await importKey(exportedPublicKey, isRsa, 'public')
+    const importedPrivateKey = await importKey(exportedPrivateKey, isRsa, 'private')
+
+    console.log(`[crypto] [signAndVerifyDemo] [importedPublicKey] -> `, importedPublicKey)
+    console.log(`[crypto] [signAndVerifyDemo] [importedPrivateKey] -> `, importedPrivateKey)
+
+    const newSignature = await signData(importedPrivateKey, value)
+
+    const isValid2 = await verifySignature(importedPublicKey, newSignature, value)
+    console.log(`[crypto] [signAndVerifyDemo] [isValid2] -> `, isValid2)
+
+    if (isValid && isValid2) {
+      console.log('Signatures are valid!')
       return value
     } else {
       throw new Error('Signature verification failed!')
@@ -134,35 +239,34 @@ async function signAndVerifyDemo(value: string): Promise<string> {
 }
 
 // Example usage:
-console.log(`^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^`)
-signAndVerifyDemo('session_cookie_value')
-  .then((originalValue) => {
-    console.log('Original value:', originalValue)
-  })
-  .catch((error) => {
-    console.error(error)
-  })
-console.log(`[crypto] [TEST]`)
-const secretKey = 'mySecretKeyForSigning'
-const cookieValue = 'user123'
+const testMe = async () => {
+  console.log(`^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^`)
+  signAndVerifyDemo('session_cookie_value')
+    .then(async (originalValue) => {
+      console.log('Original value:', originalValue)
+      const secretKey = 'mySecretKeyForSigning'
+      const cookieValue = 'user123'
+      const keyPair = await generateKeyPair()
+      const signature = await signData(keyPair.privateKey, cookieValue)
+      const isValid3 = await verifySignature(keyPair.publicKey, signature, cookieValue)
+      if (isValid3) {
+        console.log('[crypto] [TEST] [isValid3] Cookie is verified.')
+        console.log(`[crypto] [TEST] [isValid3] -> `, isValid3)
+        console.log(`[crypto] [TEST] [keyPair] -> `, keyPair)
+        console.log(`[crypto] [TEST] [cookieValue] -> `, cookieValue)
+        console.log(`[crypto] [TEST] [signature] -> `, signature)
+      } else {
+        console.log('Cookie verification failed.')
+      }
+    })
+    .catch((error) => {
+      console.error(error)
+    })
 
-// Sign a cookie value
-const keyPair = await generateKeyPair()
-const signature = await signData(keyPair.privateKey, cookieValue)
-const isValid = await verifySignature(keyPair.publicKey, signature, cookieValue)
-
-// Verify a signed cookie
-if (isValid) {
-  console.log('Cookie is verified.')
-  console.log(`[crypto] [TEST] [isValid] -> `, isValid)
-  console.log(`[crypto] [TEST] [keyPair] -> `, keyPair)
-  console.log(`[crypto] [TEST] [cookieValue] -> `, cookieValue)
-  console.log(`[crypto] [TEST] [signature] -> `, signature)
-} else {
-  console.log('Cookie verification failed.')
+  console.log(`^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^`)
 }
 
-console.log(`^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^`)
+// ;(() => testMe())()
 
 /* 
 // Usage

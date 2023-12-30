@@ -9,7 +9,9 @@
     "moduleResolution": "node",
     "noEmit": true,
     "lib": [
-      "esnext"
+      "esnext",
+      "DOM",
+      "DOM.Iterable",
     ],
     "types": [
       "@types/node",

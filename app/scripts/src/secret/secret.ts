@@ -3,6 +3,7 @@ import colors from 'kleur'
 import { command, writeFile, readFile, assert, promptForInput } from '../util'
 import { Config, Options } from '../types'
 import { __rootDir } from '#/utils/root'
+import { arrayBufferToBase64, exportKey, generateKeyPair } from '#/utils'
 
 export { writeSecretToKv, setSecretFile, setSecrets, assertPassUnlocked }
 
@@ -54,6 +55,22 @@ async function setSecrets(
     if (targetEnv) opts.env = targetEnv
     if (fileOnly === false) await writeSecretToKv(secretName, secret, opts)
     if (goLive) await setSecretFile(secretName, secret, secretsFilePath)
+  }
+
+  const keyPair = await generateKeyPair()
+  const exportedPublicKeyBuffer = await exportKey(keyPair.publicKey, false, 'public')
+  const exportedPrivateKeyBuffer = await exportKey(keyPair.privateKey, false, 'private')
+  const exportedPublicKey = arrayBufferToBase64(exportedPublicKeyBuffer)
+  const exportedPrivateKey = arrayBufferToBase64(exportedPrivateKeyBuffer)
+
+  if (fileOnly === false) {
+    await writeSecretToKv('PUBLIC_KEY', exportedPublicKey, opts)
+    await writeSecretToKv('PRIVATE_KEY', exportedPrivateKey, opts)
+  }
+
+  if (goLive) {
+    await setSecretFile('PUBLIC_KEY', exportedPublicKey, secretsFilePath)
+    await setSecretFile('PRIVATE_KEY', exportedPrivateKey, secretsFilePath)
   }
 
   return secrets

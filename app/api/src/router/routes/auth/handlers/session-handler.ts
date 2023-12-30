@@ -1,4 +1,10 @@
-import { createAuth, jsonOkResponse } from '../../../../middleware'
+import {
+  createAuth,
+  jsonOkResponse,
+  notFoundResponse,
+  serverErrorResponse
+} from '../../../../middleware'
+import { q } from '#/api/db'
 
 export const getSession = async (req: Request, env: Env) => {
   console.log(`[api] [auth] [session] ->`)
@@ -14,4 +20,23 @@ export const getSession = async (req: Request, env: Env) => {
 export const session = async (req: Request, res: Response, env: Env, ctx: ExecutionContext) => {
   const session = await getSession(req, env)
   return jsonOkResponse(session, res)
+}
+
+export const getAllSessions = async (
+  req: Request,
+  res: Response,
+  env: Env,
+  ctx: ExecutionContext
+) => {
+  try {
+    const result =
+      env.NODE_ENV === 'development' ? await q.getAllSessionsLocal() : await q.getAllSessions()
+    if (!result) {
+      return notFoundResponse('No users found')
+    }
+    return jsonOkResponse(result, res)
+  } catch (error) {
+    console.error(error)
+    return serverErrorResponse('Error getting users', error, res)
+  }
 }

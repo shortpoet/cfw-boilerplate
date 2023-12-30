@@ -471,6 +471,16 @@
         }
       }
     },
+    "/api/auth/session/all": {
+      "get": {
+        "operationId": "get__all",
+        "responses": {
+          "200": {
+            "description": "Object with user data."
+          }
+        }
+      }
+    },
     "/api/auth/user/all": {
       "get": {
         "tags": [

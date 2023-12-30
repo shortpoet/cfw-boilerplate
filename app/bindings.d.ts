@@ -86,6 +86,8 @@ declare global {
     CFW_BOILERPLATE_DB_BINDING_NAME: string
 
     // AUTH
+    PRIVATE_KEY: CryptoKey
+    PUBLIC_KEY: CryptoKey
     __SECRET__: string
     AUTH_PATH: string
     NEXTAUTH_SECRET: string
@@ -178,6 +180,8 @@ declare global {
       VITE_API_VERSION: string
       VITE_UI_VERSION: string
       SSR_BASE_PATHS: string
+      PRIVATE_KEY: CryptoKey
+      PUBLIC_KEY: CryptoKey
       __SECRET__: string
       AUTH_PATH: string
       NEXTAUTH_SECRET: string

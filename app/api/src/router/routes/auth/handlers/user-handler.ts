@@ -19,7 +19,8 @@ export class GetUsers extends OpenAPIRoute {
     data: Record<string, any>
   ) {
     try {
-      const result = await q.getAllUsers()
+      const result =
+        env.NODE_ENV === 'development' ? await q.getAllUsersLocal() : await q.getAllUsers()
       if (!result) {
         return notFoundResponse('No users found')
       }
