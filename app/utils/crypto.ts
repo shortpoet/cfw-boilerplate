@@ -6,13 +6,16 @@ export {
   verifySignature,
   exportKey,
   importKey,
-  arrayBufferToBase64
+  arrayBufferToBase64,
+  base64ToArrayBuffer
   // encrypt,
   // decrypt,
   // signCookie,
   // verifyCookie,
   // unsignCookie
 }
+
+import { generateRandomString } from 'lucia/utils'
 
 async function hashPassword(password: string, salt: string): Promise<string> {
   const utf8 = new TextEncoder().encode(`${salt}:${password}`)
@@ -196,6 +199,19 @@ async function importKey(
   )
   return cryptoKey
 }
+async function getSessionId(env: Env) {
+  const isRsa = false
+  const decodedKeyCheck = base64ToArrayBuffer(env.PRIVATE_KEY)
+
+  const importedPrivateKey = await importKey(env.PRIVATE_KEY, isRsa, 'private')
+  const rando = generateRandomString(40)
+  console.log(`[api] [auth] [login] [password] -> rando:`)
+  console.log(rando)
+  const sessionId = arrayBufferToBase64(await signData(importedPrivateKey, rando))
+  console.log(`[api] [auth] [login] [password] -> sessionId:`)
+  console.log(sessionId)
+  return sessionId
+}
 
 async function signAndVerifyDemo(value: string): Promise<string> {
   try {
@@ -241,7 +257,9 @@ async function signAndVerifyDemo(value: string): Promise<string> {
 // Example usage:
 const testMe = async () => {
   console.log(`^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^`)
-  signAndVerifyDemo('session_cookie_value')
+  const rando = generateRandomString(40)
+  console.log(`[crypto] [TEST] [rando] -> `, rando)
+  signAndVerifyDemo(rando)
     .then(async (originalValue) => {
       console.log('Original value:', originalValue)
       const secretKey = 'mySecretKeyForSigning'
@@ -266,7 +284,7 @@ const testMe = async () => {
   console.log(`^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^`)
 }
 
-// ;(() => testMe())()
+;(() => testMe())()
 
 /* 
 // Usage

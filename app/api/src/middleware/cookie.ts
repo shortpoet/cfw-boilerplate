@@ -133,27 +133,52 @@ export default function withCookies() {
 
     cookieListener(req, res, env)
 
-    // try {
-    //   // req = await cookieProxy(req, res, env)
-    //   // remapping cookie so it is unsigned for all subsequent use
-    //   if (cookieHeader) {
-    //     const headers = new Headers(req.headers)
-    //     headers.set('cookie', await unCookie(req, res, env, LUCIA_AUTH_COOKIES_SESSION_TOKEN))
-    //     req = remapRequest(req, { headers })
-    //   }
+    try {
+      // req = await cookieProxy(req, res, env)
+      // remapping cookie so it is unsigned for all subsequent use
+      if (cookieHeader) {
+        const pars = parseCookie(cookieHeader)
+        const cook = pars[LUCIA_AUTH_COOKIES_SESSION_TOKEN]
+        console.log(`[api] [middleware] [withCookies] [cook] -> `, cook)
+        const headers = new Headers()
+        headers.set('cookie', cook)
+        // const cookies = cookieHeader.split(';').map((cookie) => decodeURIComponent(cookie.trim()))
+        // cookies.forEach((cookie) => {
+        //   headers.append('cookie', cookie)
+        //   console.log(`[api] [middleware] [withCookies] [cookie] -> `, cookie)
+        // })
+        req = remapRequest(req, env, { headers })
+      }
 
-    //   // test proxy
-    //   const cookieTest = req.headers.get('cookie') || ''
-    //   console.log(`[api] [middleware] [withCookies] [cookieTest] -> `, cookieTest)
-    //   const cookieTestAync = (await req.headers.get('cookie')) || ''
-    //   console.log(`[api] [middleware] [withCookies] [cookieTestAync] -> `, cookieTestAync)
+      // test proxy
+      const cookieTest = req.headers.get('cookie') || ''
+      console.log(`[api] [middleware] [withCookies] [cookieTest] -> `, cookieTest)
+      // const cookieTestAync = (await req.headers.get('cookie')) || ''
+      // console.log(`[api] [middleware] [withCookies] [cookieTestAync] -> `, cookieTestAync)
 
-    //   cookieListener(req, res, env)
-    // } catch (error) {
-    //   console.log(`[api] [middleware] [withCookies] [error] -> `, error)
-    // } finally {
-    //   return
-    // }
+      cookieListener(req, res, env)
+    } catch (error) {
+      console.log(`[api] [middleware] [withCookies] [error] -> `, error)
+    } finally {
+      return
+    }
+
+    /*
+    // 2KGTIS22o9onlPbIgwNDUmnXpACFEmc8f3R4Ya5V5ROjprNbyqJzQPMuVcsgbyukswISIhkSAnDrm5j1vAlMbw%253D%253D
+    // 2KGTIS22o9onlPbIgwNDUmnXpACFEmc8f3R4Ya5V5ROjprNbyqJzQPMuVcsgbyukswISIhkSAnDrm5j1vAlMbw%3D%3D
+    // 2KGTIS22o9onlPbIgwNDUmnXpACFEmc8f3R4Ya5V5ROjprNbyqJzQPMuVcsgbyukswISIhkSAnDrm5j1vAlMbw%3D%3D
+    //
+    // r
+    7Pz4ibT9GVjmfi0OiKiitpE/Xss4kphyrw/3bOCHXdrKNRaTsqatgLPqbdI/gDW+yj6pv22oFR7iFR2ZGkdARg==
+    7Pz4ibT9GVjmfi0OiKiitpE%2FXss4kphyrw%2F3bOCHXdrKNRaTsqatgLPqbdI%2FgDW%2Byj6pv22oFR7iFR2ZGkdARg%3D%3D
+    7Pz4ibT9GVjmfi0OiKiitpE%2FXss4kphyrw%2F3bOCHXdrKNRaTsqatgLPqbdI%2FgDW%2Byj6pv22oFR7iFR2ZGkdARg%3D%3D
+    7Pz4ibT9GVjmfi0OiKiitpE%2FXss4kphyrw%2F3bOCHXdrKNRaTsqatgLPqbdI%2FgDW%2Byj6pv22oFR7iFR2ZGkdARg%3D%3D
+
+    7Pz4ibT9GVjmfi0OiKiitpE%2FXss4kphyrw%2F3bOCHXdrKNRaTsqatgLPqbdI%2FgDW%2Byj6pv22oFR7iFR2ZGkdARg%3D%3D
+    7Pz4ibT9GVjmfi0OiKiitpE/Xss4kphyrw/3bOCHXdrKNRaTsqatgLPqbdI/gDW+yj6pv22oFR7iFR2ZGkdARg==
+    7Pz4ibT9GVjmfi0OiKiitpE/Xss4kphyrw/3bOCHXdrKNRaTsqatgLPqbdI/gDW+yj6pv22oFR7iFR2ZGkdARg==
+
+    */
   }
 }
 

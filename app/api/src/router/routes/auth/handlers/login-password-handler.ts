@@ -27,18 +27,30 @@ import {
   arrayBufferToBase64,
   arrayToRoleFlags,
   arrayToUserTypeFlags,
+  base64ToArrayBuffer,
   importKey,
   signData
 } from '#/utils'
 
 async function getSessionId(env: Env) {
   const isRsa = false
-  const importedPrivateKey = await importKey(env.PRIVATE_KEY, isRsa, 'private')
-  const sessionId = arrayBufferToBase64(
-    await signData(importedPrivateKey, generateRandomString(40))
-  )
-  console.log(`[api] [auth] [login] [password] -> sessionId:`)
+  const privateKey = env.PRIVATE_KEY
+  console.log(`[api] [auth] [getSessionId] [password] -> privateKey:`)
+  console.log(privateKey)
+  const decodedKeyCheck = base64ToArrayBuffer(privateKey)
+  console.log(`[api] [auth] [getSessionId] [password] -> decodedKeyCheck:`)
+  console.log(decodedKeyCheck)
+
+  const importedPrivateKey = await importKey(privateKey, isRsa, 'private')
+  const rando = generateRandomString(40)
+  console.log(`[api] [auth] [getSessionId] [password] -> rando:`)
+  console.log(rando)
+  const sessionId = arrayBufferToBase64(await signData(importedPrivateKey, rando))
+  console.log(`[api] [auth] [getSessionId] [password] -> sessionId:`)
   console.log(sessionId)
+  const urlEncodedSessionId = encodeURIComponent(sessionId)
+  console.log(`[api] [auth] [getSessionId] [password] -> urlEncodedSessionId:`)
+  console.log(urlEncodedSessionId)
   return sessionId
 }
 
@@ -100,7 +112,8 @@ export class RegisterPasswordUser extends OpenAPIRoute {
       console.log(`[api] [auth] [register] [password] -> sessionCookie:`)
       console.log(sessionCookie)
 
-      await res.cookie(req, res, env, LUCIA_AUTH_COOKIES_SESSION_TOKEN, sessionCookie)
+      // await res.cookie(req, res, env, LUCIA_AUTH_COOKIES_SESSION_TOKEN, sessionCookie)
+      res.headers.set('Set-Cookie', `${LUCIA_AUTH_COOKIES_SESSION_TOKEN}=${sessionCookie}`)
       return jsonOkResponse(session, res)
     } catch (error) {
       console.error(error)
@@ -167,12 +180,15 @@ export class LoginPasswordUser extends OpenAPIRoute {
       console.log(`[api] [auth] [login] [password] -> session: ${JSON.stringify(session, null, 2)}`)
 
       const sessionCookie = auth.createSessionCookie(session).serialize()
+      console.log(`[api] [auth] [login] [password] -> sessionCookie:`)
+      console.log(sessionCookie)
       const { baseUrlApp } = getBaseUrl(env)
       const dataPage = new URL(`${baseUrlApp}/api-data`).href
 
       // return redirectHtml(dataPage, sessionCookie, 302)
 
-      await res.cookie(req, res, env, LUCIA_AUTH_COOKIES_SESSION_TOKEN, sessionCookie)
+      // await res.cookie(req, res, env, LUCIA_AUTH_COOKIES_SESSION_TOKEN, sessionCookie)
+      res.headers.set('Set-Cookie', `${LUCIA_AUTH_COOKIES_SESSION_TOKEN}=${sessionCookie}`)
       return jsonOkResponse(dataPage, res)
       // return jsonOkResponse(session, res)
     } catch (error) {

@@ -1,19 +1,19 @@
-import dotenv from 'dotenv';
-import { createEnv } from '@t3-oss/env-core';
-import { z } from 'zod';
-import path from 'node:path';
-import colors from 'kleur';
+import dotenv from 'dotenv'
+import { createEnv } from '@t3-oss/env-core'
+import { z } from 'zod'
+import path from 'node:path'
+import colors from 'kleur'
 
-const __appDir = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
-const envDir = __appDir;
-const parsed = dotenv.config({ path: `${envDir}/.env` }).parsed;
-const parsedSecret = dotenv.config({ path: `${envDir}/.env.secret` }).parsed;
-const parsedDev = dotenv.config({ path: `${__appDir}/server/.dev.vars` }).parsed;
-console.log(colors.green(`[utils] `), colors.magenta(`[config] envDir: ${envDir}`));
+const __appDir = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..')
+const envDir = __appDir
+const parsed = dotenv.config({ path: `${envDir}/.env` }).parsed
+const parsedSecret = dotenv.config({ path: `${envDir}/.env.secret` }).parsed
+const parsedDev = dotenv.config({ path: `${__appDir}/server/.dev.vars` }).parsed
+console.log(colors.green(`[utils] `), colors.magenta(`[config] envDir: ${envDir}`))
 // console.log(parsed);
 if (!parsed || !parsedDev) {
-  const which = [!parsed, !parsedDev];
-  throw new Error(`[server] missing env vars -> \n\t\t[.env, .dev.vars] -> ${which}]`);
+  const which = [!parsed, !parsedDev]
+  throw new Error(`[server] missing env vars -> \n\t\t[.env, .dev.vars] -> ${which}]`)
 }
 
 const env: EnvVars = createEnv({
@@ -25,21 +25,23 @@ const env: EnvVars = createEnv({
     VITE_LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']),
     NODE_ENV: z.enum(['development', 'staging', 'production']),
     WORKER_ENVIRONMENT: z.enum(['dev', 'rng', 'qa', 'prod']),
+    PRIVATE_KEY: z.string(),
+    PUBLIC_KEY: z.string(),
     VITE_APP_NAME: z.string(),
     NEXTAUTH_SECRET: z.string(),
     GITHUB_CLIENT_ID: z.string(),
-    GITHUB_CLIENT_SECRET: z.string(),
+    GITHUB_CLIENT_SECRET: z.string()
   },
   runtimeEnv: process.env,
-  isServer: typeof window === 'undefined',
-});
+  isServer: typeof window === 'undefined'
+})
 
 const args = {
   // watch: process.argv.includes("--watch"),
   // liveReload: true,
-};
+}
 
 export const config = {
   env: { ...env, __appDir, __wranglerDir: `${__appDir}/api/wrangler` },
-  args,
-};
+  args
+}

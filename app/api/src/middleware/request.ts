@@ -9,10 +9,13 @@ const fromEntries = (ent: [string, string][]) =>
 
 export const remapRequest = (
   req: Request,
+  env: Env,
   opts: { url?: string; method?: string; headers?: Headers; cf?: Request['cf']; body?: any }
 ) => {
   const { url, method, headers, cf, body, fetcher: _, ...rest } = req
-  return new Request(url, { method, headers, cf, body, ...rest, ...opts }) as Request
+  const duplex = env.NODE_ENV === 'development' && body ? 'half' : undefined
+  // @ts-expect-error duplex doesn't exist on CFRequest
+  return new Request(url, { method, headers, cf, body, ...rest, ...opts, duplex }) as Request
 }
 
 export const withDb = () => async (req: Request, _: Response, env: Env) => {

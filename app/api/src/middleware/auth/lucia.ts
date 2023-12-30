@@ -18,8 +18,6 @@ import {
 } from '#/types'
 import { roleFlagsToArray, userTypeFlagsToArray } from '#/utils'
 import { castIntToBool } from '#/api/db/d1-kysely-authjs/cast'
-import { ErrorMessage } from 'lucia/dist/auth/error'
-import { parseCookie } from 'lucia/utils'
 
 export const createAuth = async (env: Env) => {
   const adapter = await deriveDatabaseAdapter(env)
@@ -28,6 +26,7 @@ export const createAuth = async (env: Env) => {
   }
   const auth = lucia({
     env: env.NODE_ENV === 'production' ? 'PROD' : 'DEV',
+    debugMode: env.NODE_ENV !== 'production',
     middleware: web(),
     adapter,
     sessionCookie: {
