@@ -188,7 +188,7 @@ export class LoginPasswordUser extends OpenAPIRoute {
       // return redirectHtml(dataPage, sessionCookie, 302)
 
       // await res.cookie(req, res, env, LUCIA_AUTH_COOKIES_SESSION_TOKEN, sessionCookie)
-      res.headers.set('Set-Cookie', `${LUCIA_AUTH_COOKIES_SESSION_TOKEN}=${sessionCookie}`)
+      res.headers.set('Set-Cookie', sessionCookie)
       return jsonOkResponse(dataPage, res)
       // return jsonOkResponse(session, res)
     } catch (error) {
