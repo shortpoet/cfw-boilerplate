@@ -159,6 +159,7 @@ declare global {
       options?: CookieChangeOptions
     ) => void
     cryptoSign: (data: string) => Promise<string>
+    cryptoVerify: (data: string, signature: string) => Promise<boolean>
     cf?: ResponseCfProperties
     webSocket?: WebSocket
     encodeBody?: 'automatic' | 'manual' | undefined

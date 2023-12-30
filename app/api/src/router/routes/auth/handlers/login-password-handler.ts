@@ -28,28 +28,6 @@ import {
   signData
 } from '#/utils'
 
-async function getSessionId(req: Request, res: Response, env: Env) {
-  const sessionId = res.cryptoSign(generateRandomString(40))
-
-  // const isRsa = false
-  // const privateKey = env.PRIVATE_KEY
-  // // console.log(`[api] [auth] [getSessionId] [password] -> privateKey:`)
-  // // console.log(privateKey)
-  // // const decodedKeyCheck = base64ToArrayBuffer(privateKey)
-  // // console.log(`[api] [auth] [getSessionId] [password] -> decodedKeyCheck:`)
-  // // console.log(decodedKeyCheck)
-  // const importedPrivateKey = await importKey(privateKey, isRsa, 'private')
-  // // console.log(`[api] [auth] [getSessionId] [password] -> rando:`)
-  // // console.log(rando)
-  // const sessionId = arrayBufferToBase64(await signData(importedPrivateKey, rando))
-  // // console.log(`[api] [auth] [getSessionId] [password] -> sessionId:`)
-  // // console.log(sessionId)
-  // // const urlEncodedSessionId = encodeURIComponent(sessionId)
-  // // console.log(`[api] [auth] [getSessionId] [password] -> urlEncodedSessionId:`)
-  // // console.log(urlEncodedSessionId)
-  return sessionId
-}
-
 export class RegisterPasswordUser extends OpenAPIRoute {
   static schema = AuthRegisterSchema
 
@@ -96,7 +74,7 @@ export class RegisterPasswordUser extends OpenAPIRoute {
 
       const session = await auth.createSession({
         userId: user.userId,
-        sessionId: await getSessionId(req, res, env),
+        sessionId: await res.cryptoSign(generateRandomString(40)),
         attributes: {}
       })
 
@@ -164,7 +142,7 @@ export class LoginPasswordUser extends OpenAPIRoute {
       // console.log(key)
       const session = await auth.createSession({
         userId: key.userId,
-        sessionId: await getSessionId(req, res, env),
+        sessionId: await res.cryptoSign(generateRandomString(40)),
         attributes: {}
       })
       // console.log(`[api] [auth] [login] [password] -> session: ${JSON.stringify(session, null, 2)}`)

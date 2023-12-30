@@ -49,7 +49,7 @@ export const withCookie = async (
   let val = typeof value === 'object' ? 'j:' + JSON.stringify(value) : String(value)
 
   if (signed) {
-    // val = 's:' + (await signCookie(val, secret))
+    // val = 's:' + (await res.cryptoSign(val))
     val = 's:' + (await sig.sign(val, secret))
   }
 

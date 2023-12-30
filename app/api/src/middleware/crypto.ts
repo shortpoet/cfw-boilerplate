@@ -24,4 +24,9 @@ export const withCrypto = () => async (req: Request, res: Response, env: Env) =>
     // console.log(urlEncodedSessionId)
     return signed
   }
+  // res.cryptoVerify = async (data: string, signature: string) {
+  //   const importedPrivateKey = await importKey(privateKey, isRsa, 'private')
+  //   const signed = arrayBufferToBase64(await signData(importedPrivateKey, data))
+  //   return signed
+  // }
 }
