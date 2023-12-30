@@ -7,6 +7,14 @@ const FILE_LOG_LEVEL = 'debug'
 const fromEntries = (ent: [string, string][]) =>
   ent.reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {})
 
+export const remapRequest = (
+  req: Request,
+  opts: { url?: string; method?: string; headers?: Headers; cf?: Request['cf']; body?: any }
+) => {
+  const { url, method, headers, cf, body, fetcher: _, ...rest } = req
+  return new Request(url, { method, headers, cf, body, ...rest, ...opts }) as Request
+}
+
 export const withDb = () => async (req: Request, _: Response, env: Env) => {
   req.logger.info(`[api] [middlware] [withDb] ->`)
   console.log(`[api] [middlware] [withDb] ->`)

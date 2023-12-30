@@ -18,7 +18,6 @@ import {
 import { OpenAPIRoute } from '@cloudflare/itty-router-openapi'
 import { AuthLoginOauthCallbackSchema, AuthLoginOauthSchema } from '../auth-schema'
 import { handleSsr } from '#/api/src/ssr'
-import { unsignCookie } from '#/utils'
 
 export class LoginGithub extends OpenAPIRoute {
   static schema = AuthLoginOauthSchema
@@ -55,7 +54,12 @@ export class LoginGithubCallback extends OpenAPIRoute {
     const cook = cookies[LUCIA_AUTH_COOKIES_SESSION_TOKEN]
     req.logger.debug(`[api] [auth] [login] [github] [callback] -> cook: ${cook}`)
     const secret = env.NEXTAUTH_SECRET
-    const storedState = cook ? await unsignCookie(cook.replace('s:', ''), secret) : ''
+
+    const storedState = cookies[LUCIA_AUTH_COOKIES_SESSION_TOKEN]
+      ? await sig.unsign(cookies[LUCIA_AUTH_COOKIES_SESSION_TOKEN].replace('s:', ''), secret)
+      : ''
+    // const storedState = cook ? await unsignCookie(cook.replace('s:', ''), secret) : ''
+
     const state = req.query?.state
     const code = req.query?.code
     req.logger.debug(`[api] [auth] [login] [github] -> storedState: ${storedState}`)

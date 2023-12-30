@@ -1,14 +1,9 @@
-import { merge } from '#/utils'
+import { merge, signCookie, unsignCookie } from '#/utils'
 import Cookies, { CookieChangeOptions, CookieSetOptions } from 'universal-cookie'
-import sig from 'cookie-signature-subtle'
+// import sig from 'cookie-signature-subtle'
 import cookie from 'cookie'
 import { parseCookie } from 'lucia/utils'
-import {
-  LUCIA_AUTH_COOKIES_OPTIONS,
-  LUCIA_AUTH_COOKIES_OPTIONS_SECURE,
-  LUCIA_AUTH_COOKIES_SESSION_TOKEN
-} from '#/types'
-import { remapRequest } from './request'
+import { LUCIA_AUTH_COOKIES_OPTIONS, LUCIA_AUTH_COOKIES_OPTIONS_SECURE } from '#/types'
 
 const append = (res: Response, field: string, val: string | string[]) => {
   const prev = res.headers.get(field)
@@ -49,8 +44,7 @@ export const withCookie = async (
   let val = typeof value === 'object' ? 'j:' + JSON.stringify(value) : String(value)
 
   if (signed) {
-    // val = 's:' + (await signCookie(val, secret))
-    val = 's:' + (await sig.sign(val, secret))
+    val = 's:' + (await signCookie(val, secret))
   }
 
   if (opts.maxAge != null) {
@@ -75,13 +69,9 @@ const unCookie = async (req: Request, res: Response, env: Env, name: string) => 
   const cookies = parseCookie(req.headers.get('cookie') ?? '')
   const cook = cookies[name]
   req.logger.debug(`[api] [withCookie] uncook -> cookie: ${cook}`)
-
-  // if (cook && cook.startsWith('s:')) {
-  //   return (await unsignCookie(cook.replace('s:', ''), secret)) || '' // Modify this line
-  // }
-
-  return cook || ''
+  return cook ? await unsignCookie(cook.replace('s:', ''), secret) : ''
 }
+
 export const clearCookie = async (
   req: Request,
   res: Response,
@@ -119,11 +109,6 @@ function cookieListener(req: Request, res: Response, env: Env): void {
   })
 }
 
-async function resolveCookieSign(cookie: string, secret: string) {
-  await new Promise((resolve) => setImmediate(resolve))
-  // return unsignCookie(cookie, secret)
-}
-
 export default function withCookies() {
   return async function (req: Request, res: Response, env: Env) {
     console.log(`[api] [middleware] [withCookies] ->`)
@@ -135,29 +120,56 @@ export default function withCookies() {
     res.clearCookie = clearCookie
     res.unCookie = unCookie
 
-    cookieListener(req, res, env)
-
     try {
-      // req = await cookieProxy(req, res, env)
-      // remapping cookie so it is unsigned for all subsequent use
       if (cookieHeader) {
-        const headers = new Headers(req.headers)
-        headers.set('cookie', await unCookie(req, res, env, LUCIA_AUTH_COOKIES_SESSION_TOKEN))
-        req = remapRequest(req, { headers })
+        req = new Proxy<Request>(req, {
+          get: async (target, prop) => {
+            if (prop === 'headers') {
+              console.log(`[api] [middleware] [withCookies] [proxy] [headers] -> `, target.headers)
+              // Check if req.universalCookies exists before using it
+              return new Proxy(target.headers, {
+                get: async (target, prop) => {
+                  if (prop === 'get') {
+                    return async (key: string) => {
+                      console.log(
+                        `[api] [middleware] [withCookies] [proxy] [headers] [get] -> `,
+                        key
+                      )
+                      if (key === 'cookie' && req.universalCookies) {
+                        console.log(
+                          `[api] [middleware] [withCookies] [proxy] [headers] [get] [cookie] -> `,
+                          req.universalCookies.getAll()
+                        )
+                        const entries = Object.entries(req.universalCookies.getAll())
+                        return await Promise.all(
+                          entries.map(async ([key, value]: [string, unknown]) => {
+                            return await unsignCookie(String(value), env.NEXTAUTH_SECRET)
+                          })
+                        )
+                      }
+                      return Reflect.get(target, prop)
+                    }
+                  }
+                }
+              })
+            }
+            return Reflect.get(target, prop)
+          }
+        })
+        req.universalCookies = univCook
+        cookieListener(req, res, env)
       }
-
-      // test proxy
-      const cookieTest = req.headers.get('cookie') || ''
-      console.log(`[api] [middleware] [withCookies] [cookieTest] -> `, cookieTest)
-      const cookieTestAync = (await req.headers.get('cookie')) || ''
-      console.log(`[api] [middleware] [withCookies] [cookieTestAync] -> `, cookieTestAync)
-
-      cookieListener(req, res, env)
     } catch (error) {
       console.log(`[api] [middleware] [withCookies] [error] -> `, error)
-    } finally {
-      return
     }
+
+    const cookieTest = req.headers.get('cookie')
+    console.log(`[api] [middleware] [withCookies] [cookieTest] -> `, cookieTest)
+
+    const cookieTestAsync = await req.headers.get('cookie')
+    console.log(`[api] [middleware] [withCookies] [cookieTest] -> `, cookieTestAsync)
+
+    cookieListener(req, res, env)
   }
 }
 
@@ -167,15 +179,17 @@ const cookieProxy = async (req: Request, res: Response, env: Env) => {
   //   h.set('cookie', await unsignCookie(cookieHeader, env.NEXTAUTH_SECRET))
   //   req = new Request(req, { headers: h })
   // }
+
   const cookieHeader = req.headers.get('cookie') || ''
+  const univCook = new Cookies(cookieHeader || '')
   if (cookieHeader) {
     req = new Proxy<Request>(req, {
-      get: (target, prop) => {
+      get: async (target, prop) => {
         if (prop === 'headers') {
           console.log(`[api] [middleware] [withCookies] [proxy] [headers] -> `, target.headers)
           // Check if req.universalCookies exists before using it
           return new Proxy(target.headers, {
-            get: (target, prop) => {
+            get: async (target, prop) => {
               if (prop === 'get') {
                 return async (key: string) => {
                   console.log(`[api] [middleware] [withCookies] [proxy] [headers] [get] -> `, key)
@@ -187,12 +201,7 @@ const cookieProxy = async (req: Request, res: Response, env: Env) => {
                     const entries = Object.entries(req.universalCookies.getAll())
                     return await Promise.all(
                       entries.map(async ([key, value]: [string, unknown]) => {
-                        // const un = await unsignCookie(String(value), env.NEXTAUTH_SECRET)
-                        // console.log(
-                        //   `[api] [middleware] [withCookies] [proxy] [headers] [get] [un] -> `,
-                        //   un
-                        // )
-                        // return un
+                        return await unsignCookie(String(value), env.NEXTAUTH_SECRET)
                       })
                     )
                   }
@@ -205,6 +214,8 @@ const cookieProxy = async (req: Request, res: Response, env: Env) => {
         return Reflect.get(target, prop)
       }
     })
+    req.universalCookies = univCook
+    cookieListener(req, res, env)
   }
   return req
 }

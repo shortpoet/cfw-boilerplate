@@ -2,11 +2,13 @@ export {
   generateSalt,
   hashPassword,
   generateKeyPair,
-  encrypt,
-  decrypt,
-  signCookie,
-  verifyCookie,
-  unsignCookie
+  signData,
+  verifySignature
+  // encrypt,
+  // decrypt,
+  // signCookie,
+  // verifyCookie,
+  // unsignCookie
 }
 
 async function hashPassword(password: string, salt: string): Promise<string> {
@@ -25,118 +27,142 @@ async function generateSalt(): Promise<string> {
     .join('')
 }
 
-async function generateKeyPair(
-  hash: 'SHA-256' | 'SHA-384' | 'SHA-512' = 'SHA-256'
-): Promise<CryptoKeyPair> {
-  return crypto.subtle.generateKey(
-    {
-      name: 'RSA-OAEP',
-      modulusLength: 4096,
-      publicExponent: new Uint8Array([1, 0, 1]),
-      hash
-    },
-    true,
-    ['encrypt', 'decrypt']
-  )
+// async function generateKeyPair(
+//   hash: 'SHA-256' | 'SHA-384' | 'SHA-512' = 'SHA-256'
+// ): Promise<CryptoKeyPair> {
+//   return crypto.subtle.generateKey(
+//     {
+//       name: 'RSA-OAEP',
+//       modulusLength: 4096,
+//       publicExponent: new Uint8Array([1, 0, 1]),
+//       hash
+//     },
+//     true,
+//     ['encrypt', 'decrypt']
+//   )
+// }
+
+// You need to use an algorithm that supports signing. Here's an example using ECDSA with P-256.
+const isRsa = false
+const getAlgo = (hash: 'SHA-256' | 'SHA-384' | 'SHA-512' = 'SHA-256') =>
+  isRsa
+    ? {
+        name: 'RSA-OAEP',
+        modulusLength: 4096,
+        publicExponent: new Uint8Array([1, 0, 1]),
+        hash
+      }
+    : {
+        name: 'ECDSA',
+        namedCurve: 'P-256',
+        hash
+      }
+
+function ab2str(buf: ArrayBuffer): string {
+  const bufView = new Uint8Array(buf)
+  const chars: number[] = []
+  bufView.forEach((byte) => {
+    chars.push(byte)
+  })
+  return String.fromCharCode.apply(null, chars)
 }
 
-async function encrypt(publicKey: CryptoKey, data: string): Promise<{ iv: string; data: string }> {
-  const iv = crypto.getRandomValues(new Uint8Array(12))
-  const encoded = new TextEncoder().encode(data)
-  const encrypted = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, publicKey, encoded)
-  return {
-    iv: Array.from(iv)
-      .map((bytes) => bytes.toString(16).padStart(2, '0'))
-      .join(''),
-    data: Array.from(new Uint8Array(encrypted))
-      .map((bytes) => bytes.toString(16).padStart(2, '0'))
-      .join('')
+function str2ab(str: string): ArrayBuffer {
+  const buf = new ArrayBuffer(str.length)
+  const bufView = new Uint8Array(buf)
+  for (let i = 0; i < str.length; i++) {
+    bufView[i] = str.charCodeAt(i)
+  }
+  return buf
+}
+
+async function generateKeyPair(): Promise<CryptoKeyPair> {
+  try {
+    const algo = getAlgo()
+    console.log(`[crypto] [generateKeyPair] [algo] -> `, algo)
+    const keyPair = await crypto.subtle.generateKey(algo, true, ['sign', 'verify'])
+    return keyPair
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : 'Unknown error'
+    throw new Error(`Key generation failed: ${msg}`)
   }
 }
 
-async function decrypt(
-  privateKey: CryptoKey,
-  iv: string,
+async function signData(privateKey: CryptoKey, data: string): Promise<ArrayBuffer> {
+  try {
+    const algo = getAlgo()
+    console.log(`[crypto] [generateKeyPair] [algo] -> `, algo)
+    const signature = await crypto.subtle.sign(algo, privateKey, str2ab(data))
+    return signature
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : 'Unknown error'
+    throw new Error(`Signing failed: ${msg}`)
+  }
+}
+
+async function verifySignature(
+  publicKey: CryptoKey,
+  signature: ArrayBuffer,
   data: string
-): Promise<{ iv: string; data: string }> {
-  const ivArray = new Uint8Array(iv.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16)))
-  const dataArray = new Uint8Array(data.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16)))
-  const decrypted = await crypto.subtle.decrypt(
-    { name: 'AES-GCM', iv: ivArray },
-    privateKey,
-    dataArray
-  )
-  const decoded = new TextDecoder().decode(decrypted)
-  return {
-    iv,
-    data: decoded
+): Promise<boolean> {
+  try {
+    const verified = await crypto.subtle.verify(getAlgo(), publicKey, signature, str2ab(data))
+    return verified
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : 'Unknown error'
+    throw new Error(`Signature verification failed: ${msg}`)
   }
 }
 
-async function signCookie(value: string, secretKey: string): Promise<string> {
-  const keyBuffer = new TextEncoder().encode(secretKey)
-  const dataBuffer = new TextEncoder().encode(value)
-  const key = await crypto.subtle.importKey(
-    'raw',
-    keyBuffer,
-    { name: 'HMAC', hash: { name: 'SHA-256' } },
-    false,
-    ['sign']
-  )
-  const signature = await crypto.subtle.sign('HMAC', key, dataBuffer)
+async function signAndVerifyDemo(value: string): Promise<string> {
+  try {
+    const keyPair = await generateKeyPair()
+    const signature = await signData(keyPair.privateKey, value)
 
-  // const signatureArray = new Uint8Array(signature);
-  // return Array.from(signatureArray, byte => ('0' + (byte & 0xFF).toString(16)).slice(-2)).join('');
+    const isValid = await verifySignature(keyPair.publicKey, signature, value)
 
-  // const signatureArray = Array.from(new Uint8Array(signature))
-  // return signatureHex = signatureArray.map((b) => b.toString(16).padStart(2, '0')).join('')
-
-  return Array.from(new Uint8Array(signature))
-    .map((byte) => byte.toString(16).padStart(2, '0'))
-    .join('')
+    if (isValid) {
+      console.log('Signature is valid!')
+      return value
+    } else {
+      throw new Error('Signature verification failed!')
+    }
+  } catch (e) {
+    console.error('Error during signing and verification:', e)
+    throw e
+  }
 }
 
-async function unsignCookie(value: string, secretKey: string): Promise<string> {
-  const keyBuffer = new TextEncoder().encode(secretKey)
-  const dataBuffer = new TextEncoder().encode(value)
-  const key = await crypto.subtle.importKey(
-    'raw',
-    keyBuffer,
-    { name: 'HMAC', hash: { name: 'SHA-256' } },
-    false,
-    ['sign']
-  )
-  const signature = await crypto.subtle.sign('HMAC', key, dataBuffer)
-  return Array.from(new Uint8Array(signature))
-    .map((byte) => byte.toString(16).padStart(2, '0'))
-    .join('')
+// Example usage:
+console.log(`^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^`)
+signAndVerifyDemo('session_cookie_value')
+  .then((originalValue) => {
+    console.log('Original value:', originalValue)
+  })
+  .catch((error) => {
+    console.error(error)
+  })
+console.log(`[crypto] [TEST]`)
+const secretKey = 'mySecretKeyForSigning'
+const cookieValue = 'user123'
+
+// Sign a cookie value
+const keyPair = await generateKeyPair()
+const signature = await signData(keyPair.privateKey, cookieValue)
+const isValid = await verifySignature(keyPair.publicKey, signature, cookieValue)
+
+// Verify a signed cookie
+if (isValid) {
+  console.log('Cookie is verified.')
+  console.log(`[crypto] [TEST] [isValid] -> `, isValid)
+  console.log(`[crypto] [TEST] [keyPair] -> `, keyPair)
+  console.log(`[crypto] [TEST] [cookieValue] -> `, cookieValue)
+  console.log(`[crypto] [TEST] [signature] -> `, signature)
+} else {
+  console.log('Cookie verification failed.')
 }
 
-// Function to verify a signed cookie
-async function verifyCookie(
-  secretKey: string,
-  signedValue: string,
-  originalValue: string
-): Promise<boolean> {
-  const keyBuffer = new TextEncoder().encode(secretKey)
-  const dataBuffer = new TextEncoder().encode(originalValue)
-  const key = await crypto.subtle.importKey(
-    'raw',
-    keyBuffer,
-    { name: 'HMAC', hash: { name: 'SHA-256' } },
-    false,
-    ['verify']
-  )
-
-  // const signature = await crypto.subtle.sign('HMAC', importedKey, data)
-  // const signatureArray = Array.from(new Uint8Array(signature))
-  // const signatureHex = signatureArray.map((b) => b.toString(16).padStart(2, '0')).join('')
-  // return signatureHex === signedValue
-
-  const signature = new Uint8Array(signedValue.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16)))
-  const result = await crypto.subtle.verify('HMAC', key, signature, dataBuffer)
-  return result
-}
+console.log(`^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^`)
 
 /* 
 // Usage

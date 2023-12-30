@@ -1,6 +1,6 @@
 import { redirectHtml, redirectResponse } from '#/api/src/middleware/redirect'
 import { OAuthRequestError } from '@lucia-auth/oauth'
-import { parseCookie } from 'lucia/utils'
+import { generateRandomString, parseCookie } from 'lucia/utils'
 import sig from 'cookie-signature-subtle'
 import {
   createAuth,
@@ -23,7 +23,7 @@ import {
 
 import { castBoolToInt } from '#/api/db/d1-kysely-lucia/cast'
 import { LuciaError } from 'lucia'
-import { arrayToRoleFlags, arrayToUserTypeFlags } from '#/utils'
+import { arrayToRoleFlags, arrayToUserTypeFlags, signData } from '#/utils'
 
 export class RegisterPasswordUser extends OpenAPIRoute {
   static schema = AuthRegisterSchema
@@ -73,6 +73,7 @@ export class RegisterPasswordUser extends OpenAPIRoute {
       })
       const session = await auth.createSession({
         userId: user.userId,
+        sessionId: signData(env.PRIVATE_KEY, generateRandomString(40)),
         attributes: {}
       })
 
