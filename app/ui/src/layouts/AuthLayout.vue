@@ -55,8 +55,8 @@ useHead({
 let authLoading = ref(true)
 const pageContext = usePageContext()
 const isAdmin = computed(() =>
-  pageContext.session?.user.roles
-    ? pageContext.session?.user.roles?.includes(UserRole.Admin)
+  pageContext.session?.user?.roles
+    ? pageContext.session?.user?.roles?.includes(UserRole.Admin)
     : false
 )
 

@@ -26,6 +26,7 @@ export async function getUserById(id: string): Promise<SelectUser | null> {
 
 export async function getAllSessions(offset?: number, limit?: number): Promise<SelectSession[]> {
   let db = await getKysely()
+  // adapter table name error
   let q = db.selectFrom('UserSession').selectAll()
   if (offset) {
     q = q.offset(offset)
