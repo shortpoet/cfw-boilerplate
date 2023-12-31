@@ -128,6 +128,9 @@ importers:
       cookie-signature-subtle:
         specifier: ^1.0.0
         version: 1.0.0
+      itty-router:
+        specifier: ^4.0.23
+        version: 4.0.23
       kysely:
         specifier: ^0.26.3
         version: 0.26.3
@@ -153,9 +156,6 @@ importers:
       '@cloudflare/workers-types':
         specifier: ^4.20231121.0
         version: 4.20231121.0
-      '@faker-js/faker':
-        specifier: ^8.3.1
-        version: 8.3.1
       '@libsql/client':
         specifier: 0.4.0-pre.5
         version: 0.4.0-pre.5
@@ -186,9 +186,6 @@ importers:
       chalk:
         specifier: ^5.3.0
         version: 5.3.0
-      itty-router:
-        specifier: ^4.0.23
-        version: 4.0.23
       openapi-typescript-codegen:
         specifier: ^0.25.0
         version: 0.25.0
@@ -1538,11 +1535,6 @@ packages:
   /@eslint/js@8.55.0:
     resolution: {integrity: sha512-qQfo2mxH5yVom1kacMtZZJFVdW+E70mqHMJvVg6WTLo+VBuQJ4TojZlfWBjK0ve5BdEeNAVxOsl/nvNMpJOaJA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
-    dev: true
-
-  /@faker-js/faker@8.3.1:
-    resolution: {integrity: sha512-FdgpFxY6V6rLZE9mmIBb9hM0xpfvQOSNOLnzolzKwsE1DH+gC7lEKV1p1IbR0lAYyvYd5a4u3qWJzowUkw1bIw==}
-    engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0, npm: '>=6.14.13'}
     dev: true
 
   /@fastify/busboy@2.1.0:
@@ -5151,6 +5143,7 @@ packages:
 
   /itty-router@4.0.23:
     resolution: {integrity: sha512-tP1NI8PVK43vWlBnIPqj47ni5FDSczFviA4wgBznscndo8lEvBA+pO3DD1rNbIQPcZhprr775iUTunyGvQMcBw==}
+    dev: false
 
   /jiti@1.21.0:
     resolution: {integrity: sha512-gFqAIbuKyyso/3G2qhiO2OM6shY6EPP/R0+mkDbyspxKazh8BXDC5FiFsUjlczgdNz/vfra0da2y+aHrusLG/Q==}

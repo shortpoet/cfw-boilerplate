@@ -1,6 +1,7 @@
 // lucia.ts
 import { lucia, LuciaError, Middleware, SessionSchema } from 'lucia'
-import 'lucia/polyfill/node'
+// if running on node <= 18, you need to import the polyfill
+// import 'lucia/polyfill/node'
 import { web } from 'lucia/middleware'
 // import { google } from '@lucia-auth/oauth/providers';
 import { github } from '@lucia-auth/oauth/providers'

@@ -15,9 +15,11 @@ async function buildWorker({ entry, out, debug, external } = {}) {
   const plugins = [
     // brode(),
     polyfillNode({
-      polyfills: {
-        crypto: true,
-      },
+      // if running on node <= 18, you need to set this to match 
+      // import 'lucia/polyfill/node' in api/../lucia.ts
+      // polyfills: {
+      //   crypto: true,
+      // },
     }),
     // NodeModulesPolyfillPlugin(),
   ];
@@ -65,7 +67,7 @@ export async function build({ entry, out, debug, metaOut }) {
     // "node:buffer",
     // "node:http",
     // 'node:url',
-    'node:crypto',
+    // 'node:crypto',
     '__STATIC_CONTENT_MANIFEST',
   ])
 

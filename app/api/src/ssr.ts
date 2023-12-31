@@ -9,7 +9,7 @@ import { ROUTE_MAPPING } from './routeMapping'
 export { handleSsr }
 
 async function handleSsr(req: Request, res: Response, env: Env, ctx: ExecutionContext) {
-  const session = await getSession(req, env)
+  const session = await getSession(req, res, env, ctx)
   req.logger.info(`[api] [ssr] handleSsr -> url -> ${req.url}`)
   req.logger.info(`[api] [ssr] handleSsr -> session ->`)
   req.logger.info(session)
@@ -19,8 +19,8 @@ async function handleSsr(req: Request, res: Response, env: Env, ctx: ExecutionCo
   req.logger.debug(`[api] [ssr] handleSsr -> sessionToken -> ${sessionToken}`)
   const userAgent = req.headers.get('User-Agent') || ''
   const endpoints = Object.values(ROUTE_MAPPING)
-  req.logger.debug(`[api] [ssr] handleSsr -> endpoints ->`)
-  req.logger.debug(endpoints)
+  // req.logger.debug(`[api] [ssr] handleSsr -> endpoints ->`)
+  // req.logger.debug(endpoints)
 
   const pageContextInit = {
     urlOriginal: req.url,
