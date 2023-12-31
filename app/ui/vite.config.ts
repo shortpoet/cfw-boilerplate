@@ -1,3 +1,9 @@
+var __defProp = Object.defineProperty
+var __name = (target: any, value: any) => __defProp(target, 'name', { value, configurable: true })
+// only for server/../vike.ts
+// @ts-expect-error workaround for vite issue // https://github.com/vuejs/core/issues/8303
+globalThis.__name = __name
+
 import vue from '@vitejs/plugin-vue'
 import vike from 'vike/plugin'
 import Unocss from 'unocss/vite'

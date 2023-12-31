@@ -15,9 +15,14 @@ export const logout = async (req: Request, res: Response, env: Env, ctx: Executi
   const session = await authRequest.validate() // or `authRequest.validateBearerToken()`
   req.logger.info(`[api] [auth] [logout] -> session:`)
   console.log(`[api] [auth] [logout] -> session:`)
+  // for session cookies
+  // create blank session cookie
+  const sessionCookie = auth.createSessionCookie(null)
+
   // console.log(session);
   if (!session) {
     console.log(`\n[api] [auth] [logout] -> NO !session\n`)
+    res.cookie(req, res, env, LUCIA_AUTH_COOKIES_SESSION_TOKEN, sessionCookie.serialize())
     return okResponse(undefined, res)
     // return new Response('Unauthorized', {
     //   status: 401
@@ -29,9 +34,6 @@ export const logout = async (req: Request, res: Response, env: Env, ctx: Executi
     // make sure to invalidate the current session!
     await auth.invalidateSession(session.sessionId)
 
-    // for session cookies
-    // create blank session cookie
-    const sessionCookie = auth.createSessionCookie(null)
     const { baseUrlApp } = getBaseUrl(env)
     res.cookie(req, res, env, LUCIA_AUTH_COOKIES_SESSION_TOKEN, sessionCookie.serialize())
     const url = `${baseUrlApp}/auth/login`

@@ -1,74 +1,81 @@
-import http from 'http';
-import chalk from 'chalk';
-import { ExecutionContext } from '@cloudflare/workers-types';
-export { mapHttpHeaders, parseFormData, serverLogStart, serverLogEnd, ctx };
+import http from 'http'
+import chalk from 'chalk'
+import { ExecutionContext } from '@cloudflare/workers-types'
+export { mapHttpHeaders, parseFormData, serverLogStart, serverLogEnd, ctx }
 
 interface MappedHeaders {
-  [key: string]: any;
-  mappedHeaders: HeadersInit;
-  contentType: string | undefined;
+  [key: string]: any
+  mappedHeaders: HeadersInit
+  contentType: string | undefined
 }
 
 const mapHttpHeaders = (headers: http.IncomingHttpHeaders): MappedHeaders => {
-  const mappedHeaders: HeadersInit = {};
-  let contentType: string | undefined;
+  const mappedHeaders: HeadersInit = {}
+  let contentType: string | undefined
   for (const key in headers) {
     if (headers.hasOwnProperty(key)) {
-      const value = headers[key];
+      const value = headers[key]
       if (typeof value === 'string') {
         if (key === 'content-type') {
-          contentType = value;
+          contentType = value
         }
         if (key === 'content-length') {
-          continue;
+          continue
+        }
+        if (key === 'accept') {
+          mappedHeaders[key] = '*/*'
         }
         if (key === 'access-control-allow-origin') {
-          value === '*';
+          mappedHeaders[key] = '*'
         }
-        mappedHeaders[key] = value;
+        mappedHeaders[key] = value
       } else if (Array.isArray(value)) {
         if (key === 'content-type') {
-          contentType = value.join(',');
+          contentType = value.join(',')
         }
         if (key === 'content-length') {
-          continue;
+          continue
+        }
+        if (key === 'accept') {
+          mappedHeaders[key] = '*/*'
         }
         if (key === 'access-control-allow-origin') {
+          mappedHeaders[key] = '*'
         }
-        mappedHeaders[key] = value.join(',');
+        mappedHeaders[key] = value.join(',')
       }
     }
   }
-  return { mappedHeaders, contentType };
-};
+  return { mappedHeaders, contentType }
+}
 const mapHttpHeaders_2 = (headers: http.IncomingHttpHeaders): MappedHeaders => {
-  const mappedHeaders: HeadersInit = {};
-  let contentType: string | undefined;
+  const mappedHeaders: HeadersInit = {}
+  let contentType: string | undefined
   for (const key in headers) {
     if (headers.hasOwnProperty(key)) {
-      const value = headers[key];
+      const value = headers[key]
       if (typeof value === 'string') {
         if (key === 'content-type') {
-          contentType = value;
+          contentType = value
         }
-        mappedHeaders[key] = value;
+        mappedHeaders[key] = value
       } else if (Array.isArray(value)) {
         if (key === 'content-type') {
-          contentType = value.join(',');
+          contentType = value.join(',')
         }
-        mappedHeaders[key] = value.join(',');
+        mappedHeaders[key] = value.join(',')
       }
     }
   }
-  return { mappedHeaders, contentType };
-};
+  return { mappedHeaders, contentType }
+}
 
 const ctx: ExecutionContext = {
   waitUntil: async (promise: Promise<any>) => {
-    await promise;
+    await promise
   },
-  passThroughOnException: () => true,
-};
+  passThroughOnException: () => true
+}
 
 const serverLogStart = (req: http.IncomingMessage, contentType: string) => {
   console.log(
@@ -79,8 +86,8 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
          -> ${req.method} -> ${req.url} -> 
         content-type: ${contentType}
         Api Version -> ${process.env.API_VERSION}\n`)
-  );
-};
+  )
+}
 
 const serverLogEnd = (req: http.IncomingMessage, res: http.ServerResponse) => {
   console.log(
@@ -89,16 +96,16 @@ const serverLogEnd = (req: http.IncomingMessage, res: http.ServerResponse) => {
         MSG ${JSON.stringify(res.statusMessage, null, 2)}
 [server] [${new Date().toLocaleTimeString()}] main.fetch
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX`)
-  );
-};
+  )
+}
 function parseFormData(data: string): { [key: string]: string } {
-  const formData: { [key: string]: string } = {};
-  const keyValuePairs = data.split('&');
+  const formData: { [key: string]: string } = {}
+  const keyValuePairs = data.split('&')
 
   for (const pair of keyValuePairs) {
-    const [key, value] = pair.split('=');
-    formData[decodeURIComponent(key)] = decodeURIComponent(value);
+    const [key, value] = pair.split('=')
+    formData[decodeURIComponent(key)] = decodeURIComponent(value)
   }
 
-  return formData;
+  return formData
 }

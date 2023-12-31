@@ -41,7 +41,13 @@ const args = {
   // liveReload: true,
 }
 
-export const config = {
+console.log(colors.green(`[utils] `), colors.magenta(`[config] config:`))
+
+const config = {
   env: { ...env, __appDir, __wranglerDir: `${__appDir}/api/wrangler` },
   args
 }
+
+console.log(config)
+
+export { config }

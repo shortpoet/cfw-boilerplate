@@ -226,6 +226,6 @@ const runCallback = (callback: any) => {
 let session = ref(props.session)
 if (typeof window !== 'undefined' && !session.value) {
   console.log(`[ui] [auth] [login} [+Page] [setup] :: no props session, try to load from cookie`)
-  session.value = await useSession(getCookie(LUCIAAUTH_COOKIES_SESSION_TOKEN))
+  // session.value = await useSession(getCookie(LUCIAAUTH_COOKIES_SESSION_TOKEN))
 }
 </script>

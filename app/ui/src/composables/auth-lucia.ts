@@ -126,7 +126,9 @@ const useLuciaAuth = () => {
     let session
     if (typeof _session === 'string') {
       console.log(`[ui] [useAuth] [setSession] -> _session is string getting session using token`)
-      session = await useSession(_session)
+      // session = await useSession(_session)
+      // override annoying/expensive useSession() call - could be problematic
+      session = authStore.session
     }
     if (!session) return
     console.log(`[ui] [useAuth] [setSession] -> session ->`)
