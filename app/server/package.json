@@ -5,7 +5,7 @@
   "description": "",
   "source": "src/index.ts",
   "scripts": {
-    "serve": "cross-env PORT=3333 tsx watch ./src/simple.ts",
+    "simple": "cross-env VITE_API_PORT=3333 tsx watch ./src/simple.ts",
     "vike": "tsx ./src/vike.ts",
     "vike:watch": "nodemon server -e ts,json --exec \"npm run vike\""
   },

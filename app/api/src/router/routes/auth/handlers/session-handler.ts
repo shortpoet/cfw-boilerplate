@@ -10,14 +10,14 @@ import { LuciaError } from 'lucia'
 export const getSession = async (req: Request, res: Response, env: Env, ctx: ExecutionContext) => {
   try {
     console.log(`[api] [auth] [getSession] ->`)
-    console.log(`[api] [auth] [getSession] -> headers:`)
-    console.log(req.headers)
+    // console.log(`[api] [auth] [getSession] -> headers:`)
+    // console.log(req.headers)
     const { auth } = await createAuth(env)
     console.log(`[api] [auth] [getSession] -> auth:`)
     const authRequest = auth.handleRequest(req)
     console.log(`[api] [auth] [getSession] -> authRequest:`)
     const session = await authRequest.validate() // or `authRequest.validateBearerToken()`
-    console.log(`[api] [auth] [getSession] -> session:`)
+    console.log(`[api] [auth] [getSession] -> session: ${!!session}}`)
     return session
   } catch (error) {
     console.error(error)

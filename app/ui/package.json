@@ -5,10 +5,11 @@
   "description": "",
   "source": "src/index.ts",
   "scripts": {
+    "start": "tsx ../server/src/vike.ts",
     "build": "cross-env NODE_ENV=development vite build --mode development",
     "dev": "cross-env NODE_ENV=development pnpm build && cross-env NODE_ENV=development vite",
     "preview": "pnpm build && cross-env NODE_ENV=development vite preview",
-    "prod": "npm run build && npm run server:prod",
+    "simple": "cross-env NODE_ENV=development VITE_API_PORT=3333 vite build --mode development && cross-env NODE_ENV=development vite",
     "build:d": "cross-env NODE_ENV=staging vite build --mode dev",
     "build:w": "cross-env NODE_ENV=staging vite build --mode devo",
     "build:wp": "cross-env NODE_ENV=production vite build --mode rng",

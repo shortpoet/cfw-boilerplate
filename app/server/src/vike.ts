@@ -131,13 +131,12 @@ async function startServer() {
   // catch-all middleware superseding any middleware placed after it).
   app.get('*', async (req, res, next) => {
     console.log(colors.green(`[server] [vike] [startServer] -> app.get('*')`))
-    const headers = mapHttpHeaders(req.headers)
-    headers.mappedHeaders
-    delete headers['upgrade-insecure-requests']
-    headers['sec-fetch-mode'] = 'cors'
-    headers['accept']
-    console.log(colors.green(`[server] [vike] [startServer] -> headers:`))
-    console.log(headers)
+    const headers = new Headers(mapHttpHeaders(req.headers).mappedHeaders)
+    headers.delete('upgrade-insecure-requests')
+    headers.set('sec-fetch-dest', 'cors')
+    headers.set('accept', '*/*')
+    // console.log(colors.green(`[server] [vike] [startServer] -> headers:`))
+    // console.log(headers)
 
     const _req = new Request(new URL(req.url, 'http://' + req.headers.host), {
       method: req.method,
