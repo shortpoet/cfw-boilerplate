@@ -1,6 +1,9 @@
 export {
   generateSalt,
   hashPassword,
+  signPassword,
+  verifyPassword,
+  getBearer,
   generateKeyPair,
   signData,
   verifySignature,
@@ -12,7 +15,16 @@ export {
 
 import { generateRandomString } from 'lucia/utils'
 
-async function hashPassword(password: string, salt: string): Promise<string> {
+async function generateSalt(): Promise<string> {
+  const randomBuffer = new Uint8Array(32)
+  crypto.getRandomValues(randomBuffer)
+  return Array.from(randomBuffer)
+    .map((bytes) => bytes.toString(16).padStart(2, '0'))
+    .join('')
+}
+
+async function hashPassword(password: string, salt?: string): Promise<string> {
+  salt = salt || (await generateSalt())
   const utf8 = new TextEncoder().encode(`${salt}:${password}`)
 
   const hashBuffer = await crypto.subtle.digest({ name: 'SHA-256' }, utf8)
@@ -20,12 +32,58 @@ async function hashPassword(password: string, salt: string): Promise<string> {
   return hashArray.map((bytes) => bytes.toString(16).padStart(2, '0')).join('')
 }
 
-async function generateSalt(): Promise<string> {
-  const randomBuffer = new Uint8Array(32)
-  crypto.getRandomValues(randomBuffer)
-  return Array.from(randomBuffer)
-    .map((bytes) => bytes.toString(16).padStart(2, '0'))
-    .join('')
+async function signPassword(key: string, rawPassword: string, salt?: string): Promise<string> {
+  salt = salt || (await generateSalt())
+  const encoder = new TextEncoder()
+  const cryptoKey = await crypto.subtle.importKey(
+    'raw',
+    encoder.encode(key),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
+  )
+  const signature = await crypto.subtle.sign(
+    'HMAC',
+    cryptoKey,
+    encoder.encode(`${salt}/${rawPassword}`)
+  )
+
+  // Taken from https://bradyjoslin.com/blog/hmac-sig-webcrypto/
+  return btoa(String.fromCharCode(...new Uint8Array(signature)))
+}
+
+function getBearer(request: Request): null | string {
+  const authHeader = request.headers.get('Authorization')
+  if (!authHeader || authHeader.substring(0, 6) !== 'Bearer') {
+    return null
+  }
+  return authHeader.substring(6).trim()
+}
+
+async function verifyPassword(
+  key: string,
+  rawPassword: string,
+  signedPassword: string,
+  salt?: string
+): Promise<boolean> {
+  salt = salt || (await generateSalt())
+  const encoder = new TextEncoder()
+  const cryptoKey = await crypto.subtle.importKey(
+    'raw',
+    encoder.encode(key),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['verify']
+  )
+  // Taken from https://bradyjoslin.com/blog/hmac-sig-webcrypto/
+  const sigBuf = Uint8Array.from(atob(signedPassword), (c) => c.charCodeAt(0))
+
+  return await crypto.subtle.verify(
+    'HMAC',
+    cryptoKey,
+    sigBuf,
+    encoder.encode(`${salt}/${rawPassword}`)
+  )
 }
 
 function arrayBufferToBase64(buffer: ArrayBuffer): string {
@@ -47,19 +105,35 @@ function base64ToArrayBuffer(base64: string): ArrayBuffer {
 }
 
 // You need to use an algorithm that supports signing. Here's an example using ECDSA with P-256.
-const getAlgo = (isRsa = false, hashName = 'SHA-256') =>
-  isRsa
-    ? {
+type AlgoType = 'rsa' | 'ecdsa' | 'hmac'
+type KeyPairAlgoType = 'rsa' | 'ecdsa'
+
+const getAlgo = (algo: AlgoType, hashName = 'SHA-256') => {
+  switch (algo) {
+    case 'rsa':
+      return {
         name: 'RSASSA-PKCS1-v1_5',
         modulusLength: 2048,
         publicExponent: new Uint8Array([0x01, 0x00, 0x01]), // Equivalent to 65537
         hash: { name: hashName }
       }
-    : {
+    case 'ecdsa':
+      return {
         name: 'ECDSA',
         namedCurve: 'P-256', // This curve is associated with SHA-256
         hash: { name: hashName } // Specify hash for signing/verifying
       }
+    case 'hmac':
+      return {
+        name: 'HMAC',
+        hash: { name: hashName }
+      }
+    default:
+      throw new Error(`[crypto] [g] [algo] -> Unknown algorithm: ${algo}`)
+  }
+}
+
+type Algo = ReturnType<typeof getAlgo>
 
 function ab2str(buf: ArrayBuffer): string {
   const bufView = new Uint8Array(buf)
@@ -78,13 +152,13 @@ function str2ab(str: string): ArrayBuffer {
   }
   return buf
 }
-
-async function generateKeyPair(isRsa = false, hashName = 'SHA-256') {
+function generateKeyPair(algoType: 'ecdsa', hashName?: string): Promise<CryptoKeyPair>
+function generateKeyPair(algoType: 'rsa', hashName?: string): Promise<CryptoKeyPair>
+async function generateKeyPair(algoType = 'ecdsa' as KeyPairAlgoType, hashName = 'SHA-256') {
   try {
-    const isRsa = false
-    const algo = getAlgo(isRsa, hashName)
+    const algo = getAlgo(algoType, hashName)
     // console.log(`[crypto] [generateKeyPair] [algo] -> `, algo)
-    const usage: KeyUsage[] = isRsa ? ['sign', 'verify'] : ['sign', 'verify']
+    const usage: KeyUsage[] = ['sign', 'verify']
     const extractable = true
     const keyPair = await crypto.subtle.generateKey(algo, extractable, usage)
     return keyPair
@@ -97,7 +171,7 @@ async function generateKeyPair(isRsa = false, hashName = 'SHA-256') {
 async function signData(privateKey: CryptoKey, data: string): Promise<ArrayBuffer> {
   try {
     const isRsa = privateKey.algorithm.name === 'RSASSA-PKCS1-v1_5'
-    const algo = getAlgo(isRsa)
+    const algo = getAlgo(isRsa ? 'rsa' : 'ecdsa')
     // Hashing is implied in the algorithm for ECDSA. For RSA, we need to provide it.
     if (isRsa) {
       // This tells TypeScript that privateKey.algorithm is RsaHashedKeyAlgorithm, which has the hash property
@@ -119,7 +193,7 @@ async function verifySignature(
 ): Promise<boolean> {
   try {
     const isRsa = publicKey.algorithm.name === 'RSASSA-PKCS1-v1_5'
-    const algo = getAlgo(isRsa)
+    const algo = getAlgo(isRsa ? 'rsa' : 'ecdsa')
     // Hashing is implied in the algorithm for ECDSA. For RSA, we need to provide it.
     if (isRsa) {
       // This tells TypeScript that privateKey.algorithm is RsaHashedKeyAlgorithm, which has the hash property
@@ -168,15 +242,7 @@ async function importKey(
   const isPrivateKey = keyType === 'private'
 
   // Define the import algorithm based on the key type
-  const algo = isRsa
-    ? {
-        name: 'RSASSA-PKCS1-v1_5',
-        hash: { name: hashName }
-      }
-    : {
-        name: 'ECDSA',
-        namedCurve: 'P-256' // This curve is associated with SHA-256
-      }
+  const algo = getAlgo(isRsa ? 'rsa' : 'ecdsa', hashName)
 
   // Define the format and the usage for the key being imported
   const format = isPrivateKey ? 'pkcs8' : 'spki'
@@ -197,7 +263,7 @@ async function importKey(
 
 async function signAndVerifyDemo(value: string): Promise<string> {
   try {
-    const keyPair = await generateKeyPair()
+    const keyPair = await generateKeyPair('ecdsa')
     const signature = await signData(keyPair.privateKey, value)
     const signedData = arrayBufferToBase64(signature)
 
@@ -224,6 +290,12 @@ async function signAndVerifyDemo(value: string): Promise<string> {
     const isValid2 = await verifySignature(importedPublicKey, newSignature, value)
     console.log(`[crypto] [signAndVerifyDemo] [isValid2] -> `, isValid2)
 
+    const password = 'P@ssw0rd'
+    const generated = await signPassword('SuperSecret', password)
+    console.log(`[crypto] [signAndVerifyDemo] [generated] -> `, generated)
+    const isValidGenerated = await verifyPassword('SuperSecret', password, generated)
+    console.log(`[crypto] [signAndVerifyDemo] [isValidGenerated] -> `, isValidGenerated)
+
     if (isValid && isValid2) {
       console.log('Signatures are valid!')
       return value
@@ -246,7 +318,7 @@ const testMe = async () => {
       console.log('Original value:', originalValue)
       const secretKey = 'mySecretKeyForSigning'
       const cookieValue = 'user123'
-      const keyPair = await generateKeyPair()
+      const keyPair = await generateKeyPair('ecdsa')
       const signature = await signData(keyPair.privateKey, cookieValue)
       const isValid3 = await verifySignature(keyPair.publicKey, signature, cookieValue)
       if (isValid3) {
@@ -266,7 +338,7 @@ const testMe = async () => {
   console.log(`^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^`)
 }
 
-// ;(() => testMe())()
+;(() => testMe())()
 
 /* 
 // Usage

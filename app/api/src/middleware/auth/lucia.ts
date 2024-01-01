@@ -13,7 +13,7 @@ import {
   LUCIA_AUTH_COOKIES_OPTIONS_SECURE,
   LUCIA_AUTH_COOKIES_SESSION_TOKEN
 } from '#/types'
-import { roleFlagsToArray, userTypeFlagsToArray } from '#/utils'
+import { roleFlagsToArray, signPassword, userTypeFlagsToArray, verifyPassword } from '#/utils'
 import { castIntToBool } from '#/api/db/d1-kysely-authjs/cast'
 
 export const createAuth = async (env: Env) => {
@@ -37,6 +37,12 @@ export const createAuth = async (env: Env) => {
     csrfProtection: {
       allowedSubDomains: '*'
     },
+    passwordHash: {
+      generate: (password) => signPassword(env.__SECRET__ || 'SuperSecret', password),
+      validate: (password, hashedPassword) =>
+        verifyPassword(env.__SECRET__ || 'SuperSecret', password, hashedPassword)
+    },
+
     getUserAttributes: (data) => {
       console.log(
         `[api] [middleware] [auth] [lucia] [getUserAttributes] -> data: ${JSON.stringify(data)}`
