@@ -50,7 +50,7 @@ export async function getConfig(opts: Options): Promise<Config> {
   log.print('cyan', `[wrangle] [config] App name: ${colors.cyan(appName)}`)
   const secrets = {
     __SECRET__: `Apps/${appName}/${env}/__SECRET__`,
-    NEXTAUTH_SECRET: `Apps/${appName}/${env}/NEXTAUTH_SECRET`,
+    AUTH_SECRET: `Apps/${appName}/${env}/AUTH_SECRET`,
     GITHUB_CLIENT_ID: `Github/oauth/${appName}/${env}/GITHUB_CLIENT_ID`,
     GITHUB_CLIENT_SECRET: `Github/oauth/${appName}/${env}/GITHUB_CLIENT_SECRET`,
     EMAIL_SERVER_PASSWORD: `Mail/fastmail/ai-maps-nodemailer`,

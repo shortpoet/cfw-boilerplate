@@ -38,9 +38,38 @@ export const createAuth = async (env: Env) => {
       allowedSubDomains: '*'
     },
     passwordHash: {
-      generate: (password) => signPassword(env.__SECRET__ || 'SuperSecret', password),
-      validate: (password, hashedPassword) =>
-        verifyPassword(env.__SECRET__ || 'SuperSecret', password, hashedPassword)
+      generate: (password) => {
+        console.log('[api] [middleware] [auth] [lucia] [passwordHash] [generate] env')
+        console.log(env)
+        const signed = signPassword(
+          env.AUTH_SECRET || 'SuperSecret',
+          password,
+          env.__SECRET__ || 'SuperSecretSalt'
+        )
+        console.log(
+          `[api] [middleware] [auth] [lucia] [passwordHash] [generate] -> password: ${password}`
+        )
+        console.log(
+          `[api] [middleware] [auth] [lucia] [passwordHash] [generate] -> signed: ${signed}`
+        )
+        return signed
+      },
+      validate: (password, hashedPassword) => {
+        console.log('[api] [middleware] [auth] [lucia] [passwordHash] [validate] env')
+        console.log(env)
+        console.log(
+          `[api] [middleware] [auth] [lucia] [passwordHash] [validate] -> password: ${password}`
+        )
+        console.log(
+          `[api] [middleware] [auth] [lucia] [passwordHash] [validate] -> hashedPassword: ${hashedPassword}`
+        )
+        return verifyPassword(
+          env.AUTH_SECRET || 'SuperSecret',
+          password,
+          hashedPassword,
+          env.__SECRET__ || 'SuperSecretSalt'
+        )
+      }
     },
 
     getUserAttributes: (data) => {

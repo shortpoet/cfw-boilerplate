@@ -90,7 +90,7 @@ declare global {
     PUBLIC_KEY: string
     __SECRET__: string
     AUTH_PATH: string
-    NEXTAUTH_SECRET: string
+    AUTH_SECRET: string
     GITHUB_CLIENT_ID: string
     GITHUB_CLIENT_SECRET: string
     JMAP_TOKEN: string
@@ -186,7 +186,7 @@ declare global {
       PUBLIC_KEY: string
       __SECRET__: string
       AUTH_PATH: string
-      NEXTAUTH_SECRET: string
+      AUTH_SECRET: string
       GITHUB_CLIENT_ID: string
       GITHUB_CLIENT_SECRET: string
       JMAP_TOKEN: string
@@ -214,7 +214,7 @@ declare global {
     //   SSR_BASE_PATHS: string;
     //   __SECRET__: string;
     //   AUTH_PATH: string;
-    //   NEXTAUTH_SECRET: string;
+    //   AUTH_SECRET: string;
     //   GITHUB_CLIENT_ID: string;
     //   GITHUB_CLIENT_SECRET: string;
     //   JMAP_TOKEN: string;

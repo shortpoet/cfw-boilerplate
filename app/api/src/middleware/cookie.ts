@@ -29,7 +29,7 @@ export const withCookie = async (
   options?: CookieSetOptions
 ) => {
   const opts = merge({}, options)
-  const secret = env.NEXTAUTH_SECRET
+  const secret = env.AUTH_SECRET
   const signed = true
   options =
     options || env.NODE_ENV === 'production'
@@ -71,7 +71,7 @@ export const withCookie = async (
 }
 
 const unCookie = async (req: Request, res: Response, env: Env, name: string) => {
-  const secret = env.NEXTAUTH_SECRET
+  const secret = env.AUTH_SECRET
   const cookies = parseCookie(req.headers.get('cookie') ?? '')
   const cook = cookies[name]
   req.logger.debug(`[api] [withCookie] uncook -> cookie: ${cook}`)
@@ -166,7 +166,7 @@ export default function withCookies() {
     /*
 
       // parseSignedCookie: async (cookie: string) => {
-      //   const parsedCookie = parseCookie((await unsignCookie(cookie, env.NEXTAUTH_SECRET)) || '')
+      //   const parsedCookie = parseCookie((await unsignCookie(cookie, env.AUTH_SECRET)) || '')
       //   // I really don't like requiring `if` statements inside options
       //   if (parsedCookie === null) return null // log request - cookie possibly tampered with
       //   if (new Date(parsedCookie.expires) < new Date()) return null // log request - cookie expired
@@ -174,7 +174,7 @@ export default function withCookies() {
       // },
       // signCookie: (session: Session) => {
       //   // return signCookie(session.sessionId, session.idlePeriodExpiresAt)
-      //   return signCookie(session.sessionId, env.NEXTAUTH_SECRET)
+      //   return signCookie(session.sessionId, env.AUTH_SECRET)
       // }
 
     // 2KGTIS22o9onlPbIgwNDUmnXpACFEmc8f3R4Ya5V5ROjprNbyqJzQPMuVcsgbyukswISIhkSAnDrm5j1vAlMbw%253D%253D
@@ -198,7 +198,7 @@ export default function withCookies() {
 const cookieProxy = async (req: Request, res: Response, env: Env) => {
   // if (cookieHeader) {
   //   const h = new Headers(req.headers)
-  //   h.set('cookie', await unsignCookie(cookieHeader, env.NEXTAUTH_SECRET))
+  //   h.set('cookie', await unsignCookie(cookieHeader, env.AUTH_SECRET))
   //   req = new Request(req, { headers: h })
   // }
   const cookieHeader = req.headers.get('cookie') || ''
@@ -221,7 +221,7 @@ const cookieProxy = async (req: Request, res: Response, env: Env) => {
                     const entries = Object.entries(req.universalCookies.getAll())
                     return await Promise.all(
                       entries.map(async ([key, value]: [string, unknown]) => {
-                        // const un = await unsignCookie(String(value), env.NEXTAUTH_SECRET)
+                        // const un = await unsignCookie(String(value), env.AUTH_SECRET)
                         // console.log(
                         //   `[api] [middleware] [withCookies] [proxy] [headers] [get] [un] -> `,
                         //   un

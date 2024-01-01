@@ -53,7 +53,7 @@ export class LoginGithubCallback extends OpenAPIRoute {
     const cookies = parseCookie(req.headers.get('cookie') ?? '')
     const cook = cookies[LUCIA_AUTH_COOKIES_SESSION_TOKEN]
     req.logger.debug(`[api] [auth] [login] [github] [callback] -> cook: ${cook}`)
-    const secret = env.NEXTAUTH_SECRET
+    const secret = env.AUTH_SECRET
 
     const storedState = cookies[LUCIA_AUTH_COOKIES_SESSION_TOKEN]
       ? await sig.unsign(cookies[LUCIA_AUTH_COOKIES_SESSION_TOKEN].replace('s:', ''), secret)

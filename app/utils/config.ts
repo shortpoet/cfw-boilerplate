@@ -6,9 +6,10 @@ import colors from 'kleur'
 
 const __appDir = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..')
 const envDir = __appDir
+// merge top to bottom secrets in parsedDev have precedence
+const parsedDev = dotenv.config({ path: `${__appDir}/api/wrangler/.dev.vars` }).parsed
 const parsed = dotenv.config({ path: `${envDir}/.env` }).parsed
-const parsedSecret = dotenv.config({ path: `${envDir}/.env.secret` }).parsed
-const parsedDev = dotenv.config({ path: `${__appDir}/server/.dev.vars` }).parsed
+// const parsedSecret = dotenv.config({ path: `${envDir}/.env.secret` }).parsed
 console.log(colors.green(`[utils] `), colors.magenta(`[config] envDir: ${envDir}`))
 // console.log(parsed);
 if (!parsed || !parsedDev) {
@@ -28,7 +29,8 @@ const env: EnvVars = createEnv({
     PRIVATE_KEY: z.string(),
     PUBLIC_KEY: z.string(),
     VITE_APP_NAME: z.string(),
-    NEXTAUTH_SECRET: z.string(),
+    __SECRET__: z.string(),
+    AUTH_SECRET: z.string(),
     GITHUB_CLIENT_ID: z.string(),
     GITHUB_CLIENT_SECRET: z.string()
   },

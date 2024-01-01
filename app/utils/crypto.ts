@@ -34,7 +34,11 @@ async function hashPassword(password: string, salt?: string): Promise<string> {
 
 async function signPassword(key: string, rawPassword: string, salt?: string): Promise<string> {
   salt = salt || (await generateSalt())
+  // console.log(`[crypto] [signPassword] [key] -> `, key)
+  // console.log(`[crypto] [signPassword] [salt] -> `, salt)
+  // console.log(`[crypto] [signPassword] [rawPassword] -> `, rawPassword)
   const encoder = new TextEncoder()
+  // console.log(`[crypto] [signPassword] [encoder] -> `)
   const cryptoKey = await crypto.subtle.importKey(
     'raw',
     encoder.encode(key),
@@ -42,14 +46,17 @@ async function signPassword(key: string, rawPassword: string, salt?: string): Pr
     false,
     ['sign']
   )
+  // console.log(`[crypto] [signPassword] [cryptoKey] -> `, cryptoKey)
   const signature = await crypto.subtle.sign(
     'HMAC',
     cryptoKey,
     encoder.encode(`${salt}/${rawPassword}`)
   )
-
+  // console.log(`[crypto] [signPassword] [signature] -> `, signature)
   // Taken from https://bradyjoslin.com/blog/hmac-sig-webcrypto/
-  return btoa(String.fromCharCode(...new Uint8Array(signature)))
+  const signed = btoa(String.fromCharCode(...new Uint8Array(signature)))
+  // console.log(`[crypto] [signPassword] [signed] -> `, signed)
+  return signed
 }
 
 function getBearer(request: Request): null | string {
@@ -67,7 +74,12 @@ async function verifyPassword(
   salt?: string
 ): Promise<boolean> {
   salt = salt || (await generateSalt())
+  // console.log(`[crypto] [verifyPassword] [key] -> `, key)
+  // console.log(`[crypto] [verifyPassword] [salt] -> `, salt)
+  // console.log(`[crypto] [verifyPassword] [rawPassword] -> `, rawPassword)
+  // console.log(`[crypto] [verifyPassword] [signedPassword] -> `, signedPassword)
   const encoder = new TextEncoder()
+  // console.log(`[crypto] [verifyPassword] [encoder] -> `)
   const cryptoKey = await crypto.subtle.importKey(
     'raw',
     encoder.encode(key),
@@ -75,15 +87,18 @@ async function verifyPassword(
     false,
     ['verify']
   )
+  // console.log(`[crypto] [verifyPassword] [cryptoKey] -> `, cryptoKey)
   // Taken from https://bradyjoslin.com/blog/hmac-sig-webcrypto/
   const sigBuf = Uint8Array.from(atob(signedPassword), (c) => c.charCodeAt(0))
-
-  return await crypto.subtle.verify(
+  // console.log(`[crypto] [verifyPassword] [sigBuf] -> `, sigBuf)
+  const valid = await crypto.subtle.verify(
     'HMAC',
     cryptoKey,
     sigBuf,
     encoder.encode(`${salt}/${rawPassword}`)
   )
+  // console.log(`[crypto] [verifyPassword] [valid] -> `, valid)
+  return valid
 }
 
 function arrayBufferToBase64(buffer: ArrayBuffer): string {
@@ -269,7 +284,7 @@ async function signAndVerifyDemo(value: string): Promise<string> {
 
     const isValid = await verifySignature(keyPair.publicKey, signature, value)
 
-    console.log(`[crypto] [signAndVerifyDemo] [isValid] -> `, isValid)
+    console.log(`\n[crypto] [signAndVerifyDemo] [isValid] -> `, isValid)
 
     const exportedPublicKeyBuffer = await exportKey(keyPair.publicKey, false, 'public')
     const exportedPrivateKeyBuffer = await exportKey(keyPair.privateKey, false, 'private')
@@ -288,13 +303,15 @@ async function signAndVerifyDemo(value: string): Promise<string> {
     const newSignature = await signData(importedPrivateKey, value)
 
     const isValid2 = await verifySignature(importedPublicKey, newSignature, value)
-    console.log(`[crypto] [signAndVerifyDemo] [isValid2] -> `, isValid2)
+    console.log(`\n[crypto] [signAndVerifyDemo] [isValid2] -> `, isValid2)
 
     const password = 'P@ssw0rd'
-    const generated = await signPassword('SuperSecret', password)
+    const secretKey = 'mySecretKeyForSigning'
+    const salt = await generateSalt()
+    const generated = await signPassword(secretKey, password, salt)
     console.log(`[crypto] [signAndVerifyDemo] [generated] -> `, generated)
-    const isValidGenerated = await verifyPassword('SuperSecret', password, generated)
-    console.log(`[crypto] [signAndVerifyDemo] [isValidGenerated] -> `, isValidGenerated)
+    const isValidGenerated = await verifyPassword(secretKey, password, generated, salt)
+    console.log(`\n[crypto] [signAndVerifyDemo] [isValidGenerated] -> `, isValidGenerated)
 
     if (isValid && isValid2) {
       console.log('Signatures are valid!')
@@ -316,7 +333,6 @@ const testMe = async () => {
   signAndVerifyDemo(rando)
     .then(async (originalValue) => {
       console.log('Original value:', originalValue)
-      const secretKey = 'mySecretKeyForSigning'
       const cookieValue = 'user123'
       const keyPair = await generateKeyPair('ecdsa')
       const signature = await signData(keyPair.privateKey, cookieValue)
@@ -338,7 +354,7 @@ const testMe = async () => {
   console.log(`^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^`)
 }
 
-;(() => testMe())()
+// ;(() => testMe())()
 
 /* 
 // Usage

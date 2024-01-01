@@ -17,7 +17,7 @@ const logger = getLogger({ isSsr, nodeEnv, envLogLevel })
 
 const HOST: string = config.env.HOST || '127.0.0.1'
 const PORT: number = parseInt(config.env.PORT || '3333')
-const SECRET: string = config.env.NEXTAUTH_SECRET || ''
+const SECRET: string = config.env.AUTH_SECRET || ''
 const GITHUB_CLIENT_ID: string = config.env.GITHUB_CLIENT_ID || ''
 const GITHUB_CLIENT_SECRET: string = config.env.GITHUB_CLIENT_SECRET || ''
 const PRIVATE_KEY: string = config.env.PRIVATE_KEY || ''
@@ -28,7 +28,7 @@ if (!SECRET || !GITHUB_CLIENT_ID || !GITHUB_CLIENT_SECRET || !PRIVATE_KEY || !PU
     .filter(Boolean)
     .join(', ')
   throw new Error(
-    `[server] auth.config -> missing secret or env vars -> \n\t\t[NEXTAUTH_SECRET, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET] -> ${which}]`
+    `[server] auth.config -> missing secret or env vars -> \n\t\t[AUTH_SECRET, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET] -> ${which}]`
   )
 }
 
