@@ -1,16 +1,16 @@
-import { computed } from 'vue';
+import { computed } from 'vue'
 
-export { title, description, image, imageType, imageAlt, meta, link };
+export { title, description, image, imageType, imageAlt, meta, link }
 
-const title = 'Carlos Soriano';
+const title = 'Carlos Soriano'
 const description = `
   This is an app to explore AI deployed with SSR on the edge using cloudflare workers.
   I'm a software engineer and I love to learn new things.
   🕺
-`;
-const image = `https://${process.env.HOST}:${process.env.VITE_PORT}/pwa-512x512.png`;
-const imageType = 'image/png';
-const imageAlt = `A PWABuilder logo.`;
+`
+const image = `https://${process.env.HOST}/pwa-512x512.png`
+const imageType = 'image/png'
+const imageAlt = `A PWABuilder logo.`
 
 const meta = [
   { name: 'description', content: description },
@@ -28,7 +28,7 @@ const meta = [
   { property: 'og:updated_time', content: new Date().toISOString() },
   {
     property: 'og:see_also',
-    content: 'https://www.linkedin.com/in/carlos-soriano/',
+    content: 'https://www.linkedin.com/in/carlos-soriano/'
   },
   { name: 'twitter:card', content: 'summary_large_image' },
   { name: 'twitter:title', content: title },
@@ -50,9 +50,9 @@ const meta = [
 
   {
     name: 'theme-color',
-    content: '#00aba9',
-  },
-];
+    content: '#00aba9'
+  }
+]
 const link = [
   {
     rel: 'icon',
@@ -60,10 +60,10 @@ const link = [
     // href: '/favicon.svg?'
     // href: `https://${import.meta.env.VITE_APP_URL}/favicon.svg`
     // href: (await import('#/public/favicon.svg')).default
-    href: (await import('../../../public/Old_map_icon.svg')).default,
+    href: (await import('../../../public/Old_map_icon.svg')).default
   },
   {
     rel: 'canonical',
-    href: computed(() => import.meta.env.BASE_URL),
-  },
-];
+    href: computed(() => import.meta.env.BASE_URL)
+  }
+]

@@ -37,41 +37,22 @@ export const createAuth = async (env: Env) => {
     csrfProtection: {
       allowedSubDomains: '*'
     },
+    // workaround for free workers time limit
     passwordHash: {
-      generate: (password) => {
-        console.log('[api] [middleware] [auth] [lucia] [passwordHash] [generate] env')
-        console.log(env)
-        const signed = signPassword(
+      generate: (password) =>
+        signPassword(
           env.AUTH_SECRET || 'SuperSecret',
           password,
           env.__SECRET__ || 'SuperSecretSalt'
-        )
-        console.log(
-          `[api] [middleware] [auth] [lucia] [passwordHash] [generate] -> password: ${password}`
-        )
-        console.log(
-          `[api] [middleware] [auth] [lucia] [passwordHash] [generate] -> signed: ${signed}`
-        )
-        return signed
-      },
-      validate: (password, hashedPassword) => {
-        console.log('[api] [middleware] [auth] [lucia] [passwordHash] [validate] env')
-        console.log(env)
-        console.log(
-          `[api] [middleware] [auth] [lucia] [passwordHash] [validate] -> password: ${password}`
-        )
-        console.log(
-          `[api] [middleware] [auth] [lucia] [passwordHash] [validate] -> hashedPassword: ${hashedPassword}`
-        )
-        return verifyPassword(
+        ),
+      validate: (password, hashedPassword) =>
+        verifyPassword(
           env.AUTH_SECRET || 'SuperSecret',
           password,
           hashedPassword,
           env.__SECRET__ || 'SuperSecretSalt'
         )
-      }
     },
-
     getUserAttributes: (data) => {
       console.log(
         `[api] [middleware] [auth] [lucia] [getUserAttributes] -> data: ${JSON.stringify(data)}`
@@ -124,10 +105,10 @@ export const createAuth = async (env: Env) => {
   const githubAuth = github(auth, {
     clientId: env.GITHUB_CLIENT_ID,
     clientSecret: env.GITHUB_CLIENT_SECRET,
-    redirectUri:
-      env.NODE_ENV === 'development' || env.NODE_ENV === 'staging'
-        ? `http://${env.HOST}:${env.VITE_PORT_API}/api/auth/login/github/callback`
-        : `https://${env.HOST}/api/auth/login/github/callback`,
+    redirectUri: `https://${env.HOST}/api/auth/login/github/callback`,
+    // env.NODE_ENV === 'development' || env.NODE_ENV === 'staging'
+    //   ? `http://${env.HOST}:${env.VITE_PORT_API}/api/auth/login/github/callback`
+    //   : `https://${env.HOST}/api/auth/login/github/callback`,
     // : `https://${env.HOST}/api/auth/login/github/callback`,
     scope: ['user:email, read:user']
   })

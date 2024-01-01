@@ -19,10 +19,22 @@ export const useService = async <T>(
     const res = await service
     data.value = res
   } catch (err) {
+    console.error(`[ui] [useService] -> err:`)
+    console.log(err)
     if (err instanceof ApiError) {
+      let errBody
+      try {
+        errBody = JSON.parse(err.body)
+      } catch (error) {
+        errBody = err.body
+      }
+      console.error(`[ui] [useService] -> errBody:`)
+      console.log(errBody)
+      console.error(`[ui] [useService] -> err:`)
+      console.log(err)
       error.value = {
         ...err,
-        body: JSON.parse(err.body)
+        body: errBody
       }
     }
   } finally {

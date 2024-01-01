@@ -34,7 +34,7 @@ const vitestConfig: InlineConfig = {
 }
 
 export default ({ mode }: { mode: string }) => {
-  const { envDir, parsedSecret, parsed } = getConfig(mode)
+  const { envDir, parsedSecret, parsed, SSL_CERT, SSL_KEY } = getConfig(mode)
   console.log(`[ui] [vite] loading... (${mode})`)
   const loaded = loadEnv(mode, envDir, '')
   // console.log('[ui] [vite] loaded: ', loaded);
@@ -150,9 +150,13 @@ export default ({ mode }: { mode: string }) => {
       WebfontDownload()
     ],
     server: {
-      port: parseInt(env.VITE_PORT || '3000'),
+      // port: parseInt(env.VITE_PORT || '3000'),
       hmr: {
         overlay: false
+      },
+      https: {
+        key: SSL_KEY,
+        cert: SSL_CERT
       }
       // to avoid CORS issues
       // proxy: {

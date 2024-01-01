@@ -18,6 +18,7 @@ import { root } from './root.js'
 import colors from 'kleur'
 import { createServerAdapter } from '@whatwg-node/server'
 import fs from 'node:fs'
+import https from 'node:https'
 
 import { __rootDir, __appDir, __wranglerDir } from '#/utils/root'
 import { Api, router } from '@cfw-boilerplate/api/src/router'
@@ -30,6 +31,7 @@ import { getSession } from '#/api/src/router/routes/auth/handlers/session-handle
 const isSsr = config.env.SSR
 const nodeEnv = config.env.NODE_ENV
 const envLogLevel = config.env.VITE_LOG_LEVEL
+const { SSL_CERT: cert, SSL_KEY: key } = config.env
 
 const logger = getLogger({ isSsr, nodeEnv, envLogLevel })
 
@@ -117,7 +119,13 @@ async function startServer() {
     const viteDevMiddleware = (
       await vite.createServer({
         root,
-        server: { middlewareMode: true }
+        server: {
+          middlewareMode: true,
+          https: {
+            key,
+            cert
+          }
+        }
       })
     ).middlewares
     app.use(viteDevMiddleware)
@@ -182,7 +190,8 @@ async function startServer() {
   })
 
   app.listen(PORT, HOST)
-  logger.info(`Server running at http://${HOST}:${PORT}/`)
+  // logger.info(`Server running at http://${HOST}:${PORT}/`)
+  logger.info(`Server running at https://${HOST}/`)
   logger.info(`[server] [simple] [nodeEnv] -> ${nodeEnv}`)
   logger.info(`[server] [simple] [isSsr] -> ${isSsr}`)
   logger.info(`[server] [simple] [envLogLevel] -> ${envLogLevel}`)
@@ -190,4 +199,10 @@ async function startServer() {
   const schemaPath = `${__appDir}/api/openapi.json`
   fs.writeFileSync(schemaPath, JSON.stringify(openapi_schema, null, 2))
   logger.info(`[server] [simple] [openapi_schema] -> written to ${schemaPath}`)
+
+  const server = https.createServer({ key, cert }, app)
+  // const server = isProduction ? https.createServer({ key: PRIVATE_KEY, cert: PUBLIC_KEY }, app) : app
+  server.listen(443, () => {
+    console.log(`Server running at https://${HOST}/`)
+  })
 }

@@ -3,6 +3,7 @@ import { z } from 'zod'
 import path from 'node:path'
 import dotenv from 'dotenv'
 import colors from 'kleur'
+import fs from 'node:fs'
 
 export const getConfig = (mode: string) => {
   console.log(colors.green(`[ui] [config] mode: `), colors.magenta(`${mode}`))
@@ -34,6 +35,7 @@ export const getConfig = (mode: string) => {
     isServer: typeof window === 'undefined'
   })
   // console.log(colors.green(`[ui] [config] env: `), colors.magenta(`${JSON.stringify(env)}`));
-
-  return { envDir, parsed, parsedDev, parsedSecret, env }
+  const SSL_KEY = fs.readFileSync(`${__appDir}/certs/key.pem`)
+  const SSL_CERT = fs.readFileSync(`${__appDir}/certs/cert.pem`)
+  return { envDir, parsed, parsedDev, parsedSecret, env, SSL_KEY, SSL_CERT }
 }

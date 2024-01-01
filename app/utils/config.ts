@@ -3,6 +3,7 @@ import { createEnv } from '@t3-oss/env-core'
 import { z } from 'zod'
 import path from 'node:path'
 import colors from 'kleur'
+import fs from 'node:fs'
 
 const __appDir = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..')
 const envDir = __appDir
@@ -16,6 +17,8 @@ if (!parsed || !parsedDev) {
   const which = [!parsed, !parsedDev]
   throw new Error(`[server] missing env vars -> \n\t\t[.env, .dev.vars] -> ${which}]`)
 }
+const SSL_KEY = fs.readFileSync(`${__appDir}/certs/key.pem`)
+const SSL_CERT = fs.readFileSync(`${__appDir}/certs/cert.pem`)
 
 const env: EnvVars = createEnv({
   server: {
@@ -46,7 +49,7 @@ const args = {
 console.log(colors.green(`[utils] `), colors.magenta(`[config] config:`))
 
 const config = {
-  env: { ...env, __appDir, __wranglerDir: `${__appDir}/api/wrangler` },
+  env: { ...env, __appDir, __wranglerDir: `${__appDir}/api/wrangler`, SSL_KEY, SSL_CERT },
   args
 }
 
