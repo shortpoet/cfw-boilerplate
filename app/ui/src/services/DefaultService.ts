@@ -23,6 +23,17 @@ export class DefaultService {
    * @returns any Object with user data.
    * @throws ApiError
    */
+  public static getAll(): CancelablePromise<any> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/api/auth/session/all',
+    });
+  }
+
+  /**
+   * @returns any Object with user data.
+   * @throws ApiError
+   */
   public static getLogout(): CancelablePromise<any> {
     return __request(OpenAPI, {
       method: 'GET',
