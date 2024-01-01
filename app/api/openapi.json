@@ -18,6 +18,52 @@
       }
     },
     "schemas": {
+      "AuthLoginResponse": {
+        "type": "string",
+        "format": "uri"
+      },
+      "AuthLoginEmailBody": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 64
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "AuthLoginUsernameBody": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 20
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 64
+          }
+        },
+        "required": [
+          "username",
+          "password"
+        ]
+      },
+      "OauthLoginResponse": {
+        "type": "string",
+        "format": "uri",
+        "description": "OAuth login URL"
+      },
       "User": {
         "type": "object",
         "properties": {
@@ -121,48 +167,6 @@
           "state",
           "fresh"
         ]
-      },
-      "AuthLoginEmailBody": {
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string",
-            "format": "email"
-          },
-          "password": {
-            "type": "string",
-            "minLength": 8,
-            "maxLength": 64
-          }
-        },
-        "required": [
-          "email",
-          "password"
-        ]
-      },
-      "AuthLoginUsernameBody": {
-        "type": "object",
-        "properties": {
-          "username": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 20
-          },
-          "password": {
-            "type": "string",
-            "minLength": 8,
-            "maxLength": 64
-          }
-        },
-        "required": [
-          "username",
-          "password"
-        ]
-      },
-      "OauthLoginResponse": {
-        "type": "string",
-        "format": "uri",
-        "description": "OAuth login URL"
       },
       "ApiErrorResponse": {
         "type": "object",
@@ -326,11 +330,11 @@
         },
         "responses": {
           "200": {
-            "description": "Logged in User Session",
+            "description": "Redirect URL",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Session"
+                  "$ref": "#/components/schemas/AuthLoginResponse"
                 }
               }
             }
@@ -449,11 +453,11 @@
         },
         "responses": {
           "200": {
-            "description": "Logged in User Session",
+            "description": "Redirect URL",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Session"
+                  "$ref": "#/components/schemas/AuthLoginResponse"
                 }
               }
             }
