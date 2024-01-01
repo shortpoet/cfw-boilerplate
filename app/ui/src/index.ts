@@ -9,6 +9,7 @@ export type { OpenAPIConfig } from './core/OpenAPI';
 
 export type { ApiErrorResponse } from './models/ApiErrorResponse';
 export type { AuthLoginEmailBody } from './models/AuthLoginEmailBody';
+export type { AuthLoginResponse } from './models/AuthLoginResponse';
 export type { AuthLoginUsernameBody } from './models/AuthLoginUsernameBody';
 export type { AuthRegisterBody } from './models/AuthRegisterBody';
 export type { OauthLoginResponse } from './models/OauthLoginResponse';

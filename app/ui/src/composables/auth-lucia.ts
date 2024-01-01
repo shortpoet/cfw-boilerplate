@@ -10,7 +10,7 @@ import {
   LoginHTMLResponseSchema
 } from '#/types'
 import { storeToRefs } from 'pinia'
-import { ApiError, AuthService } from '..'
+import { ApiError, AuthLoginResponse, AuthService } from '..'
 
 export {
   LUCIAAUTH_COOKIES_SESSION_TOKEN,
@@ -150,7 +150,7 @@ const useLuciaAuth = () => {
       return
     }
     if (opts.type === 'register') {
-      const { data, dataLoading, error } = await useService<Session>(
+      const { data, dataLoading, error } = await useService<AuthLoginResponse>(
         AuthService.postRegisterPasswordUser({
           requestBody: { username: opts.username, password: opts.password, email: opts.email }
         })
@@ -172,7 +172,7 @@ const useLuciaAuth = () => {
       auth.setSession(success.data)
     }
     if (isLogin) {
-      const { data, dataLoading, error } = await useService<Session>(
+      const { data, dataLoading, error } = await useService<AuthLoginResponse>(
         AuthService.postLoginPasswordUser({
           requestBody:
             opts.type === 'email'

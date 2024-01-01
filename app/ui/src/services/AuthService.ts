@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { AuthLoginEmailBody } from '../models/AuthLoginEmailBody';
+import type { AuthLoginResponse } from '../models/AuthLoginResponse';
 import type { AuthLoginUsernameBody } from '../models/AuthLoginUsernameBody';
 import type { AuthRegisterBody } from '../models/AuthRegisterBody';
 import type { OauthLoginResponse } from '../models/OauthLoginResponse';
@@ -16,14 +17,14 @@ export class AuthService {
 
   /**
    * Log in via your email and password
-   * @returns Session Logged in User Session
+   * @returns AuthLoginResponse Redirect URL
    * @throws ApiError
    */
   public static postLoginPasswordUser({
     requestBody,
   }: {
     requestBody?: (AuthLoginEmailBody | AuthLoginUsernameBody),
-  }): CancelablePromise<Session> {
+  }): CancelablePromise<AuthLoginResponse> {
     return __request(OpenAPI, {
       method: 'POST',
       url: '/api/auth/login/password',
@@ -75,14 +76,14 @@ export class AuthService {
 
   /**
    * Register a new user via email and password
-   * @returns Session Logged in User Session
+   * @returns AuthLoginResponse Redirect URL
    * @throws ApiError
    */
   public static postRegisterPasswordUser({
     requestBody,
   }: {
     requestBody?: AuthRegisterBody,
-  }): CancelablePromise<Session> {
+  }): CancelablePromise<AuthLoginResponse> {
     return __request(OpenAPI, {
       method: 'POST',
       url: '/api/auth/register/password',
