@@ -9,6 +9,7 @@ import {
   OauthLoginResponseComponent
 } from './auth-component'
 import { ApiErrorResponseComponent } from '../common-oa'
+import { LoginRedirectResponseSchema } from '#/types'
 
 enum ServerMessages {
   UserNotFound = 'User not found',
@@ -82,8 +83,8 @@ export const AuthRegisterSchema = {
   requestBody: AuthRegisterBodyComponent,
   responses: {
     '200': {
-      description: 'Logged in User Session',
-      schema: SessionComponent
+      description: 'Redirect URL', // TODO make params?
+      schema: LoginRedirectResponseSchema.openapi('AuthLoginResponse')
     }
   }
 }
@@ -94,8 +95,8 @@ export const AuthLoginSchema = {
   requestBody: z.union([AuthLoginEmailBodyComponent, AuthLoginUsernameBodyComponent]),
   responses: {
     '200': {
-      description: 'Logged in User Session',
-      schema: SessionComponent
+      description: 'Redirect URL', // TODO make params?
+      schema: LoginRedirectResponseSchema.openapi('AuthLoginResponse')
     }
   }
 }

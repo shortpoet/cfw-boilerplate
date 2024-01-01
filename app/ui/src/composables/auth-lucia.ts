@@ -156,6 +156,11 @@ const useLuciaAuth = () => {
         })
       )
       auth.authError.value = error.value
+      if (auth.authError.value || !data.value) {
+        logger.error(`[ui] [useAuth] [login] -> auth.authError.value:`)
+        logger.error(auth.authError.value)
+        return
+      }
       auth.authLoading.value = dataLoading.value
       const success = BaseSessionSchema.safeParse(data.value)
       if (!success.success) {
@@ -176,6 +181,11 @@ const useLuciaAuth = () => {
         })
       )
       auth.authError.value = error.value
+      if (auth.authError.value || !data.value) {
+        logger.error(`[ui] [useAuth] [login] -> auth.authError.value:`)
+        logger.error(auth.authError.value)
+        return
+      }
       auth.authLoading.value = dataLoading.value
       console.log(`[ui] [useAuth] [login] -> data:`)
       console.log(data)
@@ -194,6 +204,11 @@ const useLuciaAuth = () => {
         AuthService.getLoginGithub()
       )
       auth.authError.value = error.value
+      if (auth.authError.value || !data.value) {
+        logger.error(`[ui] [useAuth] [login] -> auth.authError.value:`)
+        logger.error(auth.authError.value)
+        return
+      }
       auth.authLoading.value = dataLoading.value
       const success = LoginRedirectResponseSchema.safeParse(data.value)
       if (!success.success) {
