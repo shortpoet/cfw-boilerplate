@@ -1,62 +1,73 @@
-export {
-  UserType,
-  UserRole,
-  User,
-  Session,
-  AuthInstance,
-  LoginOptions,
-  BaseSessionSchema,
-  LoginOptionsSchema,
-  UserRoleSchema,
-  UserTypeSchema
-}
 import { z } from 'zod'
 
-type User = UserUnion
-type UserUnion = BaseUser
-
-type Session = SessionUnion
-type SessionUnion = BaseSession
-
-enum UserType {
+export enum UserType {
   _ = 'not_set',
   Email = 'email',
   GitHub = 'github',
   Credentials = 'credentials'
 }
 
-const UserTypeSchema = z.enum(['not_set', 'email', 'github', 'credentials'])
+export const UserTypeSchema = z.enum(['not_set', 'email', 'github', 'credentials'])
 
-enum UserRole {
+export enum UserRole {
   _ = 'not_set',
   Guest = 'guest',
   Admin = 'admin',
   User = 'user'
 }
 
-const UserRoleSchema = z.enum(['not_set', 'guest', 'admin', 'user'])
+export const UserRoleSchema = z.enum(['not_set', 'guest', 'admin', 'user'])
 
-const BaseUserSchema = z.object({
-  userId: z.string(),
+export const UserSchema = z.object({
+  userId: z.string({ description: 'User ID' }).length(12),
+  username: z.string({ description: "User's username" }),
   roles: z.array(UserRoleSchema),
   userTypes: z.array(UserTypeSchema),
-  username: z.string(),
-  email_verified: z.boolean(),
-  email: z.string().optional(),
-  avatar_url: z.string().optional(),
-  name: z.string().nullish()
+  email_verified: z.boolean({ description: 'Is user email verified' }),
+  email: z.string({ description: 'User email' }).optional(),
+  avatar_url: z.string({ description: 'User avatar URL' }).optional(),
+  name: z.string({ description: "User's name" }).optional(),
+  password: z.string({ description: 'User password' }).optional()
 })
-type BaseUser = z.infer<typeof BaseUserSchema>
+export type User = z.infer<typeof UserSchema>
 
-const BaseSessionSchema = z.object({
-  sessionId: z.string(),
-  user: BaseUserSchema,
-  activePeriodExpiresAt: z.string(),
-  idlePeriodExpiresAt: z.string(),
-  state: z.string(),
-  fresh: z.boolean()
+export const SessionSchema = z.object({
+  sessionId: z.string({ description: 'Session ID' }).length(12),
+  user: UserSchema,
+  activePeriodExpiresAt: z.string({ description: 'Session expiry date' }),
+  idlePeriodExpiresAt: z.string({ description: 'Session expiry date' }),
+  state: z.string({ description: 'Session state' }),
+  fresh: z.boolean({ description: 'Is session fresh' })
 })
-type BaseSession = z.infer<typeof BaseSessionSchema>
+export type Session = z.infer<typeof SessionSchema>
+
+export const AuthRegisterBodySchema = z.object({
+  //TODO: use Regex here
+  username: z.string({ required_error: 'username is required' }).min(3).max(20),
+  email: z.string({ required_error: 'email is required' }).email(),
+  password: z.string({ required_error: 'password is required' }).min(8).max(64)
+})
+export type AuthRegisterBody = z.infer<typeof AuthRegisterBodySchema>
+
+export const AuthLoginEmailBodySchema = z.object({
+  email: z.string({ required_error: 'email is required' }).email(),
+  password: z.string({ required_error: 'password is required' }).min(8).max(64)
+})
+export type AuthLoginEmailBody = z.infer<typeof AuthLoginEmailBodySchema>
+
+export const AuthLoginUsernameBodySchema = z.object({
+  username: z.string({ required_error: 'username is required' }).min(3).max(20),
+  password: z.string({ required_error: 'password is required' }).min(8).max(64)
+})
+export type AuthLoginUsernameBody = z.infer<typeof AuthLoginUsernameBodySchema>
+
+export const AuthLoginBodySchema = z.union([AuthLoginEmailBodySchema, AuthLoginUsernameBodySchema])
+export type AuthLoginBody = z.infer<typeof AuthLoginBodySchema>
+
+export const OauthLoginResponseSchema = z.string({ description: 'OAuth login URL' }).url()
+export type OauthLoginResponse = z.infer<typeof OauthLoginResponseSchema>
+
+/* Client */
 
 // interface LoginOptions extends Record<string, any> {
 //   provider: string
@@ -77,7 +88,7 @@ export type LoginProviderResponse = z.infer<typeof LoginRedirectResponseSchema>
 export const LoginHTMLResponseSchema = z.string()
 export type LoginHTMLResponse = z.infer<typeof LoginHTMLResponseSchema>
 
-const LoginOptionsOauthSchema = z.object({
+export const LoginOptionsOauthSchema = z.object({
   type: z.literal(LoginOptionsTypesEnum.Enum.oauth),
   provider: OauthProvidersEnum,
   username: z.undefined(),
@@ -85,7 +96,7 @@ const LoginOptionsOauthSchema = z.object({
   email: z.undefined()
 })
 
-const LoginOptionsRegisterSchema = z.object({
+export const LoginOptionsRegisterSchema = z.object({
   type: z.literal(LoginOptionsTypesEnum.Enum.register),
   provider: z.undefined(),
   username: z.string(),
@@ -93,7 +104,7 @@ const LoginOptionsRegisterSchema = z.object({
   email: z.string()
 })
 
-const LoginOptionsUsernameSchema = z.object({
+export const LoginOptionsUsernameSchema = z.object({
   type: z.literal(LoginOptionsTypesEnum.Enum.username),
   provider: z.undefined(),
   password: z.string(),
@@ -101,7 +112,7 @@ const LoginOptionsUsernameSchema = z.object({
   email: z.string().optional()
 })
 
-const LoginOptionsEmailSchema = z.object({
+export const LoginOptionsEmailSchema = z.object({
   type: z.literal(LoginOptionsTypesEnum.Enum.email),
   provider: z.undefined(),
   password: z.string(),
@@ -109,13 +120,13 @@ const LoginOptionsEmailSchema = z.object({
   email: z.string()
 })
 
-const LoginOptionsSchema = z.discriminatedUnion('type', [
+export const LoginOptionsSchema = z.discriminatedUnion('type', [
   LoginOptionsOauthSchema,
   LoginOptionsRegisterSchema,
   LoginOptionsUsernameSchema,
   LoginOptionsEmailSchema
 ])
-type LoginOptions = z.infer<typeof LoginOptionsSchema>
+export type LoginOptions = z.infer<typeof LoginOptionsSchema>
 
 // const LoginOptionsLoginSchema = z
 //   .object({
@@ -147,7 +158,7 @@ type LoginOptions = z.infer<typeof LoginOptionsSchema>
 //   z.union([LoginOptionsRegisterSchema, LoginOptionsLoginSchema])
 // )
 
-interface AuthInstance {
+export interface AuthInstance {
   authLoading: Ref<boolean>
   authError: Ref<any>
   isLoggedIn: Ref<boolean>
