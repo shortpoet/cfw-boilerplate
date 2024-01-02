@@ -1,15 +1,30 @@
 import { Path, Int, Query } from '@cloudflare/itty-router-openapi'
 import { z } from 'zod'
-import {
-  UserComponent,
-  SessionComponent,
-  AuthLoginUsernameBodyComponent,
-  AuthLoginEmailBodyComponent,
-  AuthRegisterBodyComponent,
-  OauthLoginResponseComponent
-} from './auth-component'
+
 import { ApiErrorResponseComponent } from '../common-oa'
-import { LoginRedirectResponseSchema } from '#/types'
+import {
+  AuthLoginBodySchema,
+  AuthLoginEmailBodySchema,
+  AuthLoginUsernameBodySchema,
+  AuthRegisterBodySchema,
+  OauthLoginResponseSchema,
+  LoginRedirectResponseSchema,
+  SessionSchema,
+  UserSchema
+} from '#/types'
+
+export const UserComponent = UserSchema.openapi('User')
+export const SessionComponent = SessionSchema.openapi('Session')
+export const AuthRegisterBodyComponent = AuthRegisterBodySchema.openapi('AuthRegisterBody')
+
+export const AuthLoginEmailBodyComponent = AuthLoginEmailBodySchema.openapi('AuthLoginEmailBody')
+
+export const AuthLoginUsernameBodyComponent =
+  AuthLoginUsernameBodySchema.openapi('AuthLoginUsernameBody')
+
+export const AuthLoginBodyComponent = AuthLoginBodySchema.openapi('AuthLoginBody')
+
+export const OauthLoginResponseComponent = OauthLoginResponseSchema.openapi('OauthLoginResponse')
 
 enum ServerMessages {
   UserNotFound = 'User not found',

@@ -19,7 +19,7 @@ export enum UserRole {
 export const UserRoleSchema = z.enum(['not_set', 'guest', 'admin', 'user'])
 
 export const UserSchema = z.object({
-  userId: z.string({ description: 'User ID' }).length(12),
+  userId: z.string({ description: 'User ID' }),
   username: z.string({ description: "User's username" }),
   roles: z.array(UserRoleSchema),
   userTypes: z.array(UserTypeSchema),
@@ -32,7 +32,7 @@ export const UserSchema = z.object({
 export type User = z.infer<typeof UserSchema>
 
 export const SessionSchema = z.object({
-  sessionId: z.string({ description: 'Session ID' }).length(12),
+  sessionId: z.string({ description: 'Session ID' }),
   user: UserSchema,
   activePeriodExpiresAt: z.string({ description: 'Session expiry date' }),
   idlePeriodExpiresAt: z.string({ description: 'Session expiry date' }),

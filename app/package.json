@@ -15,7 +15,7 @@
     "simple": "cross-env NODE_ENV=development && concurrently \"pnpm simp\" \"pnpm v:dev\"",
     "start": "pnpm serve",
     "d": "pnpm ui build:d && pnpm w:d",
-    "dev": "pnpm ui build:w && pnpm w:dev",
+    "dev": "pnpm ui build:w && sudo pnpm w:dev",
     "rng": "pnpm ui build:w && pnpm w:rng",
     "qa": "pnpm ui build:w && pnpm w:qa",
     "prev": "pnpm run wrangle:kv && pnpm run w:dev",

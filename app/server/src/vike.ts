@@ -151,7 +151,7 @@ async function startServer() {
       headers
     }) as unknown as Request
     const _res = new Response() as unknown as Response
-    const session = await getSession(_req, _res, env, ctx)
+    const session = await getSession(_req, env)
     logger.info(`[api] [ssr] handleSsr -> session ->`)
     logger.info(session)
 

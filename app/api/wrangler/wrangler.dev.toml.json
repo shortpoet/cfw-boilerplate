@@ -11,10 +11,9 @@
     "command": "npm run build:d"
   },
   "dev": {
+    "port": 443,
     "ip": "cfw.local",
-    "host": "cfw.local",
-    "local_protocol": "https",
-    "port": 443
+    "local_protocol": "https"
   },
   "env": {
     "dev": {
@@ -48,7 +47,7 @@
         {
           "binding": "CFW_BOILERPLATE_DB",
           "database_name": "cfw-boilerplate-dev-CFW_BOILERPLATE_DB",
-          "database_id": "e4bb3393-2a9e-44b0-aeba-5964e2b02714"
+          "database_id": "a2873ae4-65be-4197-9773-3d2b9ab6c73e"
         }
       ]
     }

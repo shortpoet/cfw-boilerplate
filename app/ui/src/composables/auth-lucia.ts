@@ -3,7 +3,7 @@ import {
   User,
   Session,
   LoginOptions,
-  BaseSessionSchema,
+  SessionSchema,
   LoginOptionsSchema,
   LoginProviderResponse,
   LoginRedirectResponseSchema,
@@ -162,7 +162,7 @@ const useLuciaAuth = () => {
         return
       }
       auth.authLoading.value = dataLoading.value
-      const success = BaseSessionSchema.safeParse(data.value)
+      const success = SessionSchema.safeParse(data.value)
       if (!success.success) {
         logger.error(`[ui] [useAuth] [login] -> success.error:`)
         logger.error(success.error)

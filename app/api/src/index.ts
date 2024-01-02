@@ -7,6 +7,7 @@ import { handleSsr } from './ssr'
 
 const FILE_LOG_LEVEL = 'debug'
 import { getCorrelationId, getLogger } from '#/utils/logger/logger'
+import { getDb } from './middleware'
 
 export default {
   async fetch(
@@ -48,6 +49,7 @@ async function handleFetchEvent(
     envLogLevel: env.VITE_LOG_LEVEL
   })
   req.logger = logger
+  // req.db = await getDb(req, env)
   switch (true) {
     case isAssetURL(url):
       // must early return or assets missing

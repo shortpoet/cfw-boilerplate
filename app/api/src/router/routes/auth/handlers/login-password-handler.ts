@@ -6,16 +6,17 @@ import {
   serverErrorResponse,
   getBaseUrl
 } from '#/api/src/middleware'
-import { LUCIA_AUTH_COOKIES_SESSION_TOKEN, UserRole, UserType } from '#/types'
-import { OpenAPIRoute } from '@cloudflare/itty-router-openapi'
-import { AuthLoginSchema, AuthRegisterSchema } from '../auth-schema'
-import { ZodError } from 'zod'
 import {
-  AuthLoginBodyComponent,
-  AuthLoginBodyType,
-  AuthRegisterBodyComponent,
-  AuthRegisterBodyType
-} from '../auth-component'
+  AuthLoginBody,
+  AuthLoginBodySchema,
+  AuthRegisterBody,
+  LUCIA_AUTH_COOKIES_SESSION_TOKEN,
+  UserRole,
+  UserType
+} from '#/types'
+import { OpenAPIRoute } from '@cloudflare/itty-router-openapi'
+import { AuthLoginSchema, AuthRegisterBodyComponent, AuthRegisterSchema } from '../auth-schema'
+import { ZodError } from 'zod'
 
 import { castBoolToInt } from '#/api/db/d1-kysely-lucia/cast'
 import { LuciaError } from 'lucia'
@@ -36,7 +37,7 @@ export class RegisterPasswordUser extends OpenAPIRoute {
     res: Response,
     env: Env,
     ctx: ExecutionContext,
-    data: { body: AuthRegisterBodyType }
+    data: { body: AuthRegisterBody }
   ) {
     req.logger.info(`[api] [auth] [register] [password]`)
     console.log(`[api] [auth] [register] [password] -> data: ${JSON.stringify(data, null, 2)}`)
@@ -81,10 +82,13 @@ export class RegisterPasswordUser extends OpenAPIRoute {
       const sessionCookie = auth.createSessionCookie(session).serialize()
       // console.log(`[api] [auth] [register] [password] -> sessionCookie:`)
       // console.log(sessionCookie)
+      const { baseUrlApp } = getBaseUrl(env)
+      const dataPage = new URL(`${baseUrlApp}/api-data`).href
 
       // await res.cookie(req, res, env, LUCIA_AUTH_COOKIES_SESSION_TOKEN, sessionCookie)
       res.headers.set('Set-Cookie', sessionCookie)
-      return jsonOkResponse(session, res)
+      return jsonOkResponse(dataPage, res)
+      // return jsonOkResponse(session, res)
     } catch (error) {
       console.error(error)
       if (error instanceof Error) {
@@ -108,7 +112,7 @@ export class LoginPasswordUser extends OpenAPIRoute {
     res: Response,
     env: Env,
     ctx: ExecutionContext,
-    data: { body: AuthLoginBodyType }
+    data: { body: AuthLoginBody }
   ) {
     req.logger.info(`[api] [auth] [login] [password]`)
     // console.log(`[api] [auth] [login] [password] -> data: ${JSON.stringify(data, null, 2)}`)
@@ -116,8 +120,8 @@ export class LoginPasswordUser extends OpenAPIRoute {
     try {
       const loginBody =
         env.NODE_ENV === 'development'
-          ? AuthLoginBodyComponent.safeParse(data)
-          : AuthLoginBodyComponent.safeParse(data.body)
+          ? AuthLoginBodySchema.safeParse(data)
+          : AuthLoginBodySchema.safeParse(data.body)
       // console.log(
       //   `[api] [auth] [login] [password] -> loginBody: ${JSON.stringify(loginBody, null, 2)}`
       // )

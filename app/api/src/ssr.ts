@@ -9,7 +9,7 @@ import { ROUTE_MAPPING } from './routeMapping'
 export { handleSsr }
 
 async function handleSsr(req: Request, res: Response, env: Env, ctx: ExecutionContext) {
-  const session = await getSession(req, res, env, ctx)
+  const session = await getSession(req, env)
   req.logger.info(`[api] [ssr] handleSsr -> url -> ${req.url}`)
   req.logger.info(`[api] [ssr] handleSsr -> session ->`)
   req.logger.info(session)

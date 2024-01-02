@@ -18,9 +18,7 @@ export const remapRequest = (
   return new Request(url, { method, headers, cf, body, ...rest, ...opts, duplex }) as Request
 }
 
-export const withDb = () => async (req: Request, _: Response, env: Env) => {
-  req.logger.info(`[api] [middlware] [withDb] ->`)
-  console.log(`[api] [middlware] [withDb] ->`)
+export const getDb = async (req: Request, env: Env) => {
   let db
   if (env.NODE_ENV === 'development') {
     console.log(`[api] [middlware] [withDb] -> env.NODE_ENV: ${env.NODE_ENV}`)
@@ -29,7 +27,14 @@ export const withDb = () => async (req: Request, _: Response, env: Env) => {
     console.log(`[api] [middlware] [withDb] -> env.NODE_ENV: ${env.NODE_ENV}`)
     db = await getD1(env)
   }
+  return db
+}
+
+export const withDb = () => async (req: Request, _: Response, env: Env) => {
+  req.logger.info(`[api] [middlware] [withDb] ->`)
+  console.log(`[api] [middlware] [withDb] ->`)
   // const db = env.NODE_ENV === 'development' ? await getSqlite(env) : await getD1(env)
+  const db = await getDb(req, env)
   console.log(`[api] [middlware] [withDb] -> db: ${db}`)
   req.db = db
 }
