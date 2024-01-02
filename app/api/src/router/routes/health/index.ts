@@ -1,1 +1,1 @@
-export { default as health_router } from './health';
+export { default as health_router } from './health-router'
