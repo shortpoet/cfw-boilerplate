@@ -343,6 +343,12 @@
         "required": [
           "rawManifest"
         ]
+      },
+      "MiscDataRequestComponent": {
+        "type": "object",
+        "properties": {
+          "data": {}
+        }
       }
     },
     "parameters": {}
@@ -510,20 +516,85 @@
     },
     "/api/auth/session": {
       "get": {
-        "operationId": "get__",
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Fetch a user session",
+        "operationId": "get_SessionGet",
         "responses": {
           "200": {
-            "description": "Object with user data."
+            "description": "Logged in User Session",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Session not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
           }
         }
       }
     },
     "/api/auth/session/all": {
       "get": {
-        "operationId": "get__all",
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Fetch all user sessions",
+        "operationId": "get_SessionsGet",
         "responses": {
           "200": {
-            "description": "Object with user data."
+            "description": "List of all user sessions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Session"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Sessions not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -574,10 +645,22 @@
     },
     "/api/auth/logout": {
       "get": {
-        "operationId": "get__logout",
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Log out",
+        "operationId": "get_Logout",
         "responses": {
-          "200": {
-            "description": "Object with user data."
+          "204": {
+            "description": "No content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
           }
         }
       }
@@ -961,43 +1044,57 @@
     },
     "/api/json-data": {
       "get": {
-        "operationId": "get__json-data",
+        "tags": [
+          "Misc"
+        ],
+        "description": "Get sample data",
+        "summary": "Sample data test",
+        "operationId": "get_MiscJsonDataGet",
         "responses": {
           "200": {
-            "description": "Object with user data."
+            "description": "List of sample data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No content - successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
           }
         }
       }
     },
     "/api/hello": {
       "get": {
-        "operationId": "get__hello",
-        "responses": {
-          "200": {
-            "description": "Object with user data."
-          }
-        }
-      },
-      "post": {
         "tags": [
-          "misc"
+          "Misc"
         ],
         "description": "Hello world",
         "summary": "Test data in and out",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "hello": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        },
+        "operationId": "get_MiscHelloGet",
         "responses": {
           "200": {
             "description": "Object with hello world data",
@@ -1005,29 +1102,31 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "properties": {
-                    "hello": {
-                      "type": "string"
-                    }
-                  }
+                  "properties": {}
                 }
               }
             }
           },
           "204": {
-            "description": "No content - successful operation"
+            "description": "No content - successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
           }
         }
-      }
-    },
-    "/api/hola-clase": {
+      },
       "post": {
         "tags": [
           "Misc"
         ],
         "description": "Hello world",
         "summary": "Test data in and out",
-        "operationId": "post_HelloPost",
+        "operationId": "post_MiscHelloPost",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1041,37 +1140,74 @@
                         "type": "object",
                         "properties": {
                           "schema": {
-                            "type": "object",
-                            "properties": {
-                              "type": {
-                                "type": "string",
-                                "example": "object"
-                              },
-                              "properties": {
-                                "type": "object",
-                                "properties": {
-                                  "hello": {
-                                    "type": "object",
-                                    "properties": {
-                                      "type": {
-                                        "type": "string",
-                                        "example": "string"
-                                      }
-                                    },
-                                    "required": [
-                                      "type"
-                                    ]
-                                  }
-                                },
-                                "required": [
-                                  "hello"
-                                ]
-                              }
-                            },
-                            "required": [
-                              "type",
-                              "properties"
-                            ]
+                            "$ref": "#/components/schemas/MiscDataRequestComponent"
+                          }
+                        },
+                        "required": [
+                          "schema"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "application/json"
+                    ]
+                  }
+                },
+                "required": [
+                  "content"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Object with hello world data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No content - successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/misc": {
+      "post": {
+        "tags": [
+          "Misc"
+        ],
+        "description": "Miscellaneous data dump",
+        "summary": "Test data in and out",
+        "operationId": "post_MiscPost",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "content": {
+                    "type": "object",
+                    "properties": {
+                      "application/json": {
+                        "type": "object",
+                        "properties": {
+                          "schema": {
+                            "$ref": "#/components/schemas/MiscDataRequestComponent"
                           }
                         },
                         "required": [
@@ -1119,10 +1255,45 @@
     },
     "/api/todos": {
       "get": {
-        "operationId": "get__todos",
+        "tags": [
+          "Misc"
+        ],
+        "description": "Get todos",
+        "summary": "Todos test",
+        "operationId": "get_MiscTodosGet",
         "responses": {
           "200": {
-            "description": "Object with user data."
+            "description": "List of todos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No content - successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
           }
         }
       }

@@ -18,7 +18,7 @@ export const withSession =
       userId: z.string()
     })
     try {
-      const session = await getSession(req, res, env, ctx)
+      const session = await getSession(req, env)
       req.logger.info(`[api] [middleware] [auth] [withSession] -> session ->`)
       req.logger.info(session)
       if (!session) {

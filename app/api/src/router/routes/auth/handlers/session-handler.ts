@@ -9,21 +9,25 @@ import { LuciaError } from 'lucia'
 import { AuthSessionSchema, AuthSessionsSchema } from '../auth-schema'
 import { OpenAPIRoute } from '@cloudflare/itty-router-openapi'
 
+export const getSession = async (req: Request, env: Env) => {
+  console.log(`[api] [auth] [getSession] ->`)
+  // console.log(`[api] [auth] [getSession] -> headers:`)
+  // console.log(req.headers)
+  const { auth } = await createAuth(env)
+  console.log(`[api] [auth] [getSession] -> auth:`)
+  const authRequest = auth.handleRequest(req)
+  console.log(`[api] [auth] [getSession] -> authRequest:`)
+  const session = await authRequest.validate() // or `authRequest.validateBearerToken()`
+  console.log(`[api] [auth] [getSession] -> session: ${!!session}}`)
+  return session
+}
+
 export class SessionGet extends OpenAPIRoute {
   static schema = AuthSessionSchema
 
   async handle(req: Request, res: Response, env: Env, ctx: ExecutionContext) {
     try {
-      console.log(`[api] [auth] [getSession] ->`)
-      // console.log(`[api] [auth] [getSession] -> headers:`)
-      // console.log(req.headers)
-      const { auth } = await createAuth(env)
-      console.log(`[api] [auth] [getSession] -> auth:`)
-      const authRequest = auth.handleRequest(req)
-      console.log(`[api] [auth] [getSession] -> authRequest:`)
-      const session = await authRequest.validate() // or `authRequest.validateBearerToken()`
-      console.log(`[api] [auth] [getSession] -> session: ${!!session}}`)
-      return session
+      return await getSession(req, env)
     } catch (error) {
       console.error(error)
       if (error instanceof LuciaError) {
