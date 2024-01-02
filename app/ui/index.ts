@@ -10,5 +10,4 @@ export type { OpenAPIConfig } from './src/core/OpenAPI'
 export type { Task } from './src/models/Task'
 export type { TaskListResponse } from './src/models/TaskListResponse'
 
-export { DefaultService } from './src/services/DefaultService'
 export { TasksService } from './src/services/TasksService'
