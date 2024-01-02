@@ -83,7 +83,7 @@ export class RegisterPasswordUser extends OpenAPIRoute {
       // console.log(sessionCookie)
 
       // await res.cookie(req, res, env, LUCIA_AUTH_COOKIES_SESSION_TOKEN, sessionCookie)
-      res.headers.set('Set-Cookie', `${LUCIA_AUTH_COOKIES_SESSION_TOKEN}=${sessionCookie}`)
+      res.headers.set('Set-Cookie', sessionCookie)
       return jsonOkResponse(session, res)
     } catch (error) {
       console.error(error)
