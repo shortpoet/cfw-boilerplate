@@ -3,10 +3,15 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { Task } from './Task';
-
 export type TaskResponse = {
   success: boolean;
-  task: Task;
+  task: {
+    id: string;
+    name: string;
+    slug: string;
+    description?: string;
+    completed: boolean;
+    due_date: string;
+  };
 };
 

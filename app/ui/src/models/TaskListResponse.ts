@@ -3,12 +3,17 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { Task } from './Task';
-
 export type TaskListResponse = {
   success: boolean;
   page: number;
   isCompleted?: boolean;
-  tasks: Array<Task>;
+  tasks: Array<{
+    id: string;
+    name: string;
+    slug: string;
+    description?: string;
+    completed: boolean;
+    due_date: string;
+  }>;
 };
 
