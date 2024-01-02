@@ -3,6 +3,7 @@ import { OpenAPIRoute, OpenAPIRouteSchema, Query } from '@cloudflare/itty-router
 import { taskGenerator } from './task-generator'
 import { TaskComponentType } from '../task-component'
 import { GetTaskListSchema } from '../task-schema'
+import { jsonOkResponse } from '#/api/src/middleware'
 
 export const ALL_TASKS: TaskComponentType[] = taskGenerator(134)
 
@@ -69,12 +70,15 @@ export class TaskList extends OpenAPIRoute {
       out.tasks.length,
       '\n^^^^^^^^\n'
     )
-    return {
-      success: true,
-      page,
-      isCompleted,
-      tasks: paginatedTasks
-      // Optionally, you can include metadata like next/previous page links, total count, etc.
-    }
+    return jsonOkResponse(
+      {
+        success: true,
+        page,
+        isCompleted,
+        tasks: paginatedTasks
+        // Optionally, you can include metadata like next/previous page links, total count, etc.
+      },
+      res
+    )
   }
 }
