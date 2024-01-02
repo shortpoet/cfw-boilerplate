@@ -92,4 +92,48 @@ export class AuthService {
     });
   }
 
+  /**
+   * Fetch a user session
+   * @returns Session Logged in User Session
+   * @throws ApiError
+   */
+  public static getSessionGet(): CancelablePromise<Session> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/api/auth/session',
+      errors: {
+        404: `Session not found`,
+        500: `Internal Server Error`,
+      },
+    });
+  }
+
+  /**
+   * Fetch all user sessions
+   * @returns Session List of all user sessions
+   * @throws ApiError
+   */
+  public static getSessionsGet(): CancelablePromise<Array<Session>> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/api/auth/session/all',
+      errors: {
+        404: `Sessions not found`,
+        500: `Internal Server Error`,
+      },
+    });
+  }
+
+  /**
+   * Log out
+   * @returns void
+   * @throws ApiError
+   */
+  public static getLogout(): CancelablePromise<void> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/api/auth/logout',
+    });
+  }
+
 }

@@ -182,7 +182,6 @@ declare module 'vue' {
     readonly AuthService: UnwrapRef<typeof import('./services/AuthService')['AuthService']>
     readonly CancelError: UnwrapRef<typeof import('./core/CancelablePromise')['CancelError']>
     readonly CancelablePromise: UnwrapRef<typeof import('./core/CancelablePromise')['CancelablePromise']>
-    readonly DefaultService: UnwrapRef<typeof import('./services/DefaultService')['DefaultService']>
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
     readonly FetchError: UnwrapRef<typeof import('./composables/fetch')['FetchError']>
     readonly HealthService: UnwrapRef<typeof import('./services/HealthService')['HealthService']>
@@ -324,7 +323,6 @@ declare module '@vue/runtime-core' {
     readonly AuthService: UnwrapRef<typeof import('./services/AuthService')['AuthService']>
     readonly CancelError: UnwrapRef<typeof import('./core/CancelablePromise')['CancelError']>
     readonly CancelablePromise: UnwrapRef<typeof import('./core/CancelablePromise')['CancelablePromise']>
-    readonly DefaultService: UnwrapRef<typeof import('./services/DefaultService')['DefaultService']>
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
     readonly FetchError: UnwrapRef<typeof import('./composables/fetch')['FetchError']>
     readonly HealthService: UnwrapRef<typeof import('./services/HealthService')['HealthService']>

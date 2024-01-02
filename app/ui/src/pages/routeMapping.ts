@@ -5,13 +5,13 @@ import type { Route, RouteMapping } from '#/types';
 export const ROUTE_MAPPING: RouteMapping = {
   "/api-data/todos": {
     "endpoint": "api/todos",
-    "title": "Todos",
+    "title": "Todos test",
     "path": "/api-data/todos"
   },
-  "/api-data/hola-clase": {
-    "endpoint": "api/hola-clase",
+  "/api-data/misc": {
+    "endpoint": "api/misc",
     "title": "Test data in and out",
-    "path": "/api-data/hola-clase"
+    "path": "/api-data/misc"
   },
   "/api-data/hello": {
     "endpoint": "api/hello",
@@ -20,7 +20,7 @@ export const ROUTE_MAPPING: RouteMapping = {
   },
   "/api-data/json-data": {
     "endpoint": "api/json-data",
-    "title": "Json-data",
+    "title": "Sample data test",
     "path": "/api-data/json-data"
   },
   "/api-data/health-debug": {
@@ -40,7 +40,7 @@ export const ROUTE_MAPPING: RouteMapping = {
   },
   "/api-data/auth-logout": {
     "endpoint": "api/auth/logout",
-    "title": "Auth Logout",
+    "title": "Log out",
     "path": "/api-data/auth-logout"
   },
   "/api-data/auth-user-all": {
@@ -50,12 +50,12 @@ export const ROUTE_MAPPING: RouteMapping = {
   },
   "/api-data/auth-session-all": {
     "endpoint": "api/auth/session/all",
-    "title": "Auth Session All",
+    "title": "Fetch all user sessions",
     "path": "/api-data/auth-session-all"
   },
   "/api-data/auth-session": {
     "endpoint": "api/auth/session",
-    "title": "Auth Session",
+    "title": "Fetch a user session",
     "path": "/api-data/auth-session"
   },
   "/api-data/auth-register-password": {

@@ -2,6 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { MiscDataRequestComponent } from '../models/MiscDataRequestComponent';
+
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -9,20 +11,51 @@ import { request as __request } from '../core/request';
 export class MiscService {
 
   /**
+   * Sample data test
+   * Get sample data
+   * @returns any List of sample data
+   * @throws ApiError
+   */
+  public static getMiscJsonDataGet(): CancelablePromise<any> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/api/json-data',
+      errors: {
+        500: `Internal Server Error`,
+      },
+    });
+  }
+
+  /**
    * Test data in and out
    * Hello world
    * @returns any Object with hello world data
    * @throws ApiError
    */
-  public static postApiHello({
+  public static getMiscHelloGet(): CancelablePromise<any> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/api/hello',
+    });
+  }
+
+  /**
+   * Test data in and out
+   * Hello world
+   * @returns any Object with hello world data
+   * @throws ApiError
+   */
+  public static postMiscHelloPost({
     requestBody,
   }: {
     requestBody?: {
-      hello?: string;
+      content: {
+        'application/json': {
+          schema: MiscDataRequestComponent;
+        };
+      };
     },
-  }): CancelablePromise<{
-    hello?: string;
-  }> {
+  }): CancelablePromise<any> {
     return __request(OpenAPI, {
       method: 'POST',
       url: '/api/hello',
@@ -33,33 +66,42 @@ export class MiscService {
 
   /**
    * Test data in and out
-   * Hello world
+   * Miscellaneous data dump
    * @returns any Object with hello world data
    * @throws ApiError
    */
-  public static postHelloPost({
+  public static postMiscPost({
     requestBody,
   }: {
     requestBody?: {
       content: {
         'application/json': {
-          schema: {
-            type: string;
-            properties: {
-              hello: {
-                type: string;
-              };
-            };
-          };
+          schema: MiscDataRequestComponent;
         };
       };
     },
   }): CancelablePromise<any> {
     return __request(OpenAPI, {
       method: 'POST',
-      url: '/api/hola-clase',
+      url: '/api/misc',
       body: requestBody,
       mediaType: 'application/json',
+    });
+  }
+
+  /**
+   * Todos test
+   * Get todos
+   * @returns any List of todos
+   * @throws ApiError
+   */
+  public static getMiscTodosGet(): CancelablePromise<any> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/api/todos',
+      errors: {
+        500: `Internal Server Error`,
+      },
     });
   }
 
