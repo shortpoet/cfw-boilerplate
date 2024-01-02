@@ -1,5 +1,4 @@
 import { OpenAPIRoute, OpenAPIRouteSchema, Path } from '@cloudflare/itty-router-openapi'
-import { Task } from './types'
 import { ALL_TASKS } from './taskList'
 import { badResponse, notFoundResponse, serverErrorResponse } from '#/api/src/middleware'
 import { GetTaskSchema } from '../task-schema'

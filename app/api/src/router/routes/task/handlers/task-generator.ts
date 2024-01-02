@@ -1,3 +1,4 @@
+import { Task } from '#/types'
 import {
   randVerb,
   randAccessory,
@@ -11,10 +12,9 @@ import {
   randBoolean,
   randSoonDate
 } from '@ngneat/falso'
-import { TaskComponentType } from '../task-component'
 import { capitalize } from 'lodash-es'
 
-const base: TaskComponentType[] = [
+const base: Task[] = [
   {
     id: '1',
     name: 'Clean my room',
@@ -33,7 +33,7 @@ const base: TaskComponentType[] = [
   }
 ]
 
-export const taskGenerator = (count: number): TaskComponentType[] => {
+export const taskGenerator = (count: number): Task[] => {
   let id = 3
   const tasks = base.concat(
     Array.from({ length: count }, () => {

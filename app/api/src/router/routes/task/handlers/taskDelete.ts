@@ -1,5 +1,5 @@
-import { OpenAPIRoute, OpenAPIRouteSchema, Path } from '@cloudflare/itty-router-openapi';
-import { Task } from './types';
+import { OpenAPIRoute, OpenAPIRouteSchema, Path } from '@cloudflare/itty-router-openapi'
+import { TaskComponent } from '../task-schema'
 
 export class TaskDelete extends OpenAPIRoute {
   static schema: OpenAPIRouteSchema = {
@@ -7,8 +7,8 @@ export class TaskDelete extends OpenAPIRoute {
     summary: 'Delete a Task',
     parameters: {
       taskSlug: Path(String, {
-        description: 'Task slug',
-      }),
+        description: 'Task slug'
+      })
     },
     responses: {
       '200': {
@@ -16,12 +16,12 @@ export class TaskDelete extends OpenAPIRoute {
         schema: {
           success: Boolean,
           result: {
-            task: Task,
-          },
-        },
-      },
-    },
-  };
+            task: TaskComponent
+          }
+        }
+      }
+    }
+  }
 
   async handle(
     req: Request,
@@ -31,7 +31,7 @@ export class TaskDelete extends OpenAPIRoute {
     data: Record<string, any>
   ) {
     // Retrieve the validated slug
-    const { taskSlug } = data.params;
+    const { taskSlug } = data.params
 
     // Implement your own object deletion here
 
@@ -43,10 +43,10 @@ export class TaskDelete extends OpenAPIRoute {
           slug: taskSlug,
           description: 'Lorem Ipsum',
           completed: true,
-          due_date: '2022-12-24',
-        },
+          due_date: '2022-12-24'
+        }
       },
-      success: true,
-    };
+      success: true
+    }
   }
 }

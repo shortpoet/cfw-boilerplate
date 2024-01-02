@@ -11,8 +11,9 @@
     "command": "npm run build"
   },
   "dev": {
-    "port": 3000,
-    "ip": "cfw-dev.marshmallowmeat.com"
+    "port": 443,
+    "ip": "cfw-dev.marshmallowmeat.com",
+    "local_protocol": "https"
   },
   "env": {
     "rng": {
@@ -33,7 +34,7 @@
         "EMAIL_SERVER_PORT": "465",
         "EMAIL_SERVER_USER": "cfw-boilerplate-signups@shortpoet.com",
         "EMAIL_FROM": "cfw-boilerplate-signups@shortpoet.com",
-        "SSR_BASE_PATHS": "_error,about,api-data,auth,index,task,test"
+        "SSR_BASE_PATHS": "_error,about,api-data,auth,index,routeMapping.ts,task,test"
       },
       "routes": [
         {
@@ -52,7 +53,7 @@
         {
           "binding": "CFW_BOILERPLATE_DB",
           "database_name": "cfw-boilerplate-rng-CFW_BOILERPLATE_DB",
-          "database_id": "eebfeb43-b999-48d2-b243-36f27caa59b4"
+          "database_id": "35041484-a743-4d60-8302-7ce3544dbc50"
         }
       ]
     }
