@@ -4,7 +4,7 @@ import { logger, tryLogHeaders, logObjs, getAuthCookies } from '#/utils'
 // import { getSessionItty } from './middleware';
 import { UserRole } from '#/types'
 import { getSession } from './router/routes/auth/handlers'
-import { ROUTE_MAPPING } from './routeMapping'
+import { ROUTE_MAPPING } from '#/ui/src/pages/routeMapping'
 
 export { handleSsr }
 
