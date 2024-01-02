@@ -38,8 +38,9 @@ export async function assertTomlEnv(
       command: env === 'dev' ? 'npm run build:d' : 'npm run build'
     },
     dev: {
-      port: 3000,
-      ip: envVars.HOST
+      port: 443,
+      ip: envVars.HOST,
+      local_protocol: 'https'
       // hot: true,
       // watch: {
       //   ignore: ['node_modules/**/*'],

@@ -9,7 +9,7 @@ import { assert, formatBindingId, getToml, writeToml } from '../util'
 import { assertTomlEnv } from './toml'
 // import { setBindings } from '../cf/name';
 
-const __dataDir = `${__appDir}/data`
+const __dataDir = `${__appDir}/api/db`
 export const gitDataPath = `${__dataDir}/git.json`
 export const ssrDir = `${__appDir}/ui/src/pages`
 export const secretsFilePath = `${__wranglerDir}/.dev.vars`

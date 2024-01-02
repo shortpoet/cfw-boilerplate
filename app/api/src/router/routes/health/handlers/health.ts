@@ -30,7 +30,7 @@ export class HealthGet extends OpenAPIRoute {
         gitInfo =
           isWorker() && hasNamespace
             ? JSON.parse((await (env.CFW_BOILERPLATE_UI as KVNamespace).get('gitInfo')) || '')
-            : (await import('#/api/db/data.json')).default
+            : (await import('#/api/db/git.json')).default
       } catch (error) {
         console.error(`[api] [controllers] [health] [healthRes] gitInfo error: ${error}`)
       }

@@ -23,25 +23,15 @@ export const ROUTE_MAPPING: RouteMapping = {
     "title": "Json-data",
     "path": "/api-data/json-data"
   },
-  "/api-data/health-check-root": {
-    "endpoint": "api/health/check-root",
-    "title": "Health Check-root",
-    "path": "/api-data/health-check-root"
-  },
-  "/api-data/health-check2": {
-    "endpoint": "api/health/check2",
-    "title": "Health Check2",
-    "path": "/api-data/health-check2"
+  "/api-data/health-debug": {
+    "endpoint": "api/health/debug",
+    "title": "Get debug info",
+    "path": "/api-data/health-debug"
   },
   "/api-data/health-check": {
     "endpoint": "api/health/check",
-    "title": "Health Check",
+    "title": "Get health check",
     "path": "/api-data/health-check"
-  },
-  "/api-data/health-debug": {
-    "endpoint": "api/health/debug",
-    "title": "Health Debug",
-    "path": "/api-data/health-debug"
   },
   "/api-data/task-tasks": {
     "endpoint": "api/task/tasks",

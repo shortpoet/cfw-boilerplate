@@ -12,6 +12,8 @@ export type { AuthLoginEmailBody } from './models/AuthLoginEmailBody';
 export type { AuthLoginResponse } from './models/AuthLoginResponse';
 export type { AuthLoginUsernameBody } from './models/AuthLoginUsernameBody';
 export type { AuthRegisterBody } from './models/AuthRegisterBody';
+export type { DebugWorkerResponseComponent } from './models/DebugWorkerResponseComponent';
+export type { HealthCheckResponseComponent } from './models/HealthCheckResponseComponent';
 export type { OauthLoginResponse } from './models/OauthLoginResponse';
 export type { Session } from './models/Session';
 export type { Task } from './models/Task';
@@ -21,6 +23,7 @@ export type { User } from './models/User';
 
 export { AuthService } from './services/AuthService';
 export { DefaultService } from './services/DefaultService';
+export { HealthService } from './services/HealthService';
 export { MiscService } from './services/MiscService';
 export { TasksService } from './services/TasksService';
 export { UserService } from './services/UserService';

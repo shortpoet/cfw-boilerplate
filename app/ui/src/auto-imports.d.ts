@@ -24,6 +24,7 @@ declare global {
   const DefaultService: typeof import('./services/DefaultService')['DefaultService']
   const EffectScope: typeof import('vue')['EffectScope']
   const FetchError: typeof import('./composables/fetch')['FetchError']
+  const HealthService: typeof import('./services/HealthService')['HealthService']
   const InitialStateSymbol: typeof import('./modules/pinia')['InitialStateSymbol']
   const LUCIAAUTH_COOKIES_SESSION_TOKEN: typeof import('./composables/auth-lucia')['LUCIAAUTH_COOKIES_SESSION_TOKEN']
   const LUCIAAUTH_COOKIES_USER_TOKEN: (typeof import('./composables/auth-lucia'))['LUCIAAUTH_COOKIES_USER_TOKEN']
@@ -184,6 +185,7 @@ declare module 'vue' {
     readonly DefaultService: UnwrapRef<typeof import('./services/DefaultService')['DefaultService']>
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
     readonly FetchError: UnwrapRef<typeof import('./composables/fetch')['FetchError']>
+    readonly HealthService: UnwrapRef<typeof import('./services/HealthService')['HealthService']>
     readonly InitialStateSymbol: UnwrapRef<typeof import('./modules/pinia')['InitialStateSymbol']>
     readonly LUCIAAUTH_COOKIES_SESSION_TOKEN: UnwrapRef<typeof import('./composables/auth-lucia')['LUCIAAUTH_COOKIES_SESSION_TOKEN']>
     readonly LUCIAAUTH_SESSION_TOKEN_EXPIRY: UnwrapRef<typeof import('./composables/auth-lucia')['LUCIAAUTH_SESSION_TOKEN_EXPIRY']>
@@ -325,6 +327,7 @@ declare module '@vue/runtime-core' {
     readonly DefaultService: UnwrapRef<typeof import('./services/DefaultService')['DefaultService']>
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
     readonly FetchError: UnwrapRef<typeof import('./composables/fetch')['FetchError']>
+    readonly HealthService: UnwrapRef<typeof import('./services/HealthService')['HealthService']>
     readonly InitialStateSymbol: UnwrapRef<typeof import('./modules/pinia')['InitialStateSymbol']>
     readonly LUCIAAUTH_COOKIES_SESSION_TOKEN: UnwrapRef<typeof import('./composables/auth-lucia')['LUCIAAUTH_COOKIES_SESSION_TOKEN']>
     readonly LUCIAAUTH_SESSION_TOKEN_EXPIRY: UnwrapRef<typeof import('./composables/auth-lucia')['LUCIAAUTH_SESSION_TOKEN_EXPIRY']>
