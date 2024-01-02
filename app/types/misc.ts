@@ -12,8 +12,8 @@ export type MiscData = z.infer<typeof MiscDataSchema>
 
 export const MiscDumpSchema = z.object({
   data: z.any(),
-  json: z.any(),
-  text: z.any()
+  json: z.any().optional(),
+  text: z.any().optional()
 })
 export type MiscDump = z.infer<typeof MiscDumpSchema>
 

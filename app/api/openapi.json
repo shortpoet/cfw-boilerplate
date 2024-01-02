@@ -339,6 +339,37 @@
           "tasks"
         ]
       },
+      "Task": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "completed": {
+            "type": "boolean"
+          },
+          "due_date": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "slug",
+          "completed",
+          "due_date"
+        ]
+      },
       "TaskResponse": {
         "type": "object",
         "properties": {
@@ -814,32 +845,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "example": "lorem"
-                  },
-                  "slug": {
-                    "type": "string"
-                  },
-                  "description": {
-                    "type": "string"
-                  },
-                  "completed": {
-                    "type": "boolean"
-                  },
-                  "due_date": {
-                    "type": "string",
-                    "format": "date-time"
-                  }
-                },
-                "required": [
-                  "name",
-                  "slug",
-                  "completed",
-                  "due_date"
-                ]
+                "$ref": "#/components/schemas/Task"
               }
             }
           }
@@ -859,32 +865,7 @@
                       "type": "object",
                       "properties": {
                         "task": {
-                          "type": "object",
-                          "properties": {
-                            "name": {
-                              "type": "string",
-                              "example": "lorem"
-                            },
-                            "slug": {
-                              "type": "string"
-                            },
-                            "description": {
-                              "type": "string"
-                            },
-                            "completed": {
-                              "type": "boolean"
-                            },
-                            "due_date": {
-                              "type": "string",
-                              "format": "date-time"
-                            }
-                          },
-                          "required": [
-                            "name",
-                            "slug",
-                            "completed",
-                            "due_date"
-                          ]
+                          "$ref": "#/components/schemas/Task"
                         }
                       },
                       "required": [
@@ -986,32 +967,7 @@
                       "type": "object",
                       "properties": {
                         "task": {
-                          "type": "object",
-                          "properties": {
-                            "name": {
-                              "type": "string",
-                              "example": "lorem"
-                            },
-                            "slug": {
-                              "type": "string"
-                            },
-                            "description": {
-                              "type": "string"
-                            },
-                            "completed": {
-                              "type": "boolean"
-                            },
-                            "due_date": {
-                              "type": "string",
-                              "format": "date-time"
-                            }
-                          },
-                          "required": [
-                            "name",
-                            "slug",
-                            "completed",
-                            "due_date"
-                          ]
+                          "$ref": "#/components/schemas/Task"
                         }
                       },
                       "required": [

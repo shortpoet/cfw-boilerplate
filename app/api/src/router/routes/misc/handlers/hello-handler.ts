@@ -96,20 +96,11 @@ export class MiscPost extends OpenAPIRoute {
     try {
       console.log(`[api] [misc] -> ${req.method} -> ${req.url} -> data`)
       console.log(data)
-      let json
-      let text
-      try {
-        json = await req.clone().json()
-        console.log(json)
-      } catch (error) {
-        console.error(error)
-        text = await req.clone().text()
-        console.log(text)
-      }
-      return jsonOkResponse({ data, json, text }, res)
+      // const {query, params} = data
+      return jsonOkResponse({ data }, res)
     } catch (error) {
       console.error(error)
-      return serverErrorResponse('Error getting users', error, res)
+      return serverErrorResponse(undefined, error, res)
     }
   }
 }
