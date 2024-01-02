@@ -1,64 +1,24 @@
-import type { Commit } from 'git-last-commit';
-import { User } from './auth';
+import { z } from 'zod'
+
+export const ApiErrorSchema = z.object({
+  message: z.string(),
+  type: z.string(),
+  code: z.number(),
+  stack: z.string().optional(),
+  cause: z.string().optional()
+})
+export type ApiError = z.infer<typeof ApiErrorSchema>
 
 export interface ListOptions {
-  indexKey?: string;
-  limit?: number;
-  cursor?: string;
+  indexKey?: string
+  limit?: number
+  cursor?: string
 }
 
 export interface ListOptionsRequest extends Request {
-  listOptions: ListOptions;
+  listOptions: ListOptions
 }
 
 export interface JsonData {
-  [key: string]: unknown;
-}
-
-export type HealthCheck = {
-  status: string;
-  version: string;
-  uptime: string;
-  worker_env: string;
-  timestamp: Date;
-  gitInfo: Commit;
-};
-
-export interface Image {
-  id: string;
-  title: string;
-  url: string;
-}
-
-export interface Joke {
-  id: string;
-  message: string;
-  tags: string[];
-}
-
-export interface RequestOptions {
-  method: string;
-  headers: Headers;
-  body?: string;
-}
-
-export interface ResponseOptions extends ResponseInit {
-  status: number;
-  headers: Headers;
-  body?: string;
-}
-
-export interface BodyContext {
-  user: User;
-  data: any;
-}
-
-export interface ListOptions {
-  indexKey?: string;
-  limit?: number;
-  cursor?: string;
-}
-
-export interface ListOptionsRequest extends Request {
-  listOptions: ListOptions;
+  [key: string]: unknown
 }

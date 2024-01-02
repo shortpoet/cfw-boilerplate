@@ -300,6 +300,49 @@
           "success",
           "task"
         ]
+      },
+      "HealthCheckResponseComponent": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "uptime": {
+            "type": "string"
+          },
+          "worker_env": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string"
+          },
+          "gitInfo": {}
+        },
+        "required": [
+          "status",
+          "version",
+          "uptime",
+          "worker_env",
+          "timestamp"
+        ]
+      },
+      "DebugWorkerResponseComponent": {
+        "type": "object",
+        "properties": {
+          "env": {},
+          "req": {},
+          "cf": {},
+          "ctx": {},
+          "rawManifest": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "rawManifest"
+        ]
       }
     },
     "parameters": {}
@@ -823,58 +866,95 @@
         }
       }
     },
-    "/api/health/debug": {
-      "get": {
-        "operationId": "get__debug",
-        "responses": {
-          "200": {
-            "description": "Object with user data."
-          }
-        }
-      },
-      "post": {
-        "operationId": "post__debug",
-        "responses": {
-          "200": {
-            "description": "Object with user data."
-          }
-        }
-      }
-    },
     "/api/health/check": {
       "get": {
-        "operationId": "get__check",
+        "tags": [
+          "Health"
+        ],
+        "summary": "Get health check",
+        "operationId": "get_HealthGet",
         "responses": {
           "200": {
-            "description": "Object with user data."
-          }
-        }
-      },
-      "post": {
-        "operationId": "post__check",
-        "responses": {
-          "200": {
-            "description": "Object with user data."
+            "description": "Returns health check",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthCheckResponseComponent"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Health check not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
           }
         }
       }
     },
-    "/api/health/check2": {
+    "/api/health/debug": {
       "get": {
-        "operationId": "get__check2",
-        "responses": {
-          "200": {
-            "description": "Object with user data."
+        "tags": [
+          "Health"
+        ],
+        "summary": "Get debug info",
+        "operationId": "get_DebugGet",
+        "parameters": [
+          {
+            "schema": {
+              "type": "boolean",
+              "description": "Parse KVs - expensive"
+            },
+            "required": false,
+            "name": "parse",
+            "in": "query"
           }
-        }
-      }
-    },
-    "/api/health/check-root": {
-      "get": {
-        "operationId": "get__check-root",
+        ],
         "responses": {
           "200": {
-            "description": "Object with user data."
+            "description": "Returns debug info",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DebugWorkerResponseComponent"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Debug info not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
           }
         }
       }

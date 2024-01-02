@@ -1,3 +1,6 @@
+import { z } from 'zod'
+import { ApiErrorSchema } from './api'
+
 interface Headers {
   [key: string]: string
 }
@@ -9,15 +12,9 @@ export enum ResText {
   BAD_REQUEST = 'Bad Request',
   SERVER_ERROR = 'Server Error'
 }
-export interface ApiError {
-  message: string
-  type: string
-  code: number
-  stack?: string
-  cause?: unknown
-}
 
-export interface ApiErrorResponse {
-  success: boolean
-  error: ApiError
-}
+export const ApiErrorResponseSchema = z.object({
+  success: z.boolean(),
+  error: ApiErrorSchema
+})
+export type ApiErrorResponse = z.infer<typeof ApiErrorResponseSchema>
