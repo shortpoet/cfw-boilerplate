@@ -6,10 +6,10 @@ import {
   serverErrorResponse
 } from '#/api/src/middleware'
 import { OpenAPIRoute, OpenAPIRouteSchema } from '@cloudflare/itty-router-openapi'
-import { GetUsersSchema } from '../auth-schema'
+import { AuthUsersSchema } from '../auth-schema'
 
 export class GetUsers extends OpenAPIRoute {
-  static schema: OpenAPIRouteSchema = GetUsersSchema
+  static schema: OpenAPIRouteSchema = AuthUsersSchema
 
   async handle(
     req: Request,

@@ -19,7 +19,7 @@ enum ServerMessages {
   NoContent = 'No content'
 }
 
-export const GetUserSchema = {
+export const AuthUserSchema = {
   tags: ['User'],
   summary: 'Gets a single user',
   parameters: {
@@ -35,7 +35,7 @@ export const GetUserSchema = {
   }
 }
 
-export const GetUsersSchema = {
+export const AuthUsersSchema = {
   tags: ['User'],
   summary: 'Gets a list of all users.',
   responses: {
@@ -54,7 +54,7 @@ export const GetUsersSchema = {
   }
 }
 
-export const MeSchema = {
+export const AuthMeSchema = {
   tags: ['User'],
   summary: 'Gets your own profile',
   security: [{ bearerAuth: [] }],
@@ -66,13 +66,40 @@ export const MeSchema = {
   }
 }
 
-export const LoginSchema = {
+export const AuthSessionSchema = {
   tags: ['Auth'],
   summary: 'Fetch a user session',
   responses: {
     '200': {
       description: 'Logged in User Session',
       schema: SessionComponent
+    },
+    '404': {
+      description: 'Session not found',
+      schema: ApiErrorResponseComponent
+    },
+    '500': {
+      description: 'Internal Server Error',
+      schema: ApiErrorResponseComponent
+    }
+  }
+}
+
+export const AuthSessionsSchema = {
+  tags: ['Auth'],
+  summary: 'Fetch all user sessions',
+  responses: {
+    '200': {
+      description: 'List of all user sessions',
+      schema: z.array(SessionComponent)
+    },
+    '404': {
+      description: 'Sessions not found',
+      schema: ApiErrorResponseComponent
+    },
+    '500': {
+      description: 'Internal Server Error',
+      schema: ApiErrorResponseComponent
     }
   }
 }

@@ -4,6 +4,7 @@ import { LoginPasswordUser } from './handlers/login-password-handler'
 import { LoginGithub, LoginGithubCallback } from './handlers'
 
 type CF = [env: Env, ctx: ExecutionContext, data: Record<string, any>]
+
 const router = OpenAPIRouter<IRequest, CF>({ base: '/api/auth/login' })
 
 router.post('/password', LoginPasswordUser)

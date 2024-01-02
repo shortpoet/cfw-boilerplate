@@ -177,20 +177,6 @@ export default function withCookies() {
       //   return signCookie(session.sessionId, env.AUTH_SECRET)
       // }
 
-    // 2KGTIS22o9onlPbIgwNDUmnXpACFEmc8f3R4Ya5V5ROjprNbyqJzQPMuVcsgbyukswISIhkSAnDrm5j1vAlMbw%253D%253D
-    // 2KGTIS22o9onlPbIgwNDUmnXpACFEmc8f3R4Ya5V5ROjprNbyqJzQPMuVcsgbyukswISIhkSAnDrm5j1vAlMbw%3D%3D
-    // 2KGTIS22o9onlPbIgwNDUmnXpACFEmc8f3R4Ya5V5ROjprNbyqJzQPMuVcsgbyukswISIhkSAnDrm5j1vAlMbw%3D%3D
-    //
-    // r
-    7Pz4ibT9GVjmfi0OiKiitpE/Xss4kphyrw/3bOCHXdrKNRaTsqatgLPqbdI/gDW+yj6pv22oFR7iFR2ZGkdARg==
-    7Pz4ibT9GVjmfi0OiKiitpE%2FXss4kphyrw%2F3bOCHXdrKNRaTsqatgLPqbdI%2FgDW%2Byj6pv22oFR7iFR2ZGkdARg%3D%3D
-    7Pz4ibT9GVjmfi0OiKiitpE%2FXss4kphyrw%2F3bOCHXdrKNRaTsqatgLPqbdI%2FgDW%2Byj6pv22oFR7iFR2ZGkdARg%3D%3D
-    7Pz4ibT9GVjmfi0OiKiitpE%2FXss4kphyrw%2F3bOCHXdrKNRaTsqatgLPqbdI%2FgDW%2Byj6pv22oFR7iFR2ZGkdARg%3D%3D
-
-    7Pz4ibT9GVjmfi0OiKiitpE%2FXss4kphyrw%2F3bOCHXdrKNRaTsqatgLPqbdI%2FgDW%2Byj6pv22oFR7iFR2ZGkdARg%3D%3D
-    7Pz4ibT9GVjmfi0OiKiitpE/Xss4kphyrw/3bOCHXdrKNRaTsqatgLPqbdI/gDW+yj6pv22oFR7iFR2ZGkdARg==
-    7Pz4ibT9GVjmfi0OiKiitpE/Xss4kphyrw/3bOCHXdrKNRaTsqatgLPqbdI/gDW+yj6pv22oFR7iFR2ZGkdARg==
-
     */
   }
 }
