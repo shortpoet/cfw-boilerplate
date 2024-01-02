@@ -1,11 +1,10 @@
-import { Task } from './types'
 import { OpenAPIRoute, OpenAPIRouteSchema, Query } from '@cloudflare/itty-router-openapi'
 import { taskGenerator } from './task-generator'
-import { TaskComponentType } from '../task-component'
 import { GetTaskListSchema } from '../task-schema'
 import { jsonOkResponse } from '#/api/src/middleware'
+import { Task } from '#/types'
 
-export const ALL_TASKS: TaskComponentType[] = taskGenerator(134)
+export const ALL_TASKS: Task[] = taskGenerator(134)
 
 export class TaskList extends OpenAPIRoute {
   static schema = GetTaskListSchema
@@ -46,9 +45,7 @@ export class TaskList extends OpenAPIRoute {
     // Implement pagination logic using cursor and indexKey
     if (cursor && indexKey) {
       // Find the index of the cursor value in the dataset
-      const index = ALL_TASKS.findIndex(
-        (task) => task[indexKey as keyof TaskComponentType] === cursor
-      )
+      const index = ALL_TASKS.findIndex((task) => task[indexKey as keyof Task] === cursor)
       if (index !== -1) {
         // Use the cursor index to calculate the start index for the next page
         startIndex = index + 1
