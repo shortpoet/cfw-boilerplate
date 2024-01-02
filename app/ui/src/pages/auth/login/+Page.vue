@@ -22,12 +22,14 @@
         >
           <template #submit-button>
             <button
+              v-for="provider in providers"
+              :key="provider.provider"
               type="submit"
               class="btn-main m-3 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-              id="login-button-oauth-github"
+              :id="`login-button-oauth-${provider.provider}`"
               :disabled="loginProps.isLoggedIn"
             >
-              <i class="i-carbon-logo-github" inline-block /> Log in Github
+              <i :class="provider.icon" inline-block /> Log in {{ provider.name }}
             </button>
           </template>
         </FormGeneric>
@@ -116,7 +118,8 @@ import {
   Session,
   LoginOptionsTypes,
   LoginOptionsTypesEnum,
-  OauthProvidersEnum
+  OauthProvidersEnum,
+  OauthProviders
 } from '#/types'
 import type { FormEmitValue, FormInput } from '#/ui/src/components/input/FormGeneric.vue'
 
@@ -132,6 +135,35 @@ const loginTypes = ref<LoginOptionsTypes[]>([
 // const pageContext = usePageContext();
 // const pageSession = ref(pageContext.session);
 const loginFormType = ref<'register' | 'login'>()
+
+type ProviderButton = {
+  provider: OauthProviders
+  name: string
+  icon: string
+}
+
+const providers = ref<ProviderButton[]>([
+  {
+    provider: OauthProvidersEnum.Enum.github,
+    name: 'Github',
+    icon: 'i-carbon-logo-github'
+  },
+  {
+    provider: OauthProvidersEnum.Enum.google,
+    name: 'Google',
+    icon: 'i-carbon-logo-google'
+  }
+  // {
+  //   provider: OauthProvidersEnum.Enum.facebook,
+  //   name: 'Facebook',
+  //   icon: 'i-carbon-logo-facebook'
+  // },
+  // {
+  //   provider: OauthProvidersEnum.Enum.twitter,
+  //   name: 'Twitter',
+  //   icon: 'i-carbon-logo-twitter'
+  // }
+])
 
 const passwordInputs: ComputedRef<FormInput<LoginOptions>[]> = computed(() => [
   {
