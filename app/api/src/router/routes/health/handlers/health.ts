@@ -51,7 +51,7 @@ export class HealthGet extends OpenAPIRoute {
         gitInfo: gitInfo
       }
 
-      return jsonOkResponse(JSON.stringify(healthRes, null, 2), res)
+      return jsonOkResponse(healthRes, res)
     } catch (error) {
       console.error(error)
       return serverErrorResponse('Error getting users', error, res)

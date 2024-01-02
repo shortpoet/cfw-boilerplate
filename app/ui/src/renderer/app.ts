@@ -31,8 +31,8 @@ function createApp(Page: Page, pageProps: PageProps | undefined, pageContext: Pa
   logger.info(`[ui] [app] [createApp] correlationId: ${correlationId}`)
   logger.info(`[ui] [app] [createApp] session:`)
   logger.info(session)
-  logger.info(`[ui] [app] [createApp] endpoints:`)
-  logger.info(endpoints)
+  // logger.info(`[ui] [app] [createApp] endpoints:`)
+  // logger.info(endpoints)
   let rootComponent: any
   // sxee comments below
   // let rootComponent: Component & { Page: Component; pageProps: PageProps };

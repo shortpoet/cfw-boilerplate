@@ -18,7 +18,7 @@ export class DebugGet extends OpenAPIRoute {
     try {
       req.logger.info(`[api] [DebugGet] -> ${req.method} -> ${req.url} -> req`)
       const { parse } = data.query
-      const excludes = ['token', 'ADMIN_USERS', 'secret', 'client_id', 'password']
+      const excludes = ['token', 'ADMIN_USERS', 'secret', 'client_id', 'password', 'key']
       let reqLog = escapeNestedKeys(req, excludes)
       let envLog = escapeNestedKeys(env, excludes)
 
