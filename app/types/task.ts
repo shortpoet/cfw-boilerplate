@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 export const TaskSchema = z.object({
   id: z.string(),
-  name: z.string().openapi({ example: 'Clean my room' }),
+  name: z.string(),
   slug: z.string(),
   description: z.string().optional(),
   completed: z.boolean(),

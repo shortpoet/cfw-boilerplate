@@ -64,72 +64,6 @@
         "format": "uri",
         "description": "OAuth login URL"
       },
-      "User": {
-        "type": "object",
-        "properties": {
-          "userId": {
-            "type": "string",
-            "minLength": 12,
-            "maxLength": 12,
-            "description": "User ID"
-          },
-          "username": {
-            "type": "string",
-            "description": "User's username"
-          },
-          "roles": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": [
-                "not_set",
-                "guest",
-                "admin",
-                "user"
-              ]
-            }
-          },
-          "userTypes": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": [
-                "not_set",
-                "email",
-                "github",
-                "credentials"
-              ]
-            }
-          },
-          "email_verified": {
-            "type": "boolean",
-            "description": "Is user email verified"
-          },
-          "email": {
-            "type": "string",
-            "description": "User email"
-          },
-          "avatar_url": {
-            "type": "string",
-            "description": "User avatar URL"
-          },
-          "name": {
-            "type": "string",
-            "description": "User's name"
-          },
-          "password": {
-            "type": "string",
-            "description": "User password"
-          }
-        },
-        "required": [
-          "userId",
-          "username",
-          "roles",
-          "userTypes",
-          "email_verified"
-        ]
-      },
       "Session": {
         "type": "object",
         "properties": {
@@ -140,7 +74,70 @@
             "description": "Session ID"
           },
           "user": {
-            "$ref": "#/components/schemas/User"
+            "type": "object",
+            "properties": {
+              "userId": {
+                "type": "string",
+                "minLength": 12,
+                "maxLength": 12,
+                "description": "User ID"
+              },
+              "username": {
+                "type": "string",
+                "description": "User's username"
+              },
+              "roles": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "not_set",
+                    "guest",
+                    "admin",
+                    "user"
+                  ]
+                }
+              },
+              "userTypes": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "not_set",
+                    "email",
+                    "github",
+                    "credentials"
+                  ]
+                }
+              },
+              "email_verified": {
+                "type": "boolean",
+                "description": "Is user email verified"
+              },
+              "email": {
+                "type": "string",
+                "description": "User email"
+              },
+              "avatar_url": {
+                "type": "string",
+                "description": "User avatar URL"
+              },
+              "name": {
+                "type": "string",
+                "description": "User's name"
+              },
+              "password": {
+                "type": "string",
+                "description": "User password"
+              }
+            },
+            "required": [
+              "userId",
+              "username",
+              "roles",
+              "userTypes",
+              "email_verified"
+            ]
           },
           "activePeriodExpiresAt": {
             "type": "string",
@@ -229,36 +226,70 @@
           "password"
         ]
       },
-      "Task": {
+      "User": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string"
+          "userId": {
+            "type": "string",
+            "minLength": 12,
+            "maxLength": 12,
+            "description": "User ID"
+          },
+          "username": {
+            "type": "string",
+            "description": "User's username"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "not_set",
+                "guest",
+                "admin",
+                "user"
+              ]
+            }
+          },
+          "userTypes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "not_set",
+                "email",
+                "github",
+                "credentials"
+              ]
+            }
+          },
+          "email_verified": {
+            "type": "boolean",
+            "description": "Is user email verified"
+          },
+          "email": {
+            "type": "string",
+            "description": "User email"
+          },
+          "avatar_url": {
+            "type": "string",
+            "description": "User avatar URL"
           },
           "name": {
             "type": "string",
-            "example": "Clean my room"
+            "description": "User's name"
           },
-          "slug": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "completed": {
-            "type": "boolean"
-          },
-          "due_date": {
+          "password": {
             "type": "string",
-            "format": "date-time"
+            "description": "User password"
           }
         },
         "required": [
-          "id",
-          "name",
-          "slug",
-          "completed",
-          "due_date"
+          "userId",
+          "username",
+          "roles",
+          "userTypes",
+          "email_verified"
         ]
       },
       "TaskListResponse": {
@@ -276,7 +307,35 @@
           "tasks": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Task"
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "slug": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "completed": {
+                  "type": "boolean"
+                },
+                "due_date": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "slug",
+                "completed",
+                "due_date"
+              ]
             }
           }
         },
@@ -293,7 +352,35 @@
             "type": "boolean"
           },
           "task": {
-            "$ref": "#/components/schemas/Task"
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "slug": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "completed": {
+                "type": "boolean"
+              },
+              "due_date": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "slug",
+              "completed",
+              "due_date"
+            ]
           }
         },
         "required": [
