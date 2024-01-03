@@ -525,14 +525,9 @@
             "location": "query",
             "type": {
               "_def": {
-                "innerType": {
-                  "_def": {
-                    "checks": [],
-                    "typeName": "ZodString",
-                    "coerce": false
-                  }
-                },
-                "typeName": "ZodOptional",
+                "checks": [],
+                "typeName": "ZodString",
+                "coerce": false,
                 "description": "Post login redirect URL"
               }
             }
@@ -647,14 +642,9 @@
             "location": "query",
             "type": {
               "_def": {
-                "innerType": {
-                  "_def": {
-                    "checks": [],
-                    "typeName": "ZodString",
-                    "coerce": false
-                  }
-                },
-                "typeName": "ZodOptional",
+                "checks": [],
+                "typeName": "ZodString",
+                "coerce": false,
                 "description": "Post login redirect URL"
               }
             }

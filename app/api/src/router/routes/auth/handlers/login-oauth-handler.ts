@@ -27,12 +27,15 @@ export class LoginOauth extends OpenAPIRoute {
   async handle(req: Request, res: Response, env: Env, ctx: ExecutionContext) {
     req.logger.info(`[api] [auth] [login] [oauth]`)
     const { auth, googleAuth, githubAuth } = await createAuth(env)
-    const query = OauthLoginBodySchema.safeParse(req.query)
-    if (!query.success) {
+    const query = req.query ? OauthLoginBodySchema.safeParse(req.query) : undefined
+    if (query && !query.success) {
       console.log(`[api] [auth] [login] [oauth] -> query.error: ${query.error}`)
       console.log(`[api] [auth] [login] [oauth] -> query.error: ${typeof query.error}`)
 
       return badResponse('Invalid query', JSON.stringify(query.error), res)
+    }
+    if (!query) {
+      return badResponse('Invalid query', undefined, res)
     }
     const { provider, redirect_url } = query.data
     const providerMapping = {
