@@ -12,7 +12,7 @@
   },
   "dev": {
     "port": 443,
-    "ip": "cfw.local",
+    "ip": "localhost",
     "local_protocol": "https"
   },
   "env": {

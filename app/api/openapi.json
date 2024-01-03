@@ -19,8 +19,7 @@
     },
     "schemas": {
       "AuthLoginResponse": {
-        "type": "string",
-        "format": "uri"
+        "type": "string"
       },
       "AuthLoginEmailBody": {
         "type": "object",
@@ -61,8 +60,7 @@
       },
       "OauthLoginResponse": {
         "type": "string",
-        "format": "uri",
-        "description": "OAuth login URL"
+        "description": "OAuth redirect HTML"
       },
       "Session": {
         "type": "object",

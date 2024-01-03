@@ -159,12 +159,8 @@ export class LoginPasswordUser extends OpenAPIRoute {
       const dataPage = new URL(`${baseUrlApp}/api-data`).href
 
       // await res.cookie(req, res, env, LUCIA_AUTH_COOKIES_SESSION_TOKEN, sessionCookie)
-      // res.headers.set('Set-Cookie', sessionCookie)
-      return redirectHtml(dataPage, sessionCookie, 302)
-
-      // return jsonOkResponse(dataPage, res)
-      // return redirectHtml(dataPage, sessionCookie, 302)
-      // return jsonOkResponse(session, res)
+      res.headers.set('Set-Cookie', sessionCookie)
+      return jsonOkResponse(dataPage, res)
     } catch (error) {
       console.error(error)
       if (error instanceof ZodError) {

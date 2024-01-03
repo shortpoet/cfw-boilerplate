@@ -49,10 +49,12 @@ export async function getConfig(opts: Options): Promise<Config> {
   assert(appName, `[wrangle] [config] No app name found`, false)
   log.print('cyan', `[wrangle] [config] App name: ${colors.cyan(appName)}`)
   const secrets = {
-    __SECRET__: `Apps/${appName}/${env}/__SECRET__`,
-    AUTH_SECRET: `Apps/${appName}/${env}/AUTH_SECRET`,
+    __SECRET__: `Repos/${appName}/${env}/__SECRET__`,
+    AUTH_SECRET: `Repos/${appName}/${env}/AUTH_SECRET`,
     GITHUB_CLIENT_ID: `Github/oauth/${appName}/${env}/GITHUB_CLIENT_ID`,
     GITHUB_CLIENT_SECRET: `Github/oauth/${appName}/${env}/GITHUB_CLIENT_SECRET`,
+    GOOGLE_CLIENT_ID: `Google/oauth/${appName}/${env}/GOOGLE_CLIENT_ID`,
+    GOOGLE_CLIENT_SECRET: `Google/oauth/${appName}/${env}/GOOGLE_CLIENT_SECRET`,
     EMAIL_SERVER_PASSWORD: `Mail/fastmail/ai-maps-nodemailer`,
     JMAP_TOKEN: `Mail/fastmail/ai-maps-email-send-token`
   }
