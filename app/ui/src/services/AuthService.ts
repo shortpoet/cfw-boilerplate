@@ -43,7 +43,7 @@ export class AuthService {
     redirectUrl,
   }: {
     provider: string,
-    redirectUrl: string,
+    redirectUrl?: string,
   }): CancelablePromise<OauthLoginResponse> {
     return __request(OpenAPI, {
       method: 'GET',
@@ -94,7 +94,7 @@ export class AuthService {
     redirectUrl,
   }: {
     provider: string,
-    redirectUrl: string,
+    redirectUrl?: string,
   }): CancelablePromise<OauthLoginResponse> {
     return __request(OpenAPI, {
       method: 'GET',
