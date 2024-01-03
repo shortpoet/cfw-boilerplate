@@ -14,8 +14,8 @@ router.get('/github', LoginGithub)
 
 router.get('/github/callback', LoginGithubCallback)
 
-router.get('/google', LoginOauth)
+router.get('/oauth', LoginOauth)
 
-router.get('/google/callback', LoginOauthCallback)
+router.get('/oauth/callback', LoginOauthCallback)
 
 export default router

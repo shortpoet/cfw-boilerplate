@@ -19,7 +19,7 @@ import {
 } from '#/types'
 import { OpenAPIRoute } from '@cloudflare/itty-router-openapi'
 import { AuthLoginOauthCallbackSchema, AuthLoginOauthSchema } from '../auth-schema'
-import { getGoogleUser } from './oauth-providers'
+import { getGithubUser, getGoogleUser } from './oauth-providers'
 
 export class LoginOauth extends OpenAPIRoute {
   static schema = AuthLoginOauthSchema
@@ -102,7 +102,7 @@ export class LoginOauthCallback extends OpenAPIRoute {
       }
       const providerMapping = {
         google: getGoogleUser,
-        github: () => Promise.resolve(['github', 'github']),
+        github: getGithubUser,
         twitter: () => Promise.resolve(['twitter', 'twitter']),
         facebook: () => Promise.resolve(['facebook', 'facebook']),
         linkedin: () => Promise.resolve(['linkedin', 'linkedin'])
