@@ -128,6 +128,8 @@ export class LoginOauthCallback extends OpenAPIRoute {
       resp.headers.set('Set-Cookie', sessionCookie)
       resp.headers.set('Location', dataPage)
       return resp
+
+      // return redirectHtml(dataPage, sessionCookie, 302)
     } catch (e) {
       if (e instanceof OAuthRequestError) {
         // invalid code

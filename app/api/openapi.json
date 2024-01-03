@@ -503,13 +503,13 @@
         }
       }
     },
-    "/api/auth/login/github": {
+    "/api/auth/login/oauth": {
       "get": {
         "tags": [
           "Auth"
         ],
         "summary": "Log in via OAuth",
-        "operationId": "get_LoginGithub",
+        "operationId": "get_LoginOauth",
         "parameters": [
           {
             "schema": {
@@ -561,7 +561,7 @@
           "Auth"
         ],
         "summary": "Log in via OAuth callback",
-        "operationId": "get_LoginGithubCallback",
+        "operationId": "get_LoginOauthCallback",
         "parameters": [
           {
             "schema": {
@@ -616,59 +616,7 @@
         }
       }
     },
-    "/api/auth/login/oauth": {
-      "get": {
-        "tags": [
-          "Auth"
-        ],
-        "summary": "Log in via OAuth",
-        "operationId": "get_LoginOauth",
-        "parameters": [
-          {
-            "schema": {
-              "type": "string",
-              "description": "OAuth code"
-            },
-            "required": true,
-            "name": "provider",
-            "in": "query"
-          },
-          {
-            "schema": {
-              "type": "string",
-              "description": "OAuth state"
-            },
-            "required": false,
-            "name": "redirect_url",
-            "in": "query"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OAuth login URL",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OauthLoginResponse"
-                }
-              }
-            }
-          },
-          "302": {
-            "description": "Redirect to Request URL",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {}
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/auth/login/oauth/callback": {
+    "/api/auth/login/google/callback": {
       "get": {
         "tags": [
           "Auth"

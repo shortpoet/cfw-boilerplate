@@ -11,6 +11,7 @@ router.post('/password', LoginPasswordUser)
 
 router.get('/oauth', LoginOauth)
 
-router.get('/oauth/callback', LoginOauthCallback)
+router.get('/github/callback', LoginOauthCallback)
+router.get('/google/callback', LoginOauthCallback)
 
 export default router

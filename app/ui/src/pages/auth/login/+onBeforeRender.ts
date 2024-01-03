@@ -26,11 +26,11 @@ const onBeforeRender: OnBeforeRenderAsync = async (
   return {
     pageContext: {
       pageProps: {
-        title: 'Login / Logout',
+        // title: 'Login / Logout',
         isAdmin: session?.user?.roles.includes(UserRole.Admin) || false,
         session: session
-      },
-      title: 'API Data'
+      }
+      // title: 'API Data'
     }
   }
 }
