@@ -75,7 +75,7 @@ export const OauthLoginBodySchema = z.object({
 })
 export type OauthLoginBody = z.infer<typeof OauthLoginBodySchema>
 
-export const OauthLoginResponseSchema = z.string({ description: 'OAuth login URL' }).url()
+export const OauthLoginResponseSchema = z.string({ description: 'OAuth redirect HTML' })
 export type OauthLoginResponse = z.infer<typeof OauthLoginResponseSchema>
 
 /* Client */
@@ -88,7 +88,7 @@ export type OauthLoginResponse = z.infer<typeof OauthLoginResponseSchema>
 //   email?: string
 // }
 
-export const LoginRedirectResponseSchema = z.string().url()
+export const LoginRedirectResponseSchema = z.string()
 export type LoginProviderResponse = z.infer<typeof LoginRedirectResponseSchema>
 
 export const LoginHTMLResponseSchema = z.string()

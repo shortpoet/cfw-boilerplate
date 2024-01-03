@@ -110,26 +110,26 @@ export class LoginOauthCallback extends OpenAPIRoute {
       const sessionCookie = auth.createSessionCookie(session).serialize()
       console.log(`[api] [auth] [login] [oauth] -> cookie: ${sessionCookie}`)
 
-      const html = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-      <meta http-equiv="refresh" content="0;URL='${dataPage}'"/>
-      </head>
-      <body><p>Redirecting to <a href="${dataPage}">${dataPage}</a>.</p></body>
-      </html>
-      `
-      const resp = new Response(html, {
-        headers: {
-          'content-type': 'text/html;charset=UTF-8'
-        },
-        status: 302
-      })
-      resp.headers.set('Set-Cookie', sessionCookie)
-      resp.headers.set('Location', dataPage)
-      return resp
+      // const html = `
+      // <!DOCTYPE html>
+      // <html>
+      // <head>
+      // <meta http-equiv="refresh" content="0;URL='${dataPage}'"/>
+      // </head>
+      // <body><p>Redirecting to <a href="${dataPage}">${dataPage}</a>.</p></body>
+      // </html>
+      // `
+      // const resp = new Response(html, {
+      //   headers: {
+      //     'content-type': 'text/html;charset=UTF-8'
+      //   },
+      //   status: 302
+      // })
+      // resp.headers.set('Set-Cookie', sessionCookie)
+      // resp.headers.set('Location', dataPage)
+      // return resp
 
-      // return redirectHtml(dataPage, sessionCookie, 302)
+      return redirectHtml(dataPage, sessionCookie, 302)
     } catch (e) {
       if (e instanceof OAuthRequestError) {
         // invalid code

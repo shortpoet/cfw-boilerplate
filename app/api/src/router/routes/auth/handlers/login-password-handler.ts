@@ -28,6 +28,7 @@ import {
   importKey,
   signData
 } from '#/utils'
+import { redirectHtml } from '#/api/src/middleware/redirect'
 
 export class RegisterPasswordUser extends OpenAPIRoute {
   static schema = AuthRegisterSchema
@@ -158,8 +159,10 @@ export class LoginPasswordUser extends OpenAPIRoute {
       const dataPage = new URL(`${baseUrlApp}/api-data`).href
 
       // await res.cookie(req, res, env, LUCIA_AUTH_COOKIES_SESSION_TOKEN, sessionCookie)
-      res.headers.set('Set-Cookie', sessionCookie)
-      return jsonOkResponse(dataPage, res)
+      // res.headers.set('Set-Cookie', sessionCookie)
+      return redirectHtml(dataPage, sessionCookie, 302)
+
+      // return jsonOkResponse(dataPage, res)
       // return redirectHtml(dataPage, sessionCookie, 302)
       // return jsonOkResponse(session, res)
     } catch (error) {
