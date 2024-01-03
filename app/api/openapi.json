@@ -525,7 +525,7 @@
               "type": "string",
               "description": "OAuth state"
             },
-            "required": true,
+            "required": false,
             "name": "redirect_url",
             "in": "query"
           }
@@ -638,7 +638,7 @@
               "type": "string",
               "description": "OAuth state"
             },
-            "required": true,
+            "required": false,
             "name": "redirect_url",
             "in": "query"
           }

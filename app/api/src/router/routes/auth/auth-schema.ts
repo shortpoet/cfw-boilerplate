@@ -161,7 +161,8 @@ export const AuthLoginOauthSchema = {
       description: 'OAuth code'
     }),
     redirect_url: Query(z.string(), {
-      description: 'OAuth state'
+      description: 'OAuth state',
+      required: false
     })
   },
   responses: {

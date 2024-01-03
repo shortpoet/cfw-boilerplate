@@ -38,10 +38,20 @@ export class AuthService {
    * @returns OauthLoginResponse OAuth login URL
    * @throws ApiError
    */
-  public static getLoginGithub(): CancelablePromise<OauthLoginResponse> {
+  public static getLoginGithub({
+    provider,
+    redirectUrl,
+  }: {
+    provider: string,
+    redirectUrl: string,
+  }): CancelablePromise<OauthLoginResponse> {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/api/auth/login/github',
+      query: {
+        'provider': provider,
+        'redirect_url': redirectUrl,
+      },
       errors: {
         302: `Redirect to Request URL`,
       },
@@ -79,10 +89,20 @@ export class AuthService {
    * @returns OauthLoginResponse OAuth login URL
    * @throws ApiError
    */
-  public static getLoginOauth(): CancelablePromise<OauthLoginResponse> {
+  public static getLoginOauth({
+    provider,
+    redirectUrl,
+  }: {
+    provider: string,
+    redirectUrl: string,
+  }): CancelablePromise<OauthLoginResponse> {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/api/auth/login/google',
+      query: {
+        'provider': provider,
+        'redirect_url': redirectUrl,
+      },
       errors: {
         302: `Redirect to Request URL`,
       },

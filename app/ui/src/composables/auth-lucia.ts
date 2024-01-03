@@ -210,7 +210,7 @@ const useLuciaAuth = () => {
     }
     if (opts.type === 'oauth') {
       const { data, error, dataLoading } = await useService<LoginProviderResponse>(
-        providerMapping[opts.provider]()
+        providerMapping[opts.provider]({ provider: opts.provider })
       )
       auth.authError.value = error.value
       if (auth.authError.value || !data.value) {
