@@ -157,13 +157,11 @@ export const AuthLoginOauthSchema = {
   tags: ['Auth'],
   summary: 'Log in via OAuth',
   paramerters: {
-    provider: Query(Str, {
-      description: 'OAuth provider',
-      required: true
+    provider: Query(z.string, {
+      description: 'OAuth provider'
     }),
-    redirectUrl: Query(Str, {
-      description: 'Post login redirect URL',
-      required: false
+    redirectUrl: Query(z.string, {
+      description: 'Post login redirect URL'
     })
   },
   responses: {

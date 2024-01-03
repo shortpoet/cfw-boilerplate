@@ -24,10 +24,10 @@ import { getGoogleUser } from './oauth-providers'
 export class LoginOauth extends OpenAPIRoute {
   static schema = AuthLoginOauthSchema
 
-  async handle(req: Request, res: Response, env: Env, ctx: ExecutionContext, data: any) {
+  async handle(req: Request, res: Response, env: Env, ctx: ExecutionContext) {
     req.logger.info(`[api] [auth] [login] [oauth]`)
     const { auth, googleAuth, githubAuth } = await createAuth(env)
-    const query = OauthLoginBodySchema.safeParse(data.query)
+    const query = OauthLoginBodySchema.safeParse(req.query)
     if (!query.success) {
       console.log(`[api] [auth] [login] [oauth] -> query.error: ${query.error}`)
       console.log(`[api] [auth] [login] [oauth] -> query.error: ${typeof query.error}`)
