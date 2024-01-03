@@ -93,6 +93,8 @@ declare global {
     AUTH_SECRET: string
     GITHUB_CLIENT_ID: string
     GITHUB_CLIENT_SECRET: string
+    GOOGLE_CLIENT_ID: string
+    GOOGLE_CLIENT_SECRET: string
     JMAP_TOKEN: string
     EMAIL_SERVER_HOST: string
     EMAIL_SERVER_PORT: string
@@ -189,6 +191,8 @@ declare global {
       AUTH_SECRET: string
       GITHUB_CLIENT_ID: string
       GITHUB_CLIENT_SECRET: string
+      GOOGLE_CLIENT_ID: string
+      GOOGLE_CLIENT_SECRET: string
       JMAP_TOKEN: string
       EMAIL_SERVER_HOST: string
       EMAIL_SERVER_PORT: string

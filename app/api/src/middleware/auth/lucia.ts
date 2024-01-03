@@ -4,7 +4,7 @@ import { lucia, LuciaError, Middleware, SessionSchema } from 'lucia'
 // import 'lucia/polyfill/node'
 import { web } from 'lucia/middleware'
 // import { google } from '@lucia-auth/oauth/providers';
-import { github } from '@lucia-auth/oauth/providers'
+import { github, google } from '@lucia-auth/oauth/providers'
 
 import { deriveDatabaseAdapter, q } from '#/api/db/d1-kysely-lucia'
 
@@ -113,7 +113,14 @@ export const createAuth = async (env: Env) => {
     scope: ['user:email, read:user']
   })
 
-  return { auth, githubAuth }
+  const googleAuth = google(auth, {
+    clientId: env.GOOGLE_CLIENT_ID,
+    clientSecret: env.GOOGLE_CLIENT_SECRET,
+    redirectUri: `https://${env.HOST}/api/auth/login/google/callback`,
+    scope: ['openid', 'profile', 'email']
+  })
+
+  return { auth, githubAuth, googleAuth }
 }
 
 export type Auth = ReturnType<typeof createAuth>

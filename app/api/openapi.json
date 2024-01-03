@@ -596,6 +596,99 @@
         }
       }
     },
+    "/api/auth/login/google": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Log in via OAuth",
+        "operationId": "get_LoginOauth",
+        "responses": {
+          "200": {
+            "description": "OAuth login URL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OauthLoginResponse"
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "Redirect to Request URL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/login/google/callback": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Log in via OAuth callback",
+        "operationId": "get_LoginOauthCallback",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "description": "OAuth code"
+            },
+            "required": true,
+            "name": "code",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "OAuth state"
+            },
+            "required": true,
+            "name": "state",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful OAuth login - session",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/auth/register/password": {
       "post": {
         "tags": [

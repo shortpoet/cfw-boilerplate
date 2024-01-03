@@ -142,6 +142,9 @@ const useLuciaAuth = () => {
   const login = async (opts: LoginOptions) => {
     const { logger, correlationId } = useSsrLogger()
     logger.info(`[ui] [useAuth] [login] -> correlationId: ${correlationId}`)
+    console.log(`[ui] [useAuth] [login] -> opts:`)
+    console.log(opts)
+    return
     const isLogin = opts.type === 'email' || opts.type === 'username'
     const success = LoginOptionsSchema.safeParse(opts)
     if (!success.success) {
