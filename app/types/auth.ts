@@ -64,6 +64,17 @@ export type AuthLoginUsernameBody = z.infer<typeof AuthLoginUsernameBodySchema>
 export const AuthLoginBodySchema = z.union([AuthLoginEmailBodySchema, AuthLoginUsernameBodySchema])
 export type AuthLoginBody = z.infer<typeof AuthLoginBodySchema>
 
+export const LoginOptionsTypesEnum = z.enum(['email', 'username', 'register', 'oauth'])
+export type LoginOptionsTypes = z.infer<typeof LoginOptionsTypesEnum>
+export const OauthProvidersEnum = z.enum(['github', 'google', 'twitter', 'facebook', 'linkedin'])
+export type OauthProviders = z.infer<typeof OauthProvidersEnum>
+
+export const OauthLoginBodySchema = z.object({
+  provider: OauthProvidersEnum,
+  redirect_url: z.string({ description: 'OAuth redirect URI' }).url().optional()
+})
+export type OauthLoginBody = z.infer<typeof OauthLoginBodySchema>
+
 export const OauthLoginResponseSchema = z.string({ description: 'OAuth login URL' }).url()
 export type OauthLoginResponse = z.infer<typeof OauthLoginResponseSchema>
 
@@ -76,11 +87,6 @@ export type OauthLoginResponse = z.infer<typeof OauthLoginResponseSchema>
 //   password?: string
 //   email?: string
 // }
-
-export const LoginOptionsTypesEnum = z.enum(['email', 'username', 'register', 'oauth'])
-export type LoginOptionsTypes = z.infer<typeof LoginOptionsTypesEnum>
-export const OauthProvidersEnum = z.enum(['github', 'google', 'twitter', 'facebook', 'linkedin'])
-export type OauthProviders = z.infer<typeof OauthProvidersEnum>
 
 export const LoginRedirectResponseSchema = z.string().url()
 export type LoginProviderResponse = z.infer<typeof LoginRedirectResponseSchema>

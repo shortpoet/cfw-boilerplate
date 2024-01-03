@@ -13,6 +13,7 @@ import {
   LUCIA_AUTH_COOKIES_OPTIONS,
   LUCIA_AUTH_COOKIES_OPTIONS_SECURE,
   LUCIA_AUTH_COOKIES_SESSION_TOKEN,
+  OauthLoginBodySchema,
   UserRole
 } from '#/types'
 import { OpenAPIRoute } from '@cloudflare/itty-router-openapi'
@@ -21,8 +22,21 @@ import { AuthLoginOauthCallbackSchema, AuthLoginOauthSchema } from '../auth-sche
 export class LoginOauth extends OpenAPIRoute {
   static schema = AuthLoginOauthSchema
 
-  async handle(req: Request, res: Response, env: Env, ctx: ExecutionContext) {
-    const { auth, googleAuth } = await createAuth(env)
+  async handle(req: Request, res: Response, env: Env, ctx: ExecutionContext, data: any) {
+    req.logger.info(`[api] [auth] [login] [oauth]`)
+    const { auth, googleAuth, githubAuth } = await createAuth(env)
+    const query = OauthLoginBodySchema.safeParse(data.query)
+    if (!query.success) {
+      return badResponse('Invalid query', new Error(JSON.stringify(query.error)), res)
+    }
+    const { provider, redirect_url } = query.data
+    const providerMapping = {
+      github: githubAuth.getAuthorizationUrl,
+      google: googleAuth.getAuthorizationUrl,
+      twitter: () => Promise.resolve(['twitter', 'twitter']),
+      facebook: () => Promise.resolve(['facebook', 'facebook']),
+      linkedin: () => Promise.resolve(['linkedin', 'linkedin'])
+    }
     const authRequest = auth.handleRequest(req)
     const session = await authRequest.validate()
     const reqUrl = new URL(req.url).href
@@ -32,9 +46,12 @@ export class LoginOauth extends OpenAPIRoute {
     console.log(`[api] [auth] [login] [oauth] -> reqUrl: ${reqUrl}`)
     console.log(env.GOOGLE_CLIENT_ID)
     console.log(env.GOOGLE_CLIENT_SECRET)
-    const [url, state] = await googleAuth.getAuthorizationUrl()
+    const [url, state] = await providerMapping[provider]()
     console.log(`[api] [auth] [login] [oauth] -> url: ${url}`)
+    // TODO fix cookie name so distinct from session token
     await res.cookie(req, res, env, LUCIA_AUTH_COOKIES_SESSION_TOKEN, state)
+    if (redirect_url)
+      res.headers.set('Set-Cookie', serializeCookie(`${provider}_redirect_url`, redirect_url))
     return jsonOkResponse(url, res)
   }
 }

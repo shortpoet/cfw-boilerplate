@@ -156,6 +156,16 @@ export const AuthLogoutSchema = {
 export const AuthLoginOauthSchema = {
   tags: ['Auth'],
   summary: 'Log in via OAuth',
+  paramerters: {
+    provider: Query(z.string(), {
+      description: 'OAuth provider',
+      required: true
+    }),
+    redirectUrl: Query(z.string(), {
+      description: 'Post login redirect URL',
+      required: false
+    })
+  },
   responses: {
     '200': {
       description: 'OAuth login URL',
