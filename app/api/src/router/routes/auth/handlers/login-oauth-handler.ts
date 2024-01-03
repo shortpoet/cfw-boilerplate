@@ -95,10 +95,8 @@ export class LoginOauthCallback extends OpenAPIRoute {
       return badResponse('Bad Request - State Unvalidated', undefined, res)
     }
     try {
-      const url = new URL(req.url)
-      const path = url.pathname
-      const provider = path.split('/').pop()
-      const success = OauthProvidersEnum.safeParse(provider)
+      const parts = new URL(req.url).pathname.split('/')
+      const success = OauthProvidersEnum.safeParse(parts[parts.length - 2])
       if (!success.success) {
         return badResponse('Bad Request - Provider not found', success.error, res)
       }
