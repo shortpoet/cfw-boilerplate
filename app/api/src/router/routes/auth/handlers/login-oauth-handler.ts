@@ -29,9 +29,6 @@ export class LoginOauth extends OpenAPIRoute {
     const { auth, googleAuth, githubAuth } = await createAuth(env)
     const query = req.query ? OauthLoginBodySchema.safeParse(req.query) : undefined
     if (query && !query.success) {
-      console.log(`[api] [auth] [login] [oauth] -> query.error: ${query.error}`)
-      console.log(`[api] [auth] [login] [oauth] -> query.error: ${typeof query.error}`)
-
       return badResponse('Invalid query', JSON.stringify(query.error), res)
     }
     if (!query) {
@@ -51,9 +48,6 @@ export class LoginOauth extends OpenAPIRoute {
     if (session) {
       return redirectResponse(reqUrl, 302, res.headers)
     }
-    console.log(`[api] [auth] [login] [oauth] -> reqUrl: ${reqUrl}`)
-    console.log(env.GOOGLE_CLIENT_ID)
-    console.log(env.GOOGLE_CLIENT_SECRET)
     const [url, state] = await providerMapping[provider]()
     console.log(`[api] [auth] [login] [oauth] -> url: ${url}`)
     // TODO fix cookie name so distinct from session token
@@ -96,9 +90,9 @@ export class LoginOauthCallback extends OpenAPIRoute {
     }
     try {
       const parts = new URL(req.url).pathname.split('/')
-      const success = OauthProvidersEnum.safeParse(parts[parts.length - 2])
-      if (!success.success) {
-        return badResponse('Bad Request - Provider not found', success.error, res)
+      const provider = OauthProvidersEnum.safeParse(parts[parts.length - 2])
+      if (!provider.success) {
+        return badResponse('Bad Request - Provider not found', provider.error, res)
       }
       const providerMapping = {
         google: getGoogleUser,
@@ -107,7 +101,7 @@ export class LoginOauthCallback extends OpenAPIRoute {
         facebook: () => Promise.resolve(['facebook', 'facebook']),
         linkedin: () => Promise.resolve(['linkedin', 'linkedin'])
       }
-      const user = await providerMapping[success.data](env, code)
+      const user = await providerMapping[provider.data](env, code)
 
       const session = await auth.createSession({
         userId: user.userId,
@@ -134,16 +128,6 @@ export class LoginOauthCallback extends OpenAPIRoute {
       resp.headers.set('Set-Cookie', sessionCookie)
       resp.headers.set('Location', dataPage)
       return resp
-
-      // return redirectHtml(dataPage, cookie, 302)
-
-      // res.headers.set('Set-Cookie', cookie)
-      // res.headers.set('Location', dataPage)
-      // return jsonOkResponse(session, res)
-      // return Response.redirect(dataPage, 302)
-      // const newReq = new Request(dataPage)
-      // newReq.logger = req.logger
-      // return await handleSsr(newReq, res, env, ctx)
     } catch (e) {
       if (e instanceof OAuthRequestError) {
         // invalid code

@@ -98,7 +98,7 @@ export class AuthService {
   }): CancelablePromise<OauthLoginResponse> {
     return __request(OpenAPI, {
       method: 'GET',
-      url: '/api/auth/login/google',
+      url: '/api/auth/login/oauth',
       query: {
         'provider': provider,
         'redirect_url': redirectUrl,
@@ -123,7 +123,7 @@ export class AuthService {
   }): CancelablePromise<Session> {
     return __request(OpenAPI, {
       method: 'GET',
-      url: '/api/auth/login/google/callback',
+      url: '/api/auth/login/oauth/callback',
       query: {
         'code': code,
         'state': state,

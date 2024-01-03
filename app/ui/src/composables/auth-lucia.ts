@@ -201,16 +201,9 @@ const useLuciaAuth = () => {
       // auth.setSession(success.data)
       window.location.replace(success.data)
     }
-    const providerMapping = {
-      github: AuthService.getLoginGithub,
-      google: AuthService.getLoginOauth,
-      twitter: AuthService.getLoginOauth,
-      facebook: AuthService.getLoginOauth,
-      linkedin: AuthService.getLoginOauth
-    }
     if (opts.type === 'oauth') {
       const { data, error, dataLoading } = await useService<LoginProviderResponse>(
-        providerMapping[opts.provider]({ provider: opts.provider })
+        AuthService.getLoginOauth({ provider: opts.provider })
       )
       auth.authError.value = error.value
       if (auth.authError.value || !data.value) {
