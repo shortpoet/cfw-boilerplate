@@ -17,6 +17,7 @@ export type { HealthCheckResponseComponent } from './models/HealthCheckResponseC
 export type { MiscDataRequestComponent } from './models/MiscDataRequestComponent';
 export type { OauthLoginResponse } from './models/OauthLoginResponse';
 export type { Session } from './models/Session';
+export type { Task } from './models/Task';
 export type { TaskListResponse } from './models/TaskListResponse';
 export type { TaskResponse } from './models/TaskResponse';
 export type { User } from './models/User';

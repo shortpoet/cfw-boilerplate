@@ -35,7 +35,9 @@ const env: EnvVars = createEnv({
     __SECRET__: z.string(),
     AUTH_SECRET: z.string(),
     GITHUB_CLIENT_ID: z.string(),
-    GITHUB_CLIENT_SECRET: z.string()
+    GITHUB_CLIENT_SECRET: z.string(),
+    GOOGLE_CLIENT_ID: z.string(),
+    GOOGLE_CLIENT_SECRET: z.string()
   },
   runtimeEnv: process.env,
   isServer: typeof window === 'undefined'

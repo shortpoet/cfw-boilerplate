@@ -144,7 +144,6 @@ const useLuciaAuth = () => {
     logger.info(`[ui] [useAuth] [login] -> correlationId: ${correlationId}`)
     console.log(`[ui] [useAuth] [login] -> opts:`)
     console.log(opts)
-    return
     const isLogin = opts.type === 'email' || opts.type === 'username'
     const success = LoginOptionsSchema.safeParse(opts)
     if (!success.success) {
@@ -202,9 +201,16 @@ const useLuciaAuth = () => {
       // auth.setSession(success.data)
       window.location.replace(success.data)
     }
+    const providerMapping = {
+      github: AuthService.getLoginGithub,
+      google: AuthService.getLoginOauth,
+      twitter: AuthService.getLoginOauth,
+      facebook: AuthService.getLoginOauth,
+      linkedin: AuthService.getLoginOauth
+    }
     if (opts.type === 'oauth') {
       const { data, error, dataLoading } = await useService<LoginProviderResponse>(
-        AuthService.getLoginGithub()
+        providerMapping[opts.provider]()
       )
       auth.authError.value = error.value
       if (auth.authError.value || !data.value) {

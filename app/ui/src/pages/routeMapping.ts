@@ -63,6 +63,16 @@ export const ROUTE_MAPPING: RouteMapping = {
     "title": "Register a new user via email and password",
     "path": "/api-data/auth-register-password"
   },
+  "/api-data/auth-login-google-callback": {
+    "endpoint": "api/auth/login/google/callback",
+    "title": "Log in via OAuth callback",
+    "path": "/api-data/auth-login-google-callback"
+  },
+  "/api-data/auth-login-google": {
+    "endpoint": "api/auth/login/google",
+    "title": "Log in via OAuth",
+    "path": "/api-data/auth-login-google"
+  },
   "/api-data/auth-login-github-callback": {
     "endpoint": "api/auth/login/github/callback",
     "title": "Log in via OAuth callback",

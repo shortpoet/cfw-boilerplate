@@ -75,6 +75,47 @@ export class AuthService {
   }
 
   /**
+   * Log in via OAuth
+   * @returns OauthLoginResponse OAuth login URL
+   * @throws ApiError
+   */
+  public static getLoginOauth(): CancelablePromise<OauthLoginResponse> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/api/auth/login/google',
+      errors: {
+        302: `Redirect to Request URL`,
+      },
+    });
+  }
+
+  /**
+   * Log in via OAuth callback
+   * @returns Session Successful OAuth login - session
+   * @throws ApiError
+   */
+  public static getLoginOauthCallback({
+    code,
+    state,
+  }: {
+    code: string,
+    state: string,
+  }): CancelablePromise<Session> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/api/auth/login/google/callback',
+      query: {
+        'code': code,
+        'state': state,
+      },
+      errors: {
+        400: `Bad Request`,
+        500: `Internal Server Error`,
+      },
+    });
+  }
+
+  /**
    * Register a new user via email and password
    * @returns AuthLoginResponse Redirect URL
    * @throws ApiError

@@ -40,15 +40,35 @@ const PORT: number = parseInt(config.env.VITE_PORT || '3000')
 const SECRET: string = config.env.AUTH_SECRET || ''
 const GITHUB_CLIENT_ID: string = config.env.GITHUB_CLIENT_ID || ''
 const GITHUB_CLIENT_SECRET: string = config.env.GITHUB_CLIENT_SECRET || ''
+const GOOGLE_CLIENT_ID: string = config.env.GOOGLE_CLIENT_ID || ''
+const GOOGLE_CLIENT_SECRET: string = config.env.GOOGLE_CLIENT_SECRET || ''
 const PRIVATE_KEY: string = config.env.PRIVATE_KEY || ''
 const PUBLIC_KEY: string = config.env.PUBLIC_KEY || ''
-if (!SECRET || !GITHUB_CLIENT_ID || !GITHUB_CLIENT_SECRET || !PRIVATE_KEY || !PUBLIC_KEY) {
-  const which = [!SECRET, !GITHUB_CLIENT_ID, !GITHUB_CLIENT_SECRET || !PRIVATE_KEY || !PUBLIC_KEY]
+if (
+  !SECRET ||
+  !GITHUB_CLIENT_ID ||
+  !GITHUB_CLIENT_SECRET ||
+  !PRIVATE_KEY ||
+  !PUBLIC_KEY ||
+  !GOOGLE_CLIENT_ID ||
+  !GOOGLE_CLIENT_SECRET
+) {
+  const which = [
+    !SECRET,
+    !GITHUB_CLIENT_ID,
+    !GITHUB_CLIENT_SECRET,
+    !PRIVATE_KEY,
+    !PUBLIC_KEY,
+    !GOOGLE_CLIENT_ID,
+    !GOOGLE_CLIENT_SECRET
+  ]
     .map((b) => b.toString())
     .filter(Boolean)
     .join(', ')
   throw new Error(
-    `[server] auth.config -> missing secret or env vars -> \n\t\t[AUTH_SECRET, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET] -> ${which}]`
+    `[server] auth.config -> missing secret or env vars -> 
+    \t\t[AUTH_SECRET, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, PRIVATE_KEY, PUBLIC_KEY, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET] -> 
+    \t\t[${which}]`
   )
 }
 

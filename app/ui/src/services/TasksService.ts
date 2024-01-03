@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { Task } from '../models/Task';
 import type { TaskListResponse } from '../models/TaskListResponse';
 import type { TaskResponse } from '../models/TaskResponse';
 
@@ -47,23 +48,11 @@ export class TasksService {
   public static postTaskCreate({
     requestBody,
   }: {
-    requestBody?: {
-      name: string;
-      slug: string;
-      description?: string;
-      completed: boolean;
-      due_date: string;
-    },
+    requestBody?: Task,
   }): CancelablePromise<{
     success: boolean;
     result: {
-      task: {
-        name: string;
-        slug: string;
-        description?: string;
-        completed: boolean;
-        due_date: string;
-      };
+      task: Task;
     };
   }> {
     return __request(OpenAPI, {
@@ -109,13 +98,7 @@ export class TasksService {
   }): CancelablePromise<{
     success: boolean;
     result: {
-      task: {
-        name: string;
-        slug: string;
-        description?: string;
-        completed: boolean;
-        due_date: string;
-      };
+      task: Task;
     };
   }> {
     return __request(OpenAPI, {

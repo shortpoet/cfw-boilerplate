@@ -29,8 +29,11 @@ export class LoginOauth extends OpenAPIRoute {
     if (session) {
       return redirectResponse(reqUrl, 302, res.headers)
     }
+    console.log(`[api] [auth] [login] [oauth] -> reqUrl: ${reqUrl}`)
+    console.log(env.GOOGLE_CLIENT_ID)
+    console.log(env.GOOGLE_CLIENT_SECRET)
     const [url, state] = await googleAuth.getAuthorizationUrl()
-    console.log(`[api] [auth] [login] [github] -> url: ${url}`)
+    console.log(`[api] [auth] [login] [oauth] -> url: ${url}`)
     await res.cookie(req, res, env, LUCIA_AUTH_COOKIES_SESSION_TOKEN, state)
     return jsonOkResponse(url, res)
   }
@@ -40,7 +43,7 @@ export class LoginOauthCallback extends OpenAPIRoute {
   static schema = AuthLoginOauthCallbackSchema
 
   async handle(req: Request, res: Response, env: Env, ctx: ExecutionContext) {
-    req.logger.info(`[api] [auth] [login] [github] [callback]`)
+    req.logger.info(`[api] [auth] [login] [oauth] [callback]`)
     const { auth, googleAuth } = await createAuth(env)
     const authRequest = auth.handleRequest(req)
     const session = await authRequest.validate()
@@ -51,7 +54,7 @@ export class LoginOauthCallback extends OpenAPIRoute {
     }
     const cookies = parseCookie(req.headers.get('cookie') ?? '')
     const cook = cookies[LUCIA_AUTH_COOKIES_SESSION_TOKEN]
-    req.logger.debug(`[api] [auth] [login] [github] [callback] -> cook: ${cook}`)
+    req.logger.debug(`[api] [auth] [login] [oauth] [callback] -> cook: ${cook}`)
     const secret = env.AUTH_SECRET
 
     const storedState = cookies[LUCIA_AUTH_COOKIES_SESSION_TOKEN]
@@ -61,7 +64,7 @@ export class LoginOauthCallback extends OpenAPIRoute {
 
     const state = req.query?.state
     const code = req.query?.code
-    req.logger.debug(`[api] [auth] [login] [github] -> storedState: ${storedState}`)
+    req.logger.debug(`[api] [auth] [login] [oauth] -> storedState: ${storedState}`)
     // validate state
     if (!storedState || !state || storedState !== state || typeof code !== 'string') {
       return badResponse('Bad Request - State Unvalidated', undefined, res)
@@ -69,17 +72,17 @@ export class LoginOauthCallback extends OpenAPIRoute {
     try {
       const { getExistingUser, googleUser, createUser, googleTokens } =
         await googleAuth.validateCallback(code)
-      // const emailRequest = await fetch('https://api.github.com/user/emails', {
+      // const emailRequest = await fetch('https://api.oauth.com/user/emails', {
       //   headers: {
-      //     Authorization: `token ${githubTokens.accessToken}`,
-      //     Accept: 'application/vnd.github.v3+json',
+      //     Authorization: `token ${oauthTokens.accessToken}`,
+      //     Accept: 'application/vnd.oauth.v3+json',
       //     'User-Agent': 'Lucia',
       //     'Content-Type': 'application/json',
       //     'Accept-Encoding': 'gzip, deflate'
       //   }
       // })
       // if (!emailRequest.ok) {
-      //   console.log(`[api] [auth] [login] [github] -> emailRequest not ok`)
+      //   console.log(`[api] [auth] [login] [oauth] -> emailRequest not ok`)
       //   console.log(emailRequest)
       //   throw new Error('Unable to fetch email')
       // }
@@ -110,7 +113,7 @@ export class LoginOauthCallback extends OpenAPIRoute {
         attributes: {}
       })
       const sessionCookie = auth.createSessionCookie(session).serialize()
-      console.log(`[api] [auth] [login] [github] -> cookie: ${sessionCookie}`)
+      console.log(`[api] [auth] [login] [oauth] -> cookie: ${sessionCookie}`)
 
       const html = `
       <!DOCTYPE html>
@@ -145,7 +148,7 @@ export class LoginOauthCallback extends OpenAPIRoute {
         // invalid code
         return badResponse('Invalid code', undefined, res)
       }
-      req.logger.error(`[api] [auth] [login] [github] -> error: ${e}`)
+      req.logger.error(`[api] [auth] [login] [oauth] -> error: ${e}`)
       return serverErrorResponse('Internal Server Error', new Error(JSON.stringify(e)), res)
     }
   }
