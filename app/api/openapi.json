@@ -616,7 +616,7 @@
         }
       }
     },
-    "/api/auth/login/google": {
+    "/api/auth/login/oauth": {
       "get": {
         "tags": [
           "Auth"
@@ -668,7 +668,7 @@
         }
       }
     },
-    "/api/auth/login/google/callback": {
+    "/api/auth/login/oauth/callback": {
       "get": {
         "tags": [
           "Auth"
