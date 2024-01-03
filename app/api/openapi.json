@@ -509,31 +509,27 @@
           "Auth"
         ],
         "summary": "Log in via OAuth",
-        "paramerters": {
-          "provider": {
-            "location": "query",
-            "type": {
-              "_def": {
-                "checks": [],
-                "typeName": "ZodString",
-                "coerce": false,
-                "description": "OAuth provider"
-              }
-            }
-          },
-          "redirectUrl": {
-            "location": "query",
-            "type": {
-              "_def": {
-                "checks": [],
-                "typeName": "ZodString",
-                "coerce": false,
-                "description": "Post login redirect URL"
-              }
-            }
-          }
-        },
         "operationId": "get_LoginGithub",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "description": "OAuth code"
+            },
+            "required": true,
+            "name": "provider",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "OAuth state"
+            },
+            "required": true,
+            "name": "redirect_url",
+            "in": "query"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OAuth login URL",
@@ -626,31 +622,27 @@
           "Auth"
         ],
         "summary": "Log in via OAuth",
-        "paramerters": {
-          "provider": {
-            "location": "query",
-            "type": {
-              "_def": {
-                "checks": [],
-                "typeName": "ZodString",
-                "coerce": false,
-                "description": "OAuth provider"
-              }
-            }
-          },
-          "redirectUrl": {
-            "location": "query",
-            "type": {
-              "_def": {
-                "checks": [],
-                "typeName": "ZodString",
-                "coerce": false,
-                "description": "Post login redirect URL"
-              }
-            }
-          }
-        },
         "operationId": "get_LoginOauth",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "description": "OAuth code"
+            },
+            "required": true,
+            "name": "provider",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "OAuth state"
+            },
+            "required": true,
+            "name": "redirect_url",
+            "in": "query"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OAuth login URL",
