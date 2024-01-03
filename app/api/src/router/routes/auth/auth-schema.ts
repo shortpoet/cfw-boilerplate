@@ -1,4 +1,4 @@
-import { Path, Int, Query } from '@cloudflare/itty-router-openapi'
+import { Path, Int, Query, Str } from '@cloudflare/itty-router-openapi'
 import { z } from 'zod'
 
 import { ApiErrorResponseComponent } from '../common-oa'
@@ -157,11 +157,11 @@ export const AuthLoginOauthSchema = {
   tags: ['Auth'],
   summary: 'Log in via OAuth',
   paramerters: {
-    provider: Query(z.string(), {
+    provider: Query(Str, {
       description: 'OAuth provider',
       required: true
     }),
-    redirectUrl: Query(z.string(), {
+    redirectUrl: Query(Str, {
       description: 'Post login redirect URL',
       required: false
     })
