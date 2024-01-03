@@ -509,6 +509,35 @@
           "Auth"
         ],
         "summary": "Log in via OAuth",
+        "paramerters": {
+          "provider": {
+            "location": "query",
+            "type": {
+              "_def": {
+                "checks": [],
+                "typeName": "ZodString",
+                "coerce": false,
+                "description": "OAuth provider"
+              }
+            }
+          },
+          "redirectUrl": {
+            "location": "query",
+            "type": {
+              "_def": {
+                "innerType": {
+                  "_def": {
+                    "checks": [],
+                    "typeName": "ZodString",
+                    "coerce": false
+                  }
+                },
+                "typeName": "ZodOptional",
+                "description": "Post login redirect URL"
+              }
+            }
+          }
+        },
         "operationId": "get_LoginGithub",
         "responses": {
           "200": {
@@ -602,6 +631,35 @@
           "Auth"
         ],
         "summary": "Log in via OAuth",
+        "paramerters": {
+          "provider": {
+            "location": "query",
+            "type": {
+              "_def": {
+                "checks": [],
+                "typeName": "ZodString",
+                "coerce": false,
+                "description": "OAuth provider"
+              }
+            }
+          },
+          "redirectUrl": {
+            "location": "query",
+            "type": {
+              "_def": {
+                "innerType": {
+                  "_def": {
+                    "checks": [],
+                    "typeName": "ZodString",
+                    "coerce": false
+                  }
+                },
+                "typeName": "ZodOptional",
+                "description": "Post login redirect URL"
+              }
+            }
+          }
+        },
         "operationId": "get_LoginOauth",
         "responses": {
           "200": {

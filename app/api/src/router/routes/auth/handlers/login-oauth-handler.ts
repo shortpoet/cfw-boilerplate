@@ -14,10 +14,12 @@ import {
   LUCIA_AUTH_COOKIES_OPTIONS_SECURE,
   LUCIA_AUTH_COOKIES_SESSION_TOKEN,
   OauthLoginBodySchema,
+  OauthProvidersEnum,
   UserRole
 } from '#/types'
 import { OpenAPIRoute } from '@cloudflare/itty-router-openapi'
 import { AuthLoginOauthCallbackSchema, AuthLoginOauthSchema } from '../auth-schema'
+import { getGoogleUser } from './oauth-providers'
 
 export class LoginOauth extends OpenAPIRoute {
   static schema = AuthLoginOauthSchema
@@ -27,7 +29,10 @@ export class LoginOauth extends OpenAPIRoute {
     const { auth, googleAuth, githubAuth } = await createAuth(env)
     const query = OauthLoginBodySchema.safeParse(data.query)
     if (!query.success) {
-      return badResponse('Invalid query', new Error(JSON.stringify(query.error)), res)
+      console.log(`[api] [auth] [login] [oauth] -> query.error: ${query.error}`)
+      console.log(`[api] [auth] [login] [oauth] -> query.error: ${typeof query.error}`)
+
+      return badResponse('Invalid query', JSON.stringify(query.error), res)
     }
     const { provider, redirect_url } = query.data
     const providerMapping = {
@@ -61,7 +66,7 @@ export class LoginOauthCallback extends OpenAPIRoute {
 
   async handle(req: Request, res: Response, env: Env, ctx: ExecutionContext) {
     req.logger.info(`[api] [auth] [login] [oauth] [callback]`)
-    const { auth, googleAuth } = await createAuth(env)
+    const { auth } = await createAuth(env)
     const authRequest = auth.handleRequest(req)
     const session = await authRequest.validate()
     const { baseUrlApp } = getBaseUrl(env)
@@ -87,44 +92,22 @@ export class LoginOauthCallback extends OpenAPIRoute {
       return badResponse('Bad Request - State Unvalidated', undefined, res)
     }
     try {
-      const { getExistingUser, googleUser, createUser, googleTokens } =
-        await googleAuth.validateCallback(code)
-      // const emailRequest = await fetch('https://api.oauth.com/user/emails', {
-      //   headers: {
-      //     Authorization: `token ${oauthTokens.accessToken}`,
-      //     Accept: 'application/vnd.oauth.v3+json',
-      //     'User-Agent': 'Lucia',
-      //     'Content-Type': 'application/json',
-      //     'Accept-Encoding': 'gzip, deflate'
-      //   }
-      // })
-      // if (!emailRequest.ok) {
-      //   console.log(`[api] [auth] [login] [oauth] -> emailRequest not ok`)
-      //   console.log(emailRequest)
-      //   throw new Error('Unable to fetch email')
-      // }
-      // const emails: { email: string; verified: boolean; primary: boolean }[] =
-      //   await emailRequest.json()
-      // const verifiedEmail = emails.find((email: any) => email.verified)
-      // const primaryEmail = emails.find((email: any) => email.primary)
-      // const primaryVerifiedEmail = emails.find((email: any) => email.primary && email.verified)
-      // const isVerified = primaryVerifiedEmail || verifiedEmail || primaryEmail
-      const getUser = async () => {
-        const existingUser = await getExistingUser()
-        if (existingUser) return existingUser
-        const user = await createUser({
-          attributes: {
-            username: googleUser.sub,
-            email: googleUser.email,
-            name: googleUser.name,
-            avatar_url: googleUser.picture
-            // user_type_flags: arrayToUserTypeFlags([UserType.Credentials]),
-          }
-        })
-        return user
+      const url = new URL(req.url)
+      const path = url.pathname
+      const provider = path.split('/').pop()
+      const success = OauthProvidersEnum.safeParse(provider)
+      if (!success.success) {
+        return badResponse('Bad Request - Provider not found', success.error, res)
       }
+      const providerMapping = {
+        google: getGoogleUser,
+        github: () => Promise.resolve(['github', 'github']),
+        twitter: () => Promise.resolve(['twitter', 'twitter']),
+        facebook: () => Promise.resolve(['facebook', 'facebook']),
+        linkedin: () => Promise.resolve(['linkedin', 'linkedin'])
+      }
+      const user = await providerMapping[success.data](env, code)
 
-      const user = await getUser()
       const session = await auth.createSession({
         userId: user.userId,
         attributes: {}
