@@ -43,7 +43,7 @@
           <template #submit-button>
             <div flex flex-col class="register-form-submit-controls">
               <div flex flex-row justify-around class="register-form-radio-container">
-                <div>
+                <div class="register-form-radio">
                   <input
                     class="m-2"
                     type="radio"
@@ -54,7 +54,7 @@
                   />
                   <label for="login-radio">Login</label>
                 </div>
-                <div>
+                <div class="register-form-radio">
                   <input
                     class="m-2"
                     type="radio"
@@ -66,7 +66,7 @@
                   <label for="register-radio">Register</label>
                 </div>
               </div>
-              <div flex flex-row>
+              <div flex flex-row class="register-form-submit-buttons">
                 <button
                   type="submit"
                   class="btn-main m-2 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
@@ -75,6 +75,7 @@
                 >
                   <i class="i-carbon-login" inline-block /> Log in
                 </button>
+                <TeleModal />
                 <button
                   type="submit"
                   class="btn-main m-2 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"

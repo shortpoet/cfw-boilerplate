@@ -8,7 +8,7 @@ const showModal = ref(false)
 <template>
   <button id="show-modal" @click="showModal = true">Show Modal</button>
 
-  <Teleport to="teleport-target">
+  <Teleport to="#teleport-target">
     <!-- use the modal component, pass in the prop -->
     <modal :show="showModal" @close="showModal = false">
       <template #header>
