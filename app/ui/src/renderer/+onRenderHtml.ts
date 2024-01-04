@@ -47,6 +47,7 @@ const onRenderHtml: OnRenderHtmlAsync = async (pageContext): ReturnType<OnRender
       ${headTags}
     </head>
     <body${bodyAttrs}>
+      <div id="teleport-target"></div>
       <div id="app">${pipe}</div>
       ${bodyTags}
     </body>

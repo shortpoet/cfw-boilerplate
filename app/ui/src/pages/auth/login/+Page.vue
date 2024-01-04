@@ -41,8 +41,8 @@
           :title="'Login Register'"
         >
           <template #submit-button>
-            <div flex flex-col>
-              <div flex flex-row justify-around>
+            <div flex flex-col class="register-form-submit-controls">
+              <div flex flex-row justify-around class="register-form-radio-container">
                 <div>
                   <input
                     class="m-2"

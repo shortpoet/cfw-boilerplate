@@ -202,3 +202,37 @@ export const AuthLoginOauthCallbackSchema = {
     }
   }
 }
+
+export const AuthVerifyTokenRequestSchema = {
+  tags: ['Auth'],
+  summary: 'Request a verification token',
+  parameters: {
+    email: Query(Str, {
+      description: 'Email address'
+    })
+  }
+}
+
+export const AuthVerifyEmailSchema = {
+  tags: ['Auth'],
+  summary: 'Verify email',
+  parameters: {
+    token: Query(Str, {
+      description: 'Verification token'
+    })
+  },
+  responses: {
+    '200': {
+      description: 'Successful email verification',
+      schema: SessionComponent
+    },
+    '400': {
+      description: 'Bad Request',
+      schema: ApiErrorResponseComponent
+    },
+    '500': {
+      description: 'Internal Server Error',
+      schema: ApiErrorResponseComponent
+    }
+  }
+}

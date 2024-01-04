@@ -8,12 +8,12 @@
         <span class="close" @click="showLoginModal = false">&times;</span>
         <h2>Login</h2>
         <form @submit.prevent="login">
-          <input type="text" v-model="username" placeholder="Username">
-          <br>
-          <input type="email" v-model="email" placeholder="Email">
-          <br>
-          <input type="password" v-model="password" placeholder="Password">
-          <br>
+          <input type="text" v-model="username" placeholder="Username" />
+          <br />
+          <input type="email" v-model="email" placeholder="Email" />
+          <br />
+          <input type="password" v-model="password" placeholder="Password" />
+          <br />
           <button type="submit">Login</button>
         </form>
       </div>
@@ -29,15 +29,12 @@ const showLoginModal = ref(false);
 const username = ref('');
 const password = ref('');
 const email = ref('');
-const body = {
+const loginOpts = {
+  type: 'oauth',
+  provider: 'google'
   username: username.value,
   password: password.value,
   email: email.value
-}
-const provider = 'password'
-const loginOpts = {
-  body,
-  provider
 }
 
 const emit = defineEmits<{

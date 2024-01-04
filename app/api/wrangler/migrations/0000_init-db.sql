@@ -34,6 +34,16 @@ CREATE TABLE IF NOT EXISTS [user_session]
   FOREIGN KEY (user_id) REFERENCES user(id)
 );
 
+CREATE TABLE IF NOT EXISTS [verification_code]
+(
+  [id]             VARCHAR(127) NOT NULL PRIMARY KEY,
+  [user_id]        VARCHAR(15) NOT NULL,
+  [code]           VARCHAR(255) NOT NULL,
+  [expires]        BIGINT NOT NULL,
+
+  FOREIGN KEY (user_id) REFERENCES user(id)
+);
+
 CREATE UNIQUE INDEX IF NOT EXISTS user_id
   ON user(id);
 

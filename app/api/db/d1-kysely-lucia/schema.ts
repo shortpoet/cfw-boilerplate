@@ -35,6 +35,12 @@ export interface CFWDatabase {
     idle_expires: string
     token: string
   } & Lucia.DatabaseSessionAttributes
+  VerificationCode: {
+    id: GeneratedAlways<string>
+    user_id: UserId
+    code: string
+    expires: number
+  }
   D1Migrations: {
     id: Generated<number | null>
     applied_at: Generated<string>
