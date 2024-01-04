@@ -8,7 +8,13 @@
 
     <div v-if="!session" i-carbon-not-available />
     <div v-else>
-      <JsonTree :data="session" />
+      <div flex flex-col @click="toggleSession">
+        <div :class="sessionContainerClass" />
+        <span class="form-title">Show Session</span>
+        <div :class="sessionDisplayClass">
+          <JsonTree :data="session" />
+        </div>
+      </div>
     </div>
 
     <Login :session="session" :loginTypes="loginTypes">
@@ -123,6 +129,22 @@ import {
   OauthProviders
 } from '#/types'
 import type { FormEmitValue, FormInput } from '#/ui/src/components/input/FormGeneric.vue'
+
+const showSession = ref(true)
+const toggleSession = () => {
+  showSession.value = !showSession.value
+}
+
+const sessionContainerClass = computed(() => ({
+  'i-carbon-caret-down form-icon': !showSession.value,
+  'i-carbon-caret-up form-icon': showSession.value
+}))
+
+const sessionDisplayClass = computed(() => {
+  return {
+    hidden: !showSession.value
+  }
+})
 
 const props = defineProps<{
   session?: Session

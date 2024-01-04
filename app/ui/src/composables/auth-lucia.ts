@@ -164,7 +164,7 @@ const useLuciaAuth = () => {
         return
       }
       auth.authLoading.value = dataLoading.value
-      const success = SessionSchema.safeParse(data.value)
+      const success = LoginRedirectResponseSchema.safeParse(data.value)
       if (!success.success) {
         logger.error(`[ui] [useAuth] [login] -> success.error:`)
         logger.error(success.error)

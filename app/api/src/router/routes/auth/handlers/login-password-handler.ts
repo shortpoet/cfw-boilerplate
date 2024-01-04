@@ -56,6 +56,7 @@ export class RegisterPasswordUser extends OpenAPIRoute {
       }
       const { username, password, email } = loginBody
       const { auth } = await createAuth(env)
+      // abort create user or delete if failure on unique constraint on email. or check first
       const user = await auth.createUser({
         key: {
           providerId: 'username', // auth method
