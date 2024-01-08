@@ -10,10 +10,16 @@ const showModal = ref(false)
 
   <Teleport to="#teleport-target">
     <!-- use the modal component, pass in the prop -->
-    <modal :show="showModal" @close="showModal = false">
+    <Modal :show="showModal" @close="showModal = false">
       <template #header>
-        <h3>custom header</h3>
+        <slot name="header"></slot>
       </template>
-    </modal>
+      <template #body>
+        <slot name="body"></slot>
+      </template>
+      <template #footer>
+        <slot name="footer"></slot>
+      </template>
+    </Modal>
   </Teleport>
 </template>

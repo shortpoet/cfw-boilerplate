@@ -28,7 +28,18 @@
           <template #submit-button>
             <div flex flex-col class="register-form-submit-controls">
               <div flex flex-row class="register-form-submit-buttons">
-                <TeleModal />
+                <TeleModal>
+                  <template #body>
+                    <button
+                      type="button"
+                      class="btn-main m-2 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+                      id="verify-button-password"
+                      :disabled="loginProps.isLoggedIn"
+                    >
+                      <i class="i-carbon-login" inline-block /> Verify
+                    </button>
+                  </template>
+                </TeleModal>
 
                 <button
                   type="submit"

@@ -60,6 +60,9 @@ let onLogout = ref((event: any) => {
 let onLoginPopup = ref((event: any) => {
   console.log(`[ui] [login.component] login popup ${event}`)
 })
+let onVerify = ref((event: any) => {
+  console.log(`[ui] [login.component] verify ${event}`)
+})
 
 let user = ref<User>()
 let storeSession = ref<Session>()
@@ -95,6 +98,11 @@ if (typeof window !== 'undefined') {
 
   storeSession.value = authStore.session || storeSession.value
 
+  onVerify.value = async (event: any) => {
+    console.log('[ui] [login.component] onVerify')
+    console.log(event)
+    // await verify(event);
+  }
   onLogin.value = async (event: LoginFormEvent) => {
     console.log('[ui] [login.component] onLogin')
     console.log(event)

@@ -8,6 +8,9 @@ defineProps({
   <Transition name="modal">
     <div v-if="show" class="modal-mask">
       <div class="modal-container">
+        <div text-red class="modal-close" @click="$emit('close')">
+          <i class="i-carbon-close" inline-block />
+        </div>
         <div class="modal-header">
           <slot name="header">default header</slot>
         </div>
@@ -17,10 +20,7 @@ defineProps({
         </div>
 
         <div class="modal-footer">
-          <slot name="footer">
-            default footer
-            <button bg-blue class="modal-default-button" @click="$emit('close')">OK</button>
-          </slot>
+          <slot name="footer"> default footer </slot>
         </div>
       </div>
     </div>
@@ -40,6 +40,13 @@ defineProps({
   transition: opacity 0.3s ease;
 }
 
+.modal-close {
+  cursor: pointer;
+  color: red;
+  text-align: right;
+  margin: -10px -20px 0 0;
+}
+
 .modal-container {
   width: 300px;
   margin: auto;
@@ -50,13 +57,25 @@ defineProps({
   transition: all 0.3s ease;
 }
 
-.modal-header h3 {
+.modal-header {
   margin-top: 0;
   color: #42b983;
+  background-color: black;
+  border-radius: 0.25rem;
+  padding: 10px;
 }
 
 .modal-body {
   margin: 20px 0;
+}
+
+.modal-footer {
+  padding: 10px;
+  text-align: right;
+  border-top: 1px solid #eee;
+  color: #42b983;
+  background-color: black;
+  border-radius: 0.25rem;
 }
 
 .modal-default-button {
