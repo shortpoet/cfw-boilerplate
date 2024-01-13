@@ -157,14 +157,15 @@ const useLuciaAuth = () => {
       console.error(loginOpts.error)
       return
     }
-    const usernameOrEmail =
-      'username' in loginOpts.data ? loginOpts.data?.username : loginOpts.data?.email
-    const emailOrUsername =
-      'email' in loginOpts.data ? loginOpts.data?.email : loginOpts.data?.username
+    console.log(`[ui] [useAuth] [login] -> loginOpts:`)
+    console.log(loginOpts.data)
     const password = loginOpts.data.password
-    const requestBody = usernameOrEmail
-      ? { username: usernameOrEmail, password }
-      : { email: emailOrUsername, password }
+    const requestBody =
+      'username' in loginOpts.data
+        ? { username: loginOpts.data.username, password }
+        : { email: loginOpts.data.email, password }
+    console.log(`[ui] [useAuth] [login] -> requestBody:`)
+    console.log(requestBody)
     const { data, dataLoading, error } = await useService<AuthLoginResponse>(
       AuthService.postLoginPasswordUser({ requestBody })
     )

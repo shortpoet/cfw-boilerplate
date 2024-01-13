@@ -136,16 +136,16 @@ export class LoginPasswordUser extends OpenAPIRoute {
       }
       const { password } = loginBody.data
       const { auth } = await createAuth(env)
-      const usernameOrEmail =
-        'username' in loginBody.data ? loginBody.data?.username : loginBody.data?.email
-      const emailOrUsername =
-        'email' in loginBody.data ? loginBody.data?.email : loginBody.data?.username
-      const key = usernameOrEmail
-        ? await auth.useKey('username', usernameOrEmail.toLowerCase(), password)
-        : await auth.useKey('email', emailOrUsername.toLowerCase(), password)
+      console.log(`[api] [auth] [login] [password] -> loginBody.data:`)
+      console.log(loginBody.data)
 
-      // console.log(`[api] [auth] [login] [password] -> key:`)
-      // console.log(key)
+      const key =
+        'username' in loginBody.data
+          ? await auth.useKey('username', loginBody.data.username.toLowerCase(), password)
+          : await auth.useKey('email', loginBody.data.email, password)
+
+      console.log(`[api] [auth] [login] [password] -> key:`)
+      console.log(key)
       const session = await auth.createSession({
         userId: key.userId,
         sessionId: await res.cryptoSign(generateRandomString(40)),
