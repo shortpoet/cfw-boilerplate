@@ -6,7 +6,7 @@ const showModal = ref(false)
 </script>
 
 <template>
-  <button id="show-modal" @click="showModal = true">Show Modal</button>
+  <button bg-green id="show-modal" @click="showModal = true">Show Modal</button>
 
   <Teleport to="#teleport-target">
     <!-- use the modal component, pass in the prop -->

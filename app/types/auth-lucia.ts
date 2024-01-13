@@ -1,5 +1,12 @@
 import { Ref } from 'vue'
-import { AuthInstance, LoginOptions, Session, User } from './auth'
+import {
+  AuthInstance,
+  AuthLoginBody,
+  AuthRegisterBody,
+  LoginOauthOptions,
+  Session,
+  User
+} from './auth'
 
 export { LuciaAuthInstance }
 
@@ -38,7 +45,9 @@ interface LuciaAuthInstance extends AuthInstance {
   // popupOpen: Ref<boolean>;
 
   onLoad: () => Promise<void>
-  login(options: LoginOptions): Promise<void>
+  login(options: AuthLoginBody): Promise<void>
+  loginOauth(options: LoginOauthOptions): Promise<void>
+  register(options: AuthRegisterBody): Promise<void>
   logout(options?: any): Promise<void>
   setSession: (_session?: Session | string) => Promise<Session | undefined>
   setSessionAuthStore: (session: Session | undefined) => void

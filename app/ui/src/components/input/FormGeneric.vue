@@ -80,11 +80,12 @@
 <script setup lang="ts" generic="T">
 export type FormInput<T> = {
   key: string
-  type: string
+  type: 'text' | 'password' | 'email' | 'number' | 'hidden'
   value: any
   placeholder: string
   required: boolean
 }
+export type FormInputArray<T> = FormInput<T>[]
 export type FormEmitValue<T> = {
   form: { [K in keyof T]: T[K] }
   //form: { [key: string]: string }

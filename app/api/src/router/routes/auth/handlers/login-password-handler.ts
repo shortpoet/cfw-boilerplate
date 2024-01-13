@@ -136,10 +136,10 @@ export class LoginPasswordUser extends OpenAPIRoute {
       }
       const { password } = loginBody.data
       const { auth } = await createAuth(env)
-      const emailOrUsername =
-        'email' in loginBody.data ? loginBody.data?.email : loginBody.data?.username
       const usernameOrEmail =
         'username' in loginBody.data ? loginBody.data?.username : loginBody.data?.email
+      const emailOrUsername =
+        'email' in loginBody.data ? loginBody.data?.email : loginBody.data?.username
       const key = usernameOrEmail
         ? await auth.useKey('username', usernameOrEmail.toLowerCase(), password)
         : await auth.useKey('email', emailOrUsername.toLowerCase(), password)

@@ -40,6 +40,63 @@
           </template>
         </FormGeneric>
       </template>
+      <template #login-register="loginProps">
+        <FormGeneric
+          :inputs="getForm('register')"
+          :onSubmit="runCallback(loginProps.onLogin)"
+          :title="'Login Register'"
+        >
+          <template #submit-button>
+            <div flex flex-col class="register-form-submit-controls">
+              <div flex flex-row justify-around class="register-form-radio-container">
+                <div class="register-form-radio">
+                  <input
+                    class="m-2"
+                    type="radio"
+                    id="login-radio"
+                    name="login-radio"
+                    value="login"
+                    v-model="loginFormType"
+                  />
+                  <label for="login-radio">Login</label>
+                </div>
+                <div class="register-form-radio">
+                  <input
+                    class="m-2"
+                    type="radio"
+                    id="register-radio"
+                    name="register-radio"
+                    value="register"
+                    v-model="loginFormType"
+                  />
+                  <label for="register-radio">Register</label>
+                </div>
+              </div>
+              <div flex flex-row class="register-form-submit-buttons">
+                <button
+                  type="submit"
+                  class="btn-main m-2 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+                  id="login-button-password"
+                  :disabled="loginProps.isLoggedIn"
+                >
+                  <i class="i-carbon-login" inline-block /> Log in
+                </button>
+
+                <TeleModal />
+
+                <button
+                  type="submit"
+                  class="btn-main m-2 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+                  id="register-button-password"
+                  :disabled="loginProps.isLoggedIn"
+                >
+                  <i class="i-carbon-login" inline-block /> Register
+                </button>
+              </div>
+            </div>
+          </template>
+        </FormGeneric>
+      </template>
       <template #login-popup="loginPopupProps">
         <button
           class="btn-main m-3 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
@@ -66,12 +123,12 @@
 
 <script setup lang="ts">
 import {
+  LoginOptions,
   Session,
   LoginOptionsTypes,
   LoginOptionsTypesEnum,
   OauthProvidersEnum,
-  OauthProviders,
-  LoginForm
+  OauthProviders
 } from '#/types'
 import type { FormEmitValue, FormInput } from '#/ui/src/components/input/FormGeneric.vue'
 
@@ -100,6 +157,9 @@ const loginTypes = ref<LoginOptionsTypes[]>([
   LoginOptionsTypesEnum.Enum.register,
   LoginOptionsTypesEnum.Enum.oauth
 ])
+// const pageContext = usePageContext();
+// const pageSession = ref(pageContext.session);
+const loginFormType = ref<'register' | 'login'>()
 
 type ProviderButton = {
   provider: OauthProviders
@@ -130,7 +190,44 @@ const providers = ref<ProviderButton[]>([
   // }
 ])
 
-const getForm = (type: LoginOptionsTypes): FormInput<LoginForm>[] => {
+const passwordInputs: ComputedRef<FormInput<LoginOptions>[]> = computed(() => [
+  {
+    type: 'text',
+    value: '',
+    placeholder: 'Username',
+    key: 'username',
+    required: loginFormType.value === LoginOptionsTypesEnum.Enum.register ? true : false
+  },
+  {
+    type: 'email',
+    value: '',
+    placeholder: 'Email',
+    key: 'email',
+    required: loginFormType.value === LoginOptionsTypesEnum.Enum.register ? true : false
+  },
+  {
+    type: 'password',
+    value: '',
+    placeholder: 'Password',
+    key: 'password',
+    required: true
+  },
+  {
+    type: 'hidden',
+    value: undefined,
+    placeholder: 'type',
+    key: 'type',
+    required: true
+  },
+  {
+    type: 'hidden',
+    value: undefined,
+    placeholder: 'provider',
+    key: 'provider',
+    required: false
+  }
+])
+const getForm = (type: LoginOptionsTypes): FormInput<LoginOptions>[] => {
   console.log(`[ui] [auth] [login} [+Page] [setup] :: getForm`)
   console.log(`[ui] [auth] [login} [+Page] [setup] :: getForm type ${type}`)
 
@@ -140,53 +237,17 @@ const getForm = (type: LoginOptionsTypes): FormInput<LoginForm>[] => {
     type === LoginOptionsTypesEnum.Enum.register
   console.log(`[ui] [auth] [login} [+Page] [setup] :: getForm isLoginForm ${isLoginForm}`)
 
-  const pw: FormInput<LoginForm>[] = [
-    {
-      type: 'text',
-      value: '',
-      placeholder: 'Username',
-      key: 'username',
-      required: false
-    },
-    {
-      type: 'email',
-      value: '',
-      placeholder: 'Email',
-      key: 'email',
-      required: false
-    },
-    {
-      type: 'password',
-      value: '',
-      placeholder: 'Password',
-      key: 'password',
-      required: true
-    }
-  ]
-
-  const base: FormInput<LoginForm>[] = [
+  const form = [
     { type: 'hidden', value: type, placeholder: 'type', key: 'type', required: false }
-  ]
-
-  const oauth: FormInput<LoginForm>[] = [
-    {
-      type: 'hidden',
-      value: 'github',
-      placeholder: 'provider',
-      key: 'provider',
-      required: false
-    }
-  ]
-
-  const form: FormInput<LoginForm>[] = isLoginForm ? [...pw, ...base] : [...oauth, ...base]
+  ].concat(isLoginForm ? passwordInputs.value : [])
 
   // console.log(`[ui] [auth] [login} [+Page] [setup] :: getForm form`)
-  // console.log(form.find((input) => input.key === 'username'))
-  // console.log(form.find((input) => input.key === 'email'))
+  console.log(form.find((input) => input.key === 'username'))
+  console.log(form.find((input) => input.key === 'email'))
   // console.log(form.find((input) => input.key === 'provider'))
   return form
 }
-export type LoginFormEvent = FormEmitValue<LoginForm>
+export type LoginFormEvent = FormEmitValue<LoginOptions>
 const runCallback = (callback: any) => {
   // console.log(`[ui] [auth] [login} [+Page] [setup] :: runCallback`)
   return (...args: LoginFormEvent[]) => {

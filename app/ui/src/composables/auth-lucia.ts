@@ -2,12 +2,16 @@ import {
   LuciaAuthInstance,
   User,
   Session,
-  LoginOptions,
   SessionSchema,
-  LoginOptionsSchema,
   LoginProviderResponse,
   LoginRedirectResponseSchema,
-  LoginHTMLResponseSchema
+  LoginHTMLResponseSchema,
+  AuthRegisterBody,
+  AuthRegisterBodySchema,
+  LoginOauthOptions,
+  LoginOauthOptionsSchema,
+  AuthLoginBody,
+  AuthLoginBodySchema
 } from '#/types'
 import { storeToRefs } from 'pinia'
 import { ApiError, AuthLoginResponse, AuthService } from '..'
@@ -45,6 +49,8 @@ export const provideLuciaAuth = () => {
 
     onLoad: async () => {},
     login: async () => {},
+    loginOauth: async () => {},
+    register: async () => {},
     logout: async () => {},
     setSession: async () => ({}) as Session,
     setSessionAuthStore: async () => {},
@@ -139,88 +145,109 @@ const useLuciaAuth = () => {
     auth.setSessionAuthStore(session)
     return session
   }
-  const login = async (opts: LoginOptions) => {
+  const login = async (opts: AuthLoginBody) => {
     const { logger, correlationId } = useSsrLogger()
     logger.info(`[ui] [useAuth] [login] -> correlationId: ${correlationId}`)
     console.log(`[ui] [useAuth] [login] -> opts:`)
     console.log(opts)
-    const isLogin = opts.type === 'email' || opts.type === 'username'
-    const success = LoginOptionsSchema.safeParse(opts)
-    if (!success.success) {
+    const loginOpts = AuthLoginBodySchema.safeParse(opts)
+    if (!loginOpts.success) {
       console.error(`[ui] [useAuth] [login] -> invalid login options`)
-      console.error(success.error)
+      console.error(loginOpts.error)
       return
     }
-    if (opts.type === 'register') {
-      const { data, dataLoading, error } = await useService<AuthLoginResponse>(
-        AuthService.postRegisterPasswordUser({
-          requestBody: { username: opts.username, password: opts.password, email: opts.email }
-        })
-      )
-      auth.authError.value = error.value
-      if (auth.authError.value || !data.value) {
-        logger.error(`[ui] [useAuth] [login] -> auth.authError.value:`)
-        logger.error(auth.authError.value)
-        return
-      }
-      auth.authLoading.value = dataLoading.value
-      const success = LoginRedirectResponseSchema.safeParse(data.value)
-      if (!success.success) {
-        logger.error(`[ui] [useAuth] [login] -> success.error:`)
-        logger.error(success.error)
-        auth.authError.value = success.error
-        return
-      }
-      auth.setSession(success.data)
+    const usernameOrEmail =
+      'username' in loginOpts.data ? loginOpts.data?.username : loginOpts.data?.email
+    const emailOrUsername =
+      'email' in loginOpts.data ? loginOpts.data?.email : loginOpts.data?.username
+    const password = loginOpts.data.password
+    const requestBody = usernameOrEmail
+      ? { username: usernameOrEmail, password }
+      : { email: emailOrUsername, password }
+    const { data, dataLoading, error } = await useService<AuthLoginResponse>(
+      AuthService.postLoginPasswordUser({ requestBody })
+    )
+    auth.authError.value = error.value
+    if (auth.authError.value || !data.value) {
+      logger.error(`[ui] [useAuth] [login] -> auth.authError.value:`)
+      logger.error(auth.authError.value)
+      return
     }
-    if (isLogin) {
-      const { data, dataLoading, error } = await useService<AuthLoginResponse>(
-        AuthService.postLoginPasswordUser({
-          requestBody:
-            opts.type === 'email'
-              ? { password: opts.password, email: opts.email }
-              : { username: opts.username, password: opts.password }
-        })
-      )
-      auth.authError.value = error.value
-      if (auth.authError.value || !data.value) {
-        logger.error(`[ui] [useAuth] [login] -> auth.authError.value:`)
-        logger.error(auth.authError.value)
-        return
-      }
-      auth.authLoading.value = dataLoading.value
-      console.log(`[ui] [useAuth] [login] -> data:`)
-      console.log(data)
-      const success = LoginRedirectResponseSchema.safeParse(data.value)
-      if (!success.success) {
-        logger.error(`[ui] [useAuth] [login] -> success.error:`)
-        logger.error(success.error)
-        auth.authError.value = success.error
-        return
-      }
-      // auth.setSession(success.data)
-      window.location.replace(success.data)
+    auth.authLoading.value = dataLoading.value
+    console.log(`[ui] [useAuth] [login] -> data:`)
+    console.log(data)
+    const success = LoginRedirectResponseSchema.safeParse(data.value)
+    if (!success.success) {
+      logger.error(`[ui] [useAuth] [login] -> success.error:`)
+      logger.error(success.error)
+      auth.authError.value = success.error
+      return
     }
-    if (opts.type === 'oauth') {
-      const { data, error, dataLoading } = await useService<LoginProviderResponse>(
-        AuthService.getLoginOauth({ provider: opts.provider })
-      )
-      auth.authError.value = error.value
-      if (auth.authError.value || !data.value) {
-        logger.error(`[ui] [useAuth] [login] -> auth.authError.value:`)
-        logger.error(auth.authError.value)
-        return
-      }
-      auth.authLoading.value = dataLoading.value
-      const success = LoginRedirectResponseSchema.safeParse(data.value)
-      if (!success.success) {
-        logger.error(`[ui] [useAuth] [login] -> success.error:`)
-        logger.error(success.error)
-        auth.authError.value = success.error
-        return
-      }
-      window.location.replace(success.data)
+    // auth.setSession(success.data)
+    window.location.replace(success.data)
+  }
+  const loginOauth = async (opts: LoginOauthOptions) => {
+    const { logger, correlationId } = useSsrLogger()
+    logger.info(`[ui] [useAuth] [login] -> correlationId: ${correlationId}`)
+    console.log(`[ui] [useAuth] [login] -> opts:`)
+    console.log(opts)
+    const loginOpts = LoginOauthOptionsSchema.safeParse(opts)
+    if (!loginOpts.success) {
+      console.error(`[ui] [useAuth] [login] -> invalid login options`)
+      console.error(loginOpts.error)
+      return
     }
+    const { data, error, dataLoading } = await useService<LoginProviderResponse>(
+      AuthService.getLoginOauth({ provider: loginOpts.data.provider })
+    )
+    auth.authError.value = error.value
+    if (auth.authError.value || !data.value) {
+      logger.error(`[ui] [useAuth] [login] -> auth.authError.value:`)
+      logger.error(auth.authError.value)
+      return
+    }
+    auth.authLoading.value = dataLoading.value
+    const success = LoginRedirectResponseSchema.safeParse(data.value)
+    if (!success.success) {
+      logger.error(`[ui] [useAuth] [login] -> success.error:`)
+      logger.error(success.error)
+      auth.authError.value = success.error
+      return
+    }
+    window.location.replace(success.data)
+  }
+  const register = async (opts: AuthRegisterBody) => {
+    const { logger, correlationId } = useSsrLogger()
+    logger.info(`[ui] [useAuth] [register] -> correlationId: ${correlationId}`)
+    console.log(`[ui] [useAuth] [register] -> opts:`)
+    console.log(opts)
+    const registerOpts = AuthRegisterBodySchema.safeParse(opts)
+    if (!registerOpts.success) {
+      console.error(`[ui] [useAuth] [login] -> invalid login options`)
+      console.error(registerOpts.error)
+      return
+    }
+    const { username, password, email } = registerOpts.data
+    const { data, dataLoading, error } = await useService<AuthLoginResponse>(
+      AuthService.postRegisterPasswordUser({
+        requestBody: { username, password, email }
+      })
+    )
+    auth.authError.value = error.value
+    if (auth.authError.value || !data.value) {
+      logger.error(`[ui] [useAuth] [register] -> auth.authError.value:`)
+      logger.error(auth.authError.value)
+      return
+    }
+    auth.authLoading.value = dataLoading.value
+    const success = LoginRedirectResponseSchema.safeParse(data.value)
+    if (!success.success) {
+      logger.error(`[ui] [useAuth] [register] -> success.error:`)
+      logger.error(success.error)
+      auth.authError.value = success.error
+      return
+    }
+    auth.setSession(success.data)
   }
 
   const logout = async () => {
@@ -239,6 +266,8 @@ const useLuciaAuth = () => {
 
   auth.onLoad = onLoad
   auth.login = login
+  auth.loginOauth = loginOauth
+  auth.register = register
   auth.logout = logout
   auth.setSession = setSession
   return auth

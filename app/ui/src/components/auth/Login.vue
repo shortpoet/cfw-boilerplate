@@ -83,7 +83,7 @@ if (typeof window !== 'undefined') {
   //   "[ui] [login.component] typeof window !== 'undefined' -> can now load things that would break SSR"
   // )
   const auth = useLuciaAuth()
-  const { login, logout } = auth
+  const { login, logout, loginOauth } = auth
   ;({ authError, isLoggedIn } = auth)
   // console.log(`[ui] [login.component] authError ${authError.value}`)
   user = auth.user || user
@@ -100,7 +100,8 @@ if (typeof window !== 'undefined') {
     // console.log('[ui] [login.component] onLogin')
     // console.log(event)
     try {
-      await login(event.form)
+      // TODO temp
+      event.event.type ? await login(event.form) : await loginOauth(event.form)
     } catch (error) {
       console.log(`[ui] [login.component] error`)
       console.log(error)

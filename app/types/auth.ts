@@ -78,91 +78,27 @@ export type OauthLoginBody = z.infer<typeof OauthLoginBodySchema>
 export const OauthLoginResponseSchema = z.string({ description: 'OAuth redirect HTML' })
 export type OauthLoginResponse = z.infer<typeof OauthLoginResponseSchema>
 
-/* Client */
-
-// interface LoginOptions extends Record<string, any> {
-//   provider: string
-//   register?: boolean
-//   username?: string
-//   password?: string
-//   email?: string
-// }
-
 export const LoginRedirectResponseSchema = z.string()
 export type LoginProviderResponse = z.infer<typeof LoginRedirectResponseSchema>
 
 export const LoginHTMLResponseSchema = z.string()
 export type LoginHTMLResponse = z.infer<typeof LoginHTMLResponseSchema>
 
-export const LoginOptionsOauthSchema = z.object({
-  type: z.literal(LoginOptionsTypesEnum.Enum.oauth),
-  provider: OauthProvidersEnum,
-  username: z.undefined(),
-  password: z.undefined(),
-  email: z.undefined()
+/* Client */
+
+export const LoginOauthOptionsSchema = z.object({
+  provider: OauthProvidersEnum
 })
+export type LoginOauthOptions = z.infer<typeof LoginOauthOptionsSchema>
 
-export const LoginOptionsRegisterSchema = z.object({
-  type: z.literal(LoginOptionsTypesEnum.Enum.register),
-  provider: z.undefined(),
-  username: z.string(),
-  password: z.string(),
-  email: z.string()
+export const LoginFormSchema = z.object({
+  type: LoginOptionsTypesEnum,
+  username: z.string({ description: 'Username' }).optional(),
+  email: z.string({ description: 'Email' }).optional(),
+  password: z.string({ description: 'Password' }).optional(),
+  provider: OauthProvidersEnum.optional()
 })
-
-export const LoginOptionsUsernameSchema = z.object({
-  type: z.literal(LoginOptionsTypesEnum.Enum.username),
-  provider: z.undefined(),
-  password: z.string(),
-  username: z.string(),
-  email: z.string().optional()
-})
-
-export const LoginOptionsEmailSchema = z.object({
-  type: z.literal(LoginOptionsTypesEnum.Enum.email),
-  provider: z.undefined(),
-  password: z.string(),
-  username: z.string().optional(),
-  email: z.string()
-})
-
-export const LoginOptionsSchema = z.discriminatedUnion('type', [
-  LoginOptionsOauthSchema,
-  LoginOptionsRegisterSchema,
-  LoginOptionsUsernameSchema,
-  LoginOptionsEmailSchema
-])
-export type LoginOptions = z.infer<typeof LoginOptionsSchema>
-
-// const LoginOptionsLoginSchema = z
-//   .object({
-//     type: z.literal(LoginOptionsTypesEnum.Enum.login),
-//     provider: z.undefined(),
-//     password: z.string(),
-//     username: z.string().optional(),
-//     email: z.string().optional()
-//   })
-//   .and(
-//     z.union(
-//       [
-//         z.object({ username: z.string(), email: z.undefined() }),
-//         z.object({ username: z.undefined(), email: z.string() }),
-//         z.object({ username: z.string(), email: z.string() })
-//       ],
-//       { errorMap: (issue, ctx) => ({ message: 'Either username or email is required' }) }
-//     )
-//   )
-
-// const LoginOptionsSchema = z.union([
-//   LoginOptionsRegisterSchema,
-//   LoginOptionsLoginSchema,
-//   LoginOptionsCommonSchema
-// ])
-
-// const LoginOptionsSchema = z.intersection(
-//   LoginOptionsCommonSchema,
-//   z.union([LoginOptionsRegisterSchema, LoginOptionsLoginSchema])
-// )
+export type LoginForm = z.infer<typeof LoginFormSchema>
 
 export interface AuthInstance {
   authLoading: Ref<boolean>
@@ -178,7 +114,9 @@ export interface AuthInstance {
   // popupOpen: Ref<boolean>;
 
   onLoad: () => Promise<void>
-  login(options: LoginOptions): Promise<void>
+  login(options: AuthLoginBody): Promise<void>
+  loginOauth(options: LoginOauthOptions): Promise<void>
+  register(options: AuthRegisterBody): Promise<void>
   logout(options?: any): Promise<void>
   setSession: (_session?: Session | string) => Promise<Session | undefined>
   setSessionAuthStore: (session: Session | undefined) => void
