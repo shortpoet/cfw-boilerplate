@@ -134,6 +134,7 @@ const props = defineProps({
 })
 
 const inputs = ref(props.inputs)
+console.log(`[FormGeneric] inputs ${JSON.stringify(inputs.value)}`)
 const onSubmit = (event: Event) => {
   console.log(`[FormGeneric] onSubmit event`)
   console.log(event)
@@ -141,6 +142,8 @@ const onSubmit = (event: Event) => {
     acc[input.key as keyof T] = input.value
     return acc
   }, {} as T)
+  console.log(`[FormGeneric] onSubmit inputValues`)
+  console.log(inputValues)
   emit('submit', {
     form: inputValues,
     event

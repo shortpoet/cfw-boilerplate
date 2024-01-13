@@ -28,15 +28,6 @@
           <template #submit-button>
             <div flex flex-col class="register-form-submit-controls">
               <div flex flex-row class="register-form-submit-buttons">
-                <button
-                  type="submit"
-                  class="btn-main m-2 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-                  id="login-button-password"
-                  :disabled="loginProps.isLoggedIn"
-                >
-                  <i class="i-carbon-login" inline-block /> Log in
-                </button>
-
                 <TeleModal />
 
                 <button
@@ -51,26 +42,6 @@
             </div>
           </template>
         </FormGeneric>
-      </template>
-      <template #login-popup="loginPopupProps">
-        <button
-          class="btn-main m-3 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-          id="login-button"
-          :disabled="loginPopupProps.isLoggedIn"
-          @click="loginPopupProps.onLoginPopup"
-        >
-          Log in Popup
-        </button>
-      </template>
-      <template #logout="logoutProps">
-        <button
-          class="btn-main m-3 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-          id="logout-button"
-          :disabled="logoutProps.authError"
-          @click="logoutProps.onLogout"
-        >
-          Log out
-        </button>
       </template>
     </Login>
   </div>

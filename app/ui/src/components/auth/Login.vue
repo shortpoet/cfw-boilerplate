@@ -96,21 +96,19 @@ if (typeof window !== 'undefined') {
   storeSession.value = authStore.session || storeSession.value
 
   onLogin.value = async (event: LoginFormEvent) => {
-    // console.log('[ui] [login.component] onLogin')
-    // console.log(event)
+    console.log('[ui] [login.component] onLogin')
+    console.log(event)
+    console.log(event.form.type)
     try {
-      switch (event.form.type) {
-        case 'username' || 'email':
-          await login(event.form)
-          break
-        case 'oauth':
+      switch (true) {
+        case event.form.type === 'oauth':
           await loginOauth(event.form)
           break
-        case 'register':
+        case event.form.type === 'register':
           await register(event.form)
           break
         default:
-          console.log(`[ui] [login.component] onLogin unknown type ${event.form.type}`)
+          await login(event.form)
           break
       }
     } catch (error) {

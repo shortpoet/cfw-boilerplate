@@ -41,29 +41,6 @@
         </FormGeneric>
       </template>
 
-      <template #login-email="loginProps">
-        <FormGeneric
-          :inputs="getLogsterForm('email')"
-          :onSubmit="runCallback(loginProps.onLogin)"
-          :title="'Login Email'"
-        >
-          <template #submit-button>
-            <div flex flex-col class="login-email-form-submit-controls">
-              <div flex flex-row class="login-email-form-submit-buttons">
-                <button
-                  type="submit"
-                  class="btn-main m-2 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-                  id="login-email-button-password"
-                  :disabled="loginProps.isLoggedIn"
-                >
-                  <i class="i-carbon-login" inline-block /> Log in Email
-                </button>
-              </div>
-            </div>
-          </template>
-        </FormGeneric>
-      </template>
-
       <template #login-username="loginProps">
         <FormGeneric
           :inputs="getLogsterForm('username')"
@@ -80,6 +57,29 @@
                   :disabled="loginProps.isLoggedIn"
                 >
                   <i class="i-carbon-login" inline-block /> Log in Username
+                </button>
+              </div>
+            </div>
+          </template>
+        </FormGeneric>
+      </template>
+
+      <template #login-email="loginProps">
+        <FormGeneric
+          :inputs="getLogsterForm('email')"
+          :onSubmit="runCallback(loginProps.onLogin)"
+          :title="'Login Email'"
+        >
+          <template #submit-button>
+            <div flex flex-col class="login-email-form-submit-controls">
+              <div flex flex-row class="login-email-form-submit-buttons">
+                <button
+                  type="submit"
+                  class="btn-main m-2 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+                  id="login-email-button-password"
+                  :disabled="loginProps.isLoggedIn"
+                >
+                  <i class="i-carbon-login" inline-block /> Log in Email
                 </button>
               </div>
             </div>
@@ -176,9 +176,10 @@ const runCallback = (callback: any) => {
     console.log(`[ui] [auth] [login} [+Page] [setup] :: runCallback args`)
     console.log(args)
     const [{ form, event }] = args
+    console.log(`[ui] [auth] [login} [+Page] [setup] :: runCallback form type`)
+    console.log(form.type)
 
     const submitterId = event instanceof SubmitEvent && event.submitter?.id
-    const isRegister = submitterId && submitterId.includes('register') ? true : false
 
     if (submitterId && submitterId.includes('oauth')) {
       console.log(
@@ -191,11 +192,6 @@ const runCallback = (callback: any) => {
         form.provider = parsed.data
       }
     }
-
-    // console.log(`[ui] [auth] [login} [+Page] [setup] :: runCallback submitterId ${submitterId}`)
-    const hasEmail = form.email && form.email.length > 0
-    const hasUsername = form.username && form.username.length > 0
-    form.type = isRegister ? 'register' : hasEmail ? 'email' : hasUsername ? 'username' : 'oauth'
     console.log(`[ui] [auth] [login} [+Page] [setup] onSubmit emitting inputs`)
     console.log(form)
     callback(...args)

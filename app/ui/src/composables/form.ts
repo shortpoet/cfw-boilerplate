@@ -19,7 +19,7 @@ export const getLogsterForm = (type: LoginOptionsTypes): FormInput<LoginForm>[] 
     type: 'text',
     value: '',
     placeholder: 'Username',
-    key: 'email',
+    key: 'username',
     required: true
   }
   const password: FormInput<LoginForm> = {
@@ -36,6 +36,7 @@ export const getLogsterForm = (type: LoginOptionsTypes): FormInput<LoginForm>[] 
     key: 'provider',
     required: false
   }
+  // console.log(`[ui] [composables] [form] [getLogsterForm] type: ${type}`)
 
   switch (type) {
     case LoginOptionsTypesEnum.Enum.register:
