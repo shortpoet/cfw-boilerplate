@@ -7,6 +7,7 @@ import {
   Session,
   User
 } from './auth'
+import { LoginFormEvent } from './ui'
 
 export { LuciaAuthInstance }
 
@@ -45,9 +46,9 @@ interface LuciaAuthInstance extends AuthInstance {
   // popupOpen: Ref<boolean>;
 
   onLoad: () => Promise<void>
-  login(options: AuthLoginBody): Promise<void>
-  loginOauth(options: LoginOauthOptions): Promise<void>
-  register(options: AuthRegisterBody): Promise<void>
+  login(options: LoginFormEvent['form']): Promise<void>
+  loginOauth(options: LoginFormEvent['form']): Promise<void>
+  register(options: LoginFormEvent['form']): Promise<void>
   logout(options?: any): Promise<void>
   setSession: (_session?: Session | string) => Promise<Session | undefined>
   setSessionAuthStore: (session: Session | undefined) => void

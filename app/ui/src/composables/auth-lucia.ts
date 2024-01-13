@@ -11,7 +11,8 @@ import {
   LoginOauthOptions,
   LoginOauthOptionsSchema,
   AuthLoginBody,
-  AuthLoginBodySchema
+  AuthLoginBodySchema,
+  LoginFormEvent
 } from '#/types'
 import { storeToRefs } from 'pinia'
 import { ApiError, AuthLoginResponse, AuthService } from '..'
@@ -145,7 +146,7 @@ const useLuciaAuth = () => {
     auth.setSessionAuthStore(session)
     return session
   }
-  const login = async (opts: AuthLoginBody) => {
+  const login = async (opts: LoginFormEvent['form']) => {
     const { logger, correlationId } = useSsrLogger()
     logger.info(`[ui] [useAuth] [login] -> correlationId: ${correlationId}`)
     console.log(`[ui] [useAuth] [login] -> opts:`)
@@ -186,7 +187,7 @@ const useLuciaAuth = () => {
     // auth.setSession(success.data)
     window.location.replace(success.data)
   }
-  const loginOauth = async (opts: LoginOauthOptions) => {
+  const loginOauth = async (opts: LoginFormEvent['form']) => {
     const { logger, correlationId } = useSsrLogger()
     logger.info(`[ui] [useAuth] [login] -> correlationId: ${correlationId}`)
     console.log(`[ui] [useAuth] [login] -> opts:`)
@@ -216,7 +217,7 @@ const useLuciaAuth = () => {
     }
     window.location.replace(success.data)
   }
-  const register = async (opts: AuthRegisterBody) => {
+  const register = async (opts: LoginFormEvent['form']) => {
     const { logger, correlationId } = useSsrLogger()
     logger.info(`[ui] [useAuth] [register] -> correlationId: ${correlationId}`)
     console.log(`[ui] [useAuth] [register] -> opts:`)

@@ -21,7 +21,7 @@
       <!-- template name/id must match LoginOptionsTypesEnum.Enum -->
       <template #login-oauth="loginProps">
         <FormGeneric
-          :inputs="getForm('oauth')"
+          :inputs="getLogsterForm('oauth')"
           :onSubmit="runCallback(loginProps.onLogin)"
           :hidden="true"
           :title="'Login Oauth'"
@@ -40,6 +40,53 @@
           </template>
         </FormGeneric>
       </template>
+
+      <template #login-email="loginProps">
+        <FormGeneric
+          :inputs="getLogsterForm('email')"
+          :onSubmit="runCallback(loginProps.onLogin)"
+          :title="'Login Email'"
+        >
+          <template #submit-button>
+            <div flex flex-col class="login-email-form-submit-controls">
+              <div flex flex-row class="login-email-form-submit-buttons">
+                <button
+                  type="submit"
+                  class="btn-main m-2 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+                  id="login-email-button-password"
+                  :disabled="loginProps.isLoggedIn"
+                >
+                  <i class="i-carbon-login" inline-block /> Log in Email
+                </button>
+              </div>
+            </div>
+          </template>
+        </FormGeneric>
+      </template>
+
+      <template #login-username="loginProps">
+        <FormGeneric
+          :inputs="getLogsterForm('username')"
+          :onSubmit="runCallback(loginProps.onLogin)"
+          :title="'Login username'"
+        >
+          <template #submit-button>
+            <div flex flex-col class="login-username-form-submit-controls">
+              <div flex flex-row class="login-username-form-submit-buttons">
+                <button
+                  type="submit"
+                  class="btn-main m-2 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+                  id="login-username-button-password"
+                  :disabled="loginProps.isLoggedIn"
+                >
+                  <i class="i-carbon-login" inline-block /> Log in Username
+                </button>
+              </div>
+            </div>
+          </template>
+        </FormGeneric>
+      </template>
+
       <template #login-popup="loginPopupProps">
         <button
           class="btn-main m-3 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
@@ -70,10 +117,9 @@ import {
   LoginOptionsTypes,
   LoginOptionsTypesEnum,
   OauthProvidersEnum,
-  OauthProviders,
-  LoginForm
+  LoginFormEvent,
+  ProviderButton
 } from '#/types'
-import type { FormEmitValue, FormInput } from '#/ui/src/components/input/FormGeneric.vue'
 
 const showSession = ref(true)
 const toggleSession = () => {
@@ -95,17 +141,11 @@ const props = defineProps<{
   session?: Session
 }>()
 const loginTypes = ref<LoginOptionsTypes[]>([
-  // LoginOptionsTypesEnum.Enum.email,
-  // LoginOptionsTypesEnum.Enum.username,
-  LoginOptionsTypesEnum.Enum.register,
+  LoginOptionsTypesEnum.Enum.email,
+  LoginOptionsTypesEnum.Enum.username,
+  // LoginOptionsTypesEnum.Enum.register,
   LoginOptionsTypesEnum.Enum.oauth
 ])
-
-type ProviderButton = {
-  provider: OauthProviders
-  name: string
-  icon: string
-}
 
 const providers = ref<ProviderButton[]>([
   {
@@ -130,63 +170,6 @@ const providers = ref<ProviderButton[]>([
   // }
 ])
 
-const getForm = (type: LoginOptionsTypes): FormInput<LoginForm>[] => {
-  console.log(`[ui] [auth] [login} [+Page] [setup] :: getForm`)
-  console.log(`[ui] [auth] [login} [+Page] [setup] :: getForm type ${type}`)
-
-  const isLoginForm =
-    type === LoginOptionsTypesEnum.Enum.email ||
-    type === LoginOptionsTypesEnum.Enum.username ||
-    type === LoginOptionsTypesEnum.Enum.register
-  console.log(`[ui] [auth] [login} [+Page] [setup] :: getForm isLoginForm ${isLoginForm}`)
-
-  const pw: FormInput<LoginForm>[] = [
-    {
-      type: 'text',
-      value: '',
-      placeholder: 'Username',
-      key: 'username',
-      required: false
-    },
-    {
-      type: 'email',
-      value: '',
-      placeholder: 'Email',
-      key: 'email',
-      required: false
-    },
-    {
-      type: 'password',
-      value: '',
-      placeholder: 'Password',
-      key: 'password',
-      required: true
-    }
-  ]
-
-  const base: FormInput<LoginForm>[] = [
-    { type: 'hidden', value: type, placeholder: 'type', key: 'type', required: false }
-  ]
-
-  const oauth: FormInput<LoginForm>[] = [
-    {
-      type: 'hidden',
-      value: 'github',
-      placeholder: 'provider',
-      key: 'provider',
-      required: false
-    }
-  ]
-
-  const form: FormInput<LoginForm>[] = isLoginForm ? [...pw, ...base] : [...oauth, ...base]
-
-  // console.log(`[ui] [auth] [login} [+Page] [setup] :: getForm form`)
-  // console.log(form.find((input) => input.key === 'username'))
-  // console.log(form.find((input) => input.key === 'email'))
-  // console.log(form.find((input) => input.key === 'provider'))
-  return form
-}
-export type LoginFormEvent = FormEmitValue<LoginForm>
 const runCallback = (callback: any) => {
   // console.log(`[ui] [auth] [login} [+Page] [setup] :: runCallback`)
   return (...args: LoginFormEvent[]) => {

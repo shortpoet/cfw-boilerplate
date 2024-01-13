@@ -57,6 +57,7 @@ declare global {
   const getHeaders: typeof import('./core/request')['getHeaders']
   const getI18n: typeof import('./composables/i18n')['getI18n']
   const getLocale: typeof import('./composables/locales')['getLocale']
+  const getLogsterForm: typeof import('./composables/form')['getLogsterForm']
   const getQueryString: typeof import('./core/request')['getQueryString']
   const getRequestBody: typeof import('./core/request')['getRequestBody']
   const getResponseBody: typeof import('./core/request')['getResponseBody']
@@ -213,6 +214,7 @@ declare module 'vue' {
     readonly getHeaders: UnwrapRef<typeof import('./core/request')['getHeaders']>
     readonly getI18n: UnwrapRef<typeof import('./composables/i18n')['getI18n']>
     readonly getLocale: UnwrapRef<typeof import('./composables/locales')['getLocale']>
+    readonly getLogsterForm: UnwrapRef<typeof import('./composables/form')['getLogsterForm']>
     readonly getQueryString: UnwrapRef<typeof import('./core/request')['getQueryString']>
     readonly getRequestBody: UnwrapRef<typeof import('./core/request')['getRequestBody']>
     readonly getResponseBody: UnwrapRef<typeof import('./core/request')['getResponseBody']>
@@ -354,6 +356,7 @@ declare module '@vue/runtime-core' {
     readonly getHeaders: UnwrapRef<typeof import('./core/request')['getHeaders']>
     readonly getI18n: UnwrapRef<typeof import('./composables/i18n')['getI18n']>
     readonly getLocale: UnwrapRef<typeof import('./composables/locales')['getLocale']>
+    readonly getLogsterForm: UnwrapRef<typeof import('./composables/form')['getLogsterForm']>
     readonly getQueryString: UnwrapRef<typeof import('./core/request')['getQueryString']>
     readonly getRequestBody: UnwrapRef<typeof import('./core/request')['getRequestBody']>
     readonly getResponseBody: UnwrapRef<typeof import('./core/request')['getResponseBody']>

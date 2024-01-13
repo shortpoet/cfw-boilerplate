@@ -19,59 +19,14 @@
 
     <Login :session="session" :loginTypes="loginTypes">
       <!-- template name/id must match LoginOptionsTypesEnum.Enum -->
-      <template #login-oauth="loginProps">
-        <FormGeneric
-          :inputs="getForm('oauth')"
-          :onSubmit="runCallback(loginProps.onLogin)"
-          :hidden="true"
-          :title="'Login Oauth'"
-        >
-          <template #submit-button>
-            <button
-              v-for="provider in providers"
-              :key="provider.provider"
-              type="submit"
-              class="btn-main m-3 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-              :id="`login-button-oauth-${provider.provider}`"
-              :disabled="loginProps.isLoggedIn"
-            >
-              <i :class="provider.icon" inline-block /> Log in {{ provider.name }}
-            </button>
-          </template>
-        </FormGeneric>
-      </template>
       <template #login-register="loginProps">
         <FormGeneric
-          :inputs="getForm('register')"
+          :inputs="getLogsterForm('register')"
           :onSubmit="runCallback(loginProps.onLogin)"
           :title="'Login Register'"
         >
           <template #submit-button>
             <div flex flex-col class="register-form-submit-controls">
-              <div flex flex-row justify-around class="register-form-radio-container">
-                <div class="register-form-radio">
-                  <input
-                    class="m-2"
-                    type="radio"
-                    id="login-radio"
-                    name="login-radio"
-                    value="login"
-                    v-model="loginFormType"
-                  />
-                  <label for="login-radio">Login</label>
-                </div>
-                <div class="register-form-radio">
-                  <input
-                    class="m-2"
-                    type="radio"
-                    id="register-radio"
-                    name="register-radio"
-                    value="register"
-                    v-model="loginFormType"
-                  />
-                  <label for="register-radio">Register</label>
-                </div>
-              </div>
               <div flex flex-row class="register-form-submit-buttons">
                 <button
                   type="submit"
@@ -123,14 +78,12 @@
 
 <script setup lang="ts">
 import {
-  LoginOptions,
   Session,
   LoginOptionsTypes,
   LoginOptionsTypesEnum,
   OauthProvidersEnum,
-  OauthProviders
+  LoginFormEvent
 } from '#/types'
-import type { FormEmitValue, FormInput } from '#/ui/src/components/input/FormGeneric.vue'
 
 const showSession = ref(true)
 const toggleSession = () => {
@@ -151,103 +104,10 @@ const sessionDisplayClass = computed(() => {
 const props = defineProps<{
   session?: Session
 }>()
-const loginTypes = ref<LoginOptionsTypes[]>([
-  // LoginOptionsTypesEnum.Enum.email,
-  // LoginOptionsTypesEnum.Enum.username,
-  LoginOptionsTypesEnum.Enum.register,
-  LoginOptionsTypesEnum.Enum.oauth
-])
+const loginTypes = ref<LoginOptionsTypes[]>([LoginOptionsTypesEnum.Enum.register])
 // const pageContext = usePageContext();
 // const pageSession = ref(pageContext.session);
-const loginFormType = ref<'register' | 'login'>()
 
-type ProviderButton = {
-  provider: OauthProviders
-  name: string
-  icon: string
-}
-
-const providers = ref<ProviderButton[]>([
-  {
-    provider: OauthProvidersEnum.Enum.github,
-    name: 'Github',
-    icon: 'i-carbon-logo-github'
-  },
-  {
-    provider: OauthProvidersEnum.Enum.google,
-    name: 'Google',
-    icon: 'i-carbon-logo-google'
-  }
-  // {
-  //   provider: OauthProvidersEnum.Enum.facebook,
-  //   name: 'Facebook',
-  //   icon: 'i-carbon-logo-facebook'
-  // },
-  // {
-  //   provider: OauthProvidersEnum.Enum.twitter,
-  //   name: 'Twitter',
-  //   icon: 'i-carbon-logo-twitter'
-  // }
-])
-
-const passwordInputs: ComputedRef<FormInput<LoginOptions>[]> = computed(() => [
-  {
-    type: 'text',
-    value: '',
-    placeholder: 'Username',
-    key: 'username',
-    required: loginFormType.value === LoginOptionsTypesEnum.Enum.register ? true : false
-  },
-  {
-    type: 'email',
-    value: '',
-    placeholder: 'Email',
-    key: 'email',
-    required: loginFormType.value === LoginOptionsTypesEnum.Enum.register ? true : false
-  },
-  {
-    type: 'password',
-    value: '',
-    placeholder: 'Password',
-    key: 'password',
-    required: true
-  },
-  {
-    type: 'hidden',
-    value: undefined,
-    placeholder: 'type',
-    key: 'type',
-    required: true
-  },
-  {
-    type: 'hidden',
-    value: undefined,
-    placeholder: 'provider',
-    key: 'provider',
-    required: false
-  }
-])
-const getForm = (type: LoginOptionsTypes): FormInput<LoginOptions>[] => {
-  console.log(`[ui] [auth] [login} [+Page] [setup] :: getForm`)
-  console.log(`[ui] [auth] [login} [+Page] [setup] :: getForm type ${type}`)
-
-  const isLoginForm =
-    type === LoginOptionsTypesEnum.Enum.email ||
-    type === LoginOptionsTypesEnum.Enum.username ||
-    type === LoginOptionsTypesEnum.Enum.register
-  console.log(`[ui] [auth] [login} [+Page] [setup] :: getForm isLoginForm ${isLoginForm}`)
-
-  const form = [
-    { type: 'hidden', value: type, placeholder: 'type', key: 'type', required: false }
-  ].concat(isLoginForm ? passwordInputs.value : [])
-
-  // console.log(`[ui] [auth] [login} [+Page] [setup] :: getForm form`)
-  console.log(form.find((input) => input.key === 'username'))
-  console.log(form.find((input) => input.key === 'email'))
-  // console.log(form.find((input) => input.key === 'provider'))
-  return form
-}
-export type LoginFormEvent = FormEmitValue<LoginOptions>
 const runCallback = (callback: any) => {
   // console.log(`[ui] [auth] [login} [+Page] [setup] :: runCallback`)
   return (...args: LoginFormEvent[]) => {
