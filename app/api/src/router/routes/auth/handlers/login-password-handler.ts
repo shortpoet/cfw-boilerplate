@@ -74,7 +74,7 @@ export class RegisterPasswordUser extends OpenAPIRoute {
           avatar_url: 'https://www.gravatar.com/avatar/?d=retro&s=35'
         }
       })
-
+      // TODO need to create key for email
       const session = await auth.createSession({
         userId: user.userId,
         sessionId: await res.cryptoSign(generateRandomString(40)),
