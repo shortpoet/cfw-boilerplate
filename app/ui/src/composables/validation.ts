@@ -3,6 +3,7 @@ import { Directive } from 'vue'
 const passwordRegex = /^(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?])(?=.*[A-Z])(?=.*\d).{3,32}$/
 const constraints = {
   required: (value: string, ...args: any) => !!value || 'Required.',
+  number: (value: string) => /^\d+$/.test(value) || 'Only numbers allowed.',
   text: (value: string) => /^[a-zA-Z]+$/.test(value) || 'Only text allowed.',
   counter: (value: string) => value.length <= 10 || 'Max 10 characters',
   email: (value: string) => /.+@.+\..+/.test(value) || 'Invalid e-mail.',

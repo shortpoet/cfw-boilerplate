@@ -37,7 +37,7 @@ export const getLogsterForm = (type: LoginOptionsTypes): FormInput<LoginForm>[] 
     required: false
   }
   const code: FormInput<LoginForm> = {
-    type: 'text',
+    type: 'number',
     value: '',
     placeholder: 'Verification code',
     key: 'verificationCode',

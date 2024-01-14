@@ -215,10 +215,10 @@ export const AuthVerifyTokenRequestSchema = {
 
 export const AuthVerifyTokenSubmitSchema = {
   tags: ['Auth'],
-  summary: 'Verify email with token',
+  summary: 'Verify email with code',
   parameters: {
-    token: Query(Str, {
-      description: 'Verification token'
+    code: Query(Str, {
+      description: 'Verification code'
     })
   },
   responses: {

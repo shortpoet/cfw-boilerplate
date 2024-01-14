@@ -57,7 +57,7 @@
                               id="verify-button-submit"
                               :disabled="loginProps.isLoggedIn"
                             >
-                              <i class="i-carbon-login" inline-block /> Verify
+                              <i class="i-carbon-login" inline-block /> Get code
                             </button>
                           </div>
                         </div>
@@ -80,7 +80,7 @@
                               id="verify-button-submit"
                               :disabled="loginProps.isLoggedIn"
                             >
-                              <i class="i-carbon-login" inline-block /> Verify
+                              <i class="i-carbon-login" inline-block /> Verify code
                             </button>
                           </div>
                         </div>
@@ -145,8 +145,6 @@ const runCallback = (callback: any) => {
     const [{ form, event }] = args
 
     const submitterId = event instanceof SubmitEvent && event.submitter?.id
-    const isRegister = submitterId && submitterId.includes('register') ? true : false
-
     if (submitterId && submitterId.includes('oauth')) {
       console.log(
         `[ui] [auth] [login} [+Page] [setup] :: runCallback oauth submitterId ${submitterId}`
@@ -159,10 +157,11 @@ const runCallback = (callback: any) => {
       }
     }
 
+    // const isRegister = submitterId && submitterId.includes('register') ? true : false
     // console.log(`[ui] [auth] [login} [+Page] [setup] :: runCallback submitterId ${submitterId}`)
-    const hasEmail = form.email && form.email.length > 0
-    const hasUsername = form.username && form.username.length > 0
-    form.type = isRegister ? 'register' : hasEmail ? 'email' : hasUsername ? 'username' : 'oauth'
+    // const hasEmail = form.email && form.email.length > 0
+    // const hasUsername = form.username && form.username.length > 0
+    // form.type = isRegister ? 'register' : hasEmail ? 'email' : hasUsername ? 'username' : 'oauth'
     console.log(`[ui] [auth] [login} [+Page] [setup] onSubmit emitting inputs`)
     console.log(form)
     callback(...args)

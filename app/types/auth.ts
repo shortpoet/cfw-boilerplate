@@ -103,6 +103,12 @@ export const VerifyEmailSchema = z.object({
   email: z.string({ description: 'Email' }).email()
 })
 
+export const VerifyCodeSchema = z.object({
+  code: z.number({ description: 'Verification code' })
+})
+
+export const VerifySchema = z.union([VerifyEmailSchema, VerifyCodeSchema])
+
 export const LoginFormSchema = z.object({
   type: LoginOptionsTypesEnum,
   username: z.string({ description: 'Username' }).optional(),

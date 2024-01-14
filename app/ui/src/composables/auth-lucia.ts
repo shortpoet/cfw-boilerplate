@@ -13,7 +13,9 @@ import {
   AuthLoginBody,
   AuthLoginBodySchema,
   LoginFormEvent,
-  VerifyEmailSchema
+  VerifyEmailSchema,
+  VerifyCodeSchema,
+  VerifySchema
 } from '#/types'
 import { storeToRefs } from 'pinia'
 import { ApiError, AuthLoginResponse, AuthService } from '..'
@@ -257,16 +259,27 @@ const useLuciaAuth = () => {
     logger.info(`[ui] [useAuth] [verify] -> correlationId: ${correlationId}`)
     console.log(`[ui] [useAuth] [verify] -> opts:`)
     console.log(opts)
-    const verifyOpts = VerifyEmailSchema.safeParse(opts)
+    const verifyOpts = VerifySchema.safeParse(opts)
     if (!verifyOpts.success) {
       console.error(`[ui] [useAuth] [verify] -> invalid login options`)
       console.error(verifyOpts.error)
       return
     }
-    const { email } = verifyOpts.data
-    const { data, dataLoading, error } = await useService<any>(
-      AuthService.getVerificationTokenGet({ email })
-    )
+    let data = ref<any>()
+    let dataLoading = ref(true)
+    let error = ref<any>()
+    if ('email' in verifyOpts.data) {
+      const { email } = verifyOpts.data
+      ;({ data, dataLoading, error } = await useService<any>(
+        AuthService.getVerificationTokenGet({ email })
+      ))
+    }
+    if ('code' in verifyOpts.data) {
+      const { code } = verifyOpts.data
+      ;({ data, dataLoading, error } = await useService<any>(
+        AuthService.postVerificationTokenPost({ code })
+      ))
+    }
     auth.authError.value = error.value
     if (auth.authError.value || !data.value) {
       logger.error(`[ui] [useAuth] [verify] -> auth.authError.value:`)
