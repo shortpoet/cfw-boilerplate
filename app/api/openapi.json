@@ -705,6 +705,39 @@
         }
       }
     },
+    "/api/auth/verify/email": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Request a verification token",
+        "operationId": "get_VerificationTokenGet",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "description": "Email address"
+            },
+            "required": true,
+            "name": "email",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfull response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/auth/session": {
       "get": {
         "tags": [
