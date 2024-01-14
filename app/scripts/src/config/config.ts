@@ -56,7 +56,7 @@ export async function getConfig(opts: Options): Promise<Config> {
     GOOGLE_CLIENT_ID: `Google/oauth/${appName}/${env}/GOOGLE_CLIENT_ID`,
     GOOGLE_CLIENT_SECRET: `Google/oauth/${appName}/${env}/GOOGLE_CLIENT_SECRET`,
     EMAIL_SERVER_PASSWORD: `Mail/fastmail/ai-maps-nodemailer`,
-    JMAP_TOKEN: `Mail/fastmail/ai-maps-email-send-token`
+    JMAP_TOKEN: `Mail/fastmail/cfw-boilerplate-verification`
   }
 
   await assertTomlEnv({ env, wranglerFile, appName, debug, envVars, goLive })

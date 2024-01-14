@@ -64,10 +64,10 @@ export const badResponse = (msg?: string, err?: Error | unknown, res?: Response)
   console.log(`[api] [badResponse] -> msg: ${msg}`)
   const newErr = err instanceof Error ? err : new Error(`${msg}` || ResText.NOT_FOUND)
   msg = msg ? `${ResText.BAD_REQUEST} - ${msg}` : ResText.BAD_REQUEST
-  console.log(`[api] [badResponse] -> msg: ${msg}`)
-  console.log(`[api] [badResponse] -> newErr: ${newErr}`)
-  console.log(`[api] [badResponse] -> newErr.message: ${newErr.message}`)
-  console.log(`[api] [badResponse] -> newErr.message: ${typeof newErr.message}`)
+  // console.log(`[api] [badResponse] -> msg: ${msg}`)
+  // console.log(`[api] [badResponse] -> newErr: ${newErr}`)
+  // console.log(`[api] [badResponse] -> newErr.message: ${newErr.message}`)
+  // console.log(`[api] [badResponse] -> newErr.message: ${typeof newErr.message}`)
   const statusText = ResText.BAD_REQUEST
   // zod error being mangled from obj to string then becomes invalid statusText
   // const statusText = typeof newErr.message === 'string' ? `${newErr.message}` : ResText.BAD_REQUEST
@@ -91,7 +91,7 @@ export const serverErrorResponse = (msg?: string, err?: Error | unknown, res?: R
   const init = {
     ...res,
     status: 500,
-    statusText: typeof newErr.message === 'string' ? newErr.message : ResText.SERVER_ERROR
+    statusText: ResText.SERVER_ERROR
   } as ResponseInit
   const body = formatErr(createErr(msg, 500, newErr))
   return new Response(body, init)

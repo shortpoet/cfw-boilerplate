@@ -9,22 +9,48 @@ interface AuthParams {
   username: string
 }
 
-const getAuthParams = async (env: Env): Promise<AuthParams> => ({
-  headers: {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${env.JMAP_TOKEN}`
-  },
-  authUrl: `https://api.fastmail.com/.well-known/jmap`,
-  // authUrl: `https://${env.JMAP_HOSTNAME}/.well-known/jmap`,
-  username: env.EMAIL_SERVER_USER
-})
+const getAuthParams = async (env: Env): Promise<AuthParams> => {
+  const token = env.JMAP_TOKEN
+  const username = env.EMAIL_SERVER_USER
+  if (!token || !username) {
+    throw new Error('No JMAP token or username found')
+  }
+  return {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    },
+    authUrl: `https://api.fastmail.com/.well-known/jmap`,
+    // authUrl: `https://${env.JMAP_HOSTNAME}/.well-known/jmap`,
+    username
+  }
+}
+
+const handleResponse = async (response: Response): Promise<any> => {
+  const clone = response.clone()
+  try {
+    const data: any = await response.json()
+    // console.log(`[api] [jmap] [handleResponse] [data] ${JSON.stringify(data, null, 2)}`)
+    return data
+  } catch (error) {
+    console.log(`[api] [jmap] [handleResponse] [error] ${JSON.stringify(error, null, 2)}`)
+    console.log(
+      `[api] [jmap] [handleResponse] [error] make sure token is valid, and a valid alias exists for the sender`
+    )
+    const text = await clone.text()
+    console.log(`[api] [jmap] [handleResponse] [text] ${text}`)
+    return text
+  }
+}
 
 const getSession = async (authUrl: string, headers: Record<string, string>): Promise<any> => {
+  // console.log(`[api] [jmap] [getSession] [authUrl] ${authUrl}`)
+  // console.log(`[api] [jmap] [getSession] [headers] ${JSON.stringify(headers, null, 2)}`)
   const response = await fetch(authUrl, {
     method: 'GET',
     headers
   })
-  return response.json()
+  return await handleResponse(response)
 }
 
 const mailboxQuery = async (
@@ -32,6 +58,8 @@ const mailboxQuery = async (
   accountId: string,
   headers: Record<string, string>
 ): Promise<any> => {
+  // console.log(`[api] [jmap] [mailboxQuery] [apiUrl] ${apiUrl}`)
+  // console.log(`[api] [jmap] [mailboxQuery] [accountId] ${accountId}`)
   const response = await fetch(apiUrl, {
     method: 'POST',
     headers,
@@ -40,7 +68,7 @@ const mailboxQuery = async (
       methodCalls: [['Mailbox/query', { accountId, filter: { name: 'Drafts' } }, 'a']]
     })
   })
-  const data: any = await response.json()
+  const data = await handleResponse(response)
 
   return await data['methodResponses'][0][1].ids[0]
 }
@@ -51,6 +79,9 @@ const identityQuery = async (
   username: string,
   headers: Record<string, string>
 ): Promise<any> => {
+  // console.log(`[api] [jmap] [identityQuery] [apiUrl] ${apiUrl}`)
+  // console.log(`[api] [jmap] [identityQuery] [accountId] ${accountId}`)
+  // console.log(`[api] [jmap] [identityQuery] [username] ${username}`)
   const response = await fetch(apiUrl, {
     method: 'POST',
     headers,
@@ -63,7 +94,7 @@ const identityQuery = async (
       methodCalls: [['Identity/get', { accountId, ids: null }, 'a']]
     })
   })
-  const data: any = await response.json()
+  const data: any = await handleResponse(response)
 
   return await data['methodResponses'][0][1].list.filter(
     (identity: any) => identity.email === username
@@ -154,21 +185,37 @@ const sendMail = async ({
   subject?: string
 }): Promise<any> => {
   const { headers, authUrl, username } = await getAuthParams(env)
-  const session = await getSession(authUrl, headers)
-  const apiUrl = session.apiUrl
-  const accountId = session.primaryAccounts['urn:ietf:params:jmap:mail']
-  const draftId = await mailboxQuery(apiUrl, accountId, headers)
-  const identityId = await identityQuery(apiUrl, accountId, username, headers)
-  return await draftResponse({
-    apiUrl,
-    accountId,
-    draftId,
-    identityId,
-    username,
-    headers,
-    messageBody,
-    from,
-    to,
-    subject
-  })
+  let success = false
+  console.log(headers, authUrl, username)
+  try {
+    const session = await getSession(authUrl, headers)
+    if (typeof session === 'string') {
+      throw new Error(`No JMAP session found - ${session}`)
+    }
+    const apiUrl = session.apiUrl
+    const accountId = session.primaryAccounts['urn:ietf:params:jmap:mail']
+    const draftId = await mailboxQuery(apiUrl, accountId, headers)
+    const identityId = await identityQuery(apiUrl, accountId, username, headers)
+    const res = await draftResponse({
+      apiUrl,
+      accountId,
+      draftId,
+      identityId,
+      username,
+      headers,
+      messageBody,
+      from,
+      to,
+      subject
+    })
+    success = res.methodResponses[0][1].notCreated === null
+    // console.log(res.methodResponses[0])
+    // console.log(res.methodResponses[1])
+    const timeSent = success ? res.methodResponses[1][1].created.sendIt.sendAt : null
+    return { success, timeSent }
+  } catch (error) {
+    console.log(`[api] [jmap] [sendMail] [error]`)
+    console.log(error)
+    return { success, error }
+  }
 }

@@ -129,6 +129,25 @@ export class AuthService {
   }
 
   /**
+   * Request a verification token
+   * @returns any Successfull response
+   * @throws ApiError
+   */
+  public static getVerificationTokenGet({
+    email,
+  }: {
+    email: string,
+  }): CancelablePromise<any> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/api/auth/verify/email',
+      query: {
+        'email': email,
+      },
+    });
+  }
+
+  /**
    * Fetch a user session
    * @returns Session Logged in User Session
    * @throws ApiError

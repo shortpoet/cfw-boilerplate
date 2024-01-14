@@ -55,6 +55,7 @@ interface LuciaAuthInstance extends AuthInstance {
   setSessionToken: (token: string) => void
   setLoggedIn: (loggedIn: boolean) => void
   setCurrentUser: (user: User | undefined) => void
+  verify(options: LoginFormEvent['form']): Promise<void>
   setAccessToken?: (token: string) => void
   setNonce?: (nonce: string) => void
   setAuthState?: (state: string) => void

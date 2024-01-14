@@ -1,4 +1,4 @@
-import { notFoundResponse, serverErrorResponse } from '#/api/src/middleware'
+import { jsonOkResponse, notFoundResponse, serverErrorResponse } from '#/api/src/middleware'
 import { OpenAPIRoute } from '@cloudflare/itty-router-openapi'
 import { LuciaError } from 'lucia'
 import { AuthVerifyTokenRequestSchema } from '../auth-schema'
@@ -51,18 +51,17 @@ async function sendVerificationRequest({
   }
 
   const subject = 'Verify your email address'
-  const response = await sendMail({
+  const { success, timeSent, error } = await sendMail({
     env,
     messageBody,
     from: env.EMAIL_FROM,
     to: email,
     subject
   })
-  console.log(response)
-  if (!response) {
-    const errors = response
-    throw new Error(JSON.stringify(errors, null, 2))
+  if (!success) {
+    throw new Error(JSON.stringify(error, null, 2))
   }
+  return { timeSent }
 }
 
 export class VerificationTokenGet extends OpenAPIRoute {
@@ -70,16 +69,19 @@ export class VerificationTokenGet extends OpenAPIRoute {
 
   async handle(req: Request, res: Response, env: Env, ctx: ExecutionContext) {
     try {
+      const reqUrl = new URL(req.url).href
       const session = await getSession(req, env)
       if (!session) {
         // Unauthorized
         throw new Error()
       }
       // check if email is already verified
-      const reqUrl = new URL(req.url).href
       if (session.user.emailVerified) {
         return redirectResponse(reqUrl, 302, res.headers)
       }
+
+      console.log('session')
+      console.log(session)
 
       const code = generateRandomString(8, '0123456789')
 
@@ -91,21 +93,22 @@ export class VerificationTokenGet extends OpenAPIRoute {
       const created =
         env.NODE_ENV === 'development'
           ? await q.createVerificationCodeLocal(
-              session.user.userId,
               code,
+              session.user.userId,
               Date.now() + 1000 * 60 * 5
             )
-          : await q.createVerificationCode(session.user.userId, code, Date.now() + 1000 * 60 * 5)
+          : await q.createVerificationCode(code, session.user.userId, Date.now() + 1000 * 60 * 5)
 
       if (!created || !deleted) {
         return serverErrorResponse('Error creating verification code', undefined, res)
       }
 
-      await sendVerificationRequest({
+      const { timeSent } = await sendVerificationRequest({
         env,
         email: session.user.email,
         code
       })
+      return jsonOkResponse({ timeSent })
     } catch (error) {
       console.error(error)
       if (error instanceof LuciaError) {

@@ -92,6 +92,10 @@ export const LoginOauthOptionsSchema = z.object({
 })
 export type LoginOauthOptions = z.infer<typeof LoginOauthOptionsSchema>
 
+export const VerifyEmailSchema = z.object({
+  email: z.string({ description: 'Email' }).email()
+})
+
 export const LoginFormSchema = z.object({
   type: LoginOptionsTypesEnum,
   username: z.string({ description: 'Username' }).optional(),
@@ -124,6 +128,7 @@ export interface AuthInstance {
   setSessionToken: (token: string) => void
   setLoggedIn: (loggedIn: boolean) => void
   setCurrentUser: (user: User | undefined) => void
+  verify?(options: LoginFormEvent['form']): Promise<void>
   setAccessToken?: (token: string) => void
   setNonce?: (nonce: string) => void
   setAuthState?: (state: string) => void

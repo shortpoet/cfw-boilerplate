@@ -1,6 +1,6 @@
 import { User } from '#/types'
 import { getKysely } from '../derive'
-import { querySqliteDatabaseParams } from './util'
+import { querySqliteDatabaseParams, runSqliteDatabaseParams } from './util'
 
 export async function deleteVerificationCode(userId: User['userId']) {
   let db = await getKysely()
@@ -8,27 +8,25 @@ export async function deleteVerificationCode(userId: User['userId']) {
 }
 
 export async function deleteVerificationCodeLocal(userId: User['userId']) {
-  return await querySqliteDatabaseParams('DELETE FROM verification_code WHERE user_id = ?', [
-    userId
-  ])
+  return await runSqliteDatabaseParams('DELETE FROM verification_code WHERE user_id = ?', [userId])
 }
 
 export async function createVerificationCode(
-  userId: User['userId'],
   code: string,
+  userId: User['userId'],
   expires: number
 ) {
   let db = await getKysely()
-  await db.insertInto('VerificationCode').values({ user_id: userId, code, expires }).execute()
+  await db.insertInto('VerificationCode').values({ code, user_id: userId, expires }).execute()
 }
 
 export async function createVerificationCodeLocal(
-  userId: User['userId'],
   code: string,
+  userId: User['userId'],
   expires: number
 ) {
-  return await querySqliteDatabaseParams(
-    'INSERT INTO verification_code (user_id, code, expires) VALUES (?, ?, ?)',
-    [userId, code, expires]
+  return await runSqliteDatabaseParams(
+    'INSERT INTO verification_code (code, user_id, expires) VALUES (?, ?, ?)',
+    [code, userId, expires]
   )
 }

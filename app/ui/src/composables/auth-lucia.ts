@@ -12,7 +12,8 @@ import {
   LoginOauthOptionsSchema,
   AuthLoginBody,
   AuthLoginBodySchema,
-  LoginFormEvent
+  LoginFormEvent,
+  VerifyEmailSchema
 } from '#/types'
 import { storeToRefs } from 'pinia'
 import { ApiError, AuthLoginResponse, AuthService } from '..'
@@ -52,6 +53,7 @@ export const provideLuciaAuth = () => {
     login: async () => {},
     loginOauth: async () => {},
     register: async () => {},
+    verify: async () => {},
     logout: async () => {},
     setSession: async () => ({}) as Session,
     setSessionAuthStore: async () => {},
@@ -122,6 +124,8 @@ const useLuciaAuth = () => {
     // const correlationId = getCookie(X_CORRELATION_ID);
   }
 
+  const { logger, correlationId } = useSsrLogger()
+
   const setSession = async (_session?: Session | string): Promise<Session | undefined> => {
     console.log(`[ui] [useAuth] [setSession] -> _session ->`)
     console.log(_session)
@@ -147,7 +151,6 @@ const useLuciaAuth = () => {
     return session
   }
   const login = async (opts: LoginFormEvent['form']) => {
-    const { logger, correlationId } = useSsrLogger()
     logger.info(`[ui] [useAuth] [login] -> correlationId: ${correlationId}`)
     console.log(`[ui] [useAuth] [login] -> opts:`)
     console.log(opts)
@@ -189,7 +192,6 @@ const useLuciaAuth = () => {
     window.location.replace(success.data)
   }
   const loginOauth = async (opts: LoginFormEvent['form']) => {
-    const { logger, correlationId } = useSsrLogger()
     logger.info(`[ui] [useAuth] [login] -> correlationId: ${correlationId}`)
     console.log(`[ui] [useAuth] [login] -> opts:`)
     console.log(opts)
@@ -219,7 +221,6 @@ const useLuciaAuth = () => {
     window.location.replace(success.data)
   }
   const register = async (opts: LoginFormEvent['form']) => {
-    const { logger, correlationId } = useSsrLogger()
     logger.info(`[ui] [useAuth] [register] -> correlationId: ${correlationId}`)
     console.log(`[ui] [useAuth] [register] -> opts:`)
     console.log(opts)
@@ -252,6 +253,37 @@ const useLuciaAuth = () => {
     auth.setSession(success.data)
   }
 
+  const verify = async (opts: LoginFormEvent['form']) => {
+    logger.info(`[ui] [useAuth] [verify] -> correlationId: ${correlationId}`)
+    console.log(`[ui] [useAuth] [verify] -> opts:`)
+    console.log(opts)
+    const verifyOpts = VerifyEmailSchema.safeParse(opts)
+    if (!verifyOpts.success) {
+      console.error(`[ui] [useAuth] [verify] -> invalid login options`)
+      console.error(verifyOpts.error)
+      return
+    }
+    const { email } = verifyOpts.data
+    const { data, dataLoading, error } = await useService<any>(
+      AuthService.getVerificationTokenGet({ email })
+    )
+    auth.authError.value = error.value
+    if (auth.authError.value || !data.value) {
+      logger.error(`[ui] [useAuth] [verify] -> auth.authError.value:`)
+      logger.error(auth.authError.value)
+      return
+    }
+    auth.authLoading.value = dataLoading.value
+    const success = LoginRedirectResponseSchema.safeParse(data.value)
+    if (!success.success) {
+      logger.error(`[ui] [useAuth] [verify] -> success.error:`)
+      logger.error(success.error)
+      auth.authError.value = success.error
+      return
+    }
+    auth.setSession(success.data)
+  }
+
   const logout = async () => {
     const { urlBaseApi } = useBaseUrl()
     const url = new URL(`${urlBaseApi}/${process.env.AUTH_PATH}/logout`)
@@ -270,6 +302,7 @@ const useLuciaAuth = () => {
   auth.login = login
   auth.loginOauth = loginOauth
   auth.register = register
+  auth.verify = verify
   auth.logout = logout
   auth.setSession = setSession
   return auth
