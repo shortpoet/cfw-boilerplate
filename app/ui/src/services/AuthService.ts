@@ -38,57 +38,6 @@ export class AuthService {
    * @returns OauthLoginResponse OAuth login URL
    * @throws ApiError
    */
-  public static getLoginGithub({
-    provider,
-    redirectUrl,
-  }: {
-    provider: string,
-    redirectUrl?: string,
-  }): CancelablePromise<OauthLoginResponse> {
-    return __request(OpenAPI, {
-      method: 'GET',
-      url: '/api/auth/login/github',
-      query: {
-        'provider': provider,
-        'redirect_url': redirectUrl,
-      },
-      errors: {
-        302: `Redirect to Request URL`,
-      },
-    });
-  }
-
-  /**
-   * Log in via OAuth callback
-   * @returns Session Successful OAuth login - session
-   * @throws ApiError
-   */
-  public static getLoginGithubCallback({
-    code,
-    state,
-  }: {
-    code: string,
-    state: string,
-  }): CancelablePromise<Session> {
-    return __request(OpenAPI, {
-      method: 'GET',
-      url: '/api/auth/login/github/callback',
-      query: {
-        'code': code,
-        'state': state,
-      },
-      errors: {
-        400: `Bad Request`,
-        500: `Internal Server Error`,
-      },
-    });
-  }
-
-  /**
-   * Log in via OAuth
-   * @returns OauthLoginResponse OAuth login URL
-   * @throws ApiError
-   */
   public static getLoginOauth({
     provider,
     redirectUrl,
@@ -123,7 +72,33 @@ export class AuthService {
   }): CancelablePromise<Session> {
     return __request(OpenAPI, {
       method: 'GET',
-      url: '/api/auth/login/oauth/callback',
+      url: '/api/auth/login/github/callback',
+      query: {
+        'code': code,
+        'state': state,
+      },
+      errors: {
+        400: `Bad Request`,
+        500: `Internal Server Error`,
+      },
+    });
+  }
+
+  /**
+   * Log in via OAuth callback
+   * @returns Session Successful OAuth login - session
+   * @throws ApiError
+   */
+  public static getLoginOauthCallback1({
+    code,
+    state,
+  }: {
+    code: string,
+    state: string,
+  }): CancelablePromise<Session> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/api/auth/login/google/callback',
       query: {
         'code': code,
         'state': state,

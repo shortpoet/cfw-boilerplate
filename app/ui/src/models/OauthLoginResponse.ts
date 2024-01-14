@@ -4,6 +4,6 @@
 /* eslint-disable */
 
 /**
- * OAuth login URL
+ * OAuth redirect HTML
  */
 export type OauthLoginResponse = string;

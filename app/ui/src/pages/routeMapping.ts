@@ -68,20 +68,15 @@ export const ROUTE_MAPPING: RouteMapping = {
     "title": "Log in via OAuth callback",
     "path": "/api-data/auth-login-google-callback"
   },
-  "/api-data/auth-login-google": {
-    "endpoint": "api/auth/login/google",
-    "title": "Log in via OAuth",
-    "path": "/api-data/auth-login-google"
-  },
   "/api-data/auth-login-github-callback": {
     "endpoint": "api/auth/login/github/callback",
     "title": "Log in via OAuth callback",
     "path": "/api-data/auth-login-github-callback"
   },
-  "/api-data/auth-login-github": {
-    "endpoint": "api/auth/login/github",
+  "/api-data/auth-login-oauth": {
+    "endpoint": "api/auth/login/oauth",
     "title": "Log in via OAuth",
-    "path": "/api-data/auth-login-github"
+    "path": "/api-data/auth-login-oauth"
   },
   "/api-data/auth-login-password": {
     "endpoint": "api/auth/login/password",
