@@ -15,7 +15,12 @@
     </div>
 
     <div v-for="lt in loginTypes" :key="lt">
-      <slot :name="`login-${lt}`" :onLogin="onLogin" :isLoggedIn="isLoggedIn" />
+      <slot
+        :name="`login-${lt}`"
+        :onLogin="onLogin"
+        :isLoggedIn="isLoggedIn"
+        :onVerify="onVerify"
+      />
     </div>
     <!-- <div>
       <slot name="login-popup" :onLoginPopup="onLoginPopup" :isLoggedIn="isLoggedIn" />

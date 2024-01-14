@@ -28,6 +28,8 @@ defineProps({
 </template>
 
 <style>
+@import url('../../styles/page-shell.css');
+
 .modal-mask {
   position: fixed;
   z-index: 9998;

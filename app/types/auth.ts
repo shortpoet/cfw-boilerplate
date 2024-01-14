@@ -65,7 +65,7 @@ export type AuthLoginUsernameBody = z.infer<typeof AuthLoginUsernameBodySchema>
 export const AuthLoginBodySchema = z.union([AuthLoginEmailBodySchema, AuthLoginUsernameBodySchema])
 export type AuthLoginBody = z.infer<typeof AuthLoginBodySchema>
 
-export const LoginOptionsTypesEnum = z.enum(['email', 'username', 'register', 'oauth'])
+export const LoginOptionsTypesEnum = z.enum(['email', 'username', 'register', 'oauth', 'verify'])
 export type LoginOptionsTypes = z.infer<typeof LoginOptionsTypesEnum>
 export const OauthProvidersEnum = z.enum(['github', 'google', 'twitter', 'facebook', 'linkedin'])
 export type OauthProviders = z.infer<typeof OauthProvidersEnum>

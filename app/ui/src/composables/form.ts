@@ -47,5 +47,7 @@ export const getLogsterForm = (type: LoginOptionsTypes): FormInput<LoginForm>[] 
       return [base, username, password]
     case LoginOptionsTypesEnum.Enum.oauth:
       return [base, provider]
+    case LoginOptionsTypesEnum.Enum.verify:
+      return [base, email]
   }
 }
