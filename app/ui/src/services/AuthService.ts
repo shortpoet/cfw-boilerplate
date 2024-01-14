@@ -148,6 +148,29 @@ export class AuthService {
   }
 
   /**
+   * Verify email with token
+   * @returns Session Successful email verification
+   * @throws ApiError
+   */
+  public static postVerificationTokenPost({
+    token,
+  }: {
+    token: string,
+  }): CancelablePromise<Session> {
+    return __request(OpenAPI, {
+      method: 'POST',
+      url: '/api/auth/verify/token',
+      query: {
+        'token': token,
+      },
+      errors: {
+        400: `Bad Request`,
+        500: `Internal Server Error`,
+      },
+    });
+  }
+
+  /**
    * Fetch a user session
    * @returns Session Logged in User Session
    * @throws ApiError

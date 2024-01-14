@@ -36,6 +36,13 @@ export const getLogsterForm = (type: LoginOptionsTypes): FormInput<LoginForm>[] 
     key: 'provider',
     required: false
   }
+  const code: FormInput<LoginForm> = {
+    type: 'text',
+    value: '',
+    placeholder: 'Verification code',
+    key: 'verificationCode',
+    required: true
+  }
   // console.log(`[ui] [composables] [form] [getLogsterForm] type: ${type}`)
 
   switch (type) {
@@ -47,7 +54,9 @@ export const getLogsterForm = (type: LoginOptionsTypes): FormInput<LoginForm>[] 
       return [base, username, password]
     case LoginOptionsTypesEnum.Enum.oauth:
       return [base, provider]
-    case LoginOptionsTypesEnum.Enum.verify:
+    case LoginOptionsTypesEnum.Enum.verify_email:
       return [base, email]
+    case LoginOptionsTypesEnum.Enum.verify_code:
+      return [base, code]
   }
 }

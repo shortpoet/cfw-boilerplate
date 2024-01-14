@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div flex flex-row @click="toggleForm">
+    <div flex flex-row @click="toggleForm" v-if="isToggleable">
       <div :class="formContainerClass" />
       <span class="form-title">Show {{ title }}</span>
     </div>
@@ -80,25 +80,6 @@
 <script setup lang="ts" generic="T">
 import { FormEmitValue, FormInput } from '#/types'
 
-const showForm = ref(false)
-
-const toggleForm = () => {
-  showForm.value = !showForm.value
-}
-
-const formContainerClass = computed(() => ({
-  'i-carbon-caret-down form-icon': !showForm.value,
-  'i-carbon-caret-up form-icon': showForm.value
-}))
-
-const formDisplayClass = computed(() => {
-  return {
-    hidden: !showForm.value
-  }
-})
-
-const { vValidate, errors } = useValidation()
-
 const emit = defineEmits<{
   (event: 'submit', value: FormEmitValue<T>): void
 }>()
@@ -108,6 +89,12 @@ const props = defineProps({
     required: true,
     default() {
       return [] as FormInput<T>[]
+    }
+  },
+  isToggleable: {
+    required: false,
+    default() {
+      return true
     }
   },
   title: {
@@ -132,6 +119,25 @@ const props = defineProps({
     }
   }
 })
+const showForm = ref(!props.hidden)
+if (!props.isToggleable) showForm.value = true
+
+const toggleForm = () => {
+  showForm.value = !showForm.value
+}
+
+const formContainerClass = computed(() => ({
+  'i-carbon-caret-down form-icon': !showForm.value,
+  'i-carbon-caret-up form-icon': showForm.value
+}))
+
+const formDisplayClass = computed(() => {
+  return {
+    hidden: !showForm.value
+  }
+})
+
+const { vValidate, errors } = useValidation()
 
 const inputs = ref(props.inputs)
 console.log(`[FormGeneric] inputs ${JSON.stringify(inputs.value)}`)

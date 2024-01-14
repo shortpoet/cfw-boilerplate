@@ -58,6 +58,11 @@ export const ROUTE_MAPPING: RouteMapping = {
     "title": "Fetch a user session",
     "path": "/api-data/auth-session"
   },
+  "/api-data/auth-verify-token": {
+    "endpoint": "api/auth/verify/token",
+    "title": "Verify email with token",
+    "path": "/api-data/auth-verify-token"
+  },
   "/api-data/auth-verify-email": {
     "endpoint": "api/auth/verify/email",
     "title": "Request a verification token",
