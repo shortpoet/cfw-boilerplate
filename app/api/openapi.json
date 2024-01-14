@@ -743,16 +743,16 @@
         "tags": [
           "Auth"
         ],
-        "summary": "Verify email with token",
+        "summary": "Verify email with code",
         "operationId": "post_VerificationTokenPost",
         "parameters": [
           {
             "schema": {
               "type": "string",
-              "description": "Verification token"
+              "description": "Verification code"
             },
             "required": true,
-            "name": "token",
+            "name": "code",
             "in": "query"
           }
         ],
