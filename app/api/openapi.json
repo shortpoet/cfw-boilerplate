@@ -738,6 +738,58 @@
         }
       }
     },
+    "/api/auth/verify/token": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Verify email with token",
+        "operationId": "post_VerificationTokenPost",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "description": "Verification token"
+            },
+            "required": true,
+            "name": "token",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful email verification",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/auth/session": {
       "get": {
         "tags": [
