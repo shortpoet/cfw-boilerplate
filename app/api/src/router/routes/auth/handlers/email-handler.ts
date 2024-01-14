@@ -1,12 +1,19 @@
-import { jsonOkResponse, notFoundResponse, serverErrorResponse } from '#/api/src/middleware'
+import {
+  createAuth,
+  getBaseUrl,
+  jsonOkResponse,
+  notFoundResponse,
+  serverErrorResponse
+} from '#/api/src/middleware'
 import { OpenAPIRoute } from '@cloudflare/itty-router-openapi'
 import { LuciaError } from 'lucia'
-import { AuthVerifyTokenRequestSchema } from '../auth-schema'
-import { generateRandomString } from 'lucia/utils'
+import { AuthVerifyTokenRequestSchema, AuthVerifyTokenSubmitSchema } from '../auth-schema'
+import { generateRandomString, isWithinExpiration } from 'lucia/utils'
 import { getSession } from './session-handler'
 import { redirectResponse } from '#/api/src/middleware/redirect'
-import { q } from '#/api/db'
+import { q, VerificationCodeSchema } from '#/api/db'
 import { sendMail } from './jmap'
+import { ZodError } from 'zod'
 
 const getMagicLinkBody = (recipient: string, url: string) => `
 <p>Hi, ${recipient}!</p>
@@ -114,6 +121,98 @@ export class VerificationTokenGet extends OpenAPIRoute {
       if (error instanceof LuciaError) {
         console.error(error)
         return notFoundResponse('Token Error', error, res)
+      }
+      return serverErrorResponse('Error getting session', error, res)
+    }
+  }
+}
+
+export class VerificationTokenPost extends OpenAPIRoute {
+  static schema = AuthVerifyTokenSubmitSchema
+  async handle(req: Request, res: Response, env: Env, ctx: ExecutionContext, data: any) {
+    try {
+      const verificationTimeout = new Map<
+        string,
+        {
+          timeoutUntil: number
+          timeoutSeconds: number
+        }
+      >()
+      const session = await getSession(req, env)
+
+      // prevent brute force by throttling requests
+      const storedTimeout = verificationTimeout.get(session.user.userId) ?? null
+      if (!storedTimeout) {
+        // first attempt - setup throttling
+        verificationTimeout.set(session.user.userId, {
+          timeoutUntil: Date.now(),
+          timeoutSeconds: 1
+        })
+      } else {
+        // subsequent attempts
+        if (!isWithinExpiration(storedTimeout.timeoutUntil)) {
+          throw new Error('Too many requests')
+        }
+        const timeoutSeconds = storedTimeout.timeoutSeconds * 2
+        verificationTimeout.set(session.user.userId, {
+          timeoutUntil: Date.now() + timeoutSeconds * 1000,
+          timeoutSeconds
+        })
+      }
+      const { query } = data
+      const code = query.token
+
+      const storedVerificationCode = async () => {
+        const res =
+          env.NODE_ENV === 'development'
+            ? await q.getVerificationCodeLocal(code)
+            : await q.getVerificationCode(code)
+        const result = VerificationCodeSchema.safeParse(res)
+        if (!result.success || !result.data || result.data.code !== code) {
+          throw new Error('Invalid verification code')
+        }
+        env.NODE_ENV === 'development'
+          ? await q.deleteVerificationCodeLocal(session.user.userId)
+          : await q.deleteVerificationCode(session.user.userId)
+        return result.data
+      }
+      const storedVerificationCodeResult = await storedVerificationCode()
+      if (!isWithinExpiration(storedVerificationCodeResult.expires)) {
+        // optionally send a new code instead of an error
+        throw new Error('Expired verification code')
+      }
+
+      if (storedTimeout) verificationTimeout.delete(session.user.userId)
+      const { auth } = await createAuth(env)
+
+      let user = await auth.getUser(storedVerificationCodeResult.user_id)
+
+      await auth.invalidateAllUserSessions(user.userId) // important!
+
+      user = await auth.updateUserAttributes(user.userId, {
+        email_verified: true // verify email
+      })
+
+      const newSession = await auth.createSession({
+        userId: user.userId,
+        sessionId: await res.cryptoSign(generateRandomString(40)),
+        attributes: {}
+      })
+
+      const sessionCookie = auth.createSessionCookie(newSession).serialize()
+      const { baseUrlApp } = getBaseUrl(env)
+      const dataPage = new URL(`${baseUrlApp}/api-data`).href
+      // await res.cookie(req, res, env, LUCIA_AUTH_COOKIES_SESSION_TOKEN, sessionCookie)
+      res.headers.set('Set-Cookie', sessionCookie)
+      return jsonOkResponse(dataPage, res)
+    } catch (error) {
+      console.error(error)
+      if (error instanceof LuciaError) {
+        console.error(error)
+        return notFoundResponse('Token Error', error, res)
+      }
+      if (error instanceof ZodError) {
+        return new Response(JSON.stringify(error), { status: 400 })
       }
       return serverErrorResponse('Error getting session', error, res)
     }

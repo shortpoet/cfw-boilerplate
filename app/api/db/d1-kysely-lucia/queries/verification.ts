@@ -30,3 +30,13 @@ export async function createVerificationCodeLocal(
     [code, userId, expires]
   )
 }
+
+export async function getVerificationCode(code: string) {
+  let db = await getKysely()
+  const result = await db.selectFrom('VerificationCode').where('code', '=', code).execute()
+  return result[0]
+}
+
+export async function getVerificationCodeLocal(code: string) {
+  return await querySqliteDatabaseParams('SELECT * FROM verification_code WHERE code = ?', [code])
+}

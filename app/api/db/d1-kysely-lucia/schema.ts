@@ -1,6 +1,7 @@
 import { UserRole } from '#/types'
 import { Generated, GeneratedAlways, Insertable, Selectable, Updateable } from 'kysely'
 import { Lucia } from '#/bindings'
+import { z } from 'zod'
 
 type AccountId = string
 type UserId = string
@@ -12,7 +13,6 @@ export type UpdateUser = Updateable<CFWDatabase['User']>
 export type InsertUser = Insertable<CFWDatabase['User']>
 
 export type SelectSession = Selectable<CFWDatabase['UserSession']>
-
 export interface CFWDatabase {
   User: {
     id: GeneratedAlways<string>
@@ -52,3 +52,10 @@ export interface CFWDatabase {
   //   value: Buffer | null;
   // };
 }
+
+export const VerificationCodeSchema = z.object({
+  id: z.string(),
+  user_id: z.string(),
+  code: z.string(),
+  expires: z.number()
+})

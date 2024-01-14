@@ -213,9 +213,9 @@ export const AuthVerifyTokenRequestSchema = {
   }
 }
 
-export const AuthVerifyEmailSchema = {
+export const AuthVerifyTokenSubmitSchema = {
   tags: ['Auth'],
-  summary: 'Verify email',
+  summary: 'Verify email with token',
   parameters: {
     token: Query(Str, {
       description: 'Verification token'
