@@ -205,10 +205,9 @@ export class VerificationTokenGet extends OpenAPIRoute {
 
       const sessionCookie = auth.createSessionCookie(newSession).serialize()
       const { baseUrlApp } = getBaseUrl(env)
-      const dataPage = new URL(`${baseUrlApp}/api-data`).href
       // await res.cookie(req, res, env, LUCIA_AUTH_COOKIES_SESSION_TOKEN, sessionCookie)
       res.headers.set('Set-Cookie', sessionCookie)
-      return jsonOkResponse(dataPage, res)
+      return jsonOkResponse(newSession, res)
     } catch (error) {
       console.error(error)
       if (error instanceof LuciaError) {

@@ -50,6 +50,8 @@
       </FormGeneric>
       <div class="verify-email-message">{{ verifyEmailMessage }}</div>
       <div class="verify-form-divider" />
+      <div class="verify-code-message">{{ verifyCodeMessage }}</div>
+
       <FormGeneric
         :inputs="getLogsterForm('verify_code')"
         :onSubmit="onVerifyCode"
@@ -87,6 +89,7 @@ let onVerifyEmail = (event: any) => {
   console.log(`[ui] [auth} [validate] [onVerifyEmail] ${event}`)
 }
 const verifyEmailMessage = ref('')
+const verifyCodeMessage = ref('')
 let onVerifyCode = (event: any) => {
   console.log(`[ui] [auth} [validate] [verifyEmailMessage] ${event}`)
 }
@@ -112,7 +115,10 @@ if (typeof window !== 'undefined') {
   onVerifyCode = async (event: LoginFormEvent) => {
     authLoading.value = true
     try {
-      await verifyCode(event.form)
+      const res = await verifyCode(event.form)
+      console.log(`[ui] [auth} [validate] [onVerifyCode] res -> `)
+      console.log(res)
+      verifyCodeMessage.value = `Verified new session for ${res?.user.username}`
     } catch (error) {
       authError.value = error
     }

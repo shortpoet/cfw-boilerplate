@@ -156,7 +156,7 @@ export interface AuthInstance {
   setLoggedIn: (loggedIn: boolean) => void
   setCurrentUser: (user: User | undefined) => void
   verifyEmail(options: LoginFormEvent['form']): Promise<VerifyEmailResponse | undefined>
-  verifyCode(options: LoginFormEvent['form']): Promise<void>
+  verifyCode(options: LoginFormEvent['form']): Promise<Session | undefined>
   setAccessToken?: (token: string) => void
   setNonce?: (nonce: string) => void
   setAuthState?: (state: string) => void

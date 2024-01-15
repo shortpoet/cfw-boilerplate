@@ -57,7 +57,7 @@ export const provideLuciaAuth = () => {
     loginOauth: async () => {},
     register: async () => {},
     verifyEmail: async () => undefined,
-    verifyCode: async () => {},
+    verifyCode: async () => undefined,
     logout: async () => {},
     setSession: async () => ({}) as Session,
     setSessionAuthStore: async () => {},
@@ -309,15 +309,15 @@ const useLuciaAuth = () => {
       return
     }
     auth.authLoading.value = dataLoading.value
-    const success = LoginRedirectResponseSchema.safeParse(data.value)
+    const success = SessionSchema.safeParse(data.value)
     if (!success.success) {
       logger.error(`[ui] [useAuth] [verifyCode] -> success.error:`)
       logger.error(success.error)
       auth.authError.value = success.error
       return
     }
-    // auth.setSession(success.data)
-    window.location.replace(success.data)
+    auth.setSession(success.data)
+    return success.data
   }
 
   const logout = async () => {
