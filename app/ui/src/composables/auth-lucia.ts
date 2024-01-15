@@ -15,7 +15,8 @@ import {
   LoginFormEvent,
   VerifyEmailSchema,
   VerifyCodeSchema,
-  VerifySchema
+  VerifySchema,
+  VerifyEmailResponseSchema
 } from '#/types'
 import { storeToRefs } from 'pinia'
 import { ApiError, AuthLoginResponse, AuthService } from '..'
@@ -55,7 +56,7 @@ export const provideLuciaAuth = () => {
     login: async () => {},
     loginOauth: async () => {},
     register: async () => {},
-    verifyEmail: async () => {},
+    verifyEmail: async () => undefined,
     verifyCode: async () => {},
     logout: async () => {},
     setSession: async () => ({}) as Session,
@@ -130,8 +131,8 @@ const useLuciaAuth = () => {
   const { logger, correlationId } = useSsrLogger()
 
   const setSession = async (_session?: Session | string): Promise<Session | undefined> => {
-    console.log(`[ui] [useAuth] [setSession] -> _session ->`)
-    console.log(_session)
+    // console.log(`[ui] [useAuth] [setSession] -> _session ->`)
+    // console.log(_session)
     if (!_session) {
       console.log(`[ui] [useAuth] [setSession] -> no session setting authStore to default`)
       authStore.clearState()
@@ -143,6 +144,9 @@ const useLuciaAuth = () => {
       // session = await useSession(_session)
       // override annoying/expensive useSession() call - could be problematic
       session = authStore.session
+    } else {
+      // console.log(`[ui] [useAuth] [setSession] -> _session is object`)
+      session = _session
     }
     if (!session) return
     console.log(`[ui] [useAuth] [setSession] -> session ->`)
@@ -276,14 +280,14 @@ const useLuciaAuth = () => {
       return
     }
     auth.authLoading.value = dataLoading.value
-    const success = LoginRedirectResponseSchema.safeParse(data.value)
+    const success = VerifyEmailResponseSchema.safeParse(data.value)
     if (!success.success) {
       logger.error(`[ui] [useAuth] [verifyEmail] -> success.error:`)
       logger.error(success.error)
       auth.authError.value = success.error
       return
     }
-    auth.setSession(success.data)
+    return success.data
   }
   const verifyCode = async (opts: LoginFormEvent['form']) => {
     logger.info(`[ui] [useAuth] [verifyCode] -> correlationId: ${correlationId}`)

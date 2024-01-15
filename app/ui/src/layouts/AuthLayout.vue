@@ -83,6 +83,7 @@ onMounted(async () => {
     // console.log('[ui] [AuthLayout] [onMounted] authStore.session -> ', authStore.session)
     authStore.setSession(session.value)
     auth.setSession(session.value)
+    console.log('[ui] [AuthLayout] [onMounted] authStore.isLoggedIn -> ', authStore.isLoggedIn)
   }
   await onLoad()
   authLoading.value = auth.authLoading.value

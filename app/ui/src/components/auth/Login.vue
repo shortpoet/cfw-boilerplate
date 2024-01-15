@@ -15,12 +15,7 @@
     </div>
 
     <div v-for="lt in loginTypes" :key="lt">
-      <slot
-        :name="`login-${lt}`"
-        :onLogin="onLogin"
-        :isLoggedIn="isLoggedIn"
-        :onVerify="onVerify"
-      />
+      <slot :name="`login-${lt}`" :onLogin="onLogin" :isLoggedIn="isLoggedIn" />
     </div>
     <!-- <div>
       <slot name="login-popup" :onLoginPopup="onLoginPopup" :isLoggedIn="isLoggedIn" />
@@ -65,9 +60,6 @@ let onLogout = ref((event: any) => {
 let onLoginPopup = ref((event: any) => {
   console.log(`[ui] [login.component] login popup ${event}`)
 })
-let onVerify = ref((event: any) => {
-  console.log(`[ui] [login.component] verify ${event}`)
-})
 
 let user = ref<User>()
 let storeSession = ref<Session>()
@@ -90,7 +82,7 @@ if (typeof window !== 'undefined') {
   //   "[ui] [login.component] typeof window !== 'undefined' -> can now load things that would break SSR"
   // )
   const auth = useLuciaAuth()
-  const { login, logout, loginOauth, register, verifyEmail, verifyCode } = auth
+  const { login, logout, loginOauth, register } = auth
   ;({ authError, isLoggedIn } = auth)
   // console.log(`[ui] [login.component] authError ${authError.value}`)
   user = auth.user || user
@@ -103,15 +95,6 @@ if (typeof window !== 'undefined') {
 
   storeSession.value = authStore.session || storeSession.value
 
-  onVerify.value = async (event: any) => {
-    console.log('[ui] [login.component] onVerify')
-    console.log(event)
-    if (event.form.type === 'verify_email') {
-      await verifyEmail(event.form)
-    } else if (event.form.type === 'verify_code') {
-      await verifyCode(event.form)
-    }
-  }
   onLogin.value = async (event: LoginFormEvent) => {
     console.log('[ui] [login.component] onLogin')
     console.log(event)

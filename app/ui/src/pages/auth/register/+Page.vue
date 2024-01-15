@@ -28,66 +28,6 @@
           <template #submit-button>
             <div flex flex-col class="register-form-submit-controls">
               <div flex flex-row class="register-form-submit-buttons">
-                <TeleModal>
-                  <template #trigger>
-                    <button
-                      type="button"
-                      class="btn-main m-2 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-                      id="verify-button-modal"
-                      :disabled="loginProps.isLoggedIn"
-                    >
-                      <i class="i-carbon-login" inline-block /> Verify
-                    </button>
-                  </template>
-                  <template #body>
-                    <FormGeneric
-                      :inputs="getLogsterForm('verify_email')"
-                      :onSubmit="runCallback(loginProps.onVerify)"
-                      :title="'Verify Email'"
-                      :isToggleable="false"
-                      p-2
-                      text-black
-                    >
-                      <template #submit-button>
-                        <div flex flex-col class="verify-form-submit-controls">
-                          <div flex flex-row class="verify-form-submit-buttons">
-                            <button
-                              type="submit"
-                              class="btn-main m-2 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-                              id="verify-button-submit"
-                              :disabled="loginProps.isLoggedIn"
-                            >
-                              <i class="i-carbon-login" inline-block /> Get code
-                            </button>
-                          </div>
-                        </div>
-                      </template>
-                    </FormGeneric>
-                    <FormGeneric
-                      :inputs="getLogsterForm('verify_code')"
-                      :onSubmit="runCallback(loginProps.onVerify)"
-                      :title="'Verify Code'"
-                      :isToggleable="false"
-                      p-2
-                      text-black
-                    >
-                      <template #submit-button>
-                        <div flex flex-col class="verify-form-submit-controls">
-                          <div flex flex-row class="verify-form-submit-buttons">
-                            <button
-                              type="submit"
-                              class="btn-main m-2 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-                              id="verify-button-submit"
-                              :disabled="loginProps.isLoggedIn"
-                            >
-                              <i class="i-carbon-login" inline-block /> Verify code
-                            </button>
-                          </div>
-                        </div>
-                      </template>
-                    </FormGeneric>
-                  </template>
-                </TeleModal>
                 <button
                   type="submit"
                   class="btn-main m-2 text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"

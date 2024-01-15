@@ -42,6 +42,13 @@ export const SessionSchema = z.object({
 })
 export type Session = z.infer<typeof SessionSchema>
 
+export const VerificationCodeTableSchema = z.object({
+  user_id: z.string(),
+  code: z.string(),
+  expires: z.number()
+})
+export type VerificationCodeTable = z.infer<typeof VerificationCodeTableSchema>
+
 export const AuthRegisterBodySchema = z.object({
   //TODO: use Regex here
   username: z.string({ required_error: 'username is required' }).min(3).max(20),
@@ -91,6 +98,12 @@ export type LoginProviderResponse = z.infer<typeof LoginRedirectResponseSchema>
 
 export const LoginHTMLResponseSchema = z.string()
 export type LoginHTMLResponse = z.infer<typeof LoginHTMLResponseSchema>
+
+export const VerifyEmailResponseSchema = z.object({
+  timeSent: z.string({ description: 'Time verification email was sent' }),
+  expiration: z.string({ description: 'Time verification code expires' })
+})
+export type VerifyEmailResponse = z.infer<typeof VerifyEmailResponseSchema>
 
 /* Client */
 
@@ -142,7 +155,7 @@ export interface AuthInstance {
   setSessionToken: (token: string) => void
   setLoggedIn: (loggedIn: boolean) => void
   setCurrentUser: (user: User | undefined) => void
-  verifyEmail(options: LoginFormEvent['form']): Promise<void>
+  verifyEmail(options: LoginFormEvent['form']): Promise<VerifyEmailResponse | undefined>
   verifyCode(options: LoginFormEvent['form']): Promise<void>
   setAccessToken?: (token: string) => void
   setNonce?: (nonce: string) => void

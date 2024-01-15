@@ -5,7 +5,8 @@ import {
   AuthRegisterBody,
   LoginOauthOptions,
   Session,
-  User
+  User,
+  VerifyEmailResponse
 } from './auth'
 import { LoginFormEvent } from './ui'
 
@@ -55,7 +56,7 @@ interface LuciaAuthInstance extends AuthInstance {
   setSessionToken: (token: string) => void
   setLoggedIn: (loggedIn: boolean) => void
   setCurrentUser: (user: User | undefined) => void
-  verifyEmail(options: LoginFormEvent['form']): Promise<void>
+  verifyEmail(options: LoginFormEvent['form']): Promise<VerifyEmailResponse | undefined>
   verifyCode(options: LoginFormEvent['form']): Promise<void>
   setAccessToken?: (token: string) => void
   setNonce?: (nonce: string) => void

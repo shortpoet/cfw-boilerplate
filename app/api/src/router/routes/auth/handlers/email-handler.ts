@@ -11,9 +11,10 @@ import { AuthVerifyEmailRequestSchema, AuthVerifyTokenSubmitSchema } from '../au
 import { generateRandomString, isWithinExpiration } from 'lucia/utils'
 import { getSession } from './session-handler'
 import { redirectResponse } from '#/api/src/middleware/redirect'
-import { q, VerificationCodeSchema } from '#/api/db'
+import { q } from '#/api/db'
 import { sendMail } from './jmap'
 import { ZodError } from 'zod'
+import { VerificationCodeTableSchema } from '#/types'
 
 const getMagicLinkBody = (recipient: string, url: string) => `
 <p>Hi, ${recipient}!</p>
@@ -73,9 +74,11 @@ async function sendVerificationRequest({
 
 export class VerificationEmailGet extends OpenAPIRoute {
   static schema = AuthVerifyEmailRequestSchema
+  static readonly VERIFICATION_TOKEN_EXPIRATION = 1000 * 60 * 5 // 5 minutes
 
   async handle(req: Request, res: Response, env: Env, ctx: ExecutionContext) {
     try {
+      const expiry = Date.now() + VerificationEmailGet.VERIFICATION_TOKEN_EXPIRATION
       const reqUrl = new URL(req.url).href
       const session = await getSession(req, env)
       if (!session) {
@@ -99,12 +102,8 @@ export class VerificationEmailGet extends OpenAPIRoute {
 
       const created =
         env.NODE_ENV === 'development'
-          ? await q.createVerificationCodeLocal(
-              code,
-              session.user.userId,
-              Date.now() + 1000 * 60 * 5
-            )
-          : await q.createVerificationCode(code, session.user.userId, Date.now() + 1000 * 60 * 5)
+          ? await q.createVerificationCodeLocal(code, session.user.userId, expiry)
+          : await q.createVerificationCode(code, session.user.userId, expiry)
 
       if (!created || !deleted) {
         return serverErrorResponse('Error creating verification code', undefined, res)
@@ -115,7 +114,7 @@ export class VerificationEmailGet extends OpenAPIRoute {
         email: session.user.email,
         code
       })
-      return jsonOkResponse({ timeSent })
+      return jsonOkResponse({ timeSent, expiry })
     } catch (error) {
       console.error(error)
       if (error instanceof LuciaError) {
@@ -167,7 +166,7 @@ export class VerificationTokenGet extends OpenAPIRoute {
             : await q.getVerificationCode(code)
         console.log('res')
         console.log(res)
-        const result = VerificationCodeSchema.safeParse(res)
+        const result = VerificationCodeTableSchema.safeParse(res)
         console.log('result')
         console.log(result)
         if (!result.success || !result.data || result.data.code !== code) {

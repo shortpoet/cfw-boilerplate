@@ -52,9 +52,3 @@ export interface CFWDatabase {
   //   value: Buffer | null;
   // };
 }
-
-export const VerificationCodeSchema = z.object({
-  user_id: z.string(),
-  code: z.string(),
-  expires: z.number()
-})

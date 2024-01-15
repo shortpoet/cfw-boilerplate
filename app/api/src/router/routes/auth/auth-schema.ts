@@ -10,7 +10,8 @@ import {
   OauthLoginResponseSchema,
   LoginRedirectResponseSchema,
   SessionSchema,
-  UserSchema
+  UserSchema,
+  VerifyEmailResponseSchema
 } from '#/types'
 
 export const UserComponent = UserSchema.openapi('User')
@@ -25,6 +26,8 @@ export const AuthLoginUsernameBodyComponent =
 export const AuthLoginBodyComponent = AuthLoginBodySchema.openapi('AuthLoginBody')
 
 export const OauthLoginResponseComponent = OauthLoginResponseSchema.openapi('OauthLoginResponse')
+
+export const VerifyEmailResponseComponent = VerifyEmailResponseSchema.openapi('VerifyEmailResponse')
 
 enum ServerMessages {
   UserNotFound = 'User not found',
@@ -210,6 +213,20 @@ export const AuthVerifyEmailRequestSchema = {
     email: Query(Str, {
       description: 'Email address'
     })
+  },
+  responses: {
+    '200': {
+      description: 'Successful email verification',
+      schema: VerifyEmailResponseComponent
+    },
+    '400': {
+      description: 'Bad Request',
+      schema: ApiErrorResponseComponent
+    },
+    '500': {
+      description: 'Internal Server Error',
+      schema: ApiErrorResponseComponent
+    }
   }
 }
 
