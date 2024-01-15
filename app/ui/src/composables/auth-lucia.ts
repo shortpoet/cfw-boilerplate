@@ -316,7 +316,8 @@ const useLuciaAuth = () => {
       auth.authError.value = success.error
       return
     }
-    auth.setSession(success.data)
+    // auth.setSession(success.data)
+    window.location.replace(success.data)
   }
 
   const logout = async () => {
