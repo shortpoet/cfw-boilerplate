@@ -203,7 +203,7 @@ export const AuthLoginOauthCallbackSchema = {
   }
 }
 
-export const AuthVerifyTokenRequestSchema = {
+export const AuthVerifyEmailRequestSchema = {
   tags: ['Auth'],
   summary: 'Request a verification token',
   parameters: {

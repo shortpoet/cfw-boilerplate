@@ -148,20 +148,20 @@ export class AuthService {
   }
 
   /**
-   * Verify email with token
+   * Verify email with code
    * @returns Session Successful email verification
    * @throws ApiError
    */
   public static postVerificationTokenPost({
-    token,
+    code,
   }: {
-    token: string,
+    code: string,
   }): CancelablePromise<Session> {
     return __request(OpenAPI, {
       method: 'POST',
       url: '/api/auth/verify/token',
       query: {
-        'token': token,
+        'code': code,
       },
       errors: {
         400: `Bad Request`,

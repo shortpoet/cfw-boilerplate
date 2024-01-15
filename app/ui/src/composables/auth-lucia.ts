@@ -55,7 +55,8 @@ export const provideLuciaAuth = () => {
     login: async () => {},
     loginOauth: async () => {},
     register: async () => {},
-    verify: async () => {},
+    verifyEmail: async () => {},
+    verifyCode: async () => {},
     logout: async () => {},
     setSession: async () => ({}) as Session,
     setSessionAuthStore: async () => {},
@@ -255,41 +256,58 @@ const useLuciaAuth = () => {
     auth.setSession(success.data)
   }
 
-  const verify = async (opts: LoginFormEvent['form']) => {
-    logger.info(`[ui] [useAuth] [verify] -> correlationId: ${correlationId}`)
-    console.log(`[ui] [useAuth] [verify] -> opts:`)
+  const verifyEmail = async (opts: LoginFormEvent['form']) => {
+    logger.info(`[ui] [useAuth] [verifyEmail] -> correlationId: ${correlationId}`)
+    console.log(`[ui] [useAuth] [verifyEmail] -> opts:`)
     console.log(opts)
-    const verifyOpts = VerifySchema.safeParse(opts)
-    if (!verifyOpts.success) {
-      console.error(`[ui] [useAuth] [verify] -> invalid login options`)
-      console.error(verifyOpts.error)
+    const _email = VerifyEmailSchema.safeParse(opts)
+    if (!_email.success) {
+      console.error(`[ui] [useAuth] [verifyEmail] -> invalid login options`)
+      console.error(_email.error)
       return
     }
-    let data = ref<any>()
-    let dataLoading = ref(true)
-    let error = ref<any>()
-    if ('email' in verifyOpts.data) {
-      const { email } = verifyOpts.data
-      ;({ data, dataLoading, error } = await useService<any>(
-        AuthService.getVerificationTokenGet({ email })
-      ))
-    }
-    if ('code' in verifyOpts.data) {
-      const { code } = verifyOpts.data
-      ;({ data, dataLoading, error } = await useService<any>(
-        AuthService.postVerificationTokenPost({ code })
-      ))
-    }
+    const { data, dataLoading, error } = await useService<any>(
+      AuthService.getVerificationTokenGet({ email: _email.data.email })
+    )
     auth.authError.value = error.value
     if (auth.authError.value || !data.value) {
-      logger.error(`[ui] [useAuth] [verify] -> auth.authError.value:`)
+      logger.error(`[ui] [useAuth] [verifyEmail] -> auth.authError.value:`)
       logger.error(auth.authError.value)
       return
     }
     auth.authLoading.value = dataLoading.value
     const success = LoginRedirectResponseSchema.safeParse(data.value)
     if (!success.success) {
-      logger.error(`[ui] [useAuth] [verify] -> success.error:`)
+      logger.error(`[ui] [useAuth] [verifyEmail] -> success.error:`)
+      logger.error(success.error)
+      auth.authError.value = success.error
+      return
+    }
+    auth.setSession(success.data)
+  }
+  const verifyCode = async (opts: LoginFormEvent['form']) => {
+    logger.info(`[ui] [useAuth] [verifyCode] -> correlationId: ${correlationId}`)
+    console.log(`[ui] [useAuth] [verifyCode] -> opts:`)
+    console.log(opts)
+    const _code = VerifyCodeSchema.safeParse(opts)
+    if (!_code.success) {
+      console.error(`[ui] [useAuth] [verifyCode] -> invalid login options`)
+      console.error(_code.error)
+      return
+    }
+    const { data, dataLoading, error } = await useService<any>(
+      AuthService.postVerificationTokenPost({ code: _code.data.code.toString() })
+    )
+    auth.authError.value = error.value
+    if (auth.authError.value || !data.value) {
+      logger.error(`[ui] [useAuth] [verifyCode] -> auth.authError.value:`)
+      logger.error(auth.authError.value)
+      return
+    }
+    auth.authLoading.value = dataLoading.value
+    const success = LoginRedirectResponseSchema.safeParse(data.value)
+    if (!success.success) {
+      logger.error(`[ui] [useAuth] [verifyCode] -> success.error:`)
       logger.error(success.error)
       auth.authError.value = success.error
       return
@@ -315,7 +333,8 @@ const useLuciaAuth = () => {
   auth.login = login
   auth.loginOauth = loginOauth
   auth.register = register
-  auth.verify = verify
+  auth.verifyEmail = verifyEmail
+  auth.verifyCode = verifyCode
   auth.logout = logout
   auth.setSession = setSession
   return auth

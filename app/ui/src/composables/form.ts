@@ -40,7 +40,7 @@ export const getLogsterForm = (type: LoginOptionsTypes): FormInput<LoginForm>[] 
     type: 'number',
     value: '',
     placeholder: 'Verification code',
-    key: 'verificationCode',
+    key: 'code',
     required: true
   }
   // console.log(`[ui] [composables] [form] [getLogsterForm] type: ${type}`)

@@ -7,7 +7,7 @@ import {
 } from '#/api/src/middleware'
 import { OpenAPIRoute } from '@cloudflare/itty-router-openapi'
 import { LuciaError } from 'lucia'
-import { AuthVerifyTokenRequestSchema, AuthVerifyTokenSubmitSchema } from '../auth-schema'
+import { AuthVerifyEmailRequestSchema, AuthVerifyTokenSubmitSchema } from '../auth-schema'
 import { generateRandomString, isWithinExpiration } from 'lucia/utils'
 import { getSession } from './session-handler'
 import { redirectResponse } from '#/api/src/middleware/redirect'
@@ -71,8 +71,8 @@ async function sendVerificationRequest({
   return { timeSent }
 }
 
-export class VerificationTokenGet extends OpenAPIRoute {
-  static schema = AuthVerifyTokenRequestSchema
+export class VerificationEmailGet extends OpenAPIRoute {
+  static schema = AuthVerifyEmailRequestSchema
 
   async handle(req: Request, res: Response, env: Env, ctx: ExecutionContext) {
     try {
@@ -127,7 +127,7 @@ export class VerificationTokenGet extends OpenAPIRoute {
   }
 }
 
-export class VerificationTokenPost extends OpenAPIRoute {
+export class VerificationTokenGet extends OpenAPIRoute {
   static schema = AuthVerifyTokenSubmitSchema
   async handle(req: Request, res: Response, env: Env, ctx: ExecutionContext, data: any) {
     try {
@@ -159,9 +159,7 @@ export class VerificationTokenPost extends OpenAPIRoute {
           timeoutSeconds
         })
       }
-      const { query } = data
-      const code = query.token
-
+      const code = data.query.code
       const storedVerificationCode = async () => {
         const res =
           env.NODE_ENV === 'development'
