@@ -1,4 +1,17 @@
 <template>
+  <div v-if="authError">
+    <!-- <div>
+        <slot name="logout" :onLogout="onLogout" :isLoggedIn="isLoggedIn" />
+      </div> -->
+    <div flex flex-row @click="authError = false">
+      <div m-2 text-2xl text-red i-carbon-close />
+      <div class="text-red">{{ authError.name }}</div>
+    </div>
+    <div>
+      <JsonTree :data="authError" />
+    </div>
+  </div>
+
   <TeleModal>
     <template #trigger>
       <div v-if="!isLoggedIn">You must be logged in to verify</div>
@@ -35,6 +48,8 @@
           </div>
         </template>
       </FormGeneric>
+      <div class="verify-email-message">{{ verifyEmailMessage }}</div>
+      <div class="verify-form-divider" />
       <FormGeneric
         :inputs="getLogsterForm('verify_code')"
         :onSubmit="onVerifyCode"
@@ -63,37 +78,41 @@
 </template>
 
 <script setup lang="ts">
+import { LoginFormEvent } from '#/types'
+
 let authLoading = ref(false)
 let authError = ref()
 let isLoggedIn = ref(false)
 let onVerifyEmail = (event: any) => {
-  console.log(`[ui] [login.component] womp login ${event}`)
+  console.log(`[ui] [auth} [validate] [onVerifyEmail] ${event}`)
 }
+const verifyEmailMessage = ref('')
 let onVerifyCode = (event: any) => {
-  console.log(`[ui] [login.component] womp login ${event}`)
+  console.log(`[ui] [auth} [validate] [verifyEmailMessage] ${event}`)
 }
 
 if (typeof window !== 'undefined') {
   const auth = useLuciaAuth()
   const { verifyEmail, verifyCode } = auth
   ;({ authError, isLoggedIn } = auth)
-  onVerifyEmail = async (event: any) => {
-    event.preventDefault()
+  onVerifyEmail = async (event: LoginFormEvent) => {
     authLoading.value = true
-    const { email } = event.target.elements
+    console.log(`[ui] [auth} [validate] [onVerifyEmail] event`)
+    console.log(event)
     try {
-      await verifyEmail(email.value)
+      const res = await verifyEmail(event.form)
+      console.log(`[ui] [auth} [validate] [onVerifyEmail] res -> `)
+      console.log(res)
+      verifyEmailMessage.value = `Verification code sent to ${event.form.email} at ${res?.timeSent} expires at ${res?.expiration}`
     } catch (error) {
       authError.value = error
     }
     authLoading.value = false
   }
-  onVerifyCode = async (event: any) => {
-    event.preventDefault()
+  onVerifyCode = async (event: LoginFormEvent) => {
     authLoading.value = true
-    const { code } = event.target.elements
     try {
-      await verifyCode(code.value)
+      await verifyCode(event.form)
     } catch (error) {
       authError.value = error
     }

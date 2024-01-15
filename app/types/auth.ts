@@ -101,7 +101,7 @@ export type LoginHTMLResponse = z.infer<typeof LoginHTMLResponseSchema>
 
 export const VerifyEmailResponseSchema = z.object({
   timeSent: z.string({ description: 'Time verification email was sent' }),
-  expiration: z.string({ description: 'Time verification code expires' })
+  expiration: z.number({ description: 'Time verification code expires' })
 })
 export type VerifyEmailResponse = z.infer<typeof VerifyEmailResponseSchema>
 

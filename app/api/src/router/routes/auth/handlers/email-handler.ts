@@ -78,7 +78,7 @@ export class VerificationEmailGet extends OpenAPIRoute {
 
   async handle(req: Request, res: Response, env: Env, ctx: ExecutionContext) {
     try {
-      const expiry = Date.now() + VerificationEmailGet.VERIFICATION_TOKEN_EXPIRATION
+      const expiration = Date.now() + VerificationEmailGet.VERIFICATION_TOKEN_EXPIRATION
       const reqUrl = new URL(req.url).href
       const session = await getSession(req, env)
       if (!session) {
@@ -102,8 +102,8 @@ export class VerificationEmailGet extends OpenAPIRoute {
 
       const created =
         env.NODE_ENV === 'development'
-          ? await q.createVerificationCodeLocal(code, session.user.userId, expiry)
-          : await q.createVerificationCode(code, session.user.userId, expiry)
+          ? await q.createVerificationCodeLocal(code, session.user.userId, expiration)
+          : await q.createVerificationCode(code, session.user.userId, expiration)
 
       if (!created || !deleted) {
         return serverErrorResponse('Error creating verification code', undefined, res)
@@ -114,7 +114,10 @@ export class VerificationEmailGet extends OpenAPIRoute {
         email: session.user.email,
         code
       })
-      return jsonOkResponse({ timeSent, expiry })
+      const resp = { timeSent, expiration }
+      // console.log('resp')
+      // console.log(resp)
+      return jsonOkResponse(resp, res)
     } catch (error) {
       console.error(error)
       if (error instanceof LuciaError) {
@@ -191,7 +194,7 @@ export class VerificationTokenGet extends OpenAPIRoute {
       await auth.invalidateAllUserSessions(user.userId) // important!
 
       user = await auth.updateUserAttributes(user.userId, {
-        email_verified: true // verify email
+        email_verified: env.NODE_ENV === 'development' ? 1 : true
       })
 
       const newSession = await auth.createSession({

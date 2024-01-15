@@ -220,6 +220,23 @@
           "password"
         ]
       },
+      "VerifyEmailResponse": {
+        "type": "object",
+        "properties": {
+          "timeSent": {
+            "type": "string",
+            "description": "Time verification email was sent"
+          },
+          "expiration": {
+            "type": "string",
+            "description": "Time verification code expires"
+          }
+        },
+        "required": [
+          "timeSent",
+          "expiration"
+        ]
+      },
       "User": {
         "type": "object",
         "properties": {
@@ -725,12 +742,31 @@
         ],
         "responses": {
           "200": {
-            "description": "Successfull response",
+            "description": "Successful email verification",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {}
+                  "$ref": "#/components/schemas/VerifyEmailResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
                 }
               }
             }
