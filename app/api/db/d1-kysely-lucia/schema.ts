@@ -54,7 +54,6 @@ export interface CFWDatabase {
 }
 
 export const VerificationCodeSchema = z.object({
-  id: z.string(),
   user_id: z.string(),
   code: z.string(),
   expires: z.number()

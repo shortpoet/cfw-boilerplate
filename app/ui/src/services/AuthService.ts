@@ -133,7 +133,7 @@ export class AuthService {
    * @returns any Successfull response
    * @throws ApiError
    */
-  public static getVerificationTokenGet({
+  public static getVerificationEmailGet({
     email,
   }: {
     email: string,
@@ -152,13 +152,13 @@ export class AuthService {
    * @returns Session Successful email verification
    * @throws ApiError
    */
-  public static postVerificationTokenPost({
+  public static getVerificationTokenGet({
     code,
   }: {
     code: string,
   }): CancelablePromise<Session> {
     return __request(OpenAPI, {
-      method: 'POST',
+      method: 'GET',
       url: '/api/auth/verify/token',
       query: {
         'code': code,

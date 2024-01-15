@@ -163,9 +163,13 @@ export class VerificationTokenGet extends OpenAPIRoute {
       const storedVerificationCode = async () => {
         const res =
           env.NODE_ENV === 'development'
-            ? await q.getVerificationCodeLocal(code)
+            ? ((await q.getVerificationCodeLocal(code)) as any)[0]
             : await q.getVerificationCode(code)
+        console.log('res')
+        console.log(res)
         const result = VerificationCodeSchema.safeParse(res)
+        console.log('result')
+        console.log(result)
         if (!result.success || !result.data || result.data.code !== code) {
           throw new Error('Invalid verification code')
         }

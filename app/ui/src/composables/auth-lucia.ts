@@ -267,7 +267,7 @@ const useLuciaAuth = () => {
       return
     }
     const { data, dataLoading, error } = await useService<any>(
-      AuthService.getVerificationTokenGet({ email: _email.data.email })
+      AuthService.getVerificationEmailGet({ email: _email.data.email })
     )
     auth.authError.value = error.value
     if (auth.authError.value || !data.value) {
@@ -296,7 +296,7 @@ const useLuciaAuth = () => {
       return
     }
     const { data, dataLoading, error } = await useService<any>(
-      AuthService.postVerificationTokenPost({ code: _code.data.code.toString() })
+      AuthService.getVerificationTokenGet({ code: _code.data.code.toString() })
     )
     auth.authError.value = error.value
     if (auth.authError.value || !data.value) {

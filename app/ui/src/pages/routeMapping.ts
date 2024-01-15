@@ -60,7 +60,7 @@ export const ROUTE_MAPPING: RouteMapping = {
   },
   "/api-data/auth-verify-token": {
     "endpoint": "api/auth/verify/token",
-    "title": "Verify email with token",
+    "title": "Verify email with code",
     "path": "/api-data/auth-verify-token"
   },
   "/api-data/auth-verify-email": {
