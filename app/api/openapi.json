@@ -711,7 +711,7 @@
           "Auth"
         ],
         "summary": "Request a verification token",
-        "operationId": "get_VerificationTokenGet",
+        "operationId": "get_VerificationEmailGet",
         "parameters": [
           {
             "schema": {
@@ -739,12 +739,12 @@
       }
     },
     "/api/auth/verify/token": {
-      "post": {
+      "get": {
         "tags": [
           "Auth"
         ],
         "summary": "Verify email with code",
-        "operationId": "post_VerificationTokenPost",
+        "operationId": "get_VerificationTokenGet",
         "parameters": [
           {
             "schema": {
