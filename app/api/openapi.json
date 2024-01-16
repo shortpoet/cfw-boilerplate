@@ -228,7 +228,7 @@
             "description": "Time verification email was sent"
           },
           "expiration": {
-            "type": "string",
+            "type": "number",
             "description": "Time verification code expires"
           }
         },
