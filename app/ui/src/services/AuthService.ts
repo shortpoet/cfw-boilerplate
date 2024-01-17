@@ -157,7 +157,7 @@ export class AuthService {
    * @returns Session Successful email verification
    * @throws ApiError
    */
-  public static getVerificationTokenGet({
+  public static postVerificationTokenGet({
     requestBody,
   }: {
     requestBody?: {
@@ -176,7 +176,7 @@ export class AuthService {
     },
   }): CancelablePromise<Session> {
     return __request(OpenAPI, {
-      method: 'GET',
+      method: 'POST',
       url: '/api/auth/verify/token',
       body: requestBody,
       mediaType: 'application/json',

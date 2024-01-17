@@ -301,7 +301,7 @@ const useLuciaAuth = () => {
       return
     }
     const { data, dataLoading, error } = await useService<Session>(
-      AuthService.getVerificationTokenGet({ requestBody: _opts.data })
+      AuthService.postVerificationTokenGet({ requestBody: _opts.data })
     )
     auth.authError.value = error.value
     if (auth.authError.value || !data.value) {

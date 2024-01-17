@@ -15,7 +15,7 @@ import { redirectResponse } from '#/api/src/middleware/redirect'
 import { q } from '#/api/db'
 import { sendMail } from './jmap'
 import { ZodError } from 'zod'
-import { VerificationCodeTableSchema, VerifyCodeBody, VerifyCodeBodySchema } from '#/types'
+import { User, VerificationCodeTableSchema, VerifyCodeBody, VerifyCodeBodySchema } from '#/types'
 
 const getMagicLinkBody = (recipient: string, url: string) => `
 <p>Hi, ${recipient}!</p>
@@ -221,7 +221,10 @@ export class VerificationTokenGet extends OpenAPIRoute {
 
       if (storedTimeout) verificationTimeout.delete(session.user.userId)
 
-      let user = await auth.getUser(storedVerificationCodeResult.user_id)
+      let user: User = await auth.getUser(storedVerificationCodeResult.user_id)
+
+      console.log(`[api] [auth] [verification] [token] -> user:`)
+      console.log(user)
 
       await auth.invalidateAllUserSessions(user.userId) // important!
 
@@ -229,12 +232,20 @@ export class VerificationTokenGet extends OpenAPIRoute {
         email_verified: env.NODE_ENV === 'development' ? 1 : true
       })
 
+      console.log(`[api] [auth] [verification] [token] -> updated user:`)
+      console.log(user)
+
+      console.log(`[api] [auth] [verification] [token] -> getting key:`)
+
       const key = await auth.createKey({
         userId: user.userId,
         providerId: 'email',
-        providerUserId: user.email,
+        providerUserId: user.email!,
         password
       })
+
+      console.log(`[api] [auth] [verification] [token] -> key:`)
+      console.log(key)
 
       const newSession = await auth.createSession({
         userId: user.userId,
