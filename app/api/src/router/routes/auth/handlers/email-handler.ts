@@ -15,7 +15,14 @@ import { redirectResponse } from '#/api/src/middleware/redirect'
 import { q } from '#/api/db'
 import { sendMail } from './jmap'
 import { ZodError } from 'zod'
-import { User, VerificationCodeTableSchema, VerifyCodeBody, VerifyCodeBodySchema } from '#/types'
+import {
+  User,
+  UserType,
+  VerificationCodeTableSchema,
+  VerifyCodeBody,
+  VerifyCodeBodySchema
+} from '#/types'
+import { arrayToUserTypeFlags } from '#/utils'
 
 const getMagicLinkBody = (recipient: string, url: string) => `
 <p>Hi, ${recipient}!</p>
@@ -93,8 +100,8 @@ export class VerificationEmailGet extends OpenAPIRoute {
         return redirectResponse(reqUrl, 302, res.headers)
       }
 
-      console.log('session')
-      console.log(session)
+      // console.log('session')
+      // console.log(session)
 
       const code = generateRandomString(8, '0123456789')
 
@@ -123,8 +130,8 @@ export class VerificationEmailGet extends OpenAPIRoute {
       const user = await auth.updateUserAttributes(session.user.userId, {
         email
       })
-      console.log(`[api] [auth] [verification] [email] -> updated user:`)
-      console.log(user)
+      // console.log(`[api] [auth] [verification] [email] -> updated user:`)
+      // console.log(user)
 
       const resp = { timeSent, expiration }
       // console.log('resp')
@@ -200,11 +207,11 @@ export class VerificationTokenGet extends OpenAPIRoute {
           env.NODE_ENV === 'development'
             ? ((await q.getVerificationCodeLocal(code)) as any)[0]
             : await q.getVerificationCode(code)
-        console.log('res')
-        console.log(res)
+        // console.log('res')
+        // console.log(res)
         const result = VerificationCodeTableSchema.safeParse(res)
-        console.log('result')
-        console.log(result)
+        // console.log('result')
+        // console.log(result)
         if (!result.success || !result.data || result.data.code !== code) {
           throw new Error('Invalid verification code')
         }
@@ -223,19 +230,20 @@ export class VerificationTokenGet extends OpenAPIRoute {
 
       let user: User = await auth.getUser(storedVerificationCodeResult.user_id)
 
-      console.log(`[api] [auth] [verification] [token] -> user:`)
-      console.log(user)
+      // console.log(`[api] [auth] [verification] [token] -> user:`)
+      // console.log(user)
 
       await auth.invalidateAllUserSessions(user.userId) // important!
 
       user = await auth.updateUserAttributes(user.userId, {
-        email_verified: env.NODE_ENV === 'development' ? 1 : true
+        email_verified: env.NODE_ENV === 'development' ? 1 : true,
+        user_type_flags: arrayToUserTypeFlags(user.userTypes.concat(UserType.Email) as UserType[])
       })
 
-      console.log(`[api] [auth] [verification] [token] -> updated user:`)
-      console.log(user)
+      // console.log(`[api] [auth] [verification] [token] -> updated user:`)
+      // console.log(user)
 
-      console.log(`[api] [auth] [verification] [token] -> getting key:`)
+      // console.log(`[api] [auth] [verification] [token] -> getting key:`)
 
       const key = await auth.createKey({
         userId: user.userId,
@@ -244,8 +252,8 @@ export class VerificationTokenGet extends OpenAPIRoute {
         password
       })
 
-      console.log(`[api] [auth] [verification] [token] -> key:`)
-      console.log(key)
+      // console.log(`[api] [auth] [verification] [token] -> key:`)
+      // console.log(key)
 
       const newSession = await auth.createSession({
         userId: user.userId,
@@ -257,10 +265,10 @@ export class VerificationTokenGet extends OpenAPIRoute {
       const { baseUrlApp } = getBaseUrl(env)
       // await res.cookie(req, res, env, LUCIA_AUTH_COOKIES_SESSION_TOKEN, sessionCookie)
       res.headers.set('Set-Cookie', sessionCookie)
-      console.log(`[api] [auth] [verification] [token] -> sessionCookie:`)
-      console.log(sessionCookie)
-      console.log(`[api] [auth] [verification] [token] -> new session:`)
-      console.log(newSession)
+      // console.log(`[api] [auth] [verification] [token] -> sessionCookie:`)
+      // console.log(sessionCookie)
+      // console.log(`[api] [auth] [verification] [token] -> new session:`)
+      // console.log(newSession)
       return jsonOkResponse(newSession, res)
     } catch (error) {
       console.error(error)
