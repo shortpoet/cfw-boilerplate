@@ -34,7 +34,7 @@ export type Session = {
     /**
      * User's name
      */
-    name?: string;
+    name?: string | null;
     /**
      * User password
      */

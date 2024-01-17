@@ -29,7 +29,7 @@ export type User = {
   /**
    * User's name
    */
-  name?: string;
+  name?: string | null;
   /**
    * User password
    */

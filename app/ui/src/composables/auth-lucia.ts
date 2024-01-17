@@ -294,14 +294,14 @@ const useLuciaAuth = () => {
     logger.info(`[ui] [useAuth] [verifyCode] -> correlationId: ${correlationId}`)
     console.log(`[ui] [useAuth] [verifyCode] -> opts:`)
     console.log(opts)
-    const _code = VerifyCodeBodySchema.safeParse(opts)
-    if (!_code.success) {
+    const _opts = VerifyCodeBodySchema.safeParse(opts)
+    if (!_opts.success) {
       console.error(`[ui] [useAuth] [verifyCode] -> invalid login options`)
-      console.error(_code.error)
+      console.error(_opts.error)
       return
     }
     const { data, dataLoading, error } = await useService<Session>(
-      AuthService.getVerificationTokenGet({ code: _code.data.code.toString() })
+      AuthService.getVerificationTokenGet({ requestBody: _opts.data })
     )
     auth.authError.value = error.value
     if (auth.authError.value || !data.value) {

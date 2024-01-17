@@ -8,6 +8,7 @@ import type { AuthLoginUsernameBody } from '../models/AuthLoginUsernameBody';
 import type { AuthRegisterBody } from '../models/AuthRegisterBody';
 import type { OauthLoginResponse } from '../models/OauthLoginResponse';
 import type { Session } from '../models/Session';
+import type { VerifyEmailResponse } from '../models/VerifyEmailResponse';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -130,19 +131,23 @@ export class AuthService {
 
   /**
    * Request a verification token
-   * @returns any Successfull response
+   * @returns VerifyEmailResponse Successful email verification
    * @throws ApiError
    */
   public static getVerificationEmailGet({
     email,
   }: {
     email: string,
-  }): CancelablePromise<any> {
+  }): CancelablePromise<VerifyEmailResponse> {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/api/auth/verify/email',
       query: {
         'email': email,
+      },
+      errors: {
+        400: `Bad Request`,
+        500: `Internal Server Error`,
       },
     });
   }
@@ -153,16 +158,28 @@ export class AuthService {
    * @throws ApiError
    */
   public static getVerificationTokenGet({
-    code,
+    requestBody,
   }: {
-    code: string,
+    requestBody?: {
+      /**
+       * Username
+       */
+      username: string;
+      /**
+       * Password
+       */
+      password: string;
+      /**
+       * Verification code
+       */
+      code: number;
+    },
   }): CancelablePromise<Session> {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/api/auth/verify/token',
-      query: {
-        'code': code,
-      },
+      body: requestBody,
+      mediaType: 'application/json',
       errors: {
         400: `Bad Request`,
         500: `Internal Server Error`,

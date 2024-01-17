@@ -21,6 +21,7 @@ export type { Task } from './models/Task';
 export type { TaskListResponse } from './models/TaskListResponse';
 export type { TaskResponse } from './models/TaskResponse';
 export type { User } from './models/User';
+export type { VerifyEmailResponse } from './models/VerifyEmailResponse';
 
 export { AuthService } from './services/AuthService';
 export { HealthService } from './services/HealthService';
