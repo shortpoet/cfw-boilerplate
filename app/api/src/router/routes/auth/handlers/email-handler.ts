@@ -1,4 +1,5 @@
 import {
+  badResponse,
   createAuth,
   getBaseUrl,
   jsonOkResponse,
@@ -14,7 +15,7 @@ import { redirectResponse } from '#/api/src/middleware/redirect'
 import { q } from '#/api/db'
 import { sendMail } from './jmap'
 import { ZodError } from 'zod'
-import { VerificationCodeTableSchema } from '#/types'
+import { VerificationCodeTableSchema, VerifyCodeBody, VerifyCodeBodySchema } from '#/types'
 
 const getMagicLinkBody = (recipient: string, url: string) => `
 <p>Hi, ${recipient}!</p>
@@ -142,7 +143,13 @@ export class VerificationEmailGet extends OpenAPIRoute {
 
 export class VerificationTokenGet extends OpenAPIRoute {
   static schema = AuthVerifyTokenSubmitSchema
-  async handle(req: Request, res: Response, env: Env, ctx: ExecutionContext, data: any) {
+  async handle(
+    req: Request,
+    res: Response,
+    env: Env,
+    ctx: ExecutionContext,
+    data: { body: VerifyCodeBody }
+  ) {
     try {
       const verificationTimeout = new Map<
         string,
@@ -172,7 +179,22 @@ export class VerificationTokenGet extends OpenAPIRoute {
           timeoutSeconds
         })
       }
-      const code = data.query.code
+
+      const body =
+        env.NODE_ENV === 'development'
+          ? VerifyCodeBodySchema.safeParse(data)
+          : VerifyCodeBodySchema.safeParse(data.body)
+
+      if (!body.success) {
+        return badResponse('Invalid body', new Error(JSON.stringify(body)), res)
+      }
+
+      const { username, password } = body.data
+      const { auth } = await createAuth(env)
+
+      await auth.useKey('username', username.toLowerCase(), password)
+      const code = body.data.code.toString()
+
       const storedVerificationCode = async () => {
         const res =
           env.NODE_ENV === 'development'
@@ -198,7 +220,6 @@ export class VerificationTokenGet extends OpenAPIRoute {
       }
 
       if (storedTimeout) verificationTimeout.delete(session.user.userId)
-      const { auth } = await createAuth(env)
 
       let user = await auth.getUser(storedVerificationCodeResult.user_id)
 
@@ -206,6 +227,13 @@ export class VerificationTokenGet extends OpenAPIRoute {
 
       user = await auth.updateUserAttributes(user.userId, {
         email_verified: env.NODE_ENV === 'development' ? 1 : true
+      })
+
+      const key = await auth.createKey({
+        userId: user.userId,
+        providerId: 'email',
+        providerUserId: user.email,
+        password
       })
 
       const newSession = await auth.createSession({

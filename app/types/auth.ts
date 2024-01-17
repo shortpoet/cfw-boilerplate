@@ -121,6 +121,7 @@ export const VerifyCodeBodySchema = z.object({
   password: z.string({ description: 'Password' }),
   code: z.number({ description: 'Verification code' })
 })
+export type VerifyCodeBody = z.infer<typeof VerifyCodeBodySchema>
 
 export const VerifySchema = z.union([VerifyEmailBodySchema, VerifyCodeBodySchema])
 
