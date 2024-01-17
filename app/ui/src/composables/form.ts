@@ -60,6 +60,6 @@ export const getLogsterForm = (
     case LoginOptionsTypesEnum.Enum.verify_email:
       return [base, email]
     case LoginOptionsTypesEnum.Enum.verify_code:
-      return [base, code]
+      return [base, code, username, password]
   }
 }

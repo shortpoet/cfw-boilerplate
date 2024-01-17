@@ -11,7 +11,8 @@ import {
   LoginRedirectResponseSchema,
   SessionSchema,
   UserSchema,
-  VerifyEmailResponseSchema
+  VerifyEmailResponseSchema,
+  VerifyCodeBodySchema
 } from '#/types'
 
 export const UserComponent = UserSchema.openapi('User')
@@ -233,11 +234,7 @@ export const AuthVerifyEmailRequestSchema = {
 export const AuthVerifyTokenSubmitSchema = {
   tags: ['Auth'],
   summary: 'Verify email with code',
-  parameters: {
-    code: Query(Str, {
-      description: 'Verification code'
-    })
-  },
+  requestBody: VerifyCodeBodySchema,
   responses: {
     '200': {
       description: 'Successful email verification',

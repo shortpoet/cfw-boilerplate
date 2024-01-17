@@ -13,8 +13,8 @@ import {
   AuthLoginBody,
   AuthLoginBodySchema,
   LoginFormEvent,
-  VerifyEmailSchema,
-  VerifyCodeSchema,
+  VerifyEmailBodySchema,
+  VerifyCodeBodySchema,
   VerifySchema,
   VerifyEmailResponseSchema
 } from '#/types'
@@ -265,7 +265,7 @@ const useLuciaAuth = () => {
     logger.info(`[ui] [useAuth] [verifyEmail] -> correlationId: ${correlationId}`)
     console.log(`[ui] [useAuth] [verifyEmail] -> opts:`)
     console.log(opts)
-    const _email = VerifyEmailSchema.safeParse(opts)
+    const _email = VerifyEmailBodySchema.safeParse(opts)
     if (!_email.success) {
       console.error(`[ui] [useAuth] [verifyEmail] -> invalid login options`)
       console.error(_email.error)
@@ -294,7 +294,7 @@ const useLuciaAuth = () => {
     logger.info(`[ui] [useAuth] [verifyCode] -> correlationId: ${correlationId}`)
     console.log(`[ui] [useAuth] [verifyCode] -> opts:`)
     console.log(opts)
-    const _code = VerifyCodeSchema.safeParse(opts)
+    const _code = VerifyCodeBodySchema.safeParse(opts)
     if (!_code.success) {
       console.error(`[ui] [useAuth] [verifyCode] -> invalid login options`)
       console.error(_code.error)

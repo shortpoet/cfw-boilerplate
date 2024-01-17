@@ -112,15 +112,17 @@ export const LoginOauthOptionsSchema = z.object({
 })
 export type LoginOauthOptions = z.infer<typeof LoginOauthOptionsSchema>
 
-export const VerifyEmailSchema = z.object({
+export const VerifyEmailBodySchema = z.object({
   email: z.string({ description: 'Email' }).email()
 })
 
-export const VerifyCodeSchema = z.object({
+export const VerifyCodeBodySchema = z.object({
+  username: z.string({ description: 'Username' }),
+  password: z.string({ description: 'Password' }),
   code: z.number({ description: 'Verification code' })
 })
 
-export const VerifySchema = z.union([VerifyEmailSchema, VerifyCodeSchema])
+export const VerifySchema = z.union([VerifyEmailBodySchema, VerifyCodeBodySchema])
 
 export const LoginFormSchema = z.object({
   type: LoginOptionsTypesEnum,
