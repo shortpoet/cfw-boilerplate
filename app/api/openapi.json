@@ -117,7 +117,10 @@
                 "description": "User avatar URL"
               },
               "name": {
-                "type": "string",
+                "type": [
+                  "string",
+                  "null"
+                ],
                 "description": "User's name"
               },
               "password": {
@@ -285,7 +288,10 @@
             "description": "User avatar URL"
           },
           "name": {
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "description": "User's name"
           },
           "password": {
@@ -781,17 +787,34 @@
         ],
         "summary": "Verify email with code",
         "operationId": "get_VerificationTokenGet",
-        "parameters": [
-          {
-            "schema": {
-              "type": "string",
-              "description": "Verification code"
-            },
-            "required": true,
-            "name": "code",
-            "in": "query"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "description": "Username"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "Password"
+                  },
+                  "code": {
+                    "type": "number",
+                    "description": "Verification code"
+                  }
+                },
+                "required": [
+                  "username",
+                  "password",
+                  "code"
+                ]
+              }
+            }
           }
-        ],
+        },
         "responses": {
           "200": {
             "description": "Successful email verification",
