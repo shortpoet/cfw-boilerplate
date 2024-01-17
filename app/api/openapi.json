@@ -781,12 +781,12 @@
       }
     },
     "/api/auth/verify/token": {
-      "get": {
+      "post": {
         "tags": [
           "Auth"
         ],
         "summary": "Verify email with code",
-        "operationId": "get_VerificationTokenGet",
+        "operationId": "post_VerificationTokenGet",
         "requestBody": {
           "content": {
             "application/json": {

@@ -8,6 +8,6 @@ const router = OpenAPIRouter<IRequest, CF>({ base: '/api/auth/verify' })
 
 router.get('/email', VerificationEmailGet)
 
-router.get('/token', VerificationTokenGet)
+router.post('/token', VerificationTokenGet)
 
 export default router
