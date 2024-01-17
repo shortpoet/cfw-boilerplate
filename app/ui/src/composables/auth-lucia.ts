@@ -155,6 +155,7 @@ const useLuciaAuth = () => {
     auth.setSessionToken(session.sessionId)
     auth.setLoggedIn(true)
     auth.setSessionAuthStore(session)
+    auth.session = ref(session)
     return session
   }
   const login = async (opts: LoginFormEvent['form']) => {
@@ -299,7 +300,7 @@ const useLuciaAuth = () => {
       console.error(_code.error)
       return
     }
-    const { data, dataLoading, error } = await useService<any>(
+    const { data, dataLoading, error } = await useService<Session>(
       AuthService.getVerificationTokenGet({ code: _code.data.code.toString() })
     )
     auth.authError.value = error.value
@@ -317,6 +318,8 @@ const useLuciaAuth = () => {
       return
     }
     auth.setSession(success.data)
+    console.log(`[ui] [useAuth] [verifyCode] -> success.data:`)
+    console.log(success.data)
     return success.data
   }
 

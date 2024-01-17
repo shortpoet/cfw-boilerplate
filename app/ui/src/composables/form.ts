@@ -1,6 +1,9 @@
 import { LoginOptionsTypes, FormInput, LoginForm, LoginOptionsTypesEnum } from '#/types'
 
-export const getLogsterForm = (type: LoginOptionsTypes): FormInput<LoginForm>[] => {
+export const getLogsterForm = (
+  type: LoginOptionsTypes,
+  placeholder?: string
+): FormInput<LoginForm>[] => {
   const base: FormInput<LoginForm> = {
     type: 'hidden',
     value: type,
@@ -11,21 +14,21 @@ export const getLogsterForm = (type: LoginOptionsTypes): FormInput<LoginForm>[] 
   const email: FormInput<LoginForm> = {
     type: 'email',
     value: '',
-    placeholder: 'Email',
+    placeholder: placeholder ?? 'Email',
     key: 'email',
     required: true
   }
   const username: FormInput<LoginForm> = {
     type: 'text',
     value: '',
-    placeholder: 'Username',
+    placeholder: placeholder ?? 'Username',
     key: 'username',
     required: true
   }
   const password: FormInput<LoginForm> = {
     type: 'password',
     value: '',
-    placeholder: 'Password',
+    placeholder: placeholder ?? 'Password',
     key: 'password',
     required: true
   }
@@ -39,7 +42,7 @@ export const getLogsterForm = (type: LoginOptionsTypes): FormInput<LoginForm>[] 
   const code: FormInput<LoginForm> = {
     type: 'number',
     value: '',
-    placeholder: 'Verification code',
+    placeholder: placeholder ?? 'Verification code',
     key: 'code',
     required: true
   }

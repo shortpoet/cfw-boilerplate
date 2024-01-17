@@ -1,8 +1,5 @@
 <template>
   <div v-if="authError">
-    <!-- <div>
-        <slot name="logout" :onLogout="onLogout" :isLoggedIn="isLoggedIn" />
-      </div> -->
     <div flex flex-row @click="authError = false">
       <div m-2 text-2xl text-red i-carbon-close />
       <div class="text-red">{{ authError.name }}</div>
@@ -26,7 +23,7 @@
     </template>
     <template #body>
       <FormGeneric
-        :inputs="getLogsterForm('verify_email')"
+        :inputs="getLogsterForm('verify_email', session?.user?.email)"
         :onSubmit="onVerifyEmail"
         :title="'Verify Email'"
         :isToggleable="false"
@@ -80,11 +77,12 @@
 </template>
 
 <script setup lang="ts">
-import { LoginFormEvent } from '#/types'
+import { LoginFormEvent, Session } from '#/types'
 
 let authLoading = ref(false)
 let authError = ref()
 let isLoggedIn = ref(false)
+const session = ref<Session | undefined>()
 let onVerifyEmail = (event: any) => {
   console.log(`[ui] [auth} [validate] [onVerifyEmail] ${event}`)
 }
@@ -97,6 +95,9 @@ let onVerifyCode = (event: any) => {
 if (typeof window !== 'undefined') {
   const auth = useLuciaAuth()
   const { verifyEmail, verifyCode } = auth
+  session.value = auth.session?.value ?? undefined
+  // console.log(`[ui] [auth} [validate] [session]`)
+  // console.log(session.value?.user.email)
   ;({ authError, isLoggedIn } = auth)
   onVerifyEmail = async (event: LoginFormEvent) => {
     authLoading.value = true

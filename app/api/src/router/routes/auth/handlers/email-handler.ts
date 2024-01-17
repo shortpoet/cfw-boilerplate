@@ -76,11 +76,13 @@ export class VerificationEmailGet extends OpenAPIRoute {
   static schema = AuthVerifyEmailRequestSchema
   static readonly VERIFICATION_TOKEN_EXPIRATION = 1000 * 60 * 5 // 5 minutes
 
-  async handle(req: Request, res: Response, env: Env, ctx: ExecutionContext) {
+  async handle(req: Request, res: Response, env: Env, ctx: ExecutionContext, data: any) {
     try {
       const expiration = Date.now() + VerificationEmailGet.VERIFICATION_TOKEN_EXPIRATION
       const reqUrl = new URL(req.url).href
       const session = await getSession(req, env)
+      const email = data.query.email
+
       if (!session) {
         // Unauthorized
         throw new Error()
@@ -111,9 +113,18 @@ export class VerificationEmailGet extends OpenAPIRoute {
 
       const { timeSent } = await sendVerificationRequest({
         env,
-        email: session.user.email,
+        email,
+        // email: session.user.email,
         code
       })
+      const { auth } = await createAuth(env)
+
+      const user = await auth.updateUserAttributes(session.user.userId, {
+        email
+      })
+      console.log(`[api] [auth] [verification] [email] -> updated user:`)
+      console.log(user)
+
       const resp = { timeSent, expiration }
       // console.log('resp')
       // console.log(resp)
@@ -207,6 +218,10 @@ export class VerificationTokenGet extends OpenAPIRoute {
       const { baseUrlApp } = getBaseUrl(env)
       // await res.cookie(req, res, env, LUCIA_AUTH_COOKIES_SESSION_TOKEN, sessionCookie)
       res.headers.set('Set-Cookie', sessionCookie)
+      console.log(`[api] [auth] [verification] [token] -> sessionCookie:`)
+      console.log(sessionCookie)
+      console.log(`[api] [auth] [verification] [token] -> new session:`)
+      console.log(newSession)
       return jsonOkResponse(newSession, res)
     } catch (error) {
       console.error(error)
